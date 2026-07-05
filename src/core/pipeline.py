@@ -2885,7 +2885,8 @@ class StockAnalysisPipeline:
 
         logger.info(f"===== \u5f00\u59cbanalyze {len(stock_codes)} stocks =====")
         logger.info(f"\u80a1\u7968\u5217\u8868: {', '.join(stock_codes)}")
-        logger.info(f"\u5e76\u53d1\u6570: {self.max_workers}, mode: {'\u4ec5\u83b7\u53d6\u6570\u636e' if dry_run else '\u5b8c\u6574analyze'}")
+        run_mode = '\u4ec5\u83b7\u53d6\u6570\u636e' if dry_run else '\u5b8c\u6574analyze'
+        logger.info(f"\u5e76\u53d1\u6570: {self.max_workers}, mode: {run_mode}")
 
         # \u51bb\u7ed3\u672c\u8f6e\u8fd0\u884c\u7684\u7edf\u4e00\u53c2\u8003\u65f6\u95f4; \u907f\u514d\u8de8market\u6536\u76d8\u8fb9\u754c\u65f6\u540c\u6279\u80a1\u7968\u4f7f\u7528\u4e0d\u540c\u76ee\u6807\u4ea4\u6613\u65e5.
         resume_reference_time = current_time or datetime.now(timezone.utc)

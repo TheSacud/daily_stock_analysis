@@ -1272,7 +1272,8 @@ if __name__ == "__main__":
     try:
         info = fetcher.get_base_info('600519')
         if info:
-            print(f"[\u57fa\u672cinfo] PE ratio={info.get('PE ratio(\u52a8)', 'N/A')}, PB ratio={info.get('PB ratio', 'N/A')}")
+            dynamic_pe = info.get('PE ratio(dynamic)', info.get('PE ratio(\u52a8)', 'N/A'))
+            print(f"[Basic info] PE ratio={dynamic_pe}, PB ratio={info.get('PB ratio', 'N/A')}")
         else:
             print("[\u57fa\u672cinfo] \u672a\u83b7\u53d6\u5230\u6570\u636e")
     except Exception as e:

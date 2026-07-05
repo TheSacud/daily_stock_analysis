@@ -692,7 +692,8 @@ class AkshareFetcher(BaseFetcher):
             if df is not None and not df.empty:
                 logger.info(f"[API response] ak.fund_etf_hist_em succeeded: returned {len(df)} rows, elapsed {api_elapsed:.2f}s")
                 logger.info(f"[API response] columns: {list(df.columns)}")
-                logger.info(f"[API response] date range: {df['\u65e5\u671f'].iloc[0]} ~ {df['\u65e5\u671f'].iloc[-1]}")
+                date_column = '\u65e5\u671f'
+                logger.info(f"[API response] date range: {df[date_column].iloc[0]} ~ {df[date_column].iloc[-1]}")
                 logger.debug(f"[API response] latest 3 rows:\n{df.tail(3).to_string()}")
             else:
                 logger.warning(f"[API response] ak.fund_etf_hist_em returned empty data, elapsed {api_elapsed:.2f}s")
@@ -851,7 +852,8 @@ class AkshareFetcher(BaseFetcher):
             if df is not None and not df.empty:
                 logger.info(f"[API response] ak.stock_hk_hist succeeded: returned {len(df)} rows, elapsed {api_elapsed:.2f}s")
                 logger.info(f"[API response] columns: {list(df.columns)}")
-                logger.info(f"[API response] date range: {df['\u65e5\u671f'].iloc[0]} ~ {df['\u65e5\u671f'].iloc[-1]}")
+                date_column = '\u65e5\u671f'
+                logger.info(f"[API response] date range: {df[date_column].iloc[0]} ~ {df[date_column].iloc[-1]}")
                 logger.debug(f"[API response] latest 3 rows:\n{df.tail(3).to_string()}")
             else:
                 logger.warning(f"[API response] ak.stock_hk_hist returned empty data, elapsed {api_elapsed:.2f}s")

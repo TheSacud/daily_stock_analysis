@@ -1129,9 +1129,11 @@ Focus on index trend, liquidity, and sector rotation to shape the next-session t
                 return
             if lines:
                 lines.append("")
+            rank_label = 'Rank' if language == 'en' else '\u6392\u540d'
+            change_label = 'Change' if language == 'en' else 'change\u5e45'
             lines.extend([
                 title,
-                f"| {'Rank' if language == 'en' else '\u6392\u540d'} | {name_label} | {'Change' if language == 'en' else 'change\u5e45'} |",
+                f"| {rank_label} | {name_label} | {change_label} |",
                 "|------|------|--------|",
             ])
             for rank, item in enumerate(rows[:5], 1):
@@ -1458,11 +1460,12 @@ Concept lagging: {bottom_concepts_text if bottom_concepts_text else "N/A"}"""
 - \u4e24\u5e02amount: {overview.total_amount:.0f} \u4ebf\u5143"""
 
             if self.profile.has_sector_rankings:
+                no_data_text = '\u6682no data'
                 sector_block = f"""## sector\u8868\u73b0
-industry\u9886\u6da8: {top_sectors_text if top_sectors_text else "\u6682no data"}
-industry\u9886\u8dcc: {bottom_sectors_text if bottom_sectors_text else "\u6682no data"}
-concept\u9886\u6da8: {top_concepts_text if top_concepts_text else "\u6682no data"}
-concept\u9886\u8dcc: {bottom_concepts_text if bottom_concepts_text else "\u6682no data"}"""
+industry\u9886\u6da8: {top_sectors_text if top_sectors_text else no_data_text}
+industry\u9886\u8dcc: {bottom_sectors_text if bottom_sectors_text else no_data_text}
+concept\u9886\u6da8: {top_concepts_text if top_concepts_text else no_data_text}
+concept\u9886\u8dcc: {bottom_concepts_text if bottom_concepts_text else no_data_text}"""
 
             data_limit_lines = []
             if not self.profile.has_market_stats:
@@ -1737,10 +1740,11 @@ Market conditions can change quickly. The data above is for reference only and d
                 else "- \u5f53\u524d\u4ee5\u4e3b\u8981index\u4e0e\u53ef\u7528news\u7ebf\u7d22\u8bc4\u4f30\u6574\u4f53\u98ce\u9669status."
             )
         )
+        sector_fallback = '- \u6682\u65e0sectorchange\u699c\u6570\u636e.'
         sector_section = (
             f"""
-### \u4e09、sector\u4e3b\u7ebf
-{sector_block or "- \u6682\u65e0sectorchange\u699c\u6570\u636e."}
+### \u4e09ã€sector\u4e3b\u7ebf
+{sector_block or sector_fallback}
 """
             if self.profile.has_sector_rankings
             else ""
@@ -1753,6 +1757,7 @@ Market conditions can change quickly. The data above is for reference only and d
             if self.profile.has_market_stats
             else ""
         )
+        indices_display = indices_block or indices_text or '\u6682\u65e0index\u6570\u636e.'
         return f"""## {overview.date} market review
 
 > \u4eca\u65e5{market_label}market\u6574\u4f53\u5448\u73b0**{market_mood}**\u6001\u52bf; \u4f18\u5148\u89c2\u5bdf{summary_focus}.
@@ -1761,7 +1766,7 @@ Market conditions can change quickly. The data above is for reference only and d
 {market_summary_block}
 
 ### \u4e8c、index\u7ed3\u6784
-{indices_block or indices_text or "\u6682\u65e0index\u6570\u636e."}
+{indices_display}
 {sector_section}
 {funds_section}
 

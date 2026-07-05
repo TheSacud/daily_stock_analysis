@@ -995,10 +995,11 @@ class AgentOrchestrator:
             battle["action_checklist"] = []
         position_strategy = battle.get("position_strategy")
         if not isinstance(position_strategy, dict) or not position_strategy:
+            stop_loss = sniper.get('stop_loss', '\u5f85\u8865\u5145')
             battle["position_strategy"] = {
                 "suggested_position": _default_position_size(decision_type),
                 "entry_plan": position_advice["no_position"],
-                "risk_control": f"\u6b62\u635f\u53c2\u8003 {sniper.get('stop_loss', '\u5f85\u8865\u5145')}",
+                "risk_control": f"\u6b62\u635f\u53c2\u8003 {stop_loss}",
             }
 
         data_perspective = dashboard_block.get("data_perspective")

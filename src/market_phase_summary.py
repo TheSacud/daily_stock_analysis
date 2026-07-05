@@ -226,7 +226,8 @@ def format_public_phase_pack_excerpt(
     if isinstance(quality, Mapping):
         level = _safe_text(quality.get("level"))
         if level:
-            lines.append(f"- {'data quality' if lang == 'en' else '\u6570\u636e\u8d28\u91cf'}: {level}")
+            quality_label = 'data quality' if lang == 'en' else '\u6570\u636e\u8d28\u91cf'
+            lines.append(f"- {quality_label}: {level}")
         limitations = _list_strings(quality.get("limitations"), limit=2)
         for item in limitations:
             lines.append(f"- {'limitation' if lang == 'en' else 'limit'}: {item}")

@@ -1120,13 +1120,15 @@ class HistoryService:
         # ========== \u4fe1\u53f7\u5f52\u56e0analyze ==========
         signal_attr = dashboard.get('signal_attribution', {}) if dashboard else {}
         if signal_attribution_has_content(signal_attr):
+            signal_attribution_heading = labels.get('signal_attribution_heading', '\u4fe1\u53f7\u5f52\u56e0analyze')
+            attribution_weights_label = labels.get('attribution_weights_label', '\u5f52\u56e0\u6743\u91cd')
             report_lines.extend([
-                f"### 🎯 {labels.get('signal_attribution_heading', '\u4fe1\u53f7\u5f52\u56e0analyze')}",
+                f"### {signal_attribution_heading}",
                 "",
             ])
             weight_items = signal_attribution_weight_items(signal_attr)
             if weight_items:
-                report_lines.append(f"**{labels.get('attribution_weights_label', '\u5f52\u56e0\u6743\u91cd')}**:")
+                report_lines.append(f"**{attribution_weights_label}**:")
                 weight_labels = {
                     "technical_indicators": ("📈", labels.get('technical_indicators_label', 'technical indicators')),
                     "news_sentiment": ("📰", labels.get('news_sentiment_label', 'news\u8206\u60c5')),
@@ -1139,10 +1141,12 @@ class HistoryService:
                 report_lines.append("")
             bullish = signal_attr.get('strongest_bullish_signal')
             bearish = signal_attr.get('strongest_bearish_signal')
+            strongest_bullish_signal_label = labels.get('strongest_bullish_signal_label', '\u6700\u5f3a\u770b\u591a\u4fe1\u53f7')
+            strongest_bearish_signal_label = labels.get('strongest_bearish_signal_label', '\u6700\u5f3a\u770b\u7a7a\u4fe1\u53f7')
             if bullish:
-                report_lines.append(f"**🐂 {labels.get('strongest_bullish_signal_label', '\u6700\u5f3a\u770b\u591a\u4fe1\u53f7')}**: {bullish}")
+                report_lines.append(f"**{strongest_bullish_signal_label}**: {bullish}")
             if bearish:
-                report_lines.append(f"**🐻 {labels.get('strongest_bearish_signal_label', '\u6700\u5f3a\u770b\u7a7a\u4fe1\u53f7')}**: {bearish}")
+                report_lines.append(f"**{strongest_bearish_signal_label}**: {bearish}")
             report_lines.append("")
 
         # ========== \u5982\u679c\u6ca1\u6709 dashboard; \u663e\u793a\u4f20\u7edf\u683c\u5f0f ==========

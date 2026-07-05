@@ -38,8 +38,8 @@ export const StockBarItemComponent: React.FC<StockBarItemProps> = ({
     actionLabels,
   );
   const phaseLabel = getMarketPhaseSummaryLabel(item.marketPhaseSummary, language)
-    ?.replace('市场阶段: ', '')
-    .replace('市场阶段：', '')
+    ?.replace('Market Phase: ', '')
+    .replace('Market Phase: ', '')
     .replace('Market phase: ', '');
 
   return (

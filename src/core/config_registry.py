@@ -105,11 +105,11 @@ _FIELD_DEFINITIONS: Dict[str, Dict[str, Any]] = {
         ],
         "docs": [
             {
-                "label": "完整指南：环境变量完整列表",
-                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#环境变量完整列表",
+                "label": "\u5b8c\u6574\u6307\u5357: \u73af\u5883\u53d8\u91cf\u5b8c\u6574\u5217\u8868",
+                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#\u73af\u5883\u53d8\u91cf\u5b8c\u6574\u5217\u8868",
             },
             {
-                "label": "Tushare 股票列表指南",
+                "label": "Tushare \u80a1\u7968\u5217\u8868\u6307\u5357",
                 "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/TUSHARE_STOCK_LIST_GUIDE.md",
             },
         ],
@@ -145,7 +145,7 @@ _FIELD_DEFINITIONS: Dict[str, Dict[str, Any]] = {
         ],
         "docs": [
             {
-                "label": "LLM 配置指南",
+                "label": "LLM config\u6307\u5357",
                 "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/LLM_CONFIG_GUIDE.md",
             },
         ],
@@ -171,7 +171,7 @@ _FIELD_DEFINITIONS: Dict[str, Dict[str, Any]] = {
         ],
         "docs": [
             {
-                "label": "LLM 配置指南",
+                "label": "LLM config\u6307\u5357",
                 "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/LLM_CONFIG_GUIDE.md",
             },
         ],
@@ -197,7 +197,7 @@ _FIELD_DEFINITIONS: Dict[str, Dict[str, Any]] = {
         "examples": ["GENERATION_FALLBACK_BACKEND=litellm", "GENERATION_FALLBACK_BACKEND="],
         "docs": [
             {
-                "label": "LLM 配置指南",
+                "label": "LLM config\u6307\u5357",
                 "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/LLM_CONFIG_GUIDE.md",
             },
         ],
@@ -220,7 +220,7 @@ _FIELD_DEFINITIONS: Dict[str, Dict[str, Any]] = {
         "examples": ["GENERATION_BACKEND_TIMEOUT_SECONDS=300"],
         "docs": [
             {
-                "label": "LLM 配置指南",
+                "label": "LLM config\u6307\u5357",
                 "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/LLM_CONFIG_GUIDE.md",
             },
         ],
@@ -246,7 +246,7 @@ _FIELD_DEFINITIONS: Dict[str, Dict[str, Any]] = {
         "examples": ["GENERATION_BACKEND_MAX_OUTPUT_BYTES=1048576"],
         "docs": [
             {
-                "label": "LLM 配置指南",
+                "label": "LLM config\u6307\u5357",
                 "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/LLM_CONFIG_GUIDE.md",
             },
         ],
@@ -269,7 +269,7 @@ _FIELD_DEFINITIONS: Dict[str, Dict[str, Any]] = {
         "examples": ["GENERATION_BACKEND_MAX_CONCURRENCY=1"],
         "docs": [
             {
-                "label": "LLM 配置指南",
+                "label": "LLM config\u6307\u5357",
                 "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/LLM_CONFIG_GUIDE.md",
             },
         ],
@@ -292,7 +292,7 @@ _FIELD_DEFINITIONS: Dict[str, Dict[str, Any]] = {
         "examples": ["LOCAL_CLI_BACKEND_MAX_CONCURRENCY=1"],
         "docs": [
             {
-                "label": "LLM 配置指南",
+                "label": "LLM config\u6307\u5357",
                 "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/LLM_CONFIG_GUIDE.md",
             },
         ],
@@ -319,23 +319,23 @@ _FIELD_DEFINITIONS: Dict[str, Dict[str, Any]] = {
         ],
         "docs": [
             {
-                "label": "LLM 配置指南",
+                "label": "LLM config\u6307\u5357",
                 "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/LLM_CONFIG_GUIDE.md",
             },
             {
-                "label": "完整指南：AI 模型配置",
-                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#ai-模型配置",
+                "label": "\u5b8c\u6574\u6307\u5357: AI \u6a21\u578bconfig",
+                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#ai-\u6a21\u578bconfig",
             },
             {
-                "label": "LiteLLM Providers（官方）",
+                "label": "LiteLLM Providers (\u5b98\u65b9)",
                 "href": "https://docs.litellm.ai/docs/providers",
             },
             {
-                "label": "LiteLLM OpenAI-compatible（官方）",
+                "label": "LiteLLM OpenAI-compatible (\u5b98\u65b9)",
                 "href": "https://docs.litellm.ai/docs/providers/openai_compatible",
             },
             {
-                "label": "LiteLLM model_list（官方）",
+                "label": "LiteLLM model_list (\u5b98\u65b9)",
                 "href": "https://docs.litellm.ai/docs/proxy/configs#the-model_list-key",
             },
         ],
@@ -361,12 +361,12 @@ _FIELD_DEFINITIONS: Dict[str, Dict[str, Any]] = {
         ],
         "docs": [
             {
-                "label": "LLM 配置指南",
+                "label": "LLM config\u6307\u5357",
                 "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/LLM_CONFIG_GUIDE.md",
             },
             {
-                "label": "完整指南：AI 模型配置",
-                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#ai-模型配置",
+                "label": "\u5b8c\u6574\u6307\u5357: AI \u6a21\u578bconfig",
+                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#ai-\u6a21\u578bconfig",
             },
         ],
         "warning_codes": ["inherits_primary_when_empty"],
@@ -391,19 +391,19 @@ _FIELD_DEFINITIONS: Dict[str, Dict[str, Any]] = {
         ],
         "docs": [
             {
-                "label": "LLM 配置指南",
+                "label": "LLM config\u6307\u5357",
                 "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/LLM_CONFIG_GUIDE.md",
             },
             {
-                "label": "完整指南：AI 模型配置",
-                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#ai-模型配置",
+                "label": "\u5b8c\u6574\u6307\u5357: AI \u6a21\u578bconfig",
+                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#ai-\u6a21\u578bconfig",
             },
             {
-                "label": "LiteLLM Providers（官方）",
+                "label": "LiteLLM Providers (\u5b98\u65b9)",
                 "href": "https://docs.litellm.ai/docs/providers",
             },
             {
-                "label": "LiteLLM config（官方）",
+                "label": "LiteLLM config (\u5b98\u65b9)",
                 "href": "https://docs.litellm.ai/docs/proxy/configs",
             },
         ],
@@ -431,11 +431,11 @@ _FIELD_DEFINITIONS: Dict[str, Dict[str, Any]] = {
         ],
         "docs": [
             {
-                "label": "LLM 配置指南：YAML 模式",
-                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/LLM_CONFIG_GUIDE.md#方式三litellm-原生-yaml-配置适合专家或复杂路由",
+                "label": "LLM config\u6307\u5357: YAML mode",
+                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/LLM_CONFIG_GUIDE.md#\u65b9\u5f0f\u4e09litellm-\u539f\u751f-yaml-config\u9002\u5408\u4e13\u5bb6or\u590d\u6742\u8def\u7531",
             },
             {
-                "label": "LiteLLM proxy config（官方）",
+                "label": "LiteLLM proxy config (\u5b98\u65b9)",
                 "href": "https://docs.litellm.ai/docs/proxy/configs",
             },
         ],
@@ -463,15 +463,15 @@ _FIELD_DEFINITIONS: Dict[str, Dict[str, Any]] = {
         ],
         "docs": [
             {
-                "label": "LLM 配置指南：渠道模式",
-                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/LLM_CONFIG_GUIDE.md#方式二渠道channels模式配置适合进阶多模型",
+                "label": "LLM config\u6307\u5357: \u6e20\u9053mode",
+                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/LLM_CONFIG_GUIDE.md#\u65b9\u5f0f\u4e8c\u6e20\u9053channelsmodeconfig\u9002\u5408\u8fdb\u9636\u591a\u6a21\u578b",
             },
             {
-                "label": "LLM 服务商配置速查",
+                "label": "LLM \u670d\u52a1\u5546config\u901fcheck",
                 "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/llm-providers.md",
             },
             {
-                "label": "LiteLLM OpenAI-compatible（官方）",
+                "label": "LiteLLM OpenAI-compatible (\u5b98\u65b9)",
                 "href": "https://docs.litellm.ai/docs/providers/openai_compatible",
             },
         ],
@@ -497,8 +497,8 @@ _FIELD_DEFINITIONS: Dict[str, Dict[str, Any]] = {
         ],
         "docs": [
             {
-                "label": "完整指南：AI 模型配置",
-                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#ai-模型配置",
+                "label": "\u5b8c\u6574\u6307\u5357: AI \u6a21\u578bconfig",
+                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#ai-\u6a21\u578bconfig",
             },
         ],
         "warning_codes": [],
@@ -523,7 +523,7 @@ _FIELD_DEFINITIONS: Dict[str, Dict[str, Any]] = {
         ],
         "docs": [
             {
-                "label": "LLM 配置指南",
+                "label": "LLM config\u6307\u5357",
                 "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/LLM_CONFIG_GUIDE.md",
             },
         ],
@@ -548,7 +548,7 @@ _FIELD_DEFINITIONS: Dict[str, Dict[str, Any]] = {
         ],
         "docs": [
             {
-                "label": "LLM 配置指南",
+                "label": "LLM config\u6307\u5357",
                 "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/LLM_CONFIG_GUIDE.md",
             },
         ],
@@ -578,7 +578,7 @@ _FIELD_DEFINITIONS: Dict[str, Dict[str, Any]] = {
         ],
         "docs": [
             {
-                "label": "LLM 配置指南",
+                "label": "LLM config\u6307\u5357",
                 "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/LLM_CONFIG_GUIDE.md",
             },
         ],
@@ -603,7 +603,7 @@ _FIELD_DEFINITIONS: Dict[str, Dict[str, Any]] = {
         ],
         "docs": [
             {
-                "label": "LLM 配置指南",
+                "label": "LLM config\u6307\u5357",
                 "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/LLM_CONFIG_GUIDE.md",
             },
         ],
@@ -628,7 +628,7 @@ _FIELD_DEFINITIONS: Dict[str, Dict[str, Any]] = {
         ],
         "docs": [
             {
-                "label": "LLM 配置指南",
+                "label": "LLM config\u6307\u5357",
                 "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/LLM_CONFIG_GUIDE.md",
             },
         ],
@@ -653,11 +653,11 @@ _FIELD_DEFINITIONS: Dict[str, Dict[str, Any]] = {
         ],
         "docs": [
             {
-                "label": "LLM 配置指南",
+                "label": "LLM config\u6307\u5357",
                 "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/LLM_CONFIG_GUIDE.md",
             },
             {
-                "label": "LLM 服务商配置速查",
+                "label": "LLM \u670d\u52a1\u5546config\u901fcheck",
                 "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/llm-providers.md",
             },
         ],
@@ -728,11 +728,11 @@ _FIELD_DEFINITIONS: Dict[str, Dict[str, Any]] = {
         ],
         "docs": [
             {
-                "label": "LLM 配置指南",
+                "label": "LLM config\u6307\u5357",
                 "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/LLM_CONFIG_GUIDE.md",
             },
             {
-                "label": "LLM 服务商配置速查",
+                "label": "LLM \u670d\u52a1\u5546config\u901fcheck",
                 "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/llm-providers.md",
             },
         ],
@@ -771,12 +771,12 @@ _FIELD_DEFINITIONS: Dict[str, Dict[str, Any]] = {
         ],
         "docs": [
             {
-                "label": "Tushare 股票列表指南",
+                "label": "Tushare \u80a1\u7968\u5217\u8868\u6307\u5357",
                 "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/TUSHARE_STOCK_LIST_GUIDE.md",
             },
             {
-                "label": "完整指南：环境变量完整列表",
-                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#环境变量完整列表",
+                "label": "\u5b8c\u6574\u6307\u5357: \u73af\u5883\u53d8\u91cf\u5b8c\u6574\u5217\u8868",
+                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#\u73af\u5883\u53d8\u91cf\u5b8c\u6574\u5217\u8868",
             },
         ],
         "warning_codes": ["secret_value"],
@@ -871,7 +871,7 @@ _FIELD_DEFINITIONS: Dict[str, Dict[str, Any]] = {
         ],
         "docs": [
             {
-                "label": "Tushare 股票列表指南",
+                "label": "Tushare \u80a1\u7968\u5217\u8868\u6307\u5357",
                 "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/TUSHARE_STOCK_LIST_GUIDE.md",
             },
         ],
@@ -897,19 +897,19 @@ _FIELD_DEFINITIONS: Dict[str, Dict[str, Any]] = {
         ],
         "docs": [
             {
-                "label": "LiteLLM Providers（官方）",
+                "label": "LiteLLM Providers (\u5b98\u65b9)",
                 "href": "https://docs.litellm.ai/docs/providers",
             },
             {
-                "label": "LiteLLM OpenAI-compatible（官方）",
+                "label": "LiteLLM OpenAI-compatible (\u5b98\u65b9)",
                 "href": "https://docs.litellm.ai/docs/providers/openai_compatible",
             },
             {
-                "label": "OpenAI 请求与鉴权（官方）",
+                "label": "OpenAI request\u4e0e\u9274\u6743 (\u5b98\u65b9)",
                 "href": "https://platform.openai.com/docs/api-reference/authentication",
             },
             {
-                "label": "AlphaSift 集成说明",
+                "label": "AlphaSift \u96c6\u6210\u8bf4\u660e",
                 "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/alphasift-integration.md",
             },
         ],
@@ -933,11 +933,11 @@ _FIELD_DEFINITIONS: Dict[str, Dict[str, Any]] = {
         ],
         "docs": [
             {
-                "label": "requirements.txt（版本与依赖边界）",
+                "label": "requirements.txt (\u7248\u672c\u4e0e\u4f9d\u8d56\u8fb9\u754c)",
                 "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/requirements.txt",
             },
             {
-                "label": "AlphaSift 集成说明",
+                "label": "AlphaSift \u96c6\u6210\u8bf4\u660e",
                 "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/alphasift-integration.md",
             },
         ],
@@ -961,8 +961,8 @@ _FIELD_DEFINITIONS: Dict[str, Dict[str, Any]] = {
         ],
         "docs": [
             {
-                "label": "完整指南：数据源配置",
-                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#数据源配置",
+                "label": "\u5b8c\u6574\u6307\u5357: data sourceconfig",
+                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#data sourceconfig",
             },
         ],
         "warning_codes": ["provider_priority_order"],
@@ -987,8 +987,8 @@ _FIELD_DEFINITIONS: Dict[str, Dict[str, Any]] = {
         ],
         "docs": [
             {
-                "label": "完整指南：数据源配置",
-                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#数据源配置",
+                "label": "\u5b8c\u6574\u6307\u5357: data sourceconfig",
+                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#data sourceconfig",
             },
         ],
         "warning_codes": [],
@@ -1012,8 +1012,8 @@ _FIELD_DEFINITIONS: Dict[str, Dict[str, Any]] = {
         ],
         "docs": [
             {
-                "label": "完整指南：搜索服务配置",
-                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#搜索服务配置",
+                "label": "\u5b8c\u6574\u6307\u5357: search\u670d\u52a1config",
+                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#search\u670d\u52a1config",
             },
         ],
         "warning_codes": ["secret_value", "comma_separated_keys"],
@@ -1038,8 +1038,8 @@ _FIELD_DEFINITIONS: Dict[str, Dict[str, Any]] = {
         ],
         "docs": [
             {
-                "label": "完整指南：搜索服务配置",
-                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#搜索服务配置",
+                "label": "\u5b8c\u6574\u6307\u5357: search\u670d\u52a1config",
+                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#search\u670d\u52a1config",
             },
         ],
         "warning_codes": ["secret_value", "comma_separated_keys"],
@@ -1125,8 +1125,8 @@ _FIELD_DEFINITIONS: Dict[str, Dict[str, Any]] = {
         ],
         "docs": [
             {
-                "label": "完整指南：搜索服务配置",
-                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#搜索服务配置",
+                "label": "\u5b8c\u6574\u6307\u5357: search\u670d\u52a1config",
+                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#search\u670d\u52a1config",
             },
         ],
         "warning_codes": ["requires_json_format"],
@@ -1165,8 +1165,8 @@ _FIELD_DEFINITIONS: Dict[str, Dict[str, Any]] = {
         ],
         "docs": [
             {
-                "label": "完整指南：数据源配置",
-                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#数据源配置",
+                "label": "\u5b8c\u6574\u6307\u5357: data sourceconfig",
+                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#data sourceconfig",
             },
         ],
         "warning_codes": [],
@@ -1191,8 +1191,8 @@ _FIELD_DEFINITIONS: Dict[str, Dict[str, Any]] = {
         ],
         "docs": [
             {
-                "label": "完整指南：数据源配置",
-                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#数据源配置",
+                "label": "\u5b8c\u6574\u6307\u5357: data sourceconfig",
+                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#data sourceconfig",
             },
         ],
         "warning_codes": ["cloud_deployments_may_disable"],
@@ -1217,8 +1217,8 @@ _FIELD_DEFINITIONS: Dict[str, Dict[str, Any]] = {
         ],
         "docs": [
             {
-                "label": "完整指南：环境变量完整列表",
-                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#环境变量完整列表",
+                "label": "\u5b8c\u6574\u6307\u5357: \u73af\u5883\u53d8\u91cf\u5b8c\u6574\u5217\u8868",
+                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#\u73af\u5883\u53d8\u91cf\u5b8c\u6574\u5217\u8868",
             },
         ],
         "warning_codes": [],
@@ -1243,8 +1243,8 @@ _FIELD_DEFINITIONS: Dict[str, Dict[str, Any]] = {
         ],
         "docs": [
             {
-                "label": "完整指南：环境变量完整列表",
-                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#环境变量完整列表",
+                "label": "\u5b8c\u6574\u6307\u5357: \u73af\u5883\u53d8\u91cf\u5b8c\u6574\u5217\u8868",
+                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#\u73af\u5883\u53d8\u91cf\u5b8c\u6574\u5217\u8868",
             },
         ],
         "warning_codes": [],
@@ -1325,11 +1325,11 @@ _FIELD_DEFINITIONS: Dict[str, Dict[str, Any]] = {
         ],
         "docs": [
             {
-                "label": "LLM 配置指南",
+                "label": "LLM config\u6307\u5357",
                 "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/LLM_CONFIG_GUIDE.md",
             },
             {
-                "label": "LLM 服务商配置速查",
+                "label": "LLM \u670d\u52a1\u5546config\u901fcheck",
                 "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/llm-providers.md",
             },
         ],
@@ -1412,11 +1412,11 @@ _FIELD_DEFINITIONS: Dict[str, Dict[str, Any]] = {
         ],
         "docs": [
             {
-                "label": "LLM 配置指南",
+                "label": "LLM config\u6307\u5357",
                 "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/LLM_CONFIG_GUIDE.md",
             },
             {
-                "label": "LLM 服务商配置速查",
+                "label": "LLM \u670d\u52a1\u5546config\u901fcheck",
                 "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/llm-providers.md",
             },
         ],
@@ -1456,11 +1456,11 @@ _FIELD_DEFINITIONS: Dict[str, Dict[str, Any]] = {
         ],
         "docs": [
             {
-                "label": "LLM 配置指南",
+                "label": "LLM config\u6307\u5357",
                 "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/LLM_CONFIG_GUIDE.md",
             },
             {
-                "label": "LLM 服务商配置速查",
+                "label": "LLM \u670d\u52a1\u5546config\u901fcheck",
                 "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/llm-providers.md",
             },
         ],
@@ -1528,11 +1528,11 @@ _FIELD_DEFINITIONS: Dict[str, Dict[str, Any]] = {
         ],
         "docs": [
             {
-                "label": "LLM 配置指南",
+                "label": "LLM config\u6307\u5357",
                 "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/LLM_CONFIG_GUIDE.md",
             },
             {
-                "label": "LLM 服务商配置速查",
+                "label": "LLM \u670d\u52a1\u5546config\u901fcheck",
                 "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/llm-providers.md",
             },
         ],
@@ -1554,7 +1554,7 @@ _FIELD_DEFINITIONS: Dict[str, Dict[str, Any]] = {
     },
     "ANTHROPIC_MODEL": {
         "title": "Anthropic Model",
-        "description": "Claude 模型名称（如 claude-sonnet-4-6）。",
+        "description": "Claude \u6a21\u578bname (\u5982 claude-sonnet-4-6).",
         "category": "ai_model",
         "data_type": "string",
         "ui_control": "text",
@@ -1568,7 +1568,7 @@ _FIELD_DEFINITIONS: Dict[str, Dict[str, Any]] = {
     },
     "ANTHROPIC_TEMPERATURE": {
         "title": "Anthropic Temperature",
-        "description": "温度参数，范围 [0.0, 1.0]。",
+        "description": "\u6e29\u5ea6parameter; \u8303\u56f4 [0.0, 1.0].",
         "category": "ai_model",
         "data_type": "number",
         "ui_control": "number",
@@ -1582,7 +1582,7 @@ _FIELD_DEFINITIONS: Dict[str, Dict[str, Any]] = {
     },
     "ANTHROPIC_MAX_TOKENS": {
         "title": "Anthropic Max Tokens",
-        "description": "Anthropic API 响应最大 token 数（默认 8192）。",
+        "description": "Anthropic API \u54cd\u5e94\u6700\u5927 token \u6570 (default 8192).",
         "category": "ai_model",
         "data_type": "number",
         "ui_control": "number",
@@ -1613,8 +1613,8 @@ _FIELD_DEFINITIONS: Dict[str, Dict[str, Any]] = {
         ],
         "docs": [
             {
-                "label": "完整指南：通知渠道配置",
-                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#通知渠道详细配置",
+                "label": "\u5b8c\u6574\u6307\u5357: notification channelconfig",
+                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#notification channel\u8be6\u7ec6config",
             },
         ],
         "warning_codes": ["webhook_secret_value"],
@@ -1669,8 +1669,8 @@ _FIELD_DEFINITIONS: Dict[str, Dict[str, Any]] = {
         ],
         "docs": [
             {
-                "label": "完整指南：通知渠道配置",
-                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#通知渠道详细配置",
+                "label": "\u5b8c\u6574\u6307\u5357: notification channelconfig",
+                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#notification channel\u8be6\u7ec6config",
             },
         ],
         "warning_codes": ["not_webhook_delivery", "restart_required"],
@@ -1710,8 +1710,8 @@ _FIELD_DEFINITIONS: Dict[str, Dict[str, Any]] = {
         "display_order": 50,
         "docs": [
             {
-                "label": "完整指南：自定义 Webhook",
-                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#自定义-webhook",
+                "label": "\u5b8c\u6574\u6307\u5357: \u81ea\u5b9a\u4e49 Webhook",
+                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#\u81ea\u5b9a\u4e49-webhook",
             },
         ],
         "warning_codes": ["json_template_must_render_object"],
@@ -1769,8 +1769,8 @@ _FIELD_DEFINITIONS: Dict[str, Dict[str, Any]] = {
         ],
         "docs": [
             {
-                "label": "完整指南：自定义 Webhook",
-                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#自定义-webhook",
+                "label": "\u5b8c\u6574\u6307\u5357: \u81ea\u5b9a\u4e49 Webhook",
+                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#\u81ea\u5b9a\u4e49-webhook",
             },
         ],
         "warning_codes": ["disabling_ssl_verify_is_risky"],
@@ -1795,8 +1795,8 @@ _FIELD_DEFINITIONS: Dict[str, Dict[str, Any]] = {
         ],
         "docs": [
             {
-                "label": "完整指南：环境变量完整列表",
-                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#环境变量完整列表",
+                "label": "\u5b8c\u6574\u6307\u5357: \u73af\u5883\u53d8\u91cf\u5b8c\u6574\u5217\u8868",
+                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#\u73af\u5883\u53d8\u91cf\u5b8c\u6574\u5217\u8868",
             },
         ],
         "warning_codes": [],
@@ -1821,8 +1821,8 @@ _FIELD_DEFINITIONS: Dict[str, Dict[str, Any]] = {
         ],
         "docs": [
             {
-                "label": "完整指南：环境变量完整列表",
-                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#环境变量完整列表",
+                "label": "\u5b8c\u6574\u6307\u5357: \u73af\u5883\u53d8\u91cf\u5b8c\u6574\u5217\u8868",
+                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#\u73af\u5883\u53d8\u91cf\u5b8c\u6574\u5217\u8868",
             },
         ],
         "warning_codes": [],
@@ -1850,15 +1850,15 @@ _FIELD_DEFINITIONS: Dict[str, Dict[str, Any]] = {
         "examples": [
             "FEISHU_WEBHOOK_URL=https://open.feishu.cn/open-apis/bot/v2/hook/your_hook_token",
             "FEISHU_WEBHOOK_SECRET=your_feishu_webhook_secret",
-            "FEISHU_WEBHOOK_KEYWORD=股票日报",
+            "FEISHU_WEBHOOK_KEYWORD=\u80a1\u7968\u65e5\u62a5",
         ],
         "docs": [
             {
-                "label": "完整指南：飞书通知配置",
-                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#飞书",
+                "label": "\u5b8c\u6574\u6307\u5357: Feishu\u901a\u77e5config",
+                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#Feishu",
             },
             {
-                "label": "飞书机器人配置专题",
+                "label": "Feishu\u673a\u5668\u4ebaconfig\u4e13\u9898",
                 "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/bot/feishu-bot-config.md",
             },
         ],
@@ -1942,11 +1942,11 @@ _FIELD_DEFINITIONS: Dict[str, Dict[str, Any]] = {
         ],
         "docs": [
             {
-                "label": "完整指南：飞书通知配置",
-                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#飞书",
+                "label": "\u5b8c\u6574\u6307\u5357: Feishu\u901a\u77e5config",
+                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#Feishu",
             },
             {
-                "label": "飞书机器人配置专题",
+                "label": "Feishu\u673a\u5668\u4ebaconfig\u4e13\u9898",
                 "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/bot/feishu-bot-config.md",
             },
         ],
@@ -1972,8 +1972,8 @@ _FIELD_DEFINITIONS: Dict[str, Dict[str, Any]] = {
         ],
         "docs": [
             {
-                "label": "完整指南：飞书通知配置",
-                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#飞书",
+                "label": "\u5b8c\u6574\u6307\u5357: Feishu\u901a\u77e5config",
+                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#Feishu",
             },
         ],
     },
@@ -1987,7 +1987,7 @@ _FIELD_DEFINITIONS: Dict[str, Dict[str, Any]] = {
         "is_required": False,
         "is_editable": True,
         "default_value": "chat_id",
-        "options": [{"label": "chat_id (群聊)", "value": "chat_id"}, {"label": "open_id (私聊)", "value": "open_id"}],
+        "options": [{"label": "chat_id (\u7fa4\u804a)", "value": "chat_id"}, {"label": "open_id (\u79c1\u804a)", "value": "open_id"}],
         "validation": {"enum": ["chat_id", "open_id"]},
         "display_order": 19,
         "help_key": "settings.notification.FEISHU_RECEIVE_ID_TYPE",
@@ -1997,8 +1997,8 @@ _FIELD_DEFINITIONS: Dict[str, Dict[str, Any]] = {
         ],
         "docs": [
             {
-                "label": "完整指南：飞书通知配置",
-                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#飞书",
+                "label": "\u5b8c\u6574\u6307\u5357: Feishu\u901a\u77e5config",
+                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#Feishu",
             },
         ],
     },
@@ -2012,7 +2012,7 @@ _FIELD_DEFINITIONS: Dict[str, Dict[str, Any]] = {
         "is_required": False,
         "is_editable": True,
         "default_value": "feishu",
-        "options": [{"label": "feishu (飞书国内)", "value": "feishu"}, {"label": "lark (国际版)", "value": "lark"}],
+        "options": [{"label": "feishu (Feishu\u56fd\u5185)", "value": "feishu"}, {"label": "lark (\u56fd\u9645\u7248)", "value": "lark"}],
         "validation": {"enum": ["feishu", "lark"]},
         "display_order": 20,
         "help_key": "settings.notification.FEISHU_DOMAIN",
@@ -2022,8 +2022,8 @@ _FIELD_DEFINITIONS: Dict[str, Dict[str, Any]] = {
         ],
         "docs": [
             {
-                "label": "完整指南：飞书通知配置",
-                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#飞书",
+                "label": "\u5b8c\u6574\u6307\u5357: Feishu\u901a\u77e5config",
+                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#Feishu",
             },
         ],
     },
@@ -2050,7 +2050,7 @@ _FIELD_DEFINITIONS: Dict[str, Dict[str, Any]] = {
         ],
         "docs": [
             {
-                "label": "完整指南：Telegram",
+                "label": "\u5b8c\u6574\u6307\u5357: Telegram",
                 "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#telegram",
             },
         ],
@@ -2076,7 +2076,7 @@ _FIELD_DEFINITIONS: Dict[str, Dict[str, Any]] = {
         ],
         "docs": [
             {
-                "label": "完整指南：Telegram",
+                "label": "\u5b8c\u6574\u6307\u5357: Telegram",
                 "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#telegram",
             },
         ],
@@ -2120,8 +2120,8 @@ _FIELD_DEFINITIONS: Dict[str, Dict[str, Any]] = {
         ],
         "docs": [
             {
-                "label": "完整指南：邮件",
-                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#邮件",
+                "label": "\u5b8c\u6574\u6307\u5357: Email",
+                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#Email",
             },
         ],
         "warning_codes": [],
@@ -2145,8 +2145,8 @@ _FIELD_DEFINITIONS: Dict[str, Dict[str, Any]] = {
         ],
         "docs": [
             {
-                "label": "完整指南：邮件",
-                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#邮件",
+                "label": "\u5b8c\u6574\u6307\u5357: Email",
+                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#Email",
             },
         ],
         "warning_codes": ["secret_value", "smtp_authorization_code"],
@@ -2172,8 +2172,8 @@ _FIELD_DEFINITIONS: Dict[str, Dict[str, Any]] = {
         ],
         "docs": [
             {
-                "label": "完整指南：邮件",
-                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#邮件",
+                "label": "\u5b8c\u6574\u6307\u5357: Email",
+                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#Email",
             },
         ],
         "warning_codes": ["comma_separated_values"],
@@ -2200,7 +2200,7 @@ _FIELD_DEFINITIONS: Dict[str, Dict[str, Any]] = {
         ],
         "docs": [
             {
-                "label": "完整指南：Discord",
+                "label": "\u5b8c\u6574\u6307\u5357: Discord",
                 "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#discord",
             },
         ],
@@ -2226,7 +2226,7 @@ _FIELD_DEFINITIONS: Dict[str, Dict[str, Any]] = {
         ],
         "docs": [
             {
-                "label": "完整指南：Discord",
+                "label": "\u5b8c\u6574\u6307\u5357: Discord",
                 "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#discord",
             },
         ],
@@ -2283,8 +2283,8 @@ _FIELD_DEFINITIONS: Dict[str, Dict[str, Any]] = {
         ],
         "docs": [
             {
-                "label": "完整指南：通知渠道配置",
-                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#通知渠道详细配置",
+                "label": "\u5b8c\u6574\u6307\u5357: notification channelconfig",
+                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#notification channel\u8be6\u7ec6config",
             },
         ],
         "warning_codes": ["secret_value"],
@@ -2425,11 +2425,11 @@ _FIELD_DEFINITIONS: Dict[str, Dict[str, Any]] = {
         "display_order": 41,
     },
     # ------------------------------------------------------------------
-    # Notification – Server酱 / misc
+    # Notification – Server\u9171 / misc
     # ------------------------------------------------------------------
     "SERVERCHAN3_SENDKEY": {
         "title": "ServerChan3 SendKey",
-        "description": "Server酱3 SendKey for push notifications.",
+        "description": "Server\u91713 SendKey for push notifications.",
         "category": "notification",
         "data_type": "string",
         "ui_control": "password",
@@ -2492,8 +2492,8 @@ _FIELD_DEFINITIONS: Dict[str, Dict[str, Any]] = {
         ],
         "docs": [
             {
-                "label": "完整指南：环境变量完整列表",
-                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#环境变量完整列表",
+                "label": "\u5b8c\u6574\u6307\u5357: \u73af\u5883\u53d8\u91cf\u5b8c\u6574\u5217\u8868",
+                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#\u73af\u5883\u53d8\u91cf\u5b8c\u6574\u5217\u8868",
             },
         ],
         "warning_codes": [],
@@ -2519,8 +2519,8 @@ _FIELD_DEFINITIONS: Dict[str, Dict[str, Any]] = {
         ],
         "docs": [
             {
-                "label": "完整指南：环境变量完整列表",
-                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#环境变量完整列表",
+                "label": "\u5b8c\u6574\u6307\u5357: \u73af\u5883\u53d8\u91cf\u5b8c\u6574\u5217\u8868",
+                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#\u73af\u5883\u53d8\u91cf\u5b8c\u6574\u5217\u8868",
             },
         ],
         "warning_codes": [],
@@ -2549,8 +2549,8 @@ _FIELD_DEFINITIONS: Dict[str, Dict[str, Any]] = {
         ],
         "docs": [
             {
-                "label": "完整指南：环境变量完整列表",
-                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#环境变量完整列表",
+                "label": "\u5b8c\u6574\u6307\u5357: \u73af\u5883\u53d8\u91cf\u5b8c\u6574\u5217\u8868",
+                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#\u73af\u5883\u53d8\u91cf\u5b8c\u6574\u5217\u8868",
             },
         ],
         "warning_codes": [],
@@ -2575,8 +2575,8 @@ _FIELD_DEFINITIONS: Dict[str, Dict[str, Any]] = {
         ],
         "docs": [
             {
-                "label": "完整指南：环境变量完整列表",
-                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#环境变量完整列表",
+                "label": "\u5b8c\u6574\u6307\u5357: \u73af\u5883\u53d8\u91cf\u5b8c\u6574\u5217\u8868",
+                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#\u73af\u5883\u53d8\u91cf\u5b8c\u6574\u5217\u8868",
             },
         ],
         "warning_codes": [],
@@ -2601,8 +2601,8 @@ _FIELD_DEFINITIONS: Dict[str, Dict[str, Any]] = {
         ],
         "docs": [
             {
-                "label": "完整指南：环境变量完整列表",
-                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#环境变量完整列表",
+                "label": "\u5b8c\u6574\u6307\u5357: \u73af\u5883\u53d8\u91cf\u5b8c\u6574\u5217\u8868",
+                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#\u73af\u5883\u53d8\u91cf\u5b8c\u6574\u5217\u8868",
             },
         ],
         "warning_codes": [],
@@ -2627,8 +2627,8 @@ _FIELD_DEFINITIONS: Dict[str, Dict[str, Any]] = {
         ],
         "docs": [
             {
-                "label": "完整指南：环境变量完整列表",
-                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#环境变量完整列表",
+                "label": "\u5b8c\u6574\u6307\u5357: \u73af\u5883\u53d8\u91cf\u5b8c\u6574\u5217\u8868",
+                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#\u73af\u5883\u53d8\u91cf\u5b8c\u6574\u5217\u8868",
             },
         ],
         "warning_codes": [],
@@ -2653,8 +2653,8 @@ _FIELD_DEFINITIONS: Dict[str, Dict[str, Any]] = {
         ],
         "docs": [
             {
-                "label": "完整指南：环境变量完整列表",
-                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#环境变量完整列表",
+                "label": "\u5b8c\u6574\u6307\u5357: \u73af\u5883\u53d8\u91cf\u5b8c\u6574\u5217\u8868",
+                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#\u73af\u5883\u53d8\u91cf\u5b8c\u6574\u5217\u8868",
             },
         ],
         "warning_codes": [],
@@ -2679,8 +2679,8 @@ _FIELD_DEFINITIONS: Dict[str, Dict[str, Any]] = {
         ],
         "docs": [
             {
-                "label": "完整指南：环境变量完整列表",
-                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#环境变量完整列表",
+                "label": "\u5b8c\u6574\u6307\u5357: \u73af\u5883\u53d8\u91cf\u5b8c\u6574\u5217\u8868",
+                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#\u73af\u5883\u53d8\u91cf\u5b8c\u6574\u5217\u8868",
             },
         ],
         "warning_codes": [],
@@ -2705,8 +2705,8 @@ _FIELD_DEFINITIONS: Dict[str, Dict[str, Any]] = {
         ],
         "docs": [
             {
-                "label": "完整指南：环境变量完整列表",
-                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#环境变量完整列表",
+                "label": "\u5b8c\u6574\u6307\u5357: \u73af\u5883\u53d8\u91cf\u5b8c\u6574\u5217\u8868",
+                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#\u73af\u5883\u53d8\u91cf\u5b8c\u6574\u5217\u8868",
             },
         ],
         "warning_codes": [],
@@ -2731,7 +2731,7 @@ _FIELD_DEFINITIONS: Dict[str, Dict[str, Any]] = {
         ],
         "docs": [
             {
-                "label": "通知渠道与路由",
+                "label": "notification channel\u4e0e\u8def\u7531",
                 "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/notifications.md",
             },
         ],
@@ -2757,7 +2757,7 @@ _FIELD_DEFINITIONS: Dict[str, Dict[str, Any]] = {
         ],
         "docs": [
             {
-                "label": "通知渠道与路由",
+                "label": "notification channel\u4e0e\u8def\u7531",
                 "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/notifications.md",
             },
         ],
@@ -2783,7 +2783,7 @@ _FIELD_DEFINITIONS: Dict[str, Dict[str, Any]] = {
         ],
         "docs": [
             {
-                "label": "通知渠道与路由",
+                "label": "notification channel\u4e0e\u8def\u7531",
                 "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/notifications.md",
             },
         ],
@@ -2809,7 +2809,7 @@ _FIELD_DEFINITIONS: Dict[str, Dict[str, Any]] = {
         ],
         "docs": [
             {
-                "label": "通知渠道与路由",
+                "label": "notification channel\u4e0e\u8def\u7531",
                 "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/notifications.md",
             },
         ],
@@ -2835,7 +2835,7 @@ _FIELD_DEFINITIONS: Dict[str, Dict[str, Any]] = {
         ],
         "docs": [
             {
-                "label": "通知渠道与路由",
+                "label": "notification channel\u4e0e\u8def\u7531",
                 "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/notifications.md",
             },
         ],
@@ -2861,7 +2861,7 @@ _FIELD_DEFINITIONS: Dict[str, Dict[str, Any]] = {
         ],
         "docs": [
             {
-                "label": "通知渠道与路由",
+                "label": "notification channel\u4e0e\u8def\u7531",
                 "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/notifications.md",
             },
         ],
@@ -2887,7 +2887,7 @@ _FIELD_DEFINITIONS: Dict[str, Dict[str, Any]] = {
         ],
         "docs": [
             {
-                "label": "通知渠道与路由",
+                "label": "notification channel\u4e0e\u8def\u7531",
                 "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/notifications.md",
             },
         ],
@@ -2916,7 +2916,7 @@ _FIELD_DEFINITIONS: Dict[str, Dict[str, Any]] = {
         ],
         "docs": [
             {
-                "label": "通知渠道与路由",
+                "label": "notification channel\u4e0e\u8def\u7531",
                 "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/notifications.md",
             },
         ],
@@ -2941,7 +2941,7 @@ _FIELD_DEFINITIONS: Dict[str, Dict[str, Any]] = {
         ],
         "docs": [
             {
-                "label": "通知渠道与路由",
+                "label": "notification channel\u4e0e\u8def\u7531",
                 "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/notifications.md",
             },
         ],
@@ -2968,8 +2968,8 @@ _FIELD_DEFINITIONS: Dict[str, Dict[str, Any]] = {
         ],
         "docs": [
             {
-                "label": "完整指南：其他配置",
-                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#其他配置",
+                "label": "\u5b8c\u6574\u6307\u5357: otherconfig",
+                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#otherconfig",
             },
         ],
         "warning_codes": ["local_timezone"],
@@ -2996,7 +2996,7 @@ _FIELD_DEFINITIONS: Dict[str, Dict[str, Any]] = {
         "docs": [
             {
                 "label": "Full guide: configuration",
-                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#其他配置",
+                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#otherconfig",
             },
         ],
         "warning_codes": ["local_timezone"],
@@ -3021,8 +3021,8 @@ _FIELD_DEFINITIONS: Dict[str, Dict[str, Any]] = {
         ],
         "docs": [
             {
-                "label": "完整指南：环境变量完整列表",
-                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#环境变量完整列表",
+                "label": "\u5b8c\u6574\u6307\u5357: \u73af\u5883\u53d8\u91cf\u5b8c\u6574\u5217\u8868",
+                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#\u73af\u5883\u53d8\u91cf\u5b8c\u6574\u5217\u8868",
             },
         ],
         "warning_codes": ["network_scope"],
@@ -3047,8 +3047,8 @@ _FIELD_DEFINITIONS: Dict[str, Dict[str, Any]] = {
         ],
         "docs": [
             {
-                "label": "完整指南：环境变量完整列表",
-                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#环境变量完整列表",
+                "label": "\u5b8c\u6574\u6307\u5357: \u73af\u5883\u53d8\u91cf\u5b8c\u6574\u5217\u8868",
+                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#\u73af\u5883\u53d8\u91cf\u5b8c\u6574\u5217\u8868",
             },
         ],
         "warning_codes": ["restart_required"],
@@ -3073,8 +3073,8 @@ _FIELD_DEFINITIONS: Dict[str, Dict[str, Any]] = {
         ],
         "docs": [
             {
-                "label": "完整指南：环境变量完整列表",
-                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#环境变量完整列表",
+                "label": "\u5b8c\u6574\u6307\u5357: \u73af\u5883\u53d8\u91cf\u5b8c\u6574\u5217\u8868",
+                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#\u73af\u5883\u53d8\u91cf\u5b8c\u6574\u5217\u8868",
             },
         ],
         "warning_codes": ["restart_required", "path_must_be_writable"],
@@ -3099,11 +3099,11 @@ _FIELD_DEFINITIONS: Dict[str, Dict[str, Any]] = {
         ],
         "docs": [
             {
-                "label": "完整指南：WebUI 与 API",
-                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#webui-与-api-服务",
+                "label": "\u5b8c\u6574\u6307\u5357: WebUI \u4e0e API",
+                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#webui-\u4e0e-api-\u670d\u52a1",
             },
             {
-                "label": "云服务器访问 WebUI",
+                "label": "\u4e91\u670d\u52a1\u5668\u8bbfask WebUI",
                 "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/deploy-webui-cloud.md",
             },
         ],
@@ -3129,11 +3129,11 @@ _FIELD_DEFINITIONS: Dict[str, Dict[str, Any]] = {
         ],
         "docs": [
             {
-                "label": "完整指南：WebUI 与 API",
-                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#webui-与-api-服务",
+                "label": "\u5b8c\u6574\u6307\u5357: WebUI \u4e0e API",
+                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#webui-\u4e0e-api-\u670d\u52a1",
             },
             {
-                "label": "云服务器访问 WebUI",
+                "label": "\u4e91\u670d\u52a1\u5668\u8bbfask WebUI",
                 "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/deploy-webui-cloud.md",
             },
         ],
@@ -3159,12 +3159,12 @@ _FIELD_DEFINITIONS: Dict[str, Dict[str, Any]] = {
         ],
         "docs": [
             {
-                "label": "云服务器访问 WebUI",
+                "label": "\u4e91\u670d\u52a1\u5668\u8bbfask WebUI",
                 "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/deploy-webui-cloud.md",
             },
             {
-                "label": "完整指南：WebUI 与 API",
-                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#webui-与-api-服务",
+                "label": "\u5b8c\u6574\u6307\u5357: WebUI \u4e0e API",
+                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#webui-\u4e0e-api-\u670d\u52a1",
             },
         ],
         "warning_codes": ["public_bind_requires_auth", "restart_required"],
@@ -3189,12 +3189,12 @@ _FIELD_DEFINITIONS: Dict[str, Dict[str, Any]] = {
         ],
         "docs": [
             {
-                "label": "云服务器访问 WebUI",
+                "label": "\u4e91\u670d\u52a1\u5668\u8bbfask WebUI",
                 "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/deploy-webui-cloud.md",
             },
             {
-                "label": "完整指南：WebUI 与 API",
-                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#webui-与-api-服务",
+                "label": "\u5b8c\u6574\u6307\u5357: WebUI \u4e0e API",
+                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#webui-\u4e0e-api-\u670d\u52a1",
             },
         ],
         "warning_codes": ["port_mapping_required", "restart_required"],
@@ -3219,8 +3219,8 @@ _FIELD_DEFINITIONS: Dict[str, Dict[str, Any]] = {
         ],
         "docs": [
             {
-                "label": "完整指南：其他配置",
-                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#其他配置",
+                "label": "\u5b8c\u6574\u6307\u5357: otherconfig",
+                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#otherconfig",
             },
         ],
         "warning_codes": ["restart_required"],
@@ -3246,8 +3246,8 @@ _FIELD_DEFINITIONS: Dict[str, Dict[str, Any]] = {
         ],
         "docs": [
             {
-                "label": "完整指南：其他配置",
-                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#其他配置",
+                "label": "\u5b8c\u6574\u6307\u5357: otherconfig",
+                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#otherconfig",
             },
         ],
         "warning_codes": ["restart_required"],
@@ -3272,11 +3272,11 @@ _FIELD_DEFINITIONS: Dict[str, Dict[str, Any]] = {
         ],
         "docs": [
             {
-                "label": "完整指南：其他配置",
-                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#其他配置",
+                "label": "\u5b8c\u6574\u6307\u5357: otherconfig",
+                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#otherconfig",
             },
             {
-                "label": "云服务器访问 WebUI",
+                "label": "\u4e91\u670d\u52a1\u5668\u8bbfask WebUI",
                 "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/deploy-webui-cloud.md",
             },
         ],
@@ -3302,11 +3302,11 @@ _FIELD_DEFINITIONS: Dict[str, Dict[str, Any]] = {
         ],
         "docs": [
             {
-                "label": "完整指南：其他配置",
-                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#其他配置",
+                "label": "\u5b8c\u6574\u6307\u5357: otherconfig",
+                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#otherconfig",
             },
             {
-                "label": "云服务器访问 WebUI",
+                "label": "\u4e91\u670d\u52a1\u5668\u8bbfask WebUI",
                 "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/deploy-webui-cloud.md",
             },
         ],
@@ -3332,8 +3332,8 @@ _FIELD_DEFINITIONS: Dict[str, Dict[str, Any]] = {
         ],
         "docs": [
             {
-                "label": "完整指南：其他配置",
-                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#其他配置",
+                "label": "\u5b8c\u6574\u6307\u5357: otherconfig",
+                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#otherconfig",
             },
         ],
         "warning_codes": ["restart_required"],
@@ -3358,8 +3358,8 @@ _FIELD_DEFINITIONS: Dict[str, Dict[str, Any]] = {
         ],
         "docs": [
             {
-                "label": "完整指南：其他配置",
-                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#其他配置",
+                "label": "\u5b8c\u6574\u6307\u5357: otherconfig",
+                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#otherconfig",
             },
         ],
         "warning_codes": ["force_run_override"],
@@ -3384,8 +3384,8 @@ _FIELD_DEFINITIONS: Dict[str, Dict[str, Any]] = {
         ],
         "docs": [
             {
-                "label": "完整指南：环境变量完整列表",
-                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#环境变量完整列表",
+                "label": "\u5b8c\u6574\u6307\u5357: \u73af\u5883\u53d8\u91cf\u5b8c\u6574\u5217\u8868",
+                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#\u73af\u5883\u53d8\u91cf\u5b8c\u6574\u5217\u8868",
             },
         ],
         "warning_codes": [],
@@ -3410,8 +3410,8 @@ _FIELD_DEFINITIONS: Dict[str, Dict[str, Any]] = {
         ],
         "docs": [
             {
-                "label": "完整指南：环境变量完整列表",
-                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#环境变量完整列表",
+                "label": "\u5b8c\u6574\u6307\u5357: \u73af\u5883\u53d8\u91cf\u5b8c\u6574\u5217\u8868",
+                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#\u73af\u5883\u53d8\u91cf\u5b8c\u6574\u5217\u8868",
             },
         ],
         "warning_codes": [],
@@ -3437,8 +3437,8 @@ _FIELD_DEFINITIONS: Dict[str, Dict[str, Any]] = {
         ],
         "docs": [
             {
-                "label": "完整指南：环境变量完整列表",
-                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#环境变量完整列表",
+                "label": "\u5b8c\u6574\u6307\u5357: \u73af\u5883\u53d8\u91cf\u5b8c\u6574\u5217\u8868",
+                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#\u73af\u5883\u53d8\u91cf\u5b8c\u6574\u5217\u8868",
             },
         ],
         "warning_codes": [],
@@ -3466,8 +3466,8 @@ _FIELD_DEFINITIONS: Dict[str, Dict[str, Any]] = {
         ],
         "docs": [
             {
-                "label": "完整指南：环境变量完整列表",
-                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#环境变量完整列表",
+                "label": "\u5b8c\u6574\u6307\u5357: \u73af\u5883\u53d8\u91cf\u5b8c\u6574\u5217\u8868",
+                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#\u73af\u5883\u53d8\u91cf\u5b8c\u6574\u5217\u8868",
             },
         ],
         "warning_codes": [],
@@ -3492,8 +3492,8 @@ _FIELD_DEFINITIONS: Dict[str, Dict[str, Any]] = {
         ],
         "docs": [
             {
-                "label": "完整指南：环境变量完整列表",
-                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#环境变量完整列表",
+                "label": "\u5b8c\u6574\u6307\u5357: \u73af\u5883\u53d8\u91cf\u5b8c\u6574\u5217\u8868",
+                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#\u73af\u5883\u53d8\u91cf\u5b8c\u6574\u5217\u8868",
             },
         ],
         "warning_codes": [],
@@ -3518,8 +3518,8 @@ _FIELD_DEFINITIONS: Dict[str, Dict[str, Any]] = {
         ],
         "docs": [
             {
-                "label": "完整指南：环境变量完整列表",
-                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#环境变量完整列表",
+                "label": "\u5b8c\u6574\u6307\u5357: \u73af\u5883\u53d8\u91cf\u5b8c\u6574\u5217\u8868",
+                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#\u73af\u5883\u53d8\u91cf\u5b8c\u6574\u5217\u8868",
             },
         ],
         "warning_codes": [],
@@ -3545,12 +3545,12 @@ _FIELD_DEFINITIONS: Dict[str, Dict[str, Any]] = {
         ],
         "docs": [
             {
-                "label": "AnalysisContextPack P6 文档、迁移与回滚",
-                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/analysis-context-pack.md#p6-文档迁移与回滚",
+                "label": "AnalysisContextPack P6 docs、\u8fc1\u79fb\u4e0e\u56de\u6eda",
+                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/analysis-context-pack.md#p6-docs\u8fc1\u79fb\u4e0e\u56de\u6eda",
             },
             {
-                "label": "完整指南：其他配置",
-                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#其他配置",
+                "label": "\u5b8c\u6574\u6307\u5357: otherconfig",
+                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#otherconfig",
             },
         ],
         "warning_codes": [],
@@ -3575,8 +3575,8 @@ _FIELD_DEFINITIONS: Dict[str, Dict[str, Any]] = {
         ],
         "docs": [
             {
-                "label": "完整指南：环境变量完整列表",
-                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#环境变量完整列表",
+                "label": "\u5b8c\u6574\u6307\u5357: \u73af\u5883\u53d8\u91cf\u5b8c\u6574\u5217\u8868",
+                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#\u73af\u5883\u53d8\u91cf\u5b8c\u6574\u5217\u8868",
             },
         ],
         "warning_codes": [],
@@ -3601,8 +3601,8 @@ _FIELD_DEFINITIONS: Dict[str, Dict[str, Any]] = {
         ],
         "docs": [
             {
-                "label": "完整指南：回测配置",
-                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#回测功能",
+                "label": "\u5b8c\u6574\u6307\u5357: backtestconfig",
+                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#backtest\u529f\u80fd",
             },
         ],
         "warning_codes": [],
@@ -3628,8 +3628,8 @@ _FIELD_DEFINITIONS: Dict[str, Dict[str, Any]] = {
         ],
         "docs": [
             {
-                "label": "完整指南：回测配置",
-                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#回测功能",
+                "label": "\u5b8c\u6574\u6307\u5357: backtestconfig",
+                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#backtest\u529f\u80fd",
             },
         ],
         "warning_codes": [],
@@ -3654,8 +3654,8 @@ _FIELD_DEFINITIONS: Dict[str, Dict[str, Any]] = {
         ],
         "docs": [
             {
-                "label": "完整指南：回测配置",
-                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#回测功能",
+                "label": "\u5b8c\u6574\u6307\u5357: backtestconfig",
+                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#backtest\u529f\u80fd",
             },
         ],
         "warning_codes": [],
@@ -3679,8 +3679,8 @@ _FIELD_DEFINITIONS: Dict[str, Dict[str, Any]] = {
         ],
         "docs": [
             {
-                "label": "完整指南：回测配置",
-                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#回测功能",
+                "label": "\u5b8c\u6574\u6307\u5357: backtestconfig",
+                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#backtest\u529f\u80fd",
             },
         ],
         "warning_codes": [],
@@ -3705,8 +3705,8 @@ _FIELD_DEFINITIONS: Dict[str, Dict[str, Any]] = {
         ],
         "docs": [
             {
-                "label": "完整指南：回测配置",
-                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#回测功能",
+                "label": "\u5b8c\u6574\u6307\u5357: backtestconfig",
+                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#backtest\u529f\u80fd",
             },
         ],
         "warning_codes": [],
@@ -3731,8 +3731,8 @@ _FIELD_DEFINITIONS: Dict[str, Dict[str, Any]] = {
         ],
         "docs": [
             {
-                "label": "完整指南：Agent 配置",
-                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#环境变量完整列表",
+                "label": "\u5b8c\u6574\u6307\u5357: Agent config",
+                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#\u73af\u5883\u53d8\u91cf\u5b8c\u6574\u5217\u8868",
             },
         ],
         "warning_codes": [],
@@ -3760,7 +3760,7 @@ _FIELD_DEFINITIONS: Dict[str, Dict[str, Any]] = {
         ],
         "docs": [
             {
-                "label": "LLM 配置指南",
+                "label": "LLM config\u6307\u5357",
                 "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/LLM_CONFIG_GUIDE.md",
             },
         ],
@@ -3786,8 +3786,8 @@ _FIELD_DEFINITIONS: Dict[str, Dict[str, Any]] = {
         ],
         "docs": [
             {
-                "label": "完整指南：Agent 配置",
-                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#环境变量完整列表",
+                "label": "\u5b8c\u6574\u6307\u5357: Agent config",
+                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#\u73af\u5883\u53d8\u91cf\u5b8c\u6574\u5217\u8868",
             },
         ],
         "warning_codes": [],
@@ -3813,8 +3813,8 @@ _FIELD_DEFINITIONS: Dict[str, Dict[str, Any]] = {
         ],
         "docs": [
             {
-                "label": "完整指南：Agent 配置",
-                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#环境变量完整列表",
+                "label": "\u5b8c\u6574\u6307\u5357: Agent config",
+                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#\u73af\u5883\u53d8\u91cf\u5b8c\u6574\u5217\u8868",
             },
         ],
         "warning_codes": [],
@@ -3839,8 +3839,8 @@ _FIELD_DEFINITIONS: Dict[str, Dict[str, Any]] = {
         ],
         "docs": [
             {
-                "label": "完整指南：Agent 配置",
-                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#环境变量完整列表",
+                "label": "\u5b8c\u6574\u6307\u5357: Agent config",
+                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#\u73af\u5883\u53d8\u91cf\u5b8c\u6574\u5217\u8868",
             },
         ],
         "warning_codes": [],
@@ -3865,8 +3865,8 @@ _FIELD_DEFINITIONS: Dict[str, Dict[str, Any]] = {
         ],
         "docs": [
             {
-                "label": "完整指南：Agent 配置",
-                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#环境变量完整列表",
+                "label": "\u5b8c\u6574\u6307\u5357: Agent config",
+                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#\u73af\u5883\u53d8\u91cf\u5b8c\u6574\u5217\u8868",
             },
         ],
         "warning_codes": [],
@@ -3894,8 +3894,8 @@ _FIELD_DEFINITIONS: Dict[str, Dict[str, Any]] = {
         ],
         "docs": [
             {
-                "label": "完整指南：Agent 配置",
-                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#环境变量完整列表",
+                "label": "\u5b8c\u6574\u6307\u5357: Agent config",
+                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#\u73af\u5883\u53d8\u91cf\u5b8c\u6574\u5217\u8868",
             },
         ],
         "warning_codes": [],
@@ -3925,8 +3925,8 @@ _FIELD_DEFINITIONS: Dict[str, Dict[str, Any]] = {
         ],
         "docs": [
             {
-                "label": "完整指南：Agent 配置",
-                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#环境变量完整列表",
+                "label": "\u5b8c\u6574\u6307\u5357: Agent config",
+                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#\u73af\u5883\u53d8\u91cf\u5b8c\u6574\u5217\u8868",
             },
         ],
         "warning_codes": [],
@@ -3951,8 +3951,8 @@ _FIELD_DEFINITIONS: Dict[str, Dict[str, Any]] = {
         ],
         "docs": [
             {
-                "label": "完整指南：Agent 配置",
-                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#环境变量完整列表",
+                "label": "\u5b8c\u6574\u6307\u5357: Agent config",
+                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#\u73af\u5883\u53d8\u91cf\u5b8c\u6574\u5217\u8868",
             },
         ],
         "warning_codes": [],
@@ -3977,8 +3977,8 @@ _FIELD_DEFINITIONS: Dict[str, Dict[str, Any]] = {
         ],
         "docs": [
             {
-                "label": "完整指南：Agent 配置",
-                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#环境变量完整列表",
+                "label": "\u5b8c\u6574\u6307\u5357: Agent config",
+                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#\u73af\u5883\u53d8\u91cf\u5b8c\u6574\u5217\u8868",
             },
         ],
         "warning_codes": [],
@@ -4003,8 +4003,8 @@ _FIELD_DEFINITIONS: Dict[str, Dict[str, Any]] = {
         ],
         "docs": [
             {
-                "label": "完整指南：Agent 配置",
-                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#环境变量完整列表",
+                "label": "\u5b8c\u6574\u6307\u5357: Agent config",
+                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#\u73af\u5883\u53d8\u91cf\u5b8c\u6574\u5217\u8868",
             },
         ],
         "warning_codes": [],
@@ -4029,8 +4029,8 @@ _FIELD_DEFINITIONS: Dict[str, Dict[str, Any]] = {
         ],
         "docs": [
             {
-                "label": "完整指南：Agent 配置",
-                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#环境变量完整列表",
+                "label": "\u5b8c\u6574\u6307\u5357: Agent config",
+                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#\u73af\u5883\u53d8\u91cf\u5b8c\u6574\u5217\u8868",
             },
         ],
         "warning_codes": [],
@@ -4055,8 +4055,8 @@ _FIELD_DEFINITIONS: Dict[str, Dict[str, Any]] = {
         ],
         "docs": [
             {
-                "label": "完整指南：Agent 配置",
-                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#环境变量完整列表",
+                "label": "\u5b8c\u6574\u6307\u5357: Agent config",
+                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#\u73af\u5883\u53d8\u91cf\u5b8c\u6574\u5217\u8868",
             },
         ],
         "warning_codes": [],
@@ -4081,8 +4081,8 @@ _FIELD_DEFINITIONS: Dict[str, Dict[str, Any]] = {
         ],
         "docs": [
             {
-                "label": "完整指南：Agent 配置",
-                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#环境变量完整列表",
+                "label": "\u5b8c\u6574\u6307\u5357: Agent config",
+                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#\u73af\u5883\u53d8\u91cf\u5b8c\u6574\u5217\u8868",
             },
         ],
         "warning_codes": [],
@@ -4110,8 +4110,8 @@ _FIELD_DEFINITIONS: Dict[str, Dict[str, Any]] = {
         ],
         "docs": [
             {
-                "label": "完整指南：Agent 配置",
-                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#环境变量完整列表",
+                "label": "\u5b8c\u6574\u6307\u5357: Agent config",
+                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#\u73af\u5883\u53d8\u91cf\u5b8c\u6574\u5217\u8868",
             },
         ],
         "warning_codes": [],
@@ -4136,12 +4136,12 @@ _FIELD_DEFINITIONS: Dict[str, Dict[str, Any]] = {
         ],
         "docs": [
             {
-                "label": "LLM 配置指南：问股可见对话上下文压缩",
-                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/LLM_CONFIG_GUIDE.md#问股可见对话上下文压缩",
+                "label": "LLM config\u6307\u5357: ask-stock\u53ef\u89c1\u5bf9\u8bdd\u4e0a\u4e0b\u6587\u538b\u7f29",
+                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/LLM_CONFIG_GUIDE.md#ask-stock\u53ef\u89c1\u5bf9\u8bdd\u4e0a\u4e0b\u6587\u538b\u7f29",
             },
             {
-                "label": "完整指南：环境变量完整列表",
-                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#环境变量完整列表",
+                "label": "\u5b8c\u6574\u6307\u5357: \u73af\u5883\u53d8\u91cf\u5b8c\u6574\u5217\u8868",
+                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#\u73af\u5883\u53d8\u91cf\u5b8c\u6574\u5217\u8868",
             },
         ],
         "warning_codes": [],
@@ -4157,9 +4157,9 @@ _FIELD_DEFINITIONS: Dict[str, Dict[str, Any]] = {
         "is_editable": True,
         "default_value": "balanced",
         "options": [
-            {"label": "成本优先", "value": "cost"},
-            {"label": "均衡推荐", "value": "balanced"},
-            {"label": "长上下文原文优先", "value": "long_context_raw_first"},
+            {"label": "\u6210\u672c\u4f18\u5148", "value": "cost"},
+            {"label": "\u5747\u8861\u63a8\u8350", "value": "balanced"},
+            {"label": "\u957f\u4e0a\u4e0b\u6587\u539f\u6587\u4f18\u5148", "value": "long_context_raw_first"},
         ],
         "validation": {"enum": list(AGENT_CONTEXT_COMPRESSION_PROFILES.keys())},
         "display_order": 73,
@@ -4171,12 +4171,12 @@ _FIELD_DEFINITIONS: Dict[str, Dict[str, Any]] = {
         ],
         "docs": [
             {
-                "label": "LLM 配置指南：问股可见对话上下文压缩",
-                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/LLM_CONFIG_GUIDE.md#问股可见对话上下文压缩",
+                "label": "LLM config\u6307\u5357: ask-stock\u53ef\u89c1\u5bf9\u8bdd\u4e0a\u4e0b\u6587\u538b\u7f29",
+                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/LLM_CONFIG_GUIDE.md#ask-stock\u53ef\u89c1\u5bf9\u8bdd\u4e0a\u4e0b\u6587\u538b\u7f29",
             },
             {
-                "label": "完整指南：环境变量完整列表",
-                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#环境变量完整列表",
+                "label": "\u5b8c\u6574\u6307\u5357: \u73af\u5883\u53d8\u91cf\u5b8c\u6574\u5217\u8868",
+                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#\u73af\u5883\u53d8\u91cf\u5b8c\u6574\u5217\u8868",
             },
         ],
         "warning_codes": [],
@@ -4201,12 +4201,12 @@ _FIELD_DEFINITIONS: Dict[str, Dict[str, Any]] = {
         ],
         "docs": [
             {
-                "label": "LLM 配置指南：问股可见对话上下文压缩",
-                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/LLM_CONFIG_GUIDE.md#问股可见对话上下文压缩",
+                "label": "LLM config\u6307\u5357: ask-stock\u53ef\u89c1\u5bf9\u8bdd\u4e0a\u4e0b\u6587\u538b\u7f29",
+                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/LLM_CONFIG_GUIDE.md#ask-stock\u53ef\u89c1\u5bf9\u8bdd\u4e0a\u4e0b\u6587\u538b\u7f29",
             },
             {
-                "label": "完整指南：环境变量完整列表",
-                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#环境变量完整列表",
+                "label": "\u5b8c\u6574\u6307\u5357: \u73af\u5883\u53d8\u91cf\u5b8c\u6574\u5217\u8868",
+                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#\u73af\u5883\u53d8\u91cf\u5b8c\u6574\u5217\u8868",
             },
         ],
         "warning_codes": [],
@@ -4231,12 +4231,12 @@ _FIELD_DEFINITIONS: Dict[str, Dict[str, Any]] = {
         ],
         "docs": [
             {
-                "label": "LLM 配置指南：问股可见对话上下文压缩",
-                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/LLM_CONFIG_GUIDE.md#问股可见对话上下文压缩",
+                "label": "LLM config\u6307\u5357: ask-stock\u53ef\u89c1\u5bf9\u8bdd\u4e0a\u4e0b\u6587\u538b\u7f29",
+                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/LLM_CONFIG_GUIDE.md#ask-stock\u53ef\u89c1\u5bf9\u8bdd\u4e0a\u4e0b\u6587\u538b\u7f29",
             },
             {
-                "label": "完整指南：环境变量完整列表",
-                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#环境变量完整列表",
+                "label": "\u5b8c\u6574\u6307\u5357: \u73af\u5883\u53d8\u91cf\u5b8c\u6574\u5217\u8868",
+                "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#\u73af\u5883\u53d8\u91cf\u5b8c\u6574\u5217\u8868",
             },
         ],
         "warning_codes": [],
@@ -4261,7 +4261,7 @@ _FIELD_DEFINITIONS: Dict[str, Dict[str, Any]] = {
         ],
         "docs": [
             {
-                "label": "告警中心文档",
+                "label": "\u544a\u8b66Medium\u5fc3docs",
                 "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/alerts.md",
             },
         ],
@@ -4287,7 +4287,7 @@ _FIELD_DEFINITIONS: Dict[str, Dict[str, Any]] = {
         ],
         "docs": [
             {
-                "label": "告警中心文档",
+                "label": "\u544a\u8b66Medium\u5fc3docs",
                 "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/alerts.md",
             },
         ],
@@ -4318,7 +4318,7 @@ _FIELD_DEFINITIONS: Dict[str, Dict[str, Any]] = {
         ],
         "docs": [
             {
-                "label": "告警中心文档",
+                "label": "\u544a\u8b66Medium\u5fc3docs",
                 "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/alerts.md",
             },
         ],
@@ -4328,47 +4328,47 @@ _FIELD_DEFINITIONS: Dict[str, Dict[str, Any]] = {
 
 _DOC_FULL_GUIDE_ENV = [
     {
-        "label": "完整指南：环境变量完整列表",
-        "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#环境变量完整列表",
+        "label": "\u5b8c\u6574\u6307\u5357: \u73af\u5883\u53d8\u91cf\u5b8c\u6574\u5217\u8868",
+        "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#\u73af\u5883\u53d8\u91cf\u5b8c\u6574\u5217\u8868",
     },
 ]
 
 _DOC_FULL_GUIDE_SEARCH = [
     {
-        "label": "完整指南：搜索服务配置",
-        "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#搜索服务配置",
+        "label": "\u5b8c\u6574\u6307\u5357: search\u670d\u52a1config",
+        "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#search\u670d\u52a1config",
     },
 ]
 
 _DOC_FULL_GUIDE_DATA_SOURCE = [
     {
-        "label": "完整指南：数据源配置",
-        "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#数据源配置",
+        "label": "\u5b8c\u6574\u6307\u5357: data sourceconfig",
+        "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#data sourceconfig",
     },
 ]
 
 _DOC_FULL_GUIDE_NOTIFICATION = [
     {
-        "label": "完整指南：通知渠道配置",
-        "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#通知渠道详细配置",
+        "label": "\u5b8c\u6574\u6307\u5357: notification channelconfig",
+        "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#notification channel\u8be6\u7ec6config",
     },
 ]
 
 _DOC_LLM_CONFIG = [
     {
-        "label": "LLM 配置指南",
+        "label": "LLM config\u6307\u5357",
         "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/LLM_CONFIG_GUIDE.md",
     },
     {
-        "label": "LLM 服务商配置速查",
+        "label": "LLM \u670d\u52a1\u5546config\u901fcheck",
         "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/llm-providers.md",
     },
 ]
 
 _DOC_CUSTOM_WEBHOOK = [
     {
-        "label": "完整指南：自定义 Webhook",
-        "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#自定义-webhook",
+        "label": "\u5b8c\u6574\u6307\u5357: \u81ea\u5b9a\u4e49 Webhook",
+        "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/full-guide.md#\u81ea\u5b9a\u4e49-webhook",
     },
 ]
 
@@ -4671,7 +4671,7 @@ _FIELD_HELP_METADATA: Dict[str, Dict[str, Any]] = {
         "docs": [
             *_DOC_FULL_GUIDE_NOTIFICATION,
             {
-                "label": "飞书机器人配置专题",
+                "label": "Feishu\u673a\u5668\u4ebaconfig\u4e13\u9898",
                 "href": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/main/docs/bot/feishu-bot-config.md",
             },
         ],
@@ -4680,7 +4680,7 @@ _FIELD_HELP_METADATA: Dict[str, Dict[str, Any]] = {
     "FEISHU_WEBHOOK_KEYWORD": {
         "help_key": "settings.notification.FEISHU_WEBHOOK_URL",
         "examples": [
-            "FEISHU_WEBHOOK_KEYWORD=股票日报",
+            "FEISHU_WEBHOOK_KEYWORD=\u80a1\u7968\u65e5\u62a5",
         ],
         "docs": _DOC_FULL_GUIDE_NOTIFICATION,
         "warning_codes": [],

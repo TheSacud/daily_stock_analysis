@@ -1,8 +1,8 @@
-# Hot Theme Strategy / 热点题材
+﻿# Hot Theme Strategy
 
 name: hot_theme
-display_name: 热点题材
-description: 跟踪政策、产业和市场热点，判断题材强度、板块扩散和个股相对强弱。
+display_name: Hot Theme
+description: Tracks policy, industry, and market themes to judge theme strength, sector diffusion, and stock-level relative strength.
 category: framework
 core_rules: [2, 3, 5, 7]
 required_tools:
@@ -10,45 +10,45 @@ required_tools:
   - search_stock_news
   - get_realtime_quote
   - analyze_trend
-aliases: [热点, 题材, 热点题材]
+aliases: [hot theme, theme, market theme]
 default_priority: 35
 market_regimes: [sector_hot]
 
 instructions: |
-  **热点题材策略（Hot Theme Strategy）**
+  **Hot Theme Strategy**
 
-  适用场景：
-  - 市场出现明确政策、产业、技术路线或资金抱团热点。
-  - 需要判断个股是否真正受益于热点，而不是单纯蹭概念。
+  Use cases:
+  - The market has a clear policy, industry, technology-roadmap, or crowded-fund theme.
+  - Judge whether the stock truly benefits from the theme or is only loosely associated with it.
 
-  分析框架：
+  Analysis framework:
 
-  1. **热点强度**
-     - 使用 `get_sector_rankings` 判断相关板块是否在近期涨幅、成交额或人气上处于前列。
-     - 观察热点是否从少数核心股扩散到板块内多只个股。
-     - 若只有单股异动、板块未共振，降低信号权重。
+  1. **Theme strength**
+     - Use `get_sector_rankings` to judge whether the related sector leads on gains, turnover, or attention.
+     - Watch whether the theme spreads from a few core stocks to a wider group.
+     - If only one stock moves and the sector does not confirm, lower signal weight.
 
-  2. **个股相关性**
-     - 使用 `search_stock_news` 检查公司业务、订单、产能、客户、公告是否与热点直接相关。
-     - 区分“实质受益”“间接受益”“概念关联较弱”。
-     - 概念关联弱但涨幅过大时，应提示题材兑现风险。
+  2. **Stock relevance**
+     - Use `search_stock_news` to check whether the company's business, orders, capacity, customers, or filings are directly related to the theme.
+     - Separate direct beneficiaries, indirect beneficiaries, and weak concept links.
+     - If relevance is weak but the stock has already rallied sharply, flag theme-realization risk.
 
-  3. **相对强弱**
-     - 使用 `get_realtime_quote` 与 `analyze_trend` 判断个股涨幅、量比、换手率是否强于板块平均。
-     - 强势热点股通常表现为放量、换手活跃、回调不破关键均线。
+  3. **Relative strength**
+     - Use `get_realtime_quote` and `analyze_trend` to compare the stock's move, volume ratio, and turnover with the sector average.
+     - Strong theme stocks usually have expanding volume, active turnover, and pullbacks that hold key averages.
 
-  4. **节奏与风险**
-     - 不在连续加速、高乖离率位置追涨。
-     - 若新闻集中在“已经大涨”“资金追捧”“龙虎榜游资博弈”，需要警惕短线情绪顶。
-     - 重大利空、监管问询、澄清公告可一票降低评级。
+  4. **Timing and risk**
+     - Do not chase after continuous acceleration or excessive bias.
+     - If headlines focus on prior gains, speculative trading, or crowded capital flows, watch for a short-term sentiment top.
+     - Major bad news, regulatory inquiries, or clarification announcements can sharply lower the rating.
 
-  输出要求：
-  - 明确当前热点阶段：启动 / 扩散 / 分化 / 退潮。
-  - 说明个股与热点的实质相关性。
-  - 给出可执行触发条件：回踩承接、放量突破、板块继续共振或退潮止损。
+  Output requirements:
+  - Classify the theme stage as launch, diffusion, divergence, or fading.
+  - Explain the stock's substantive relevance to the theme.
+  - Provide executable triggers: pullback support, volume breakout, continued sector confirmation, or fading-theme stop.
 
-  评分调整建议：
-  - 热点处于启动或扩散期，且个股实质受益：`sentiment_score +12`
-  - 个股强于板块并有量能确认：额外 `+6`
-  - 热点进入分化或退潮：`sentiment_score -8`
-  - 仅概念蹭热点且乖离率过高：`sentiment_score -12`
+  Suggested score adjustments:
+  - Theme in launch or diffusion stage with substantive stock benefit: `sentiment_score +12`
+  - Stock stronger than sector with volume confirmation: additional `+6`
+  - Theme entering divergence or fading stage: `sentiment_score -8`
+  - Weak concept link with excessive bias: `sentiment_score -12`

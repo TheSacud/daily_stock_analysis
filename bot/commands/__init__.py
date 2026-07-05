@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 """
 ===================================
-命令处理器模块
+command\u5904\u7406\u5668\u6a21chunks
 ===================================
 
-包含所有机器人命令的实现。
+\u5305\u542b\u6240\u6709\u673a\u5668\u4ebacommand\u7684\u5b9e\u73b0.
 """
 
 from bot.commands.base import BotCommand

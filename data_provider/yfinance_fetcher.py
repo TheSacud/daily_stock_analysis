@@ -1,17 +1,17 @@
 # -*- coding: utf-8 -*-
 """
 ===================================
-YfinanceFetcher - 兜底数据源 (Priority 4)
+YfinanceFetcher - \u515c\u5e95data source (Priority 4)
 ===================================
 
-数据来源：Yahoo Finance（通过 yfinance 库）
-特点：国际数据源、可能有延迟或缺失
-定位：当所有国内数据源都失败时的最后保障
+\u6570\u636esource: Yahoo Finance (\u901a\u8fc7 yfinance library)
+\u7279\u70b9: \u56fd\u9645data source、\u53ef\u80fd\u6709\u5ef6\u8fdfor\u7f3a\u5931
+\u5b9acharacters: \u5f53\u6240\u6709\u56fd\u5185data source\u90fdfailed\u65f6\u7684\u6700\u540e\u4fdd\u969c
 
-关键策略：
-1. 自动将 A 股代码转换为 yfinance 格式（.SS / .SZ）
-2. 处理 Yahoo Finance 的数据格式差异
-3. 失败后指数退避重试
+\u5173\u952estrategy:
+1. \u81ea\u52a8\u5c06 A \u80a1code\u8f6c\u6362\u4e3a yfinance \u683c\u5f0f (.SS / .SZ)
+2. \u5904\u7406 Yahoo Finance data\u683c\u5f0f\u5dee\u5f02
+3. failed\u540eindex\u9000\u907f\u91cd\u8bd5
 """
 
 import csv
@@ -36,14 +36,14 @@ from .realtime_types import UnifiedRealtimeQuote, RealtimeSource
 from .us_index_mapping import get_us_index_yf_symbol, is_us_stock_code
 from src.services.market_symbol_utils import get_suffix_market, is_suffix_market_symbol
 
-# 可选导入本地股票映射补丁，若缺失则使用空字典兜底
+# optional\u5bfc\u5165\u672c\u5730\u80a1\u7968\u6620\u5c04\u8865\u4e01; \u82e5\u7f3a\u5931\u5219\u4f7f\u7528\u7a7a\u5b57\u5178\u515c\u5e95
 try:
     from src.data.stock_mapping import STOCK_NAME_MAP, is_meaningful_stock_name
 except (ImportError, ModuleNotFoundError):
     STOCK_NAME_MAP = {}
 
     def is_meaningful_stock_name(name: str | None, stock_code: str) -> bool:
-        """简单的名称有效性校验兜底"""
+        """\u7b80\u5355\u7684name\u6709\u6548\u6821\u9a8c\u515c\u5e95"""
         if not name:
             return False
         n = str(name).strip()
@@ -56,27 +56,27 @@ logger = logging.getLogger(__name__)
 
 class YfinanceFetcher(BaseFetcher):
     """
-    Yahoo Finance 数据源实现
+    Yahoo Finance data source\u5b9e\u73b0
 
-    优先级：4（最低，作为兜底）
-    数据来源：Yahoo Finance
+    \u4f18\u5148\u7ea7: 4 (\u6700Low; \u4f5c\u4e3a\u515c\u5e95)
+    \u6570\u636esource: Yahoo Finance
 
-    关键策略：
-    - 自动转换股票代码格式
-    - 处理时区和数据格式差异
-    - 失败后指数退避重试
+    \u5173\u952estrategy:
+    - \u81ea\u52a8\u8f6c\u6362stock code\u683c\u5f0f
+    - \u5904\u7406\u65f6\u533a\u548c\u6570\u636e\u683c\u5f0f\u5dee\u5f02
+    - failed\u540eindex\u9000\u907f\u91cd\u8bd5
 
-    注意事项：
-    - A 股数据可能有延迟
-    - 某些股票可能无数据
-    - 数据精度可能与国内源略有差异
+    \u6ce8\u610f\u4e8b\u9879:
+    - A \u80a1\u6570\u636e\u53ef\u80fd\u6709\u5ef6\u8fdf
+    - \u67d0\u4e9b\u80a1\u7968\u53ef\u80fdno data
+    - \u6570\u636e\u7cbe\u5ea6\u53ef\u80fd\u4e0e\u56fd\u5185\u6e90\u7565\u6709\u5dee\u5f02
     """
 
     name = "YfinanceFetcher"
     priority = int(os.getenv("YFINANCE_PRIORITY", "4"))
 
     def __init__(self):
-        """初始化 YfinanceFetcher"""
+        """\u521d\u59cb\u5316 YfinanceFetcher"""
         pass
 
     @staticmethod
@@ -95,19 +95,19 @@ class YfinanceFetcher(BaseFetcher):
 
     def _convert_stock_code(self, stock_code: str) -> str:
         """
-        转换股票代码为 Yahoo Finance 格式
+        \u8f6c\u6362stock code\u4e3a Yahoo Finance \u683c\u5f0f
 
-        Yahoo Finance 代码格式：
-        - A股沪市：600519.SS (Shanghai Stock Exchange)
-        - A股深市：000001.SZ (Shenzhen Stock Exchange)
-        - 港股：0700.HK (Hong Kong Stock Exchange)
-        - 美股：AAPL, TSLA, GOOGL (无需后缀)
+        Yahoo Finance code\u683c\u5f0f:
+        - A-share\u6caa\u5e02: 600519.SS (Shanghai Stock Exchange)
+        - A-share\u6df1\u5e02: 000001.SZ (Shenzhen Stock Exchange)
+        - HK stock: 0700.HK (Hong Kong Stock Exchange)
+        - US stock: AAPL, TSLA, GOOGL (\u65e0\u9700\u540e\u7f00)
 
         Args:
-            stock_code: 原始代码，如 '600519', 'hk00700', 'AAPL'
+            stock_code: \u539f\u59cbcode; \u5982 '600519', 'hk00700', 'AAPL'
 
         Returns:
-            Yahoo Finance 格式代码
+            Yahoo Finance \u683c\u5f0fcode
 
         Examples:
             >>> fetcher._convert_stock_code('600519')
@@ -119,34 +119,34 @@ class YfinanceFetcher(BaseFetcher):
         """
         code = stock_code.strip().upper()
 
-        # 美股指数：映射到 Yahoo Finance 符号（如 SPX -> ^GSPC）
+        # US stockindex: \u6620\u5c04\u5230 Yahoo Finance \u7b26\u53f7 (\u5982 SPX -> ^GSPC)
         yf_symbol, _ = get_us_index_yf_symbol(code)
         if yf_symbol:
-            logger.debug(f"识别为美股指数: {code} -> {yf_symbol}")
+            logger.debug(f"\u8bc6\u522b\u4e3aUS stockindex: {code} -> {yf_symbol}")
             return yf_symbol
 
-        # 美股：1-5 个大写字母（可选 .X 后缀），原样返回
+        # US stock: 1-5 \u4e2a\u5927\u5199\u5b57\u6bcd (optional .X \u540e\u7f00); \u539f\u6837\u8fd4\u56de
         if is_us_stock_code(code):
-            logger.debug(f"识别为美股代码: {code}")
+            logger.debug(f"\u8bc6\u522b\u4e3aUS stockcode: {code}")
             return code
 
-        # 日股/韩股/台股 MVP：显式 Yahoo Finance suffix-only 代码，原样传给 Yahoo。
+        # JP stock/KR stock/TW stock MVP: \u663e\u5f0f Yahoo Finance suffix-only code; \u539f\u6837\u4f20\u7ed9 Yahoo.
         if self._is_jp_kr_suffix_stock(code) or self._is_tw_suffix_stock(code):
-            logger.debug(f"识别为日韩台 Yahoo suffix 代码: {code}")
+            logger.debug(f"\u8bc6\u522b\u4e3a\u65e5\u97e9\u53f0 Yahoo suffix code: {code}")
             return code
 
-        # 港股：hk前缀 -> .HK后缀
+        # HK stock: hkprefix -> .HK\u540e\u7f00
         if code.startswith('HK'):
-            hk_code = code[2:].lstrip('0') or '0'  # 去除前导0，但保留至少一个0
-            hk_code = hk_code.zfill(4)  # 补齐到4位
-            logger.debug(f"转换港股代码: {stock_code} -> {hk_code}.HK")
+            hk_code = code[2:].lstrip('0') or '0'  # \u53bb\u9664\u524d\u5bfc0; \u4f46\u4fdd\u7559\u81f3\u5c11\u4e00\u4e2a0
+            hk_code = hk_code.zfill(4)  # \u8865\u9f50\u52304characters
+            logger.debug(f"\u8f6c\u6362HK stockcode: {stock_code} -> {hk_code}.HK")
             return f"{hk_code}.HK"
 
-        # 已经包含后缀的情况
+        # \u5df2\u7ecf\u5305\u542b\u540e\u7f00\u7684\u60c5\u51b5
         if '.SS' in code or '.SZ' in code or '.HK' in code or '.BJ' in code:
             return code
 
-        # 去除可能的 .SH 后缀
+        # \u53bb\u9664\u53ef\u80fd\u7684 .SH \u540e\u7f00
         code = code.replace('.SH', '')
 
         # ETF: Shanghai ETF (51xx, 52xx, 56xx, 58xx) -> .SS; Shenzhen ETF (15xx, 16xx, 18xx) -> .SZ
@@ -161,13 +161,13 @@ class YfinanceFetcher(BaseFetcher):
             base = code.split('.')[0] if '.' in code else code
             return f"{base}.BJ"
 
-        # A股：根据代码前缀判断市场
+        # A-share: \u6839\u636ecodeprefix\u5224\u65admarket
         if code.startswith(('600', '601', '603', '688')):
             return f"{code}.SS"
         elif code.startswith(('000', '002', '300')):
             return f"{code}.SZ"
         else:
-            logger.warning(f"无法确定股票 {code} 的市场，默认使用深市")
+            logger.warning(f"Unable to determine\u80a1\u7968 {code} \u7684market; default\u4f7f\u7528\u6df1\u5e02")
             return f"{code}.SZ"
 
     @retry(
@@ -178,34 +178,34 @@ class YfinanceFetcher(BaseFetcher):
     )
     def _fetch_raw_data(self, stock_code: str, start_date: str, end_date: str) -> pd.DataFrame:
         """
-        从 Yahoo Finance 获取原始数据
+        \u4ece Yahoo Finance \u83b7\u53d6\u539f\u59cb\u6570\u636e
 
-        使用 yfinance.download() 获取历史数据
+        \u4f7f\u7528 yfinance.download() \u83b7\u53d6history\u6570\u636e
 
-        流程：
-        1. 转换股票代码格式
-        2. 调用 yfinance API
-        3. 处理返回数据
+        \u6d41\u7a0b:
+        1. \u8f6c\u6362stock code\u683c\u5f0f
+        2. \u8c03\u7528 yfinance API
+        3. \u5904\u7406\u8fd4\u56de\u6570\u636e
         """
         import yfinance as yf
 
-        # 转换代码格式
+        # \u8f6c\u6362code\u683c\u5f0f
         yf_code = self._convert_stock_code(stock_code)
 
-        logger.debug(f"调用 yfinance.download({yf_code}, {start_date}, {end_date})")
+        logger.debug(f"\u8c03\u7528 yfinance.download({yf_code}, {start_date}, {end_date})")
 
         try:
-            # 使用 yfinance 下载数据
+            # \u4f7f\u7528 yfinance \u4e0b\u8f7d\u6570\u636e
             df = yf.download(
                 tickers=yf_code,
                 start=start_date,
                 end=end_date,
-                progress=False,  # 禁止进度条
-                auto_adjust=True,  # 自动调整价格（复权）
+                progress=False,  # \u7981\u6b62\u8fdb\u5ea6\u6761
+                auto_adjust=True,  # \u81ea\u52a8\u8c03\u6574price (\u590d\u6743)
                 multi_level_index=True
             )
 
-            # 筛选出 yf_code 的列, 避免多只股票数据混淆
+            # \u7b5b\u9009\u51fa yf_code \u7684\u5217, \u907f\u514d\u591astocks\u6570\u636e\u6df7\u6dc6
             if isinstance(df.columns, pd.MultiIndex) and len(df.columns) > 1:
                 ticker_level = df.columns.get_level_values(1)
                 mask = ticker_level == yf_code
@@ -213,41 +213,41 @@ class YfinanceFetcher(BaseFetcher):
                     df = df.loc[:, mask].copy()
 
             if df.empty:
-                raise DataFetchError(f"Yahoo Finance 未查询到 {stock_code} 的数据")
+                raise DataFetchError(f"Yahoo Finance found no data for {stock_code} data")
 
             return df
 
         except Exception as e:
             if isinstance(e, DataFetchError):
                 raise
-            raise DataFetchError(f"Yahoo Finance 获取数据失败: {e}") from e
+            raise DataFetchError(f"Yahoo Finance data fetch failed: {e}") from e
 
     def _normalize_data(self, df: pd.DataFrame, stock_code: str) -> pd.DataFrame:
         """
-        标准化 Yahoo Finance 数据
+        \u6807\u51c6\u5316 Yahoo Finance \u6570\u636e
 
-        yfinance 返回的列名：
-        Open, High, Low, Close, Volume（索引是日期）
+        yfinance \u8fd4\u56de\u7684\u5217\u540d:
+        Open, High, Low, Close, Volume (\u7d22\u5f15\u662fdate)
 
-        注意：新版 yfinance 返回 MultiIndex 列名，如 ('Close', 'AMD')
-        需要先扁平化列名再进行处理
+        \u6ce8\u610f: \u65b0\u7248 yfinance \u8fd4\u56de MultiIndex \u5217\u540d; \u5982 ('Close', 'AMD')
+        \u9700\u8981\u5148\u6241\u5e73\u5316\u5217\u540d\u518d\u8fdb\u884c\u5904\u7406
 
-        需要映射到标准列名：
+        \u9700\u8981\u6620\u5c04\u5230\u6807\u51c6\u5217\u540d:
         date, open, high, low, close, volume, amount, pct_chg
         """
         df = df.copy()
 
-        # 处理 MultiIndex 列名（新版 yfinance 返回格式）
-        # 例如: ('Close', 'AMD') -> 'Close'
+        # \u5904\u7406 MultiIndex \u5217\u540d (\u65b0\u7248 yfinance \u8fd4\u56de\u683c\u5f0f)
+        # \u4f8b\u5982: ('Close', 'AMD') -> 'Close'
         if isinstance(df.columns, pd.MultiIndex):
-            logger.debug("检测到 MultiIndex 列名，进行扁平化处理")
-            # 取第一级列名（Price level: Close, High, Low, etc.）
+            logger.debug("\u68c0\u6d4b\u5230 MultiIndex \u5217\u540d; \u8fdb\u884c\u6241\u5e73\u5316\u5904\u7406")
+            # \u53d6\u7b2c\u4e00\u7ea7\u5217\u540d (Price level: Close, High, Low, etc.)
             df.columns = df.columns.get_level_values(0)
 
-        # 重置索引，将日期从索引变为列
+        # \u91cd\u7f6e\u7d22\u5f15; \u5c06date\u4ece\u7d22\u5f15\u53d8\u4e3a\u5217
         df = df.reset_index()
 
-        # 列名映射（yfinance 使用首字母大写）
+        # \u5217\u540d\u6620\u5c04 (yfinance \u4f7f\u7528\u9996\u5b57\u6bcd\u5927\u5199)
         column_mapping = {
             'Date': 'date',
             'Datetime': 'date',
@@ -272,22 +272,22 @@ class YfinanceFetcher(BaseFetcher):
                         df = df.rename(columns={index_col: 'date'})
                         df['date'] = parsed_dates
 
-        # 计算涨跌幅（因为 yfinance 不直接提供）
+        # \u8ba1\u7b97change\u5e45 (\u56e0\u4e3a yfinance \u4e0d\u76f4\u63a5\u63d0\u4f9b)
         if 'close' in df.columns:
             df['pct_chg'] = df['close'].pct_change() * 100
             df['pct_chg'] = df['pct_chg'].fillna(0).round(2)
 
-        # 计算成交额（yfinance 不提供，使用估算值）
-        # 成交额 ≈ 成交量 * 平均价格
+        # \u8ba1\u7b97amount (yfinance \u4e0d\u63d0\u4f9b; \u4f7f\u7528\u4f30\u7b97\u503c)
+        # amount ≈ volume * \u5e73\u5747price
         if 'volume' in df.columns and 'close' in df.columns:
             df['amount'] = df['volume'] * df['close']
         else:
             df['amount'] = 0
 
-        # 添加股票代码列
+        # \u6dfb\u52a0stock code\u5217
         df['code'] = stock_code
 
-        # 只保留需要的列
+        # \u53ea\u4fdd\u7559\u9700\u8981\u7684\u5217
         keep_cols = ['code'] + STANDARD_COLUMNS
         existing_cols = [col for col in keep_cols if col in df.columns]
         df = df[existing_cols]
@@ -296,19 +296,19 @@ class YfinanceFetcher(BaseFetcher):
 
     def _fetch_yf_ticker_data(self, yf, yf_code: str, name: str, return_code: str) -> Optional[Dict[str, Any]]:
         """
-        通过 yfinance 拉取单个指数/股票的行情数据。
+        \u901a\u8fc7 yfinance \u62c9\u53d6\u5355\u4e2aindex/\u80a1\u7968\u7684\u884c\u60c5\u6570\u636e.
 
         Args:
-            yf: yfinance 模块引用
-            yf_code: yfinance 使用的代码（如 '000001.SS'、'^GSPC'）
-            name: 指数显示名称
-            return_code: 写入结果 dict 的 code 字段（如 'sh000001'、'SPX'）
+            yf: yfinance \u6a21chunks\u5f15\u7528
+            yf_code: yfinance \u4f7f\u7528\u7684code (\u5982 '000001.SS'、'^GSPC')
+            name: index\u663e\u793aname
+            return_code: \u5199\u5165result dict \u7684 code \u5b57\u6bb5 (\u5982 'sh000001'、'SPX')
 
         Returns:
-            行情字典，失败时返回 None
+            \u884c\u60c5\u5b57\u5178; failed\u65f6\u8fd4\u56de None
         """
         ticker = yf.Ticker(yf_code)
-        # 取近两日数据以计算涨跌幅
+        # \u53d6\u8fd1\u4e24\u65e5\u6570\u636e\u4ee5\u8ba1\u7b97change\u5e45
         hist = ticker.history(period='2d')
         if hist.empty:
             return None
@@ -320,7 +320,7 @@ class YfinanceFetcher(BaseFetcher):
         change_pct = (change / prev_close) * 100 if prev_close else 0
         high = float(today_row['High'])
         low = float(today_row['Low'])
-        # 振幅 = (最高 - 最低) / 昨收 * 100
+        # \u632f\u5e45 = (\u6700High - \u6700Low) / \u6628\u6536 * 100
         amplitude = ((high - low) / prev_close * 100) if prev_close else 0
         return {
             'code': return_code,
@@ -333,16 +333,16 @@ class YfinanceFetcher(BaseFetcher):
             'low': low,
             'prev_close': prev_close,
             'volume': float(today_row['Volume']),
-            'amount': 0.0,  # Yahoo Finance 不提供准确成交额
+            'amount': 0.0,  # Yahoo Finance \u4e0d\u63d0\u4f9b\u51c6\u786eamount
             'amplitude': amplitude,
         }
 
     def get_main_indices(self, region: str = "cn") -> Optional[List[Dict[str, Any]]]:
         """
-        获取主要指数行情 (Yahoo Finance)，支持 A 股、美股、港股、日股、韩股与台股。
-        region=us 时委托给 _get_us_main_indices。
-        region=hk 时委托给 _get_hk_main_indices。
-        region=jp/kr/tw 时分别委托给对应市场指数方法。
+        \u83b7\u53d6\u4e3b\u8981index\u884c\u60c5 (Yahoo Finance); \u652f\u6301 A \u80a1、US stock、HK stock、JP stock、KR stock\u4e0eTW stock.
+        region=us \u65f6\u59d4\u6258\u7ed9 _get_us_main_indices.
+        region=hk \u65f6\u59d4\u6258\u7ed9 _get_hk_main_indices.
+        region=jp/kr/tw \u65f6\u5206\u522b\u59d4\u6258\u7ed9\u5bf9\u5e94marketindex\u65b9\u6cd5.
         """
         import yfinance as yf
 
@@ -357,14 +357,14 @@ class YfinanceFetcher(BaseFetcher):
         if region == "tw":
             return self._get_tw_main_indices(yf)
 
-        # A 股指数：akshare 代码 -> (yfinance 代码, 显示名称)
+        # A \u80a1index: akshare code -> (yfinance code, \u663e\u793aname)
         yf_mapping = {
-            'sh000001': ('000001.SS', '上证指数'),
-            'sz399001': ('399001.SZ', '深证成指'),
-            'sz399006': ('399006.SZ', '创业板指'),
-            'sh000688': ('000688.SS', '科创50'),
-            'sh000016': ('000016.SS', '上证50'),
-            'sh000300': ('000300.SS', '沪深300'),
+            'sh000001': ('000001.SS', '\u4e0a\u8bc1index'),
+            'sz399001': ('399001.SZ', '\u6df1\u8bc1\u6210\u6307'),
+            'sz399006': ('399006.SZ', '\u521b\u4e1a\u677f\u6307'),
+            'sh000688': ('000688.SS', '\u79d1\u521b50'),
+            'sh000016': ('000016.SS', '\u4e0a\u8bc150'),
+            'sh000300': ('000300.SS', '\u6caa\u6df1300'),
         }
 
         results = []
@@ -374,22 +374,22 @@ class YfinanceFetcher(BaseFetcher):
                     item = self._fetch_yf_ticker_data(yf, yf_code, name, ak_code)
                     if item:
                         results.append(item)
-                        logger.debug(f"[Yfinance] 获取指数 {name} 成功")
+                        logger.debug(f"[Yfinance] \u83b7\u53d6index {name} success")
                 except Exception as e:
-                    logger.warning(f"[Yfinance] 获取指数 {name} 失败: {e}")
+                    logger.warning(f"[Yfinance] \u83b7\u53d6index {name} failed: {e}")
 
             if results:
-                logger.info(f"[Yfinance] 成功获取 {len(results)} 个 A 股指数行情")
+                logger.info(f"[Yfinance] success\u83b7\u53d6 {len(results)} \u4e2a A \u80a1index\u884c\u60c5")
                 return results
 
         except Exception as e:
-            logger.error(f"[Yfinance] 获取 A 股指数行情失败: {e}")
+            logger.error(f"[Yfinance] \u83b7\u53d6 A \u80a1index\u884c\u60c5failed: {e}")
 
         return None
 
     def _get_us_main_indices(self, yf) -> Optional[List[Dict[str, Any]]]:
-        """获取美股主要指数行情（SPX、IXIC、DJI、VIX），复用 _fetch_yf_ticker_data"""
-        # 大盘复盘所需核心美股指数
+        """\u83b7\u53d6US stock\u4e3b\u8981index\u884c\u60c5 (SPX、IXIC、DJI、VIX); \u590d\u7528 _fetch_yf_ticker_data"""
+        # market review\u6240\u9700\u6838\u5fc3US stockindex
         us_indices = ['SPX', 'IXIC', 'DJI', 'VIX']
         results = []
         try:
@@ -401,30 +401,30 @@ class YfinanceFetcher(BaseFetcher):
                     item = self._fetch_yf_ticker_data(yf, yf_symbol, name, code)
                     if item:
                         results.append(item)
-                        logger.debug(f"[Yfinance] 获取美股指数 {name} 成功")
+                        logger.debug(f"[Yfinance] \u83b7\u53d6US stockindex {name} success")
                 except Exception as e:
-                    logger.warning(f"[Yfinance] 获取美股指数 {name} 失败: {e}")
+                    logger.warning(f"[Yfinance] \u83b7\u53d6US stockindex {name} failed: {e}")
 
             if results:
-                logger.info(f"[Yfinance] 成功获取 {len(results)} 个美股指数行情")
+                logger.info(f"[Yfinance] success\u83b7\u53d6 {len(results)} \u4e2aUS stockindex\u884c\u60c5")
                 return results
 
         except Exception as e:
-            logger.error(f"[Yfinance] 获取美股指数行情失败: {e}")
+            logger.error(f"[Yfinance] \u83b7\u53d6US stockindex\u884c\u60c5failed: {e}")
 
         return None
 
     def _get_hk_main_indices(self, yf) -> Optional[List[Dict[str, Any]]]:
-        """获取港股主要指数行情（HSI、HSTECH、HSCEI），复用 _fetch_yf_ticker_data"""
-        # Yahoo Finance 港股指数符号映射：
+        """\u83b7\u53d6HK stock\u4e3b\u8981index\u884c\u60c5 (HSI、HSTECH、HSCEI); \u590d\u7528 _fetch_yf_ticker_data"""
+        # Yahoo Finance HK stockindex\u7b26\u53f7\u6620\u5c04:
         # - HSI -> ^HSI
-        # - HSTECH -> HSTECH.HK（不是 ^HSTECH）
-        # - HSCEI -> ^HSCE（不是 ^HSCEI）
-        # 该映射由离线单测 tests/test_yfinance_hk_indices.py 固化，避免在线依赖导致非确定性失败。
+        # - HSTECH -> HSTECH.HK (\u4e0d\u662f ^HSTECH)
+        # - HSCEI -> ^HSCE (\u4e0d\u662f ^HSCEI)
+        # \u8be5\u6620\u5c04\u7531\u79bb\u7ebf\u5355\u6d4b tests/test_yfinance_hk_indices.py \u56fa\u5316; \u907f\u514d\u5728\u7ebf\u4f9d\u8d56\u5bfc\u81f4\u975e\u786e\u5b9afailed.
         hk_indices = {
-            'HSI': ('^HSI', '恒生指数'),
-            'HSTECH': ('HSTECH.HK', '恒生科技指数'),
-            'HSCEI': ('^HSCE', '国企指数'),
+            'HSI': ('^HSI', '\u6052\u751findex'),
+            'HSTECH': ('HSTECH.HK', '\u6052\u751f\u79d1\u6280index'),
+            'HSCEI': ('^HSCE', '\u56fd\u4f01index'),
         }
         results = []
         try:
@@ -433,24 +433,24 @@ class YfinanceFetcher(BaseFetcher):
                     item = self._fetch_yf_ticker_data(yf, yf_symbol, name, code)
                     if item:
                         results.append(item)
-                        logger.debug(f"[Yfinance] 获取港股指数 {name} 成功")
+                        logger.debug(f"[Yfinance] \u83b7\u53d6HK stockindex {name} success")
                 except Exception as e:
-                    logger.warning(f"[Yfinance] 获取港股指数 {name} 失败: {e}")
+                    logger.warning(f"[Yfinance] \u83b7\u53d6HK stockindex {name} failed: {e}")
 
             if results:
-                logger.info(f"[Yfinance] 成功获取 {len(results)} 个港股指数行情")
+                logger.info(f"[Yfinance] success\u83b7\u53d6 {len(results)} \u4e2aHK stockindex\u884c\u60c5")
                 return results
 
         except Exception as e:
-            logger.error(f"[Yfinance] 获取港股指数行情失败: {e}")
+            logger.error(f"[Yfinance] \u83b7\u53d6HK stockindex\u884c\u60c5failed: {e}")
 
         return None
 
     def _get_jp_main_indices(self, yf) -> Optional[List[Dict[str, Any]]]:
-        """获取日本主要指数行情（日经225、TOPIX），复用 _fetch_yf_ticker_data。"""
+        """\u83b7\u53d6\u65e5\u672c\u4e3b\u8981index\u884c\u60c5 (\u65e5\u7ecf225、TOPIX); \u590d\u7528 _fetch_yf_ticker_data."""
         jp_indices = {
-            'N225': ('^N225', '日经225'),
-            'TOPX': ('^TOPX', '东证指数'),
+            'N225': ('^N225', '\u65e5\u7ecf225'),
+            'TOPX': ('^TOPX', '\u4e1c\u8bc1index'),
         }
         results = []
         try:
@@ -459,18 +459,18 @@ class YfinanceFetcher(BaseFetcher):
                     item = self._fetch_yf_ticker_data(yf, yf_symbol, name, code)
                     if item:
                         results.append(item)
-                        logger.debug(f"[Yfinance] 获取日本指数 {name} 成功")
+                        logger.debug(f"[Yfinance] \u83b7\u53d6\u65e5\u672cindex {name} success")
                 except Exception as e:
-                    logger.warning(f"[Yfinance] 获取日本指数 {name} 失败: {e}")
+                    logger.warning(f"[Yfinance] \u83b7\u53d6\u65e5\u672cindex {name} failed: {e}")
             if results:
-                logger.info(f"[Yfinance] 成功获取 {len(results)} 个日本指数行情")
+                logger.info(f"[Yfinance] success\u83b7\u53d6 {len(results)} \u4e2a\u65e5\u672cindex\u884c\u60c5")
                 return results
         except Exception as e:
-            logger.error(f"[Yfinance] 获取日本指数行情失败: {e}")
+            logger.error(f"[Yfinance] \u83b7\u53d6\u65e5\u672cindex\u884c\u60c5failed: {e}")
         return None
 
     def _get_kr_main_indices(self, yf) -> Optional[List[Dict[str, Any]]]:
-        """获取韩国主要指数行情（KOSPI、KOSDAQ），复用 _fetch_yf_ticker_data。"""
+        """\u83b7\u53d6\u97e9\u56fd\u4e3b\u8981index\u884c\u60c5 (KOSPI、KOSDAQ); \u590d\u7528 _fetch_yf_ticker_data."""
         kr_indices = {
             'KS11': ('^KS11', 'KOSPI'),
             'KQ11': ('^KQ11', 'KOSDAQ'),
@@ -482,21 +482,21 @@ class YfinanceFetcher(BaseFetcher):
                     item = self._fetch_yf_ticker_data(yf, yf_symbol, name, code)
                     if item:
                         results.append(item)
-                        logger.debug(f"[Yfinance] 获取韩国指数 {name} 成功")
+                        logger.debug(f"[Yfinance] \u83b7\u53d6\u97e9\u56fdindex {name} success")
                 except Exception as e:
-                    logger.warning(f"[Yfinance] 获取韩国指数 {name} 失败: {e}")
+                    logger.warning(f"[Yfinance] \u83b7\u53d6\u97e9\u56fdindex {name} failed: {e}")
             if results:
-                logger.info(f"[Yfinance] 成功获取 {len(results)} 个韩国指数行情")
+                logger.info(f"[Yfinance] success\u83b7\u53d6 {len(results)} \u4e2a\u97e9\u56fdindex\u884c\u60c5")
                 return results
         except Exception as e:
-            logger.error(f"[Yfinance] 获取韩国指数行情失败: {e}")
+            logger.error(f"[Yfinance] \u83b7\u53d6\u97e9\u56fdindex\u884c\u60c5failed: {e}")
         return None
 
     def _get_tw_main_indices(self, yf) -> Optional[List[Dict[str, Any]]]:
-        """获取台湾主要指数行情（加权指数 ^TWII、柜买指数 ^TWOII），复用 _fetch_yf_ticker_data。"""
+        """\u83b7\u53d6\u53f0\u6e7e\u4e3b\u8981index\u884c\u60c5 (\u52a0\u6743index ^TWII、\u67dc\u4e70index ^TWOII); \u590d\u7528 _fetch_yf_ticker_data."""
         tw_indices = {
-            'TWII': ('^TWII', '台湾加权指数'),
-            'TWOII': ('^TWOII', '台湾柜买指数'),
+            'TWII': ('^TWII', '\u53f0\u6e7e\u52a0\u6743index'),
+            'TWOII': ('^TWOII', '\u53f0\u6e7e\u67dc\u4e70index'),
         }
         results = []
         try:
@@ -505,30 +505,30 @@ class YfinanceFetcher(BaseFetcher):
                     item = self._fetch_yf_ticker_data(yf, yf_symbol, name, code)
                     if item:
                         results.append(item)
-                        logger.debug(f"[Yfinance] 获取台湾指数 {name} 成功")
+                        logger.debug(f"[Yfinance] \u83b7\u53d6\u53f0\u6e7eindex {name} success")
                 except Exception as e:
-                    logger.warning(f"[Yfinance] 获取台湾指数 {name} 失败: {e}")
+                    logger.warning(f"[Yfinance] \u83b7\u53d6\u53f0\u6e7eindex {name} failed: {e}")
             if results:
-                logger.info(f"[Yfinance] 成功获取 {len(results)} 个台湾指数行情")
+                logger.info(f"[Yfinance] success\u83b7\u53d6 {len(results)} \u4e2a\u53f0\u6e7eindex\u884c\u60c5")
                 return results
         except Exception as e:
-            logger.error(f"[Yfinance] 获取台湾指数行情失败: {e}")
+            logger.error(f"[Yfinance] \u83b7\u53d6\u53f0\u6e7eindex\u884c\u60c5failed: {e}")
         return None
 
     def _is_us_stock(self, stock_code: str) -> bool:
         """
-        判断代码是否为美股股票（排除美股指数）。
+        \u5224\u65adcode\u662f\u5426\u4e3aUS stock\u80a1\u7968 (\u6392\u9664US stockindex).
 
-        委托给 us_index_mapping 模块的 is_us_stock_code()。
+        \u59d4\u6258\u7ed9 us_index_mapping \u6a21chunks\u7684 is_us_stock_code().
         """
         return is_us_stock_code(stock_code)
 
     def _get_us_stock_quote_from_stooq(self, stock_code: str) -> Optional[UnifiedRealtimeQuote]:
         """
-        使用 Stooq 为美股实时行情提供免密钥兜底。
+        \u4f7f\u7528 Stooq \u4e3aUS stockrealtime quote\u63d0\u4f9b\u514d\u5bc6\u94a5\u515c\u5e95.
 
-        Stooq 提供的是最新交易日行情，精度不如分时实时接口，但在 Yahoo / yfinance
-        被限流时，至少能为 Web UI 提供可用价格；若可获取到昨收价，则同时提供涨跌幅等衍生指标。
+        Stooq \u63d0\u4f9b\u7684\u662f\u6700\u65b0\u4ea4\u6613\u65e5\u884c\u60c5; \u7cbe\u5ea6\u4e0d\u5982\u5206\u65f6\u5b9e\u65f6\u63a5\u53e3; \u4f46\u5728 Yahoo / yfinance
+        \u88ab\u9650\u6d41\u65f6; \u81f3\u5c11\u80fd\u4e3a Web UI \u63d0\u4f9b\u53ef\u7528price；\u82e5\u53ef\u83b7\u53d6\u5230\u6628\u6536\u4ef7; \u5219\u540c\u65f6\u63d0\u4f9bchange\u5e45\u7b49\u884d\u751f\u6307\u6807.
         """
         symbol = stock_code.strip().upper()
         stooq_symbol = f"{symbol.lower()}.us"
@@ -545,11 +545,11 @@ class YfinanceFetcher(BaseFetcher):
             with urlopen(request, timeout=15) as response:
                 payload = response.read().decode("utf-8", "ignore").strip()
         except (HTTPError, URLError, TimeoutError) as exc:
-            logger.warning(f"[Stooq] 获取美股 {symbol} 实时行情失败: {exc}")
+            logger.warning(f"[Stooq] \u83b7\u53d6US stock {symbol} realtime quotefailed: {exc}")
             return None
 
         if not payload or payload.upper().startswith("NO DATA"):
-            logger.warning(f"[Stooq] 无法获取 {symbol} 的行情数据")
+            logger.warning(f"[Stooq] \u65e0\u6cd5\u83b7\u53d6 {symbol} \u7684\u884c\u60c5\u6570\u636e")
             return None
 
         def _fetch_prev_close() -> Optional[float]:
@@ -565,7 +565,7 @@ class YfinanceFetcher(BaseFetcher):
                 with urlopen(history_request, timeout=15) as response:
                     history_payload = response.read().decode("utf-8", "ignore").strip()
             except (HTTPError, URLError, TimeoutError) as exc:
-                logger.debug(f"[Stooq] 获取美股 {symbol} 日线历史失败: {exc}")
+                logger.debug(f"[Stooq] \u83b7\u53d6US stock {symbol} daily datahistoryfailed: {exc}")
                 return None
 
             if not history_payload or history_payload.upper().startswith("NO DATA"):
@@ -668,10 +668,10 @@ class YfinanceFetcher(BaseFetcher):
                 total_mv=None,
                 circ_mv=None,
             )
-            logger.info(f"[Stooq] 获取美股 {symbol} 兜底行情成功: 价格={price}")
+            logger.info(f"[Stooq] \u83b7\u53d6US stock {symbol} \u515c\u5e95\u884c\u60c5success: price={price}")
             return quote
         except Exception as exc:
-            logger.warning(f"[Stooq] 解析美股 {symbol} 行情失败: {exc}")
+            logger.warning(f"[Stooq] \u89e3\u6790US stock {symbol} \u884c\u60c5failed: {exc}")
             return None
 
     def _get_us_index_realtime_quote(
@@ -694,7 +694,7 @@ class YfinanceFetcher(BaseFetcher):
         import yfinance as yf
 
         try:
-            logger.debug(f"[Yfinance] 获取美股指数 {user_code} ({yf_symbol}) 实时行情")
+            logger.debug(f"[Yfinance] \u83b7\u53d6US stockindex {user_code} ({yf_symbol}) realtime quote")
             ticker = yf.Ticker(yf_symbol)
 
             try:
@@ -708,10 +708,10 @@ class YfinanceFetcher(BaseFetcher):
                 low = getattr(info, 'dayLow', None) or getattr(info, 'day_low', None)
                 volume = getattr(info, 'lastVolume', None) or getattr(info, 'last_volume', None)
             except Exception:
-                logger.debug("[Yfinance] fast_info 失败，尝试 history 方法")
+                logger.debug("[Yfinance] fast_info failed; \u5c1d\u8bd5 history \u65b9\u6cd5")
                 hist = ticker.history(period='2d')
                 if hist.empty:
-                    logger.warning(f"[Yfinance] 无法获取 {yf_symbol} 的数据")
+                    logger.warning(f"[Yfinance] \u65e0\u6cd5\u83b7\u53d6 {yf_symbol} data")
                     return None
                 today = hist.iloc[-1]
                 prev = hist.iloc[-2] if len(hist) > 1 else today
@@ -774,28 +774,28 @@ class YfinanceFetcher(BaseFetcher):
                 total_mv=None,
                 circ_mv=None,
             )
-            logger.info(f"[Yfinance] 获取美股指数 {user_code} 实时行情成功: 价格={price}")
+            logger.info(f"[Yfinance] \u83b7\u53d6US stockindex {user_code} realtime quotesuccess: price={price}")
             return quote
         except Exception as e:
-            logger.warning(f"[Yfinance] 获取美股指数 {user_code} 实时行情失败: {e}")
+            logger.warning(f"[Yfinance] \u83b7\u53d6US stockindex {user_code} realtime quotefailed: {e}")
             return None
 
     def get_realtime_quote(self, stock_code: str) -> Optional[UnifiedRealtimeQuote]:
         """
-        获取美股/美股指数实时行情数据
+        \u83b7\u53d6US stock/US stockindexrealtime quote\u6570\u636e
 
-        支持美股股票（AAPL、TSLA）和美股指数（SPX、DJI 等）。
-        数据来源：yfinance Ticker.info
+        \u652f\u6301US stock\u80a1\u7968 (AAPL、TSLA)\u548cUS stockindex (SPX、DJI \u7b49).
+        \u6570\u636esource: yfinance Ticker.info
 
         Args:
-            stock_code: 美股代码或指数代码，如 'AMD', 'AAPL', 'SPX', 'DJI'
+            stock_code: US stockcodeorindexcode; \u5982 'AMD', 'AAPL', 'SPX', 'DJI'
 
         Returns:
-            UnifiedRealtimeQuote 对象，获取失败返回 None
+            UnifiedRealtimeQuote \u5bf9\u8c61; fetch failed\u8fd4\u56de None
         """
         import yfinance as yf
 
-        # 美股指数：使用映射（SPX -> ^GSPC）
+        # US stockindex: \u4f7f\u7528\u6620\u5c04 (SPX -> ^GSPC)
         yf_symbol, index_name = get_us_index_yf_symbol(stock_code)
         if yf_symbol:
             return self._get_us_index_realtime_quote(
@@ -804,24 +804,24 @@ class YfinanceFetcher(BaseFetcher):
                 index_name=index_name,
             )
 
-        # 仅处理美股股票或 JP/KR/TW suffix-only 股票
+        # \u4ec5\u5904\u7406US stock\u80a1\u7968or JP/KR/TW suffix-only \u80a1\u7968
         if not (
             self._is_us_stock(stock_code)
             or self._is_jp_kr_suffix_stock(stock_code)
             or self._is_tw_suffix_stock(stock_code)
         ):
-            logger.debug(f"[Yfinance] {stock_code} 不是美股或日韩 suffix 代码，跳过")
+            logger.debug(f"[Yfinance] {stock_code} \u4e0d\u662fUS stockor\u65e5\u97e9 suffix code; skipping")
             return None
 
         try:
             symbol = self._convert_stock_code(stock_code)
             is_us_symbol = self._is_us_stock(symbol)
             suffix_market = get_suffix_market(symbol)
-            logger.debug(f"[Yfinance] 获取 {symbol} 实时行情")
+            logger.debug(f"[Yfinance] \u83b7\u53d6 {symbol} realtime quote")
 
             ticker = yf.Ticker(symbol)
 
-            # 尝试获取 fast_info（更快，但字段较少）
+            # \u5c1d\u8bd5\u83b7\u53d6 fast_info (\u66f4\u5feb; \u4f46\u5b57\u6bb5\u8f83\u5c11)
             try:
                 info = ticker.fast_info
                 if info is None:
@@ -836,14 +836,14 @@ class YfinanceFetcher(BaseFetcher):
                 market_cap = getattr(info, 'marketCap', None) or getattr(info, 'market_cap', None)
 
             except Exception:
-                # 回退到 history 方法获取最新数据
-                logger.debug("[Yfinance] fast_info 失败，尝试 history 方法")
+                # \u56de\u9000\u5230 history \u65b9\u6cd5\u83b7\u53d6\u6700\u65b0\u6570\u636e
+                logger.debug("[Yfinance] fast_info failed; \u5c1d\u8bd5 history \u65b9\u6cd5")
                 hist = ticker.history(period='2d')
                 if hist.empty:
                     if is_us_symbol:
-                        logger.warning(f"[Yfinance] 无法获取 {symbol} 的数据，尝试 Stooq 兜底")
+                        logger.warning(f"[Yfinance] \u65e0\u6cd5\u83b7\u53d6 {symbol} data; \u5c1d\u8bd5 Stooq \u515c\u5e95")
                         return self._get_us_stock_quote_from_stooq(symbol)
-                    logger.warning(f"[Yfinance] 无法获取 {symbol} 的数据")
+                    logger.warning(f"[Yfinance] \u65e0\u6cd5\u83b7\u53d6 {symbol} data")
                     return None
 
                 today = hist.iloc[-1]
@@ -857,19 +857,19 @@ class YfinanceFetcher(BaseFetcher):
                 volume = int(today['Volume'])
                 market_cap = None
 
-            # 计算涨跌幅
+            # \u8ba1\u7b97change\u5e45
             change_amount = None
             change_pct = None
             if price is not None and prev_close is not None and prev_close > 0:
                 change_amount = price - prev_close
                 change_pct = (change_amount / prev_close) * 100
 
-            # 计算振幅
+            # \u8ba1\u7b97\u632f\u5e45
             amplitude = None
             if high is not None and low is not None and prev_close is not None and prev_close > 0:
                 amplitude = ((high - low) / prev_close) * 100
 
-            # 获取股票名称与 provider 元数据
+            # \u83b7\u53d6stock name\u4e0e provider \u5143\u6570\u636e
             try:
                 ticker_info = ticker.info or {}
             except Exception:
@@ -904,7 +904,7 @@ class YfinanceFetcher(BaseFetcher):
                 change_pct=round(change_pct, 2) if change_pct is not None else None,
                 change_amount=round(change_amount, 4) if change_amount is not None else None,
                 volume=volume,
-                amount=None,  # yfinance 不直接提供成交额
+                amount=None,  # yfinance \u4e0d\u76f4\u63a5\u63d0\u4f9bamount
                 volume_ratio=None,
                 turnover_rate=None,
                 amplitude=round(amplitude, 2) if amplitude is not None else None,
@@ -918,26 +918,26 @@ class YfinanceFetcher(BaseFetcher):
                 circ_mv=None,
             )
 
-            logger.info(f"[Yfinance] 获取 {symbol} 实时行情成功: 价格={price}")
+            logger.info(f"[Yfinance] \u83b7\u53d6 {symbol} realtime quotesuccess: price={price}")
             return quote
 
         except Exception as e:
             if self._is_us_stock(stock_code):
-                logger.warning(f"[Yfinance] 获取美股 {stock_code} 实时行情失败: {e}，尝试 Stooq 兜底")
+                logger.warning(f"[Yfinance] \u83b7\u53d6US stock {stock_code} realtime quotefailed: {e}; \u5c1d\u8bd5 Stooq \u515c\u5e95")
                 return self._get_us_stock_quote_from_stooq(stock_code)
-            logger.warning(f"[Yfinance] 获取 {stock_code} 实时行情失败: {e}")
+            logger.warning(f"[Yfinance] \u83b7\u53d6 {stock_code} realtime quotefailed: {e}")
             return None
 
 
 if __name__ == "__main__":
-    # 测试代码
+    # \u6d4b\u8bd5code
     logging.basicConfig(level=logging.DEBUG)
 
     fetcher = YfinanceFetcher()
 
     try:
-        df = fetcher.get_daily_data('600519')  # 茅台
-        print(f"获取成功，共 {len(df)} 条数据")
+        df = fetcher.get_daily_data('600519')  # \u8305\u53f0
+        print(f"fetch succeeded; \u5171 {len(df)} \u6761\u6570\u636e")
         print(df.tail())
     except Exception as e:
-        print(f"获取失败: {e}")
+        print(f"fetch failed: {e}")

@@ -22,7 +22,7 @@ const {
       taskId: 'screen-task-1',
       traceId: 'screen-task-1',
       status: 'pending',
-      message: 'AlphaSift 选股任务已提交',
+      message: 'AlphaSift \u9009\u80a1\u4efb\u52a1\u5df2\u63d0\u4ea4',
       strategy: 'dual_low',
       market: 'cn',
       maxResults: 3,
@@ -35,7 +35,7 @@ const {
       traceId: 'screen-task-1',
       status: 'completed',
       progress: 100,
-      message: '任务执行完成',
+      message: '\u4efb\u52a1\u6267\u884c\u5b8c\u6210',
       result: lastScreenResult,
     };
   });
@@ -119,21 +119,21 @@ describe('StockScreeningPage', () => {
     getHotspotDetail.mockResolvedValue({
       enabled: true,
       provider: 'akshare',
-      topic: 'AI算力',
-      name: 'AI算力',
-      canonicalTopic: '算力',
-      summary: 'AI算力 盘中发酵。',
+      topic: 'AI\u7b97\u529b',
+      name: 'AI\u7b97\u529b',
+      canonicalTopic: '\u7b97\u529b',
+      summary: 'AI\u7b97\u529b \u76d8\u4e2d\u53d1\u9175。',
       qualityStatus: 'stale',
       missingFields: ['live_stocks'],
       fallbackUsed: true,
       stale: true,
       staleAgeHours: 2.5,
       sourceErrors: ['akshare timeout'],
-      route: [{ title: '盘中发酵', description: '出现大笔买入。', source: 'eastmoney_board_change' }],
+      route: [{ title: '\u76d8\u4e2d\u53d1\u9175', description: '\u51fa\u73b0\u5927\u7b14\u4e70\u5165。', source: 'eastmoney_board_change' }],
       stocks: [{
         code: '300000',
-        name: '中际旭创',
-        role: '核心龙头',
+        name: '\u4e2d\u9645\u65ed\u521b',
+        role: '\u6838\u5fc3\u9f99\u5934',
         hotStockScore: 88,
         source: 'last_good_cache.leader_stocks',
         sourceConfidence: 0.65,
@@ -157,20 +157,20 @@ describe('StockScreeningPage', () => {
         available: false,
         installSpecIsDefault: true,
       });
-    enableAlphaSift.mockRejectedValueOnce(new Error('AlphaSift 适配层不可用。请执行 pip install -r requirements.txt'));
+    enableAlphaSift.mockRejectedValueOnce(new Error('AlphaSift \u9002\u914d\u5c42\u4e0d\u53ef\u7528。\u8bf7\u6267\u884c pip install -r requirements.txt'));
 
     render(<StockScreeningPage />);
 
-    expect(await screen.findByText('选股未开启')).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /运行选股/ })).toBeDisabled();
+    expect(await screen.findByText('\u9009\u80a1\u672a\u5f00\u542f')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /\u8fd0\u884c\u9009\u80a1/ })).toBeDisabled();
 
-    fireEvent.click(screen.getByRole('button', { name: '开启 AlphaSift' }));
+    fireEvent.click(screen.getByRole('button', { name: '\u5f00\u542f AlphaSift' }));
 
     await waitFor(() => expect(getAlphaSiftStatus).toHaveBeenCalledTimes(2));
-    expect(screen.getByText('选股未开启')).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /运行选股/ })).toBeDisabled();
-    expect(screen.getByText(/适配层当前不可用/)).toBeInTheDocument();
-    expect(screen.getByText('AlphaSift 适配层不可用。请执行 pip install -r requirements.txt')).toBeInTheDocument();
+    expect(screen.getByText('\u9009\u80a1\u672a\u5f00\u542f')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /\u8fd0\u884c\u9009\u80a1/ })).toBeDisabled();
+    expect(screen.getByText(/\u9002\u914d\u5c42\u5f53\u524d\u4e0d\u53ef\u7528/)).toBeInTheDocument();
+    expect(screen.getByText('AlphaSift \u9002\u914d\u5c42\u4e0d\u53ef\u7528。\u8bf7\u6267\u884c pip install -r requirements.txt')).toBeInTheDocument();
   });
 
   it('loads AlphaSift hotspot themes on demand', async () => {
@@ -195,15 +195,15 @@ describe('StockScreeningPage', () => {
         providerUsed: 'akshare',
         hotspots: [
           {
-            topic: 'AI算力',
-            name: 'AI算力',
+            topic: 'AI\u7b97\u529b',
+            name: 'AI\u7b97\u529b',
             heatScore: 88,
             trendScore: 12,
             persistenceScore: 66,
             changePct: 4.2,
-            stage: '加速主升',
+            stage: '\u52a0\u901f\u4e3b\u5347',
             sampleStockCount: 8,
-            leaders: ['中际旭创', '工业富联'],
+            leaders: ['\u4e2d\u9645\u65ed\u521b', '\u5de5\u4e1a\u5bcc\u8054'],
           },
         ],
         hotspotCount: 1,
@@ -211,35 +211,35 @@ describe('StockScreeningPage', () => {
 
     render(<StockScreeningPage />);
 
-    expect(await screen.findByText('选股已开启')).toBeInTheDocument();
+    expect(await screen.findByText('\u9009\u80a1\u5df2\u5f00\u542f')).toBeInTheDocument();
     await waitFor(() => expect(getHotspots).toHaveBeenCalledWith({ provider: 'akshare', top: 12, refresh: false }));
     expect(getHotspotDetail).not.toHaveBeenCalled();
-    fireEvent.click(screen.getByRole('button', { name: /展开热点题材/ }));
-    fireEvent.click(screen.getByRole('button', { name: /刷新热点题材/ }));
+    fireEvent.click(screen.getByRole('button', { name: /\u5c55\u5f00\u70ed\u70b9\u9898\u6750/ }));
+    fireEvent.click(screen.getByRole('button', { name: /\u5237\u65b0\u70ed\u70b9\u9898\u6750/ }));
 
     await waitFor(() => expect(getHotspots).toHaveBeenCalledWith({ provider: 'akshare', top: 12, refresh: true }));
-    fireEvent.click(await screen.findByRole('button', { name: /AI算力/ }));
-    await waitFor(() => expect(getHotspotDetail).toHaveBeenCalledWith({ topic: 'AI算力', provider: 'akshare', refresh: false }));
-    await waitFor(() => expect(screen.getAllByText('AI算力').length).toBeGreaterThan(0));
-    expect(screen.getByText('强势领先')).toBeInTheDocument();
-    expect(screen.getByText(/中际旭创、工业富联/)).toBeInTheDocument();
-    expect(screen.getByText(/覆盖 8 股/)).toBeInTheDocument();
-    expect(await screen.findByText('发酵时间线')).toBeInTheDocument();
-    expect(screen.getByText('标准题材：算力')).toBeInTheDocument();
-    expect(screen.getByText('质量 stale')).toBeInTheDocument();
-    expect(screen.getByText('缓存回退 2.5h')).toBeInTheDocument();
-    expect(screen.getByText('详情数据已降级，展开查看原因')).toBeInTheDocument();
-    expect(screen.getByText(/缺失字段：live_stocks/)).toBeInTheDocument();
-    expect(screen.getByText('盘中发酵')).toBeInTheDocument();
-    expect(screen.getByText('概念股')).toBeInTheDocument();
-    expect(screen.getByText('中际旭创')).toBeInTheDocument();
-    expect(screen.getByText(/来源 last_good_cache\.leader_stocks · 置信 65% · 回退/)).toBeInTheDocument();
+    fireEvent.click(await screen.findByRole('button', { name: /AI\u7b97\u529b/ }));
+    await waitFor(() => expect(getHotspotDetail).toHaveBeenCalledWith({ topic: 'AI\u7b97\u529b', provider: 'akshare', refresh: false }));
+    await waitFor(() => expect(screen.getAllByText('AI\u7b97\u529b').length).toBeGreaterThan(0));
+    expect(screen.getByText('\u5f3a\u52bf\u9886\u5148')).toBeInTheDocument();
+    expect(screen.getByText(/\u4e2d\u9645\u65ed\u521b、\u5de5\u4e1a\u5bcc\u8054/)).toBeInTheDocument();
+    expect(screen.getByText(/\u8986\u76d6 8 \u80a1/)).toBeInTheDocument();
+    expect(await screen.findByText('\u53d1\u9175\u65f6\u95f4\u7ebf')).toBeInTheDocument();
+    expect(screen.getByText('\u6807\u51c6\u9898\u6750：\u7b97\u529b')).toBeInTheDocument();
+    expect(screen.getByText('\u8d28\u91cf stale')).toBeInTheDocument();
+    expect(screen.getByText('\u7f13\u5b58\u56de\u9000 2.5h')).toBeInTheDocument();
+    expect(screen.getByText('\u8be6\u60c5\u6570\u636e\u5df2\u964d\u7ea7，\u5c55\u5f00\u67e5\u770b\u539f\u56e0')).toBeInTheDocument();
+    expect(screen.getByText(/\u7f3a\u5931\u5b57\u6bb5：live_stocks/)).toBeInTheDocument();
+    expect(screen.getByText('\u76d8\u4e2d\u53d1\u9175')).toBeInTheDocument();
+    expect(screen.getByText('\u6982\u5ff5\u80a1')).toBeInTheDocument();
+    expect(screen.getByText('\u4e2d\u9645\u65ed\u521b')).toBeInTheDocument();
+    expect(screen.getByText(/\u6765\u6e90 last_good_cache\.leader_stocks · \u7f6e\u4fe1 65% · \u56de\u9000/)).toBeInTheDocument();
 
-    fireEvent.click(screen.getByRole('button', { name: '分析 中际旭创' }));
+    fireEvent.click(screen.getByRole('button', { name: '\u5206\u6790 \u4e2d\u9645\u65ed\u521b' }));
     expect(navigate).toHaveBeenCalledWith('/', {
       state: {
         stockCode: '300000',
-        stockName: '中际旭创',
+        stockName: '\u4e2d\u9645\u65ed\u521b',
         autoAnalyze: true,
         selectionSource: 'alphasift_hotspot',
       },
@@ -263,7 +263,7 @@ describe('StockScreeningPage', () => {
 
     render(<StockScreeningPage />);
 
-    expect(await screen.findByText('暂无缓存热点题材，展开后可点击刷新拉取实时数据。')).toBeInTheDocument();
+    expect(await screen.findByText('\u6682\u65e0\u7f13\u5b58\u70ed\u70b9\u9898\u6750，\u5c55\u5f00\u540e\u53ef\u70b9\u51fb\u5237\u65b0\u62c9\u53d6\u5b9e\u65f6\u6570\u636e。')).toBeInTheDocument();
     expect(screen.queryByText(/No cached AlphaSift hotspot snapshot/)).not.toBeInTheDocument();
   });
 
@@ -280,12 +280,12 @@ describe('StockScreeningPage', () => {
       hotspots: [],
       hotspotCount: 0,
       sourceErrors: ['eastmoney_hotspot_unavailable', "RemoteDisconnected('Remote end closed connection without response')"],
-      message: '热点源连接中断，暂无可用缓存。',
+      message: '\u70ed\u70b9\u6e90\u8fde\u63a5\u4e2d\u65ad，\u6682\u65e0\u53ef\u7528\u7f13\u5b58。',
     });
 
     render(<StockScreeningPage />);
 
-    expect(await screen.findByText('热点源连接中断，暂无可用缓存。')).toBeInTheDocument();
+    expect(await screen.findByText('\u70ed\u70b9\u6e90\u8fde\u63a5\u4e2d\u65ad，\u6682\u65e0\u53ef\u7528\u7f13\u5b58。')).toBeInTheDocument();
     expect(screen.queryByText(/RemoteDisconnected/)).not.toBeInTheDocument();
   });
 
@@ -299,15 +299,15 @@ describe('StockScreeningPage', () => {
       enabled: true,
       provider: 'akshare',
       providerUsed: 'akshare',
-      hotspots: [{ topic: 'AI算力', name: 'AI算力', heatScore: 88, stage: '加速主升' }],
+      hotspots: [{ topic: 'AI\u7b97\u529b', name: 'AI\u7b97\u529b', heatScore: 88, stage: '\u52a0\u901f\u4e3b\u5347' }],
       hotspotCount: 1,
     });
     getHotspotDetail.mockResolvedValueOnce({
       enabled: true,
       provider: 'akshare',
-      topic: 'AI算力',
-      name: 'AI算力',
-      summary: 'AI算力 当前热点详情。',
+      topic: 'AI\u7b97\u529b',
+      name: 'AI\u7b97\u529b',
+      summary: 'AI\u7b97\u529b \u5f53\u524d\u70ed\u70b9\u8be6\u60c5。',
       route: [{ title: 'route-summary', description: 'compact route summary', source: 'news_search' }],
       timeline: [{ title: 'raw-timeline', description: 'full raw timeline text should stay hidden', source: 'raw_news' }],
       stocks: [],
@@ -317,8 +317,8 @@ describe('StockScreeningPage', () => {
     render(<StockScreeningPage />);
 
     await waitFor(() => expect(getHotspots).toHaveBeenCalledWith({ provider: 'akshare', top: 12, refresh: false }));
-    fireEvent.click(screen.getByRole('button', { name: /展开热点题材/ }));
-    fireEvent.click(await screen.findByRole('button', { name: /AI算力/ }));
+    fireEvent.click(screen.getByRole('button', { name: /\u5c55\u5f00\u70ed\u70b9\u9898\u6750/ }));
+    fireEvent.click(await screen.findByRole('button', { name: /AI\u7b97\u529b/ }));
 
     expect(await screen.findByText('route-summary')).toBeInTheDocument();
     expect(screen.getByText('compact route summary')).toBeInTheDocument();
@@ -355,7 +355,7 @@ describe('StockScreeningPage', () => {
     render(<StockScreeningPage />);
 
     await waitFor(() => expect(getHotspots).toHaveBeenCalledWith({ provider: 'akshare', top: 12, refresh: false }));
-    fireEvent.click(screen.getByRole('button', { name: /展开热点题材/ }));
+    fireEvent.click(screen.getByRole('button', { name: /\u5c55\u5f00\u70ed\u70b9\u9898\u6750/ }));
     fireEvent.click(await screen.findByRole('button', { name: /Moly/ }));
 
     expect(await screen.findByText('prefetched catalyst')).toBeInTheDocument();
@@ -376,16 +376,16 @@ describe('StockScreeningPage', () => {
       providerUsed: 'akshare',
       hotspots: [
         {
-          topic: 'AI算力',
-          name: 'AI算力',
+          topic: 'AI\u7b97\u529b',
+          name: 'AI\u7b97\u529b',
           heatScore: 88,
-          stage: '加速主升',
+          stage: '\u52a0\u901f\u4e3b\u5347',
         },
         {
-          topic: '机器人执行器',
-          name: '机器人执行器',
+          topic: '\u673a\u5668\u4eba\u6267\u884c\u5668',
+          name: '\u673a\u5668\u4eba\u6267\u884c\u5668',
           heatScore: 80,
-          stage: '轮动扩散',
+          stage: '\u8f6e\u52a8\u6269\u6563',
         },
       ],
       hotspotCount: 2,
@@ -393,18 +393,18 @@ describe('StockScreeningPage', () => {
 
     render(<StockScreeningPage />);
 
-    expect(await screen.findByText('选股已开启')).toBeInTheDocument();
+    expect(await screen.findByText('\u9009\u80a1\u5df2\u5f00\u542f')).toBeInTheDocument();
     await waitFor(() => expect(getHotspots).toHaveBeenCalledWith({ provider: 'akshare', top: 12, refresh: false }));
     expect(getHotspotDetail).not.toHaveBeenCalled();
-    fireEvent.click(screen.getByRole('button', { name: /展开热点题材/ }));
-    fireEvent.click(screen.getByRole('button', { name: /AI算力/ }));
-    await waitFor(() => expect(getHotspotDetail).toHaveBeenCalledWith({ topic: 'AI算力', provider: 'akshare', refresh: false }));
+    fireEvent.click(screen.getByRole('button', { name: /\u5c55\u5f00\u70ed\u70b9\u9898\u6750/ }));
+    fireEvent.click(screen.getByRole('button', { name: /AI\u7b97\u529b/ }));
+    await waitFor(() => expect(getHotspotDetail).toHaveBeenCalledWith({ topic: 'AI\u7b97\u529b', provider: 'akshare', refresh: false }));
     expect(getHotspotDetail).toHaveBeenCalledTimes(1);
 
-    fireEvent.click(screen.getByRole('button', { name: /机器人执行器/ }));
+    fireEvent.click(screen.getByRole('button', { name: /\u673a\u5668\u4eba\u6267\u884c\u5668/ }));
 
     await waitFor(() =>
-      expect(getHotspotDetail).toHaveBeenLastCalledWith({ topic: '机器人执行器', provider: 'akshare', refresh: false }),
+      expect(getHotspotDetail).toHaveBeenLastCalledWith({ topic: '\u673a\u5668\u4eba\u6267\u884c\u5668', provider: 'akshare', refresh: false }),
     );
     await new Promise((resolve) => window.setTimeout(resolve, 0));
     expect(getHotspotDetail).toHaveBeenCalledTimes(2);
@@ -422,16 +422,16 @@ describe('StockScreeningPage', () => {
       providerUsed: 'akshare',
       hotspots: [
         {
-          topic: 'AI算力',
-          name: 'AI算力',
+          topic: 'AI\u7b97\u529b',
+          name: 'AI\u7b97\u529b',
           heatScore: 88,
-          stage: '加速主升',
+          stage: '\u52a0\u901f\u4e3b\u5347',
         },
         {
-          topic: '机器人执行器',
-          name: '机器人执行器',
+          topic: '\u673a\u5668\u4eba\u6267\u884c\u5668',
+          name: '\u673a\u5668\u4eba\u6267\u884c\u5668',
           heatScore: 80,
-          stage: '轮动扩散',
+          stage: '\u8f6e\u52a8\u6269\u6563',
         },
       ],
       hotspotCount: 2,
@@ -442,15 +442,15 @@ describe('StockScreeningPage', () => {
       .mockResolvedValueOnce({
         enabled: true,
         provider: 'akshare',
-        topic: 'AI算力',
-        name: 'AI算力',
-        summary: 'AI算力 盘中发酵。',
-        route: [{ title: '盘中发酵', description: '出现大笔买入。', source: 'eastmoney_board_change' }],
-        stocks: [{ code: '300000', name: '中际旭创', role: '核心龙头', hotStockScore: 88 }],
+        topic: 'AI\u7b97\u529b',
+        name: 'AI\u7b97\u529b',
+        summary: 'AI\u7b97\u529b \u76d8\u4e2d\u53d1\u9175。',
+        route: [{ title: '\u76d8\u4e2d\u53d1\u9175', description: '\u51fa\u73b0\u5927\u7b14\u4e70\u5165。', source: 'eastmoney_board_change' }],
+        stocks: [{ code: '300000', name: '\u4e2d\u9645\u65ed\u521b', role: '\u6838\u5fc3\u9f99\u5934', hotStockScore: 88 }],
         stockCount: 1,
       })
       .mockImplementationOnce(({ topic }: { topic: string }) => {
-        if (topic === '机器人执行器') {
+        if (topic === '\u673a\u5668\u4eba\u6267\u884c\u5668') {
           return robotDetail.promise;
         }
         return Promise.reject(new Error(`unexpected topic: ${topic}`));
@@ -458,37 +458,37 @@ describe('StockScreeningPage', () => {
 
     render(<StockScreeningPage />);
 
-    expect(await screen.findByText('选股已开启')).toBeInTheDocument();
-    fireEvent.click(screen.getByRole('button', { name: /展开热点题材/ }));
-    fireEvent.click(await screen.findByRole('button', { name: /AI算力/ }));
-    expect(await screen.findByText('盘中发酵')).toBeInTheDocument();
-    expect(screen.getByText('中际旭创')).toBeInTheDocument();
+    expect(await screen.findByText('\u9009\u80a1\u5df2\u5f00\u542f')).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: /\u5c55\u5f00\u70ed\u70b9\u9898\u6750/ }));
+    fireEvent.click(await screen.findByRole('button', { name: /AI\u7b97\u529b/ }));
+    expect(await screen.findByText('\u76d8\u4e2d\u53d1\u9175')).toBeInTheDocument();
+    expect(screen.getByText('\u4e2d\u9645\u65ed\u521b')).toBeInTheDocument();
 
-    fireEvent.click(screen.getByRole('button', { name: /机器人执行器/ }));
+    fireEvent.click(screen.getByRole('button', { name: /\u673a\u5668\u4eba\u6267\u884c\u5668/ }));
 
     await waitFor(() =>
-      expect(getHotspotDetail).toHaveBeenLastCalledWith({ topic: '机器人执行器', provider: 'akshare', refresh: false }),
+      expect(getHotspotDetail).toHaveBeenLastCalledWith({ topic: '\u673a\u5668\u4eba\u6267\u884c\u5668', provider: 'akshare', refresh: false }),
     );
-    expect(screen.getAllByText('机器人执行器').length).toBeGreaterThan(0);
-    expect(screen.getByText('正在读取发酵路线与概念股...')).toBeInTheDocument();
-    expect(screen.queryByText('盘中发酵')).not.toBeInTheDocument();
-    expect(screen.queryByText('中际旭创')).not.toBeInTheDocument();
+    expect(screen.getAllByText('\u673a\u5668\u4eba\u6267\u884c\u5668').length).toBeGreaterThan(0);
+    expect(screen.getByText('\u6b63\u5728\u8bfb\u53d6\u53d1\u9175\u8def\u7ebf\u4e0e\u6982\u5ff5\u80a1...')).toBeInTheDocument();
+    expect(screen.queryByText('\u76d8\u4e2d\u53d1\u9175')).not.toBeInTheDocument();
+    expect(screen.queryByText('\u4e2d\u9645\u65ed\u521b')).not.toBeInTheDocument();
 
     await act(async () => {
       robotDetail.resolve({
         enabled: true,
         provider: 'akshare',
-        topic: '机器人执行器',
-        name: '机器人执行器',
-        summary: '机器人执行器 继续发酵。',
-        route: [{ title: '机器人发酵', description: '执行器链条扩散。', source: 'eastmoney_board_change' }],
-        stocks: [{ code: '300111', name: '机器人龙头', role: '核心龙头', hotStockScore: 86 }],
+        topic: '\u673a\u5668\u4eba\u6267\u884c\u5668',
+        name: '\u673a\u5668\u4eba\u6267\u884c\u5668',
+        summary: '\u673a\u5668\u4eba\u6267\u884c\u5668 \u7ee7\u7eed\u53d1\u9175。',
+        route: [{ title: '\u673a\u5668\u4eba\u53d1\u9175', description: '\u6267\u884c\u5668\u94fe\u6761\u6269\u6563。', source: 'eastmoney_board_change' }],
+        stocks: [{ code: '300111', name: '\u673a\u5668\u4eba\u9f99\u5934', role: '\u6838\u5fc3\u9f99\u5934', hotStockScore: 86 }],
         stockCount: 1,
       });
     });
 
-    expect(await screen.findByText('机器人发酵')).toBeInTheDocument();
-    expect(screen.getByText('机器人龙头')).toBeInTheDocument();
+    expect(await screen.findByText('\u673a\u5668\u4eba\u53d1\u9175')).toBeInTheDocument();
+    expect(screen.getByText('\u673a\u5668\u4eba\u9f99\u5934')).toBeInTheDocument();
   });
 
   it('ignores stale hotspot detail responses when switching themes', async () => {
@@ -503,16 +503,16 @@ describe('StockScreeningPage', () => {
       providerUsed: 'akshare',
       hotspots: [
         {
-          topic: 'AI算力',
-          name: 'AI算力',
+          topic: 'AI\u7b97\u529b',
+          name: 'AI\u7b97\u529b',
           heatScore: 88,
-          stage: '加速主升',
+          stage: '\u52a0\u901f\u4e3b\u5347',
         },
         {
-          topic: '机器人执行器',
-          name: '机器人执行器',
+          topic: '\u673a\u5668\u4eba\u6267\u884c\u5668',
+          name: '\u673a\u5668\u4eba\u6267\u884c\u5668',
           heatScore: 80,
-          stage: '轮动扩散',
+          stage: '\u8f6e\u52a8\u6269\u6563',
         },
       ],
       hotspotCount: 2,
@@ -521,10 +521,10 @@ describe('StockScreeningPage', () => {
     const aiDetail = createDeferred<unknown>();
     const robotDetail = createDeferred<unknown>();
     getHotspotDetail.mockImplementation(({ topic }: { topic: string }) => {
-      if (topic === 'AI算力') {
+      if (topic === 'AI\u7b97\u529b') {
         return aiDetail.promise;
       }
-      if (topic === '机器人执行器') {
+      if (topic === '\u673a\u5668\u4eba\u6267\u884c\u5668') {
         return robotDetail.promise;
       }
       return Promise.reject(new Error(`unexpected topic: ${topic}`));
@@ -532,48 +532,48 @@ describe('StockScreeningPage', () => {
 
     render(<StockScreeningPage />);
 
-    expect(await screen.findByText('选股已开启')).toBeInTheDocument();
-    fireEvent.click(screen.getByRole('button', { name: /展开热点题材/ }));
-    fireEvent.click(await screen.findByRole('button', { name: /AI算力/ }));
-    await waitFor(() => expect(getHotspotDetail).toHaveBeenCalledWith({ topic: 'AI算力', provider: 'akshare', refresh: false }));
+    expect(await screen.findByText('\u9009\u80a1\u5df2\u5f00\u542f')).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: /\u5c55\u5f00\u70ed\u70b9\u9898\u6750/ }));
+    fireEvent.click(await screen.findByRole('button', { name: /AI\u7b97\u529b/ }));
+    await waitFor(() => expect(getHotspotDetail).toHaveBeenCalledWith({ topic: 'AI\u7b97\u529b', provider: 'akshare', refresh: false }));
 
-    fireEvent.click(screen.getByRole('button', { name: /机器人执行器/ }));
+    fireEvent.click(screen.getByRole('button', { name: /\u673a\u5668\u4eba\u6267\u884c\u5668/ }));
 
     await waitFor(() =>
-      expect(getHotspotDetail).toHaveBeenLastCalledWith({ topic: '机器人执行器', provider: 'akshare', refresh: false }),
+      expect(getHotspotDetail).toHaveBeenLastCalledWith({ topic: '\u673a\u5668\u4eba\u6267\u884c\u5668', provider: 'akshare', refresh: false }),
     );
     await act(async () => {
       robotDetail.resolve({
         enabled: true,
         provider: 'akshare',
-        topic: '机器人执行器',
-        name: '机器人执行器',
-        summary: '机器人执行器 继续发酵。',
-        route: [{ title: '机器人发酵', description: '执行器链条扩散。', source: 'eastmoney_board_change' }],
-        stocks: [{ code: '300111', name: '机器人龙头', role: '核心龙头', hotStockScore: 86 }],
+        topic: '\u673a\u5668\u4eba\u6267\u884c\u5668',
+        name: '\u673a\u5668\u4eba\u6267\u884c\u5668',
+        summary: '\u673a\u5668\u4eba\u6267\u884c\u5668 \u7ee7\u7eed\u53d1\u9175。',
+        route: [{ title: '\u673a\u5668\u4eba\u53d1\u9175', description: '\u6267\u884c\u5668\u94fe\u6761\u6269\u6563。', source: 'eastmoney_board_change' }],
+        stocks: [{ code: '300111', name: '\u673a\u5668\u4eba\u9f99\u5934', role: '\u6838\u5fc3\u9f99\u5934', hotStockScore: 86 }],
         stockCount: 1,
       });
     });
 
-    expect(await screen.findByText('机器人发酵')).toBeInTheDocument();
+    expect(await screen.findByText('\u673a\u5668\u4eba\u53d1\u9175')).toBeInTheDocument();
 
     await act(async () => {
       aiDetail.resolve({
         enabled: true,
         provider: 'akshare',
-        topic: 'AI算力',
-        name: 'AI算力',
-        summary: 'AI算力 旧响应。',
-        route: [{ title: 'AI旧发酵', description: '旧请求晚到。', source: 'eastmoney_board_change' }],
-        stocks: [{ code: '300000', name: '中际旭创', role: '核心龙头', hotStockScore: 88 }],
+        topic: 'AI\u7b97\u529b',
+        name: 'AI\u7b97\u529b',
+        summary: 'AI\u7b97\u529b \u65e7\u54cd\u5e94。',
+        route: [{ title: 'AI\u65e7\u53d1\u9175', description: '\u65e7\u8bf7\u6c42\u665a\u5230。', source: 'eastmoney_board_change' }],
+        stocks: [{ code: '300000', name: '\u4e2d\u9645\u65ed\u521b', role: '\u6838\u5fc3\u9f99\u5934', hotStockScore: 88 }],
         stockCount: 1,
       });
     });
 
-    expect(screen.getByText('机器人发酵')).toBeInTheDocument();
-    expect(screen.getByText('机器人龙头')).toBeInTheDocument();
-    expect(screen.queryByText('AI旧发酵')).not.toBeInTheDocument();
-    expect(screen.queryByText('中际旭创')).not.toBeInTheDocument();
+    expect(screen.getByText('\u673a\u5668\u4eba\u53d1\u9175')).toBeInTheDocument();
+    expect(screen.getByText('\u673a\u5668\u4eba\u9f99\u5934')).toBeInTheDocument();
+    expect(screen.queryByText('AI\u65e7\u53d1\u9175')).not.toBeInTheDocument();
+    expect(screen.queryByText('\u4e2d\u9645\u65ed\u521b')).not.toBeInTheDocument();
   });
 
   it('reloads selected hotspot detail when refreshed themes keep the same topic', async () => {
@@ -589,16 +589,16 @@ describe('StockScreeningPage', () => {
         providerUsed: 'akshare',
         hotspots: [
           {
-            topic: 'AI算力',
-            name: 'AI算力',
+            topic: 'AI\u7b97\u529b',
+            name: 'AI\u7b97\u529b',
             heatScore: 88,
-            stage: '加速主升',
+            stage: '\u52a0\u901f\u4e3b\u5347',
           },
           {
-            topic: '机器人执行器',
-            name: '机器人执行器',
+            topic: '\u673a\u5668\u4eba\u6267\u884c\u5668',
+            name: '\u673a\u5668\u4eba\u6267\u884c\u5668',
             heatScore: 80,
-            stage: '轮动扩散',
+            stage: '\u8f6e\u52a8\u6269\u6563',
           },
         ],
         hotspotCount: 2,
@@ -609,10 +609,10 @@ describe('StockScreeningPage', () => {
         providerUsed: 'akshare',
         hotspots: [
           {
-            topic: 'AI算力',
-            name: 'AI算力',
+            topic: 'AI\u7b97\u529b',
+            name: 'AI\u7b97\u529b',
             heatScore: 91,
-            stage: '高位发酵',
+            stage: '\u9ad8\u4f4d\u53d1\u9175',
           },
         ],
         hotspotCount: 1,
@@ -621,38 +621,38 @@ describe('StockScreeningPage', () => {
       .mockResolvedValueOnce({
         enabled: true,
         provider: 'akshare',
-        topic: 'AI算力',
-        name: 'AI算力',
-        summary: 'AI算力 盘中发酵。',
-        route: [{ title: '盘中发酵', description: '出现大笔买入。', source: 'eastmoney_board_change' }],
-        stocks: [{ code: '300000', name: '中际旭创', role: '核心龙头', hotStockScore: 88 }],
+        topic: 'AI\u7b97\u529b',
+        name: 'AI\u7b97\u529b',
+        summary: 'AI\u7b97\u529b \u76d8\u4e2d\u53d1\u9175。',
+        route: [{ title: '\u76d8\u4e2d\u53d1\u9175', description: '\u51fa\u73b0\u5927\u7b14\u4e70\u5165。', source: 'eastmoney_board_change' }],
+        stocks: [{ code: '300000', name: '\u4e2d\u9645\u65ed\u521b', role: '\u6838\u5fc3\u9f99\u5934', hotStockScore: 88 }],
         stockCount: 1,
       })
       .mockResolvedValueOnce({
         enabled: true,
         provider: 'akshare',
-        topic: 'AI算力',
-        name: 'AI算力',
-        summary: 'AI算力 刷新后继续发酵。',
-        route: [{ title: '刷新发酵', description: '刷新后仍在榜内。', source: 'eastmoney_board_change' }],
-        stocks: [{ code: '601138', name: '工业富联', role: '核心龙头', hotStockScore: 90 }],
+        topic: 'AI\u7b97\u529b',
+        name: 'AI\u7b97\u529b',
+        summary: 'AI\u7b97\u529b \u5237\u65b0\u540e\u7ee7\u7eed\u53d1\u9175。',
+        route: [{ title: '\u5237\u65b0\u53d1\u9175', description: '\u5237\u65b0\u540e\u4ecd\u5728\u699c\u5185。', source: 'eastmoney_board_change' }],
+        stocks: [{ code: '601138', name: '\u5de5\u4e1a\u5bcc\u8054', role: '\u6838\u5fc3\u9f99\u5934', hotStockScore: 90 }],
         stockCount: 1,
       });
 
     render(<StockScreeningPage />);
 
-    expect(await screen.findByText('选股已开启')).toBeInTheDocument();
-    fireEvent.click(screen.getByRole('button', { name: /展开热点题材/ }));
-    fireEvent.click(await screen.findByRole('button', { name: /AI算力/ }));
+    expect(await screen.findByText('\u9009\u80a1\u5df2\u5f00\u542f')).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: /\u5c55\u5f00\u70ed\u70b9\u9898\u6750/ }));
+    fireEvent.click(await screen.findByRole('button', { name: /AI\u7b97\u529b/ }));
     await waitFor(() => expect(getHotspotDetail).toHaveBeenCalledTimes(1));
 
-    fireEvent.click(screen.getByRole('button', { name: /刷新热点题材/ }));
+    fireEvent.click(screen.getByRole('button', { name: /\u5237\u65b0\u70ed\u70b9\u9898\u6750/ }));
 
     await waitFor(() => expect(getHotspots).toHaveBeenCalledWith({ provider: 'akshare', top: 12, refresh: true }));
     await waitFor(() => expect(getHotspotDetail).toHaveBeenCalledTimes(2));
-    expect(getHotspotDetail).toHaveBeenLastCalledWith({ topic: 'AI算力', provider: 'akshare', refresh: true });
-    expect(await screen.findByText('刷新发酵')).toBeInTheDocument();
-    expect(screen.getByText('工业富联')).toBeInTheDocument();
+    expect(getHotspotDetail).toHaveBeenLastCalledWith({ topic: 'AI\u7b97\u529b', provider: 'akshare', refresh: true });
+    expect(await screen.findByText('\u5237\u65b0\u53d1\u9175')).toBeInTheDocument();
+    expect(screen.getByText('\u5de5\u4e1a\u5bcc\u8054')).toBeInTheDocument();
   });
 
   it('keeps existing hotspot cards when manual refresh fails', async () => {
@@ -668,15 +668,15 @@ describe('StockScreeningPage', () => {
         providerUsed: 'akshare',
         hotspots: [
           {
-            topic: 'AI算力',
-            name: 'AI算力',
+            topic: 'AI\u7b97\u529b',
+            name: 'AI\u7b97\u529b',
             heatScore: 88,
             trendScore: 12,
             persistenceScore: 66,
             changePct: 4.2,
-            stage: '加速主升',
+            stage: '\u52a0\u901f\u4e3b\u5347',
             sampleStockCount: 8,
-            leaders: ['中际旭创', '工业富联'],
+            leaders: ['\u4e2d\u9645\u65ed\u521b', '\u5de5\u4e1a\u5bcc\u8054'],
           },
         ],
         hotspotCount: 1,
@@ -685,18 +685,18 @@ describe('StockScreeningPage', () => {
 
     render(<StockScreeningPage />);
 
-    expect(await screen.findByText('选股已开启')).toBeInTheDocument();
-    fireEvent.click(screen.getByRole('button', { name: /展开热点题材/ }));
-    expect(await screen.findByText('强势领先')).toBeInTheDocument();
-    expect(screen.getByText(/中际旭创、工业富联/)).toBeInTheDocument();
+    expect(await screen.findByText('\u9009\u80a1\u5df2\u5f00\u542f')).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: /\u5c55\u5f00\u70ed\u70b9\u9898\u6750/ }));
+    expect(await screen.findByText('\u5f3a\u52bf\u9886\u5148')).toBeInTheDocument();
+    expect(screen.getByText(/\u4e2d\u9645\u65ed\u521b、\u5de5\u4e1a\u5bcc\u8054/)).toBeInTheDocument();
 
-    fireEvent.click(screen.getByRole('button', { name: /刷新热点题材/ }));
+    fireEvent.click(screen.getByRole('button', { name: /\u5237\u65b0\u70ed\u70b9\u9898\u6750/ }));
 
     await waitFor(() => expect(getHotspots).toHaveBeenCalledWith({ provider: 'akshare', top: 12, refresh: true }));
     expect(await screen.findByText(/manual refresh failed/)).toBeInTheDocument();
-    expect(screen.getByText('强势领先')).toBeInTheDocument();
-    expect(screen.getByText(/中际旭创、工业富联/)).toBeInTheDocument();
-    expect(screen.queryByText(/点击刷新后会拉取热点概念/)).not.toBeInTheDocument();
+    expect(screen.getByText('\u5f3a\u52bf\u9886\u5148')).toBeInTheDocument();
+    expect(screen.getByText(/\u4e2d\u9645\u65ed\u521b、\u5de5\u4e1a\u5bcc\u8054/)).toBeInTheDocument();
+    expect(screen.queryByText(/\u70b9\u51fb\u5237\u65b0\u540e\u4f1a\u62c9\u53d6\u70ed\u70b9\u6982\u5ff5/)).not.toBeInTheDocument();
   });
 
   it('shows input strategy when strategy is not in preset list', async () => {
@@ -713,27 +713,27 @@ describe('StockScreeningPage', () => {
 
     render(<StockScreeningPage />);
 
-    expect(await screen.findByText('选股已开启')).toBeInTheDocument();
-    fireEvent.change(screen.getByLabelText('策略参数'), {
+    expect(await screen.findByText('\u9009\u80a1\u5df2\u5f00\u542f')).toBeInTheDocument();
+    fireEvent.change(screen.getByLabelText('\u7b56\u7565\u53c2\u6570'), {
       target: { value: 'custom_strategy_alpha' },
     });
 
     expect(screen.getByDisplayValue('custom_strategy_alpha')).toBeInTheDocument();
 
-    fireEvent.click(screen.getByRole('button', { name: /运行选股/ }));
+    fireEvent.click(screen.getByRole('button', { name: /\u8fd0\u884c\u9009\u80a1/ }));
     await waitFor(() => expect(screenStocks).toHaveBeenCalledTimes(1));
-    await waitFor(() => expect(screen.getByText(/自定义策略 \(custom_strategy_alpha\)/)).toBeInTheDocument());
+    await waitFor(() => expect(screen.getByText(/\u81ea\u5b9a\u4e49\u7b56\u7565 \(custom_strategy_alpha\)/)).toBeInTheDocument());
   });
 
   it('uses supported AlphaSift strategy ids and cn market', async () => {
     getStrategies.mockResolvedValueOnce({
       enabled: true,
       strategies: [
-        { id: 'balanced_alpha', name: '平衡选股', description: 'desc', category: '框架' },
-        { id: 'capital_heat', name: '资金热度', description: 'desc', category: '动量' },
-        { id: 'dual_low', name: '双低', description: 'desc', category: '价值' },
-        { id: 'oversold_reversal', name: '超跌', description: 'desc', category: '反转' },
-        { id: 'shrink_pullback', name: '缩量回踩', description: 'desc', category: '趋势' },
+        { id: 'balanced_alpha', name: '\u5e73\u8861\u9009\u80a1', description: 'desc', category: '\u6846\u67b6' },
+        { id: 'capital_heat', name: '\u8d44\u91d1\u70ed\u5ea6', description: 'desc', category: '\u52a8\u91cf' },
+        { id: 'dual_low', name: '\u53cc\u4f4e', description: 'desc', category: '\u4ef7\u503c' },
+        { id: 'oversold_reversal', name: '\u8d85\u8dcc', description: 'desc', category: '\u53cd\u8f6c' },
+        { id: 'shrink_pullback', name: '\u7f29\u91cf\u56de\u8e29', description: 'desc', category: '\u8d8b\u52bf' },
       ],
       strategyCount: 5,
     });
@@ -750,22 +750,22 @@ describe('StockScreeningPage', () => {
 
     render(<StockScreeningPage />);
 
-    expect(await screen.findByText('选股已开启')).toBeInTheDocument();
+    expect(await screen.findByText('\u9009\u80a1\u5df2\u5f00\u542f')).toBeInTheDocument();
 
-    const marketSelect = screen.getByLabelText('市场') as HTMLSelectElement;
+    const marketSelect = screen.getByLabelText('\u5e02\u573a') as HTMLSelectElement;
     expect(Array.from(marketSelect.options).map((option) => option.value)).toEqual(['cn']);
 
     [
-      ['平衡选股', 'balanced_alpha'],
-      ['资金热度', 'capital_heat'],
-      ['超跌', 'oversold_reversal'],
-      ['缩量回踩', 'shrink_pullback'],
+      ['\u5e73\u8861\u9009\u80a1', 'balanced_alpha'],
+      ['\u8d44\u91d1\u70ed\u5ea6', 'capital_heat'],
+      ['\u8d85\u8dcc', 'oversold_reversal'],
+      ['\u7f29\u91cf\u56de\u8e29', 'shrink_pullback'],
     ].forEach(([label, id]) => {
       fireEvent.click(screen.getByRole('button', { name: new RegExp(label) }));
       expect(screen.getByDisplayValue(id)).toBeInTheDocument();
     });
 
-    fireEvent.click(screen.getByRole('button', { name: /运行选股/ }));
+    fireEvent.click(screen.getByRole('button', { name: /\u8fd0\u884c\u9009\u80a1/ }));
     await waitFor(() => expect(screenStocks).toHaveBeenCalledTimes(1));
     expect(screenStocks).toHaveBeenCalledWith({
       market: 'cn',
@@ -778,8 +778,8 @@ describe('StockScreeningPage', () => {
     getStrategies.mockResolvedValueOnce({
       enabled: true,
       strategies: [
-        { id: 'dual_low', name: '双低选股', description: 'desc', category: '价值' },
-        { id: 'capital_heat', name: '资金热度', description: 'desc', category: '动量' },
+        { id: 'dual_low', name: '\u53cc\u4f4e\u9009\u80a1', description: 'desc', category: '\u4ef7\u503c' },
+        { id: 'capital_heat', name: '\u8d44\u91d1\u70ed\u5ea6', description: 'desc', category: '\u52a8\u91cf' },
       ],
       strategyCount: 2,
     });
@@ -794,7 +794,7 @@ describe('StockScreeningPage', () => {
         {
           rank: 1,
           code: '000001',
-          name: '旧策略股票',
+          name: '\u65e7\u7b56\u7565\u80a1\u7968',
           score: 88.5,
           reason: 'old result',
           raw: {},
@@ -805,17 +805,17 @@ describe('StockScreeningPage', () => {
 
     render(<StockScreeningPage />);
 
-    expect(await screen.findByText('选股已开启')).toBeInTheDocument();
-    fireEvent.click(screen.getByRole('button', { name: /运行选股/ }));
+    expect(await screen.findByText('\u9009\u80a1\u5df2\u5f00\u542f')).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: /\u8fd0\u884c\u9009\u80a1/ }));
 
-    expect(await screen.findByText('旧策略股票')).toBeInTheDocument();
-    expect(screen.getByText('选股完成')).toBeInTheDocument();
+    expect(await screen.findByText('\u65e7\u7b56\u7565\u80a1\u7968')).toBeInTheDocument();
+    expect(screen.getByText('\u9009\u80a1\u5b8c\u6210')).toBeInTheDocument();
 
-    fireEvent.click(screen.getByRole('button', { name: /资金热度/ }));
+    fireEvent.click(screen.getByRole('button', { name: /\u8d44\u91d1\u70ed\u5ea6/ }));
 
-    expect(screen.queryByText('旧策略股票')).not.toBeInTheDocument();
-    expect(screen.getByText('等待运行')).toBeInTheDocument();
-    expect(screen.getByText('当前策略：资金热度 · A 股')).toBeInTheDocument();
+    expect(screen.queryByText('\u65e7\u7b56\u7565\u80a1\u7968')).not.toBeInTheDocument();
+    expect(screen.getByText('\u7b49\u5f85\u8fd0\u884c')).toBeInTheDocument();
+    expect(screen.getByText('\u5f53\u524d\u7b56\u7565：\u8d44\u91d1\u70ed\u5ea6 · A \u80a1')).toBeInTheDocument();
   });
 
   it('restores an in-flight screening task after remounting the page', async () => {
@@ -830,7 +830,7 @@ describe('StockScreeningPage', () => {
         {
           rank: 1,
           code: '000001',
-          name: '恢复后的候选',
+          name: '\u6062\u590d\u540e\u7684\u5019\u9009',
           score: 88.5,
           reason: 'restored result',
           raw: {},
@@ -844,7 +844,7 @@ describe('StockScreeningPage', () => {
         traceId: 'screen-task-1',
         status: 'processing',
         progress: 35,
-        message: '正在执行 AlphaSift 选股',
+        message: '\u6b63\u5728\u6267\u884c AlphaSift \u9009\u80a1',
         result: null,
       })
       .mockResolvedValueOnce({
@@ -852,14 +852,14 @@ describe('StockScreeningPage', () => {
         traceId: 'screen-task-1',
         status: 'completed',
         progress: 100,
-        message: '任务执行完成',
+        message: '\u4efb\u52a1\u6267\u884c\u5b8c\u6210',
         result: {
           enabled: true,
           candidates: [
             {
               rank: 1,
               code: '000001',
-              name: '恢复后的候选',
+              name: '\u6062\u590d\u540e\u7684\u5019\u9009',
               score: 88.5,
               reason: 'restored result',
               raw: {},
@@ -871,17 +871,17 @@ describe('StockScreeningPage', () => {
 
     const firstRender = render(<StockScreeningPage />);
 
-    expect(await screen.findByText('选股已开启')).toBeInTheDocument();
-    fireEvent.click(screen.getByRole('button', { name: /运行选股/ }));
+    expect(await screen.findByText('\u9009\u80a1\u5df2\u5f00\u542f')).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: /\u8fd0\u884c\u9009\u80a1/ }));
 
-    expect(await screen.findByText('选股运行中')).toBeInTheDocument();
+    expect(await screen.findByText('\u9009\u80a1\u8fd0\u884c\u4e2d')).toBeInTheDocument();
     expect(window.sessionStorage.getItem('dsa.alphasift.activeScreenTask.v1')).toContain('screen-task-1');
 
     firstRender.unmount();
     render(<StockScreeningPage />);
 
-    expect(await screen.findByText('恢复后的候选')).toBeInTheDocument();
-    expect(screen.getByText('选股完成')).toBeInTheDocument();
+    expect(await screen.findByText('\u6062\u590d\u540e\u7684\u5019\u9009')).toBeInTheDocument();
+    expect(screen.getByText('\u9009\u80a1\u5b8c\u6210')).toBeInTheDocument();
     expect(window.sessionStorage.getItem('dsa.alphasift.activeScreenTask.v1')).toBeNull();
   });
 
@@ -903,11 +903,11 @@ describe('StockScreeningPage', () => {
 
     render(<StockScreeningPage />);
 
-    expect(await screen.findByText('选股任务运行中')).toBeInTheDocument();
+    expect(await screen.findByText('\u9009\u80a1\u4efb\u52a1\u8fd0\u884c\u4e2d')).toBeInTheDocument();
     await waitFor(() => expect(getScreenTask).toHaveBeenCalledTimes(1));
-    expect(screen.getByText('选股运行中')).toBeInTheDocument();
-    expect(screen.getByText('选股任务仍在后台运行，状态轮询暂时超时，将自动重试。')).toBeInTheDocument();
-    expect(screen.queryByText(/连接上游服务超时/)).not.toBeInTheDocument();
+    expect(screen.getByText('\u9009\u80a1\u8fd0\u884c\u4e2d')).toBeInTheDocument();
+    expect(screen.getByText('\u9009\u80a1\u4efb\u52a1\u4ecd\u5728\u540e\u53f0\u8fd0\u884c，\u72b6\u6001\u8f6e\u8be2\u6682\u65f6\u8d85\u65f6，\u5c06\u81ea\u52a8\u91cd\u8bd5。')).toBeInTheDocument();
+    expect(screen.queryByText(/\u8fde\u63a5\u4e0a\u6e38\u670d\u52a1\u8d85\u65f6/)).not.toBeInTheDocument();
     expect(window.sessionStorage.getItem('dsa.alphasift.activeScreenTask.v1')).toContain('screen-task-1');
   });
 
@@ -923,9 +923,9 @@ describe('StockScreeningPage', () => {
         {
           rank: 1,
           code: '000001',
-          name: '平安银行',
+          name: '\u5e73\u5b89\u94f6\u884c',
           score: 88.5,
-          reason: '本地后置评分: value_quality',
+          reason: '\u672c\u5730\u540e\u7f6e\u8bc4\u5206: value_quality',
           amount: 1042000000,
           factorScores: {
             value: 87.44,
@@ -943,16 +943,16 @@ describe('StockScreeningPage', () => {
 
     render(<StockScreeningPage />);
 
-    expect(await screen.findByText('选股已开启')).toBeInTheDocument();
-    fireEvent.click(screen.getByRole('button', { name: /运行选股/ }));
+    expect(await screen.findByText('\u9009\u80a1\u5df2\u5f00\u542f')).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: /\u8fd0\u884c\u9009\u80a1/ }));
 
-    expect(await screen.findByText('LLM 已降级')).toBeInTheDocument();
-    expect(screen.getByText(/缺少可用 LLM API Key/)).toBeInTheDocument();
+    expect(await screen.findByText('LLM \u5df2\u964d\u7ea7')).toBeInTheDocument();
+    expect(screen.getByText(/\u7f3a\u5c11\u53ef\u7528 LLM API Key/)).toBeInTheDocument();
     expect(screen.queryByText(/Missing gemini_api_key/)).not.toBeInTheDocument();
-    expect(screen.getByText('未重排')).toBeInTheDocument();
-    expect(screen.getByText('本次 LLM 重排失败或未返回判断，当前展示的是本地因子评分结果。')).toBeInTheDocument();
-    expect(screen.getByText('LLM 元数据未返回')).toBeInTheDocument();
-    expect(screen.getAllByText('未返回（LLM 已降级）')).toHaveLength(2);
+    expect(screen.getByText('\u672a\u91cd\u6392')).toBeInTheDocument();
+    expect(screen.getByText('\u672c\u6b21 LLM \u91cd\u6392\u5931\u8d25\u6216\u672a\u8fd4\u56de\u5224\u65ad，\u5f53\u524d\u5c55\u793a\u7684\u662f\u672c\u5730\u56e0\u5b50\u8bc4\u5206\u7ed3\u679c。')).toBeInTheDocument();
+    expect(screen.getByText('LLM \u5143\u6570\u636e\u672a\u8fd4\u56de')).toBeInTheDocument();
+    expect(screen.getAllByText('\u672a\u8fd4\u56de（LLM \u5df2\u964d\u7ea7）')).toHaveLength(2);
   });
 
   it('deduplicates AlphaSift snapshot fallback warnings and source errors', async () => {
@@ -967,7 +967,7 @@ describe('StockScreeningPage', () => {
         {
           rank: 1,
           code: '601919',
-          name: '中远海控',
+          name: '\u4e2d\u8fdc\u6d77\u63a7',
           score: 82.88,
           llmScore: 82,
           riskLevel: 'low',
@@ -982,11 +982,11 @@ describe('StockScreeningPage', () => {
 
     render(<StockScreeningPage />);
 
-    expect(await screen.findByText('选股已开启')).toBeInTheDocument();
-    fireEvent.click(screen.getByRole('button', { name: /运行选股/ }));
+    expect(await screen.findByText('\u9009\u80a1\u5df2\u5f00\u542f')).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: /\u8fd0\u884c\u9009\u80a1/ }));
 
-    expect(await screen.findByText('AlphaSift 提示')).toBeInTheDocument();
-    expect(screen.getAllByText('数据源降级：tushare（交易日历暂无可用开市日）')).toHaveLength(1);
+    expect(await screen.findByText('AlphaSift \u63d0\u793a')).toBeInTheDocument();
+    expect(screen.getAllByText('\u6570\u636e\u6e90\u964d\u7ea7：tushare（\u4ea4\u6613\u65e5\u5386\u6682\u65e0\u53ef\u7528\u5f00\u5e02\u65e5）')).toHaveLength(1);
     expect(screen.queryByText(/trade_cal returned no open trading days/)).not.toBeInTheDocument();
   });
 
@@ -1002,7 +1002,7 @@ describe('StockScreeningPage', () => {
         {
           rank: 1,
           code: '600016',
-          name: '民生银行',
+          name: '\u6c11\u751f\u94f6\u884c',
           score: 80.12,
           raw: {},
         },
@@ -1017,14 +1017,14 @@ describe('StockScreeningPage', () => {
 
     render(<StockScreeningPage />);
 
-    expect(await screen.findByText('选股已开启')).toBeInTheDocument();
-    fireEvent.click(screen.getByRole('button', { name: /运行选股/ }));
+    expect(await screen.findByText('\u9009\u80a1\u5df2\u5f00\u542f')).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: /\u8fd0\u884c\u9009\u80a1/ }));
 
-    const efinanceWarning = await screen.findByText('数据源降级：efinance（网络连接中断）');
+    const efinanceWarning = await screen.findByText('\u6570\u636e\u6e90\u964d\u7ea7：efinance（\u7f51\u7edc\u8fde\u63a5\u4e2d\u65ad）');
     const alert = efinanceWarning.closest('[role="alert"]');
     expect(alert).toHaveClass('max-w-full');
     expect(efinanceWarning).toBeInTheDocument();
-    expect(screen.getByText('数据源降级：akshare_em（网络连接中断）')).toBeInTheDocument();
+    expect(screen.getByText('\u6570\u636e\u6e90\u964d\u7ea7：akshare_em（\u7f51\u7edc\u8fde\u63a5\u4e2d\u65ad）')).toBeInTheDocument();
     expect(screen.queryByText(/HTTPConnectionPool/)).not.toBeInTheDocument();
     expect(screen.queryByText(/\/api\/qt\/clist\/get/)).not.toBeInTheDocument();
     expect(screen.queryByText(/RemoteDisconnected/)).not.toBeInTheDocument();
@@ -1042,11 +1042,11 @@ describe('StockScreeningPage', () => {
         {
           rank: 1,
           code: '600519',
-          name: '贵州茅台',
+          name: '\u8d35\u5dde\u8305\u53f0',
           score: 91.2,
           reason: 'AlphaSift pick',
-          dsaAnalysisSummary: 'DSA行情：现价 1688，涨跌幅 1.2%；DSA新闻：贵州茅台最新公告',
-          dsaNews: [{ title: '贵州茅台最新公告', source: '测试源' }],
+          dsaAnalysisSummary: 'DSA\u884c\u60c5：\u73b0\u4ef7 1688，\u6da8\u8dcc\u5e45 1.2%；DSA\u65b0\u95fb：\u8d35\u5dde\u8305\u53f0\u6700\u65b0\u516c\u544a',
+          dsaNews: [{ title: '\u8d35\u5dde\u8305\u53f0\u6700\u65b0\u516c\u544a', source: '\u6d4b\u8bd5\u6e90' }],
           dsaContext: {
             enriched: true,
             warnings: ['stock_news_unavailable'],
@@ -1064,16 +1064,16 @@ describe('StockScreeningPage', () => {
 
     render(<StockScreeningPage />);
 
-    expect(await screen.findByText('选股已开启')).toBeInTheDocument();
-    fireEvent.click(screen.getByRole('button', { name: /运行选股/ }));
+    expect(await screen.findByText('\u9009\u80a1\u5df2\u5f00\u542f')).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: /\u8fd0\u884c\u9009\u80a1/ }));
 
-    expect(await screen.findByText('DSA增强：1 / 1')).toBeInTheDocument();
+    expect(await screen.findByText('DSA\u589e\u5f3a：1 / 1')).toBeInTheDocument();
 
-    expect(screen.getByText('DSA 增强摘要')).toBeInTheDocument();
-    expect(screen.getByText(/DSA行情：现价 1688/)).toBeInTheDocument();
-    expect(screen.getByText('DSA 新闻')).toBeInTheDocument();
-    expect(screen.getByText('贵州茅台最新公告')).toBeInTheDocument();
-    expect(screen.getByText('DSA 增强提示')).toBeInTheDocument();
+    expect(screen.getByText('DSA \u589e\u5f3a\u6458\u8981')).toBeInTheDocument();
+    expect(screen.getByText(/DSA\u884c\u60c5：\u73b0\u4ef7 1688/)).toBeInTheDocument();
+    expect(screen.getByText('DSA \u65b0\u95fb')).toBeInTheDocument();
+    expect(screen.getByText('\u8d35\u5dde\u8305\u53f0\u6700\u65b0\u516c\u544a')).toBeInTheDocument();
+    expect(screen.getByText('DSA \u589e\u5f3a\u63d0\u793a')).toBeInTheDocument();
     expect(screen.getByText('stock_news_unavailable')).toBeInTheDocument();
   });
 });

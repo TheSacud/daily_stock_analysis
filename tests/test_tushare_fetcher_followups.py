@@ -103,8 +103,8 @@ class TestTushareFetcherFollowUps(unittest.TestCase):
 
         # Data not ready, should fall back to Thursday (19th)
         self.assertEqual(result, "20260319")
-        
-          
+
+
     def test_get_sector_rankings_rate_limits_calendar_and_rankings_api(self) -> None:
         fetcher = self._make_fetcher()
         fetcher._api.trade_cal.return_value = pd.DataFrame(
@@ -112,7 +112,7 @@ class TestTushareFetcherFollowUps(unittest.TestCase):
         )
         fetcher._api.moneyflow_ind_ths.return_value = pd.DataFrame(
             {
-                "industry": ["AI", "消费"],
+                "industry": ["AI", "\u6d88\u8d39"],
                 "pct_change": [1.8, -0.6],
             }
         )
@@ -123,7 +123,7 @@ class TestTushareFetcherFollowUps(unittest.TestCase):
             top, bottom = fetcher.get_sector_rankings(n=1)
 
         self.assertEqual(top, [{"name": "AI", "change_pct": 1.8}])
-        self.assertEqual(bottom, [{"name": "消费", "change_pct": -0.6}])
+        self.assertEqual(bottom, [{"name": "\u6d88\u8d39", "change_pct": -0.6}])
         self.assertEqual(rate_limit_mock.call_count, 2)
 
     def test_get_chip_distribution_rate_limits_all_tushare_calls(self) -> None:
@@ -171,7 +171,7 @@ class TestTushareFetcherFollowUps(unittest.TestCase):
         tushare_module.get_realtime_quotes.return_value = pd.DataFrame(
             [
                 {
-                    "name": "平安银行",
+                    "name": "\u5e73\u5b89\u94f6\u884c",
                     "price": "10.94",
                     "pre_close": "10.88",
                     "volume": "1000",
@@ -187,5 +187,5 @@ class TestTushareFetcherFollowUps(unittest.TestCase):
 
         self.assertIsNotNone(quote)
         self.assertEqual(quote.code, "000001")
-        self.assertEqual(quote.name, "平安银行")
+        self.assertEqual(quote.name, "\u5e73\u5b89\u94f6\u884c")
         tushare_module.get_realtime_quotes.assert_called_once_with("000001")

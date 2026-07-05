@@ -1,16 +1,16 @@
 # -*- coding: utf-8 -*-
 """
 ===================================
-定时调度模块
+\u5b9a\u65f6\u8c03\u5ea6\u6a21chunks
 ===================================
 
-职责：
-1. 支持每日定时执行股票分析
-2. 支持定时执行大盘复盘
-3. 优雅处理信号，确保可靠退出
+\u804c\u8d23:
+1. \u652f\u6301\u6bcf\u65e5\u5b9a\u65f6\u6267\u884c\u80a1\u7968analyze
+2. \u652f\u6301\u5b9a\u65f6\u6267\u884cmarket review
+3. \u4f18\u96c5\u5904\u7406\u4fe1\u53f7; \u786e\u4fdd\u53ef\u9760\u9000\u51fa
 
-依赖：
-- schedule: 轻量级定时任务库
+\u4f9d\u8d56:
+- schedule: \u8f7b\u91cf\u7ea7scheduled tasklibrary
 """
 
 import logging
@@ -50,9 +50,9 @@ def normalize_schedule_times(
 
 class GracefulShutdown:
     """
-    优雅退出处理器
+    \u4f18\u96c5\u9000\u51fa\u5904\u7406\u5668
 
-    捕获 SIGTERM/SIGINT 信号，确保任务完成后再退出
+    \u6355\u83b7 SIGTERM/SIGINT \u4fe1\u53f7; \u786e\u4fddtask\u5b8c\u6210\u540e\u518d\u9000\u51fa
     """
 
     def __init__(self, register_signals: bool = True):
@@ -61,32 +61,32 @@ class GracefulShutdown:
         if not register_signals:
             return
 
-        # 注册信号处理器
+        # \u6ce8\u518c\u4fe1\u53f7\u5904\u7406\u5668
         signal.signal(signal.SIGINT, self._signal_handler)
         signal.signal(signal.SIGTERM, self._signal_handler)
 
     def _signal_handler(self, signum, frame):
-        """信号处理函数"""
+        """\u4fe1\u53f7\u5904\u7406\u51fd\u6570"""
         with self._lock:
             if not self.shutdown_requested:
-                logger.info(f"收到退出信号 ({signum})，等待当前任务完成...")
+                logger.info(f"received\u9000\u51fa\u4fe1\u53f7 ({signum}); waiting\u5f53\u524dtask\u5b8c\u6210...")
                 self.shutdown_requested = True
 
     @property
     def should_shutdown(self) -> bool:
-        """检查是否应该退出"""
+        """\u68c0check\u662f\u5426\u5e94\u8be5\u9000\u51fa"""
         with self._lock:
             return self.shutdown_requested
 
 
 class Scheduler:
     """
-    定时任务调度器
+    scheduled task\u8c03\u5ea6\u5668
 
-    基于 schedule 库实现，支持：
-    - 每日定时执行
-    - 启动时立即执行
-    - 优雅退出
+    \u57fa\u4e8e schedule library\u5b9e\u73b0; \u652f\u6301:
+    - \u6bcf\u65e5\u5b9a\u65f6\u6267\u884c
+    - run immediately on startup
+    - \u4f18\u96c5\u9000\u51fa
     """
 
     def __init__(
@@ -98,17 +98,17 @@ class Scheduler:
         register_signals: bool = True,
     ):
         """
-        初始化调度器
+        \u521d\u59cb\u5316\u8c03\u5ea6\u5668
 
         Args:
-            schedule_time: 每日执行时间，格式 "HH:MM"
+            schedule_time: daily run time; \u683c\u5f0f "HH:MM"
         """
         try:
             import schedule
             self.schedule = schedule
         except ImportError:
-            logger.error("schedule 库未安装，请执行: pip install schedule")
-            raise ImportError("请安装 schedule 库: pip install schedule")
+            logger.error("schedule library is not installed; \u8bf7\u6267\u884c: pip install schedule")
+            raise ImportError("please install schedule library: pip install schedule")
 
         self.schedule_time = schedule_time
         self.schedule_times = (
@@ -127,18 +127,18 @@ class Scheduler:
 
     def set_daily_task(self, task: Callable, run_immediately: bool = True):
         """
-        设置每日定时任务
+        \u8bbe\u7f6e\u6bcf\u65e5scheduled task
 
         Args:
-            task: 要执行的任务函数（无参数）
-            run_immediately: 是否在设置后立即执行一次
+            task: \u8981\u6267\u884c\u7684task\u51fd\u6570 (\u65e0parameter)
+            run_immediately: \u662f\u5426\u5728\u8bbe\u7f6e\u540e\u7acb\u5373\u6267\u884c\u4e00\u6b21
         """
         self._task_callback = task
         if not self._configure_daily_tasks(self.schedule_times):
-            raise ValueError(f"无效的定时执行时间: {self.schedule_time!r}")
+            raise ValueError(f"invalid scheduled run time: {self.schedule_time!r}")
 
         if run_immediately:
-            logger.info("立即执行一次任务...")
+            logger.info("\u7acb\u5373\u6267\u884c\u4e00\u6b21task...")
             self._safe_run_task()
 
     @staticmethod
@@ -172,7 +172,7 @@ class Scheduler:
         candidate = (schedule_time or "").strip()
         if not self._is_valid_schedule_time(candidate):
             logger.warning(
-                "检测到无效的定时执行时间 %r，继续沿用当前时间 %s",
+                "\u68c0\u6d4b\u5230invalid scheduled run time %r; \u7ee7\u7eed\u6cbf\u7528\u5f53\u524d\u65f6\u95f4 %s",
                 schedule_time,
                 self.schedule_time,
             )
@@ -184,10 +184,10 @@ class Scheduler:
         self.schedule_time = candidate
 
         if previous_time == candidate:
-            logger.info("已设置每日定时任务，执行时间: %s", self.schedule_time)
+            logger.info("\u5df2\u8bbe\u7f6e\u6bcf\u65e5scheduled task; \u6267\u884c\u65f6\u95f4: %s", self.schedule_time)
         else:
             logger.info(
-                "检测到 SCHEDULE_TIME 变更，已将每日定时任务从 %s 更新为 %s",
+                "\u68c0\u6d4b\u5230 SCHEDULE_TIME \u53d8\u66f4; \u5df2\u5c06\u6bcf\u65e5scheduled task\u4ece %s \u66f4\u65b0\u4e3a %s",
                 previous_time,
                 self.schedule_time,
             )
@@ -201,14 +201,14 @@ class Scheduler:
         try:
             latest_schedule_time = (self._schedule_time_provider() or "").strip()
         except Exception as exc:  # pragma: no cover - defensive branch
-            logger.warning("读取最新 SCHEDULE_TIME 失败，继续沿用 %s: %s", self.schedule_time, exc)
+            logger.warning("\u8bfb\u53d6\u6700\u65b0 SCHEDULE_TIME failed; \u7ee7\u7eed\u6cbf\u7528 %s: %s", self.schedule_time, exc)
             return
 
         if not latest_schedule_time or latest_schedule_time == self.schedule_time:
             return
 
         if self._configure_daily_task(latest_schedule_time):
-            logger.info("更新后的下次执行时间: %s", self._get_next_run_time())
+            logger.info("\u66f4\u65b0\u540e\u7684\u4e0b\u6b21\u6267\u884c\u65f6\u95f4: %s", self._get_next_run_time())
 
     def _configure_daily_tasks(self, schedule_times: Union[Sequence[str], str]) -> bool:
         """(Re)register daily jobs at the requested times."""
@@ -279,21 +279,21 @@ class Scheduler:
         self._refresh_daily_schedule_if_needed()
 
     def _safe_run_task(self):
-        """安全执行任务（带异常捕获）"""
+        """\u5b89\u5168\u6267\u884ctask (\u5e26\u5f02\u5e38\u6355\u83b7)"""
         if self._task_callback is None:
             return
 
         try:
             logger.info("=" * 50)
-            logger.info(f"定时任务开始执行 - {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+            logger.info(f"scheduled taskstarting - {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
             logger.info("=" * 50)
 
             self._task_callback()
 
-            logger.info(f"定时任务执行完成 - {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+            logger.info(f"scheduled taskcompleted - {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
 
         except Exception as e:
-            logger.exception(f"定时任务执行失败: {e}")
+            logger.exception(f"scheduled taskexecution failed: {e}")
 
     def add_background_task(
         self,
@@ -310,7 +310,7 @@ class Scheduler:
         clamped_interval = max(30, int(interval_seconds))
         if int(interval_seconds) < 30:
             logger.warning(
-                "后台任务 %s 请求间隔 %ds，但调度循环每 30s 轮询一次，已自动调整为 30s",
+                "\u540e\u53f0task %s request\u95f4\u9694 %ds; \u4f46\u8c03\u5ea6\u5faa\u73af\u6bcf 30s \u8f6e\u8be2\u4e00\u6b21; \u5df2\u81ea\u52a8\u8c03\u6574\u4e3a 30s",
                 name or getattr(task, "__name__", "background_task"),
                 interval_seconds,
             )
@@ -326,7 +326,7 @@ class Scheduler:
             entry["last_run"] = time.time()
         self._background_tasks.append(entry)
         logger.info(
-            "已注册后台任务: %s（间隔 %s 秒，立即执行=%s）",
+            "registered\u540e\u53f0task: %s (\u95f4\u9694 %s \u79d2; \u7acb\u5373\u6267\u884c=%s)",
             entry["name"],
             entry["interval_seconds"],
             run_immediately,
@@ -342,10 +342,10 @@ class Scheduler:
 
         def _runner() -> None:
             try:
-                logger.info("后台任务开始执行: %s", entry["name"])
+                logger.info("\u540e\u53f0taskstarting: %s", entry["name"])
                 entry["task"]()
             except Exception as exc:
-                logger.exception("后台任务执行失败 [%s]: %s", entry["name"], exc)
+                logger.exception("\u540e\u53f0taskexecution failed [%s]: %s", entry["name"], exc)
             finally:
                 entry["running"] = False
                 entry["thread"] = None
@@ -380,36 +380,36 @@ class Scheduler:
 
     def run(self):
         """
-        运行调度器主循环
+        \u8fd0\u884c\u8c03\u5ea6\u5668\u4e3b\u5faa\u73af
 
-        阻塞运行，直到收到退出信号
+        \u963b\u585e\u8fd0\u884c; \u76f4\u5230received\u9000\u51fa\u4fe1\u53f7
         """
         self._running = True
-        logger.info("调度器开始运行...")
-        logger.info(f"下次执行时间: {self._get_next_run_time()}")
+        logger.info("\u8c03\u5ea6\u5668\u5f00\u59cb\u8fd0\u884c...")
+        logger.info(f"\u4e0b\u6b21\u6267\u884c\u65f6\u95f4: {self._get_next_run_time()}")
 
         while self._running and not self.shutdown_handler.should_shutdown:
             self._refresh_daily_schedule_if_needed()
             self.schedule.run_pending()
             self._run_background_tasks()
-            time.sleep(30)  # 每30秒检查一次
+            time.sleep(30)  # \u6bcf30\u79d2\u68c0check\u4e00\u6b21
 
-            # 每小时打印一次心跳
+            # \u6bcf\u5c0f\u65f6\u6253\u5370\u4e00\u6b21\u5fc3\u8df3
             if datetime.now().minute == 0 and datetime.now().second < 30:
-                logger.info(f"调度器运行中... 下次执行: {self._get_next_run_time()}")
+                logger.info(f"\u8c03\u5ea6\u5668\u8fd0\u884cMedium... \u4e0b\u6b21\u6267\u884c: {self._get_next_run_time()}")
 
-        logger.info("调度器已停止")
+        logger.info("\u8c03\u5ea6\u5668\u5df2\u505c\u6b62")
 
     def _get_next_run_time(self) -> str:
-        """获取下次执行时间"""
+        """\u83b7\u53d6\u4e0b\u6b21\u6267\u884c\u65f6\u95f4"""
         jobs = self.schedule.get_jobs()
         if jobs:
             next_run = min(job.next_run for job in jobs)
             return next_run.strftime('%Y-%m-%d %H:%M:%S')
-        return "未设置"
+        return "\u672a\u8bbe\u7f6e"
 
     def stop(self):
-        """停止调度器"""
+        """\u505c\u6b62\u8c03\u5ea6\u5668"""
         self._running = False
         self._cancel_daily_job()
 
@@ -424,17 +424,17 @@ def run_with_schedule(
     schedule_times_provider: Optional[Callable[[], Union[Sequence[str], str]]] = None,
 ):
     """
-    便捷函数：使用定时调度运行任务
+    \u4fbf\u6377\u51fd\u6570: \u4f7f\u7528\u5b9a\u65f6\u8c03\u5ea6\u8fd0\u884ctask
 
     Args:
-        task: 要执行的任务函数
-        schedule_time: 每日执行时间
-        run_immediately: 是否立即执行一次
-        background_tasks: 可选的后台任务定义列表。每项为一个字典，
-            需包含 `task` 与 `interval_seconds`，可选包含 `name`
-            和 `run_immediately`。`interval_seconds` 单位为秒。
-        schedule_time_provider: 可选的时间提供器；调度器每轮检查前会读取，
-            当返回值变化时自动重建 daily job。
+        task: \u8981\u6267\u884c\u7684task\u51fd\u6570
+        schedule_time: daily run time
+        run_immediately: \u662f\u5426\u7acb\u5373\u6267\u884c\u4e00\u6b21
+        background_tasks: optional\u7684\u540e\u53f0task\u5b9a\u4e49\u5217\u8868.\u6bcf\u9879\u4e3a\u4e00\u4e2a\u5b57\u5178;
+            \u9700\u5305\u542b `task` \u4e0e `interval_seconds`; optional\u5305\u542b `name`
+            \u548c `run_immediately`.`interval_seconds` \u5355characters\u4e3a\u79d2.
+        schedule_time_provider: optional\u7684\u65f6\u95f4\u63d0\u4f9b\u5668；\u8c03\u5ea6\u5668\u6bcf\u8f6e\u68c0check\u524d\u4f1a\u8bfb\u53d6;
+            \u5f53\u8fd4\u56de\u503c\u53d8\u5316\u65f6\u81ea\u52a8\u91cd\u5efa daily job.
     """
     scheduler_kwargs: Dict[str, Any] = {
         "schedule_time": schedule_time,
@@ -457,16 +457,16 @@ def run_with_schedule(
 
 
 if __name__ == "__main__":
-    # 测试定时调度
+    # \u6d4b\u8bd5\u5b9a\u65f6\u8c03\u5ea6
     logging.basicConfig(
         level=logging.INFO,
         format='%(asctime)s | %(levelname)-8s | %(name)-20s | %(message)s',
     )
 
     def test_task():
-        print(f"任务执行中... {datetime.now()}")
+        print(f"task\u6267\u884cMedium... {datetime.now()}")
         time.sleep(2)
-        print("任务完成!")
+        print("task\u5b8c\u6210!")
 
-    print("启动测试调度器（按 Ctrl+C 退出）")
+    print("started\u6d4b\u8bd5\u8c03\u5ea6\u5668 (press Ctrl+C to exit)")
     run_with_schedule(test_task, schedule_time="23:59", run_immediately=True)

@@ -84,7 +84,7 @@ def _is_windows_process_alive(pid: int) -> bool:
         finally:
             kernel32.CloseHandle(handle)
     except Exception as exc:
-        logger.warning("Windows 进程存活探测失败，保守视为仍在运行: %s", exc)
+        logger.warning("Windows \u8fdb\u7a0b\u5b58\u6d3b\u63a2\u6d4bfailed; \u4fdd\u5b88\u89c6\u4e3a\u4ecd\u5728\u8fd0\u884c: %s", exc)
         return True
 
 
@@ -183,11 +183,11 @@ def try_acquire_market_review_lock(
                     if not _is_stale_lock(lock_path):
                         return None
 
-                    logger.warning("检测到过期的 market_review.lock，尝试清理后重试。")
+                    logger.warning("\u68c0\u6d4b\u5230\u8fc7\u671f\u7684 market_review.lock; \u5c1d\u8bd5\u6e05\u7406\u540e\u91cd\u8bd5.")
                     try:
                         lock_path.unlink()
                     except OSError as exc:
-                        logger.warning("清理过期 market_review.lock 失败: %s", exc)
+                        logger.warning("\u6e05\u7406\u8fc7\u671f market_review.lock failed: %s", exc)
                         return None
 
             if fd is None:

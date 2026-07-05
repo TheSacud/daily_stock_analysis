@@ -1,113 +1,113 @@
 ---
 name: "stock_analyzer"
-description: "分析股票和市场。当用户想要分析单个或多个股票，或进行市场复盘时调用。"
+description: "\u5206\u6790\u80a1\u7968\u548c\u5e02\u573a。\u5f53\u7528\u6237\u60f3\u8981\u5206\u6790\u5355\u4e2a\u6216\u591a\u4e2a\u80a1\u7968，\u6216\u8fdb\u884c\u5e02\u573a\u590d\u76d8\u65f6\u8c03\u7528。"
 ---
 
-# 股票分析器
+# \u80a1\u7968\u5206\u6790\u5668
 
-本技能基于 `src/services/analyzer_service.py` 的逻辑，提供分析股票和整体市场的功能。
+\u672c\u6280\u80fd\u57fa\u4e8e `src/services/analyzer_service.py` \u7684\u903b\u8f91，\u63d0\u4f9b\u5206\u6790\u80a1\u7968\u548c\u6574\u4f53\u5e02\u573a\u7684\u529f\u80fd。
 
-## 输出结构 (`AnalysisResult`)
+## \u8f93\u51fa\u7ed3\u6784 (`AnalysisResult`)
 
-分析函数返回一个 `AnalysisResult` 对象（或其列表），该对象具有丰富的结构。以下是其关键组件的简要概述，并附有真实的输出示例：
+\u5206\u6790\u51fd\u6570\u8fd4\u56de\u4e00\u4e2a `AnalysisResult` \u5bf9\u8c61（\u6216\u5176\u5217\u8868），\u8be5\u5bf9\u8c61\u5177\u6709\u4e30\u5bcc\u7684\u7ed3\u6784。\u4ee5\u4e0b\u662f\u5176\u5173\u952e\u7ec4\u4ef6\u7684\u7b80\u8981\u6982\u8ff0，\u5e76\u9644\u6709\u771f\u5b9e\u7684\u8f93\u51fa\u793a\u4f8b：
 
-`dashboard` 属性包含核心分析，分为四个主要部分：
-1.  **`core_conclusion`**: 一句话总结、信号类型和仓位建议。
-2.  **`data_perspective`**: 技术数据，包括趋势状态、价格位置、量能分析和筹码结构。
-3.  **`intelligence`**: 定性信息，如新闻、风险警报和积极催化剂。
-4.  **`battle_plan`**: 可操作的策略，包括狙击点（买/卖目标）、仓位策略和风险控制清单。
+`dashboard` \u5c5e\u6027\u5305\u542b\u6838\u5fc3\u5206\u6790，\u5206\u4e3a\u56db\u4e2a\u4e3b\u8981\u90e8\u5206：
+1.  **`core_conclusion`**: \u4e00\u53e5\u8bdd\u603b\u7ed3、\u4fe1\u53f7\u7c7b\u578b\u548c\u4ed3\u4f4d\u5efa\u8bae。
+2.  **`data_perspective`**: \u6280\u672f\u6570\u636e，\u5305\u62ec\u8d8b\u52bf\u72b6\u6001、\u4ef7\u683c\u4f4d\u7f6e、\u91cf\u80fd\u5206\u6790\u548c\u7b79\u7801\u7ed3\u6784。
+3.  **`intelligence`**: \u5b9a\u6027\u4fe1\u606f，\u5982\u65b0\u95fb、\u98ce\u9669\u8b66\u62a5\u548c\u79ef\u6781\u50ac\u5316\u5242。
+4.  **`battle_plan`**: \u53ef\u64cd\u4f5c\u7684\u7b56\u7565，\u5305\u62ec\u72d9\u51fb\u70b9（\u4e70/\u5356\u76ee\u6807）、\u4ed3\u4f4d\u7b56\u7565\u548c\u98ce\u9669\u63a7\u5236\u6e05\u5355。
 
-## 配置 (`Config`)
+## \u914d\u7f6e (`Config`)
 
-所有分析函数都可以接受一个可选的 `config` 对象。该对象包含应用程序的所有配置，例如 API 密钥、通知设置和分析参数。
+\u6240\u6709\u5206\u6790\u51fd\u6570\u90fd\u53ef\u4ee5\u63a5\u53d7\u4e00\u4e2a\u53ef\u9009\u7684 `config` \u5bf9\u8c61。\u8be5\u5bf9\u8c61\u5305\u542b\u5e94\u7528\u7a0b\u5e8f\u7684\u6240\u6709\u914d\u7f6e，\u4f8b\u5982 API \u5bc6\u94a5、\u901a\u77e5\u8bbe\u7f6e\u548c\u5206\u6790\u53c2\u6570。
 
-如果未提供 `config` 对象，函数将自动使用从 `.env` 文件加载的全局单例实例。
+\u5982\u679c\u672a\u63d0\u4f9b `config` \u5bf9\u8c61，\u51fd\u6570\u5c06\u81ea\u52a8\u4f7f\u7528\u4ece `.env` \u6587\u4ef6\u52a0\u8f7d\u7684\u5168\u5c40\u5355\u4f8b\u5b9e\u4f8b。
 
-**参考:** [`Config`](src/config.py)
+**\u53c2\u8003:** [`Config`](src/config.py)
 
-## 函数
+## \u51fd\u6570
 
-### 1. 分析单只股票
+### 1. \u5206\u6790\u5355\u53ea\u80a1\u7968
 
-**描述:** 分析单只股票并返回分析结果。
+**\u63cf\u8ff0:** \u5206\u6790\u5355\u53ea\u80a1\u7968\u5e76\u8fd4\u56de\u5206\u6790\u7ed3\u679c。
 
-**何时使用:** 当用户要求分析特定股票时。
+**\u4f55\u65f6\u4f7f\u7528:** \u5f53\u7528\u6237\u8981\u6c42\u5206\u6790\u7279\u5b9a\u80a1\u7968\u65f6。
 
-**输入:**
-- `stock_code` (str): 要分析的股票代码。
-- `config` (Config, 可选): 配置对象。默认为 `None`。
-- `full_report` (bool, 可选): 是否生成完整报告。默认为 `False`。
-- `notifier` (NotificationService, 可选): 通知服务对象。默认为 `None`。
+**\u8f93\u5165:**
+- `stock_code` (str): \u8981\u5206\u6790\u7684\u80a1\u7968\u4ee3\u7801。
+- `config` (Config, \u53ef\u9009): \u914d\u7f6e\u5bf9\u8c61。\u9ed8\u8ba4\u4e3a `None`。
+- `full_report` (bool, \u53ef\u9009): \u662f\u5426\u751f\u6210\u5b8c\u6574\u62a5\u544a。\u9ed8\u8ba4\u4e3a `False`。
+- `notifier` (NotificationService, \u53ef\u9009): \u901a\u77e5\u670d\u52a1\u5bf9\u8c61。\u9ed8\u8ba4\u4e3a `None`。
 
-**输出:** `Optional[AnalysisResult]`
-一个包含分析结果的 `AnalysisResult` 对象，如果分析失败则为 `None`。
+**\u8f93\u51fa:** `Optional[AnalysisResult]`
+\u4e00\u4e2a\u5305\u542b\u5206\u6790\u7ed3\u679c\u7684 `AnalysisResult` \u5bf9\u8c61，\u5982\u679c\u5206\u6790\u5931\u8d25\u5219\u4e3a `None`。
 
-**示例:**
+**\u793a\u4f8b:**
 
 ```python
 from src.services.analyzer_service import analyze_stock
 
-# 分析单只股票
+# \u5206\u6790\u5355\u53ea\u80a1\u7968
 result = analyze_stock("600989")
 if result:
-    print(f"股票: {result.name} ({result.code})")
-    print(f"情绪得分: {result.sentiment_score}")
-    print(f"操作建议: {result.operation_advice}")
+    print(f"\u80a1\u7968: {result.name} ({result.code})")
+    print(f"\u60c5\u7eea\u5f97\u5206: {result.sentiment_score}")
+    print(f"\u64cd\u4f5c\u5efa\u8bae: {result.operation_advice}")
 ```
 
-**参考:** [`analyze_stock`](src/services/analyzer_service.py)
+**\u53c2\u8003:** [`analyze_stock`](src/services/analyzer_service.py)
 
-### 2. 分析多只股票
+### 2. \u5206\u6790\u591a\u53ea\u80a1\u7968
 
-**描述:** 分析一个股票列表并返回分析结果列表。
+**\u63cf\u8ff0:** \u5206\u6790\u4e00\u4e2a\u80a1\u7968\u5217\u8868\u5e76\u8fd4\u56de\u5206\u6790\u7ed3\u679c\u5217\u8868。
 
-**何时使用:** 当用户想要一次分析多只股票时。
+**\u4f55\u65f6\u4f7f\u7528:** \u5f53\u7528\u6237\u60f3\u8981\u4e00\u6b21\u5206\u6790\u591a\u53ea\u80a1\u7968\u65f6。
 
-**输入:**
-- `stock_codes` (List[str]): 要分析的股票代码列表。
-- `config` (Config, 可选): 配置对象。默认为 `None`。
-- `full_report` (bool, 可选): 是否为每只股票生成完整报告。默认为 `False`。
-- `notifier` (NotificationService, 可选): 通知服务对象。默认为 `None`。
+**\u8f93\u5165:**
+- `stock_codes` (List[str]): \u8981\u5206\u6790\u7684\u80a1\u7968\u4ee3\u7801\u5217\u8868。
+- `config` (Config, \u53ef\u9009): \u914d\u7f6e\u5bf9\u8c61。\u9ed8\u8ba4\u4e3a `None`。
+- `full_report` (bool, \u53ef\u9009): \u662f\u5426\u4e3a\u6bcf\u53ea\u80a1\u7968\u751f\u6210\u5b8c\u6574\u62a5\u544a。\u9ed8\u8ba4\u4e3a `False`。
+- `notifier` (NotificationService, \u53ef\u9009): \u901a\u77e5\u670d\u52a1\u5bf9\u8c61。\u9ed8\u8ba4\u4e3a `None`。
 
-**输出:** `List[AnalysisResult]`
-一个 `AnalysisResult` 对象列表。
+**\u8f93\u51fa:** `List[AnalysisResult]`
+\u4e00\u4e2a `AnalysisResult` \u5bf9\u8c61\u5217\u8868。
 
-**示例:**
+**\u793a\u4f8b:**
 
 ```python
 from src.services.analyzer_service import analyze_stocks
 
-# 分析多只股票
+# \u5206\u6790\u591a\u53ea\u80a1\u7968
 results = analyze_stocks(["600989", "000001"])
 for result in results:
-    print(f"股票: {result.name}, 操作建议: {result.operation_advice}")
+    print(f"\u80a1\u7968: {result.name}, \u64cd\u4f5c\u5efa\u8bae: {result.operation_advice}")
 ```
 
-**参考:** [`analyze_stocks`](src/services/analyzer_service.py)
+**\u53c2\u8003:** [`analyze_stocks`](src/services/analyzer_service.py)
 
 
-### 3. 执行大盘复盘
+### 3. \u6267\u884c\u5927\u76d8\u590d\u76d8
 
-**描述:** 对整体市场进行复盘并返回一份报告。
+**\u63cf\u8ff0:** \u5bf9\u6574\u4f53\u5e02\u573a\u8fdb\u884c\u590d\u76d8\u5e76\u8fd4\u56de\u4e00\u4efd\u62a5\u544a。
 
-**何时使用:** 当用户要求市场概览、摘要或复盘时。
+**\u4f55\u65f6\u4f7f\u7528:** \u5f53\u7528\u6237\u8981\u6c42\u5e02\u573a\u6982\u89c8、\u6458\u8981\u6216\u590d\u76d8\u65f6。
 
-**输入:**
-- `config` (Config, 可选): 配置对象。默认为 `None`。
-- `notifier` (NotificationService, 可选): 通知服务对象。默认为 `None`。
+**\u8f93\u5165:**
+- `config` (Config, \u53ef\u9009): \u914d\u7f6e\u5bf9\u8c61。\u9ed8\u8ba4\u4e3a `None`。
+- `notifier` (NotificationService, \u53ef\u9009): \u901a\u77e5\u670d\u52a1\u5bf9\u8c61。\u9ed8\u8ba4\u4e3a `None`。
 
-**输出:** `Optional[str]`
-一个包含市场复盘报告的字符串，如果失败则为 `None`。
+**\u8f93\u51fa:** `Optional[str]`
+\u4e00\u4e2a\u5305\u542b\u5e02\u573a\u590d\u76d8\u62a5\u544a\u7684\u5b57\u7b26\u4e32，\u5982\u679c\u5931\u8d25\u5219\u4e3a `None`。
 
-**示例:**
+**\u793a\u4f8b:**
 
 ```python
 from src.services.analyzer_service import perform_market_review
 
-# 执行大盘复盘
+# \u6267\u884c\u5927\u76d8\u590d\u76d8
 report = perform_market_review()
 if report:
     print(report)
 ```
 
-**参考:** [`perform_market_review`](src/services/analyzer_service.py)
+**\u53c2\u8003:** [`perform_market_review`](src/services/analyzer_service.py)

@@ -34,47 +34,47 @@ class MarketPhasePromptTestCase(unittest.TestCase):
             _ctx(phase="premarket", is_partial_bar=False, minutes_to_open=30)
         )
 
-        self.assertIn("市场阶段上下文", section)
-        self.assertIn("盘前", section)
-        self.assertIn("尚未开盘", section)
-        self.assertIn("不得描述“今日走势已经发生”", section)
-        self.assertIn("上一完整交易日", section)
+        self.assertIn("\u5e02\u573a\u9636\u6bb5\u4e0a\u4e0b\u6587", section)
+        self.assertIn("\u76d8\u524d", section)
+        self.assertIn("\u5c1a\u672a\u5f00\u76d8", section)
+        self.assertIn("\u4e0d\u5f97\u63cf\u8ff0“\u4eca\u65e5\u8d70\u52bf\u5df2\u7ecf\u53d1\u751f”", section)
+        self.assertIn("\u4e0a\u4e00\u5b8c\u6574\u4ea4\u6613\u65e5", section)
         self.assertIn("2026-03-26", section)
-        self.assertIn("距常规开盘约 30 分钟", section)
+        self.assertIn("\u8ddd\u5e38\u89c4\u5f00\u76d8\u7ea6 30 \u5206\u949f", section)
 
     def test_intraday_partial_bar_warns_against_full_daily_recap(self):
         section = format_market_phase_prompt_section(_ctx())
 
-        self.assertIn("盘中", section)
-        self.assertIn("当前不是盘后复盘", section)
-        self.assertIn("最后一根日线可能尚未完成", section)
-        self.assertIn("不得当作完整日线复盘", section)
-        self.assertIn("距常规收盘约 300 分钟", section)
+        self.assertIn("\u76d8\u4e2d", section)
+        self.assertIn("\u5f53\u524d\u4e0d\u662f\u76d8\u540e\u590d\u76d8", section)
+        self.assertIn("\u6700\u540e\u4e00\u6839\u65e5\u7ebf\u53ef\u80fd\u5c1a\u672a\u5b8c\u6210", section)
+        self.assertIn("\u4e0d\u5f97\u5f53\u4f5c\u5b8c\u6574\u65e5\u7ebf\u590d\u76d8", section)
+        self.assertIn("\u8ddd\u5e38\u89c4\u6536\u76d8\u7ea6 300 \u5206\u949f", section)
 
     def test_lunch_break_and_closing_auction_add_phase_specific_guidance(self):
         lunch = format_market_phase_prompt_section(_ctx(phase="lunch_break"))
         closing = format_market_phase_prompt_section(_ctx(phase="closing_auction"))
 
-        self.assertIn("午间休市", lunch)
-        self.assertIn("下午交易确认", lunch)
-        self.assertIn("临近收盘", closing)
-        self.assertIn("是否隔夜持仓", closing)
+        self.assertIn("\u5348\u95f4\u4f11\u5e02", lunch)
+        self.assertIn("\u4e0b\u5348\u4ea4\u6613\u786e\u8ba4", lunch)
+        self.assertIn("\u4e34\u8fd1\u6536\u76d8", closing)
+        self.assertIn("\u662f\u5426\u9694\u591c\u6301\u4ed3", closing)
 
     def test_postmarket_keeps_recap_semantics(self):
         section = format_market_phase_prompt_section(
             _ctx(phase="postmarket", is_partial_bar=False, minutes_to_close=None)
         )
 
-        self.assertIn("盘后", section)
-        self.assertIn("完整交易日复盘语义", section)
+        self.assertIn("\u76d8\u540e", section)
+        self.assertIn("\u5b8c\u6574\u4ea4\u6613\u65e5\u590d\u76d8\u8bed\u4e49", section)
 
     def test_non_trading_prevents_fake_intraday_movement(self):
         section = format_market_phase_prompt_section(
             _ctx(phase="non_trading", is_partial_bar=False, minutes_to_close=None)
         )
 
-        self.assertIn("非交易日", section)
-        self.assertIn("不得伪造今日盘中走势", section)
+        self.assertIn("\u975e\u4ea4\u6613\u65e5", section)
+        self.assertIn("\u4e0d\u5f97\u4f2a\u9020\u4eca\u65e5\u76d8\u4e2d\u8d70\u52bf", section)
         self.assertIn("2026-03-26", section)
 
     def test_unknown_phase_and_warnings_are_conservative_without_raw_codes(self):
@@ -82,9 +82,9 @@ class MarketPhasePromptTestCase(unittest.TestCase):
             _ctx(phase="not_a_phase", warnings=["calendar_unavailable", "unknown_warning"])
         )
 
-        self.assertIn("未知阶段", section)
-        self.assertIn("不可可靠推断", section)
-        self.assertIn("交易日历不可用", section)
+        self.assertIn("\u672a\u77e5\u9636\u6bb5", section)
+        self.assertIn("\u4e0d\u53ef\u53ef\u9760\u63a8\u65ad", section)
+        self.assertIn("\u4ea4\u6613\u65e5\u5386\u4e0d\u53ef\u7528", section)
         self.assertNotIn("calendar_unavailable", section)
         self.assertNotIn("unknown_warning", section)
 
@@ -94,14 +94,14 @@ class MarketPhasePromptTestCase(unittest.TestCase):
 
         section = format_market_phase_prompt_section(payload)
 
-        self.assertIn("未知阶段", section)
-        self.assertIn("不可可靠推断", section)
+        self.assertIn("\u672a\u77e5\u9636\u6bb5", section)
+        self.assertIn("\u4e0d\u53ef\u53ef\u9760\u63a8\u65ad", section)
 
     def test_warnings_non_list_is_ignored(self):
         section = format_market_phase_prompt_section(_ctx(warnings="calendar_unavailable"))
 
-        self.assertNotIn("降级说明", section)
-        self.assertIn("盘中", section)
+        self.assertNotIn("\u964d\u7ea7\u8bf4\u660e", section)
+        self.assertIn("\u76d8\u4e2d", section)
 
     def test_english_mode_outputs_readable_english_constraints(self):
         section = format_market_phase_prompt_section(

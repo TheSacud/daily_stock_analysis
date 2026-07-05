@@ -131,8 +131,8 @@ class TestYfinanceFundamentalAdapter(unittest.TestCase):
         self.assertEqual(
             bundle["belong_boards"],
             [
-                {"name": "Technology", "type": "行业"},
-                {"name": "Consumer Electronics", "type": "概念"},
+                {"name": "Technology", "type": "\u884c\u4e1a"},
+                {"name": "Consumer Electronics", "type": "\u6982\u5ff5"},
             ],
         )
 
@@ -140,7 +140,7 @@ class TestYfinanceFundamentalAdapter(unittest.TestCase):
         # yfinance 1.2.x returns Ticker.dividends as a single-column DataFrame, not a
         # Series. Without coercion, `.items()` yields (column_name, Series), every event
         # is dropped, and TTM silently falls back to the annual-rate estimate — the real
-        # bug seen on live US/HK/JP/KR/TW reports (24.0 / "0 次" instead of the true sum).
+        # bug seen on live US/HK/JP/KR/TW reports (24.0 / "0 \u6b21" instead of the true sum).
         idx = pd.DatetimeIndex(
             ["2025-08-11", "2025-11-10", "2026-02-09", "2026-05-11"],
             tz="America/New_York",

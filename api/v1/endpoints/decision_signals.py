@@ -53,7 +53,7 @@ router = APIRouter(dependencies=[Security(admin_session_cookie)])
 AUTH_RESPONSE = {
     401: {
         "model": ErrorResponse,
-        "description": "未登录或管理员会话无效（ADMIN_AUTH_ENABLED=true 时）",
+        "description": "\u672a\u767b\u5f55or\u7ba1\u7406\u5458conversation\u65e0\u6548 (ADMIN_AUTH_ENABLED=true \u65f6)",
     },
 }
 
@@ -92,17 +92,17 @@ def _internal_error(message: str, exc: Exception) -> HTTPException:
     response_model=DecisionSignalMutationResponse,
     responses={
         **AUTH_RESPONSE,
-        400: {"model": ErrorResponse, "description": "请求字段非法"},
-        422: {"model": ErrorResponse, "description": "请求体或路径参数校验失败"},
-        500: {"model": ErrorResponse, "description": "创建失败"},
+        400: {"model": ErrorResponse, "description": "request\u5b57\u6bb5\u975e\u6cd5"},
+        422: {"model": ErrorResponse, "description": "request\u4f53or\u8def\u5f84parametervalidation failed"},
+        500: {"model": ErrorResponse, "description": "create failed"},
     },
-    summary="创建或去重决策信号",
+    summary="\u521b\u5efaor\u53bb\u91cd\u51b3\u7b56\u4fe1\u53f7",
     description=(
-        "显式写入 DecisionSignal。未传 horizon/expires_at 时由服务补默认生命周期；"
-        "命中同源去重键或窄 relaxed 去重时返回已有记录和 created=false；"
-        "active 新建或 expired 续期会失效同股旧 active 相反信号，"
-        "active duplicate retry 也会重跑该修复；普通旧 duplicate/replay 不作为新的激活事件；"
-        "不保证并发绝对幂等。"
+        "\u663e\u5f0f\u5199\u5165 DecisionSignal.\u672a\u4f20 horizon/expires_at \u65f6\u7531\u670d\u52a1\u8865default\u751f\u547d\u5468\u671f；"
+        "\u547dMedium\u540c\u6e90\u53bb\u91cd\u952eor\u7a84 relaxed \u53bb\u91cd\u65f6\u8fd4\u56de\u5df2\u6709\u8bb0\u5f55\u548c created=false；"
+        "active \u65b0\u5efaor expired \u7eed\u671f\u4f1a\u5931\u6548\u540c\u80a1\u65e7 active \u76f8\u53cd\u4fe1\u53f7; "
+        "active duplicate retry \u4e5f\u4f1a\u91cd\u8dd1\u8be5\u4fee\u590d；\u666e\u901a\u65e7 duplicate/replay \u4e0d\u4f5c\u4e3a\u65b0\u7684\u6fc0\u6d3b\u4e8b\u4ef6；"
+        "\u4e0d\u4fdd\u8bc1\u5e76\u53d1\u7edd\u5bf9\u5e42\u7b49."
     ),
     operation_id="createDecisionSignal",
 )
@@ -124,17 +124,17 @@ def create_signal(request: DecisionSignalCreateRequest) -> DecisionSignalMutatio
     response_model=DecisionSignalListResponse,
     responses={
         **AUTH_RESPONSE,
-        400: {"model": ErrorResponse, "description": "查询参数非法"},
-        422: {"model": ErrorResponse, "description": "查询参数校验失败"},
-        500: {"model": ErrorResponse, "description": "查询失败"},
+        400: {"model": ErrorResponse, "description": "queryparameter\u975e\u6cd5"},
+        422: {"model": ErrorResponse, "description": "queryparametervalidation failed"},
+        500: {"model": ErrorResponse, "description": "query failed"},
     },
-    summary="查询决策信号列表",
+    summary="query\u51b3\u7b56\u4fe1\u53f7\u5217\u8868",
     description=(
-        "分页查询 DecisionSignal；读取前会懒过期已到 expires_at 的 active 信号。"
-        "当 source_type=analysis 且只传 source_report_id 查询时，若无命中信号会尝试基于该历史报告一次性懒回填 "
-        "（仅首次命中列表场景，且该精确查询会触发历史决策信号回填写入，属于 read-with-write 行为；"
-        "不影响其他分页列表筛选参数场景）。"
-        "holding_only=true 只读取 active 账户的 portfolio_positions 缓存持仓，不触发 portfolio snapshot replay。"
+        "\u5206\u9875query DecisionSignal；\u8bfb\u53d6\u524d\u4f1a\u61d2\u8fc7\u671f\u5df2\u5230 expires_at \u7684 active \u4fe1\u53f7."
+        "\u5f53 source_type=analysis \u4e14\u53ea\u4f20 source_report_id query\u65f6; \u82e5\u65e0\u547dMedium\u4fe1\u53f7\u4f1a\u5c1d\u8bd5\u57fa\u4e8e\u8be5historyreport\u4e00\u6b21\u61d2\u56de\u586b "
+        " (\u4ec5\u9996\u6b21\u547dMedium\u5217\u8868\u573a\u666f; \u4e14\u8be5\u7cbe\u786equery\u4f1a\u89e6\u53d1history\u51b3\u7b56\u4fe1\u53f7\u56de\u586b\u5199\u5165; \u5c5e\u4e8e read-with-write \u884c\u4e3a；"
+        "\u4e0d\u5f71\u54cdother\u5206\u9875\u5217\u8868\u7b5b\u9009parameter\u573a\u666f)."
+        "holding_only=true \u53ea\u8bfb\u53d6 active \u8d26\u6237\u7684 portfolio_positions cache\u6301\u4ed3; \u4e0d\u89e6\u53d1 portfolio snapshot replay."
     ),
     operation_id="listDecisionSignals",
 )
@@ -196,16 +196,16 @@ def list_signals(
     response_model=DecisionSignalOutcomeRunResponse,
     responses={
         **AUTH_RESPONSE,
-        400: {"model": ErrorResponse, "description": "请求字段非法"},
-        404: {"model": ErrorResponse, "description": "信号不存在"},
-        422: {"model": ErrorResponse, "description": "请求体校验失败"},
-        500: {"model": ErrorResponse, "description": "后验计算失败"},
+        400: {"model": ErrorResponse, "description": "request\u5b57\u6bb5\u975e\u6cd5"},
+        404: {"model": ErrorResponse, "description": "\u4fe1\u53f7does not exist"},
+        422: {"model": ErrorResponse, "description": "request\u4f53validation failed"},
+        500: {"model": ErrorResponse, "description": "\u540e\u9a8c\u8ba1\u7b97failed"},
     },
-    summary="触发决策信号后验评估",
+    summary="\u89e6\u53d1\u51b3\u7b56\u4fe1\u53f7\u540e\u9a8c\u8bc4\u4f30",
     description=(
-        "显式触发 signal-level outcome 计算；默认跳过 completed 和终态 unable，"
-        "但会重算缺少行情数据等可恢复 unable；force=true 会重算并覆盖同一 "
-        "signal_id+horizon+engine_version。"
+        "\u663e\u5f0f\u89e6\u53d1 signal-level outcome \u8ba1\u7b97；defaultskipping completed \u548c\u7ec8\u6001 unable; "
+        "\u4f46\u4f1a\u91cd\u7b97\u7f3a\u5c11\u884c\u60c5\u6570\u636e\u7b49\u53ef\u6062\u590d unable；force=true \u4f1a\u91cd\u7b97\u5e76\u8986\u76d6\u540c\u4e00 "
+        "signal_id+horizon+engine_version."
     ),
     operation_id="runDecisionSignalOutcomes",
 )
@@ -238,12 +238,12 @@ def run_outcomes(request: DecisionSignalOutcomeRunRequest) -> DecisionSignalOutc
     response_model=DecisionSignalOutcomeListResponse,
     responses={
         **AUTH_RESPONSE,
-        400: {"model": ErrorResponse, "description": "查询参数非法"},
-        422: {"model": ErrorResponse, "description": "查询参数校验失败"},
-        500: {"model": ErrorResponse, "description": "查询失败"},
+        400: {"model": ErrorResponse, "description": "queryparameter\u975e\u6cd5"},
+        422: {"model": ErrorResponse, "description": "queryparametervalidation failed"},
+        500: {"model": ErrorResponse, "description": "query failed"},
     },
-    summary="查询决策信号后验结果",
-    description="分页查询 signal-level outcome；默认只查当前 signal 后验 engine_version。",
+    summary="query\u51b3\u7b56\u4fe1\u53f7\u540e\u9a8cresult",
+    description="\u5206\u9875query signal-level outcome；default\u53eacheck\u5f53\u524d signal \u540e\u9a8c engine_version.",
     operation_id="listDecisionSignalOutcomes",
 )
 def list_outcomes(
@@ -279,12 +279,12 @@ def list_outcomes(
     response_model=DecisionSignalOutcomeStatsResponse,
     responses={
         **AUTH_RESPONSE,
-        400: {"model": ErrorResponse, "description": "查询参数非法"},
-        422: {"model": ErrorResponse, "description": "查询参数校验失败"},
-        500: {"model": ErrorResponse, "description": "统计失败"},
+        400: {"model": ErrorResponse, "description": "queryparameter\u975e\u6cd5"},
+        422: {"model": ErrorResponse, "description": "queryparametervalidation failed"},
+        500: {"model": ErrorResponse, "description": "\u7edf\u8ba1failed"},
     },
-    summary="查询决策信号后验统计",
-    description="默认统计当前 engine_version，且排除 archived 信号。",
+    summary="query\u51b3\u7b56\u4fe1\u53f7\u540e\u9a8c\u7edf\u8ba1",
+    description="default\u7edf\u8ba1\u5f53\u524d engine_version; \u4e14\u6392\u9664 archived \u4fe1\u53f7.",
     operation_id="getDecisionSignalOutcomeStats",
 )
 def get_outcome_stats(
@@ -312,15 +312,15 @@ def get_outcome_stats(
     response_model=DecisionSignalReassessResponse,
     responses={
         **AUTH_RESPONSE,
-        400: {"model": ErrorResponse, "description": "重评估请求不支持或历史报告不适用"},
-        404: {"model": ErrorResponse, "description": "来源历史报告不存在"},
-        422: {"model": ErrorResponse, "description": "请求体校验失败"},
-        500: {"model": ErrorResponse, "description": "重评估失败"},
+        400: {"model": ErrorResponse, "description": "\u91cd\u8bc4\u4f30requestdoes not supportorhistoryreport\u4e0d\u9002\u7528"},
+        404: {"model": ErrorResponse, "description": "sourcehistoryreportdoes not exist"},
+        422: {"model": ErrorResponse, "description": "request\u4f53validation failed"},
+        500: {"model": ErrorResponse, "description": "\u91cd\u8bc4\u4f30failed"},
     },
-    summary="预览决策风格重评估",
+    summary="\u9884\u89c8\u51b3\u7b56\u98ce\u683c\u91cd\u8bc4\u4f30",
     description=(
-        "基于 source_report_id 对应的持久化历史报告快照生成 decision_profile preview；"
-        "P3a 仅支持 persist=false，不写入 DecisionSignal。"
+        "\u57fa\u4e8e source_report_id \u5bf9\u5e94\u7684\u6301\u4e45\u5316historyreport\u5feb\u7167\u751f\u6210 decision_profile preview；"
+        "P3a \u4ec5\u652f\u6301 persist=false; \u4e0d\u5199\u5165 DecisionSignal."
     ),
     operation_id="reassessDecisionSignalPreview",
 )
@@ -361,12 +361,12 @@ def reassess_signal(request: DecisionSignalReassessRequest) -> DecisionSignalRea
     response_model=DecisionSignalListResponse,
     responses={
         **AUTH_RESPONSE,
-        400: {"model": ErrorResponse, "description": "请求参数非法"},
-        422: {"model": ErrorResponse, "description": "路径或查询参数校验失败"},
-        500: {"model": ErrorResponse, "description": "查询失败"},
+        400: {"model": ErrorResponse, "description": "requestparameter\u975e\u6cd5"},
+        422: {"model": ErrorResponse, "description": "\u8def\u5f84orqueryparametervalidation failed"},
+        500: {"model": ErrorResponse, "description": "query failed"},
     },
-    summary="查询股票最新 active 决策信号",
-    description="返回指定股票最新 active 信号列表；读取前会执行懒过期。",
+    summary="query\u80a1\u7968\u6700\u65b0 active \u51b3\u7b56\u4fe1\u53f7",
+    description="\u8fd4\u56de\u6307\u5b9a\u80a1\u7968\u6700\u65b0 active \u4fe1\u53f7\u5217\u8868；\u8bfb\u53d6\u524d\u4f1a\u6267\u884c\u61d2\u8fc7\u671f.",
     operation_id="getLatestDecisionSignals",
 )
 def get_latest_active(
@@ -396,12 +396,12 @@ def get_latest_active(
     response_model=DecisionSignalItem,
     responses={
         **AUTH_RESPONSE,
-        404: {"model": ErrorResponse, "description": "信号不存在"},
-        422: {"model": ErrorResponse, "description": "路径参数校验失败"},
-        500: {"model": ErrorResponse, "description": "查询失败"},
+        404: {"model": ErrorResponse, "description": "\u4fe1\u53f7does not exist"},
+        422: {"model": ErrorResponse, "description": "\u8def\u5f84parametervalidation failed"},
+        500: {"model": ErrorResponse, "description": "query failed"},
     },
-    summary="查询单条决策信号",
-    description="按 ID 查询单条 DecisionSignal；读取前会执行懒过期。",
+    summary="query\u5355\u6761\u51b3\u7b56\u4fe1\u53f7",
+    description="\u6309 ID query\u5355\u6761 DecisionSignal；\u8bfb\u53d6\u524d\u4f1a\u6267\u884c\u61d2\u8fc7\u671f.",
     operation_id="getDecisionSignal",
 )
 def get_signal(signal_id: int) -> DecisionSignalItem:
@@ -421,12 +421,12 @@ def get_signal(signal_id: int) -> DecisionSignalItem:
     response_model=DecisionSignalOutcomeListResponse,
     responses={
         **AUTH_RESPONSE,
-        404: {"model": ErrorResponse, "description": "信号不存在"},
-        422: {"model": ErrorResponse, "description": "路径参数校验失败"},
-        500: {"model": ErrorResponse, "description": "查询失败"},
+        404: {"model": ErrorResponse, "description": "\u4fe1\u53f7does not exist"},
+        422: {"model": ErrorResponse, "description": "\u8def\u5f84parametervalidation failed"},
+        500: {"model": ErrorResponse, "description": "query failed"},
     },
-    summary="查询单个决策信号后验结果",
-    description="返回指定 signal_id 在当前 engine_version 下的后验结果。",
+    summary="query\u5355\u4e2a\u51b3\u7b56\u4fe1\u53f7\u540e\u9a8cresult",
+    description="\u8fd4\u56de\u6307\u5b9a signal_id \u5728\u5f53\u524d engine_version \u4e0b\u7684\u540e\u9a8cresult.",
     operation_id="listDecisionSignalOutcomesBySignal",
 )
 def list_signal_outcomes(signal_id: int) -> DecisionSignalOutcomeListResponse:
@@ -444,12 +444,12 @@ def list_signal_outcomes(signal_id: int) -> DecisionSignalOutcomeListResponse:
     response_model=DecisionSignalFeedbackItem,
     responses={
         **AUTH_RESPONSE,
-        404: {"model": ErrorResponse, "description": "信号不存在"},
-        422: {"model": ErrorResponse, "description": "路径参数校验失败"},
-        500: {"model": ErrorResponse, "description": "查询失败"},
+        404: {"model": ErrorResponse, "description": "\u4fe1\u53f7does not exist"},
+        422: {"model": ErrorResponse, "description": "\u8def\u5f84parametervalidation failed"},
+        500: {"model": ErrorResponse, "description": "query failed"},
     },
-    summary="查询决策信号用户反馈",
-    description="没有反馈时返回 feedback_value=null；信号不存在时返回 404。",
+    summary="query\u51b3\u7b56\u4fe1\u53f7user\u53cd\u9988",
+    description="\u6ca1\u6709\u53cd\u9988\u65f6\u8fd4\u56de feedback_value=null；\u4fe1\u53f7does not exist\u65f6\u8fd4\u56de 404.",
     operation_id="getDecisionSignalFeedback",
 )
 def get_feedback(signal_id: int) -> DecisionSignalFeedbackItem:
@@ -467,13 +467,13 @@ def get_feedback(signal_id: int) -> DecisionSignalFeedbackItem:
     response_model=DecisionSignalFeedbackItem,
     responses={
         **AUTH_RESPONSE,
-        400: {"model": ErrorResponse, "description": "请求字段非法"},
-        404: {"model": ErrorResponse, "description": "信号不存在"},
-        422: {"model": ErrorResponse, "description": "请求体或路径参数校验失败"},
-        500: {"model": ErrorResponse, "description": "更新失败"},
+        400: {"model": ErrorResponse, "description": "request\u5b57\u6bb5\u975e\u6cd5"},
+        404: {"model": ErrorResponse, "description": "\u4fe1\u53f7does not exist"},
+        422: {"model": ErrorResponse, "description": "request\u4f53or\u8def\u5f84parametervalidation failed"},
+        500: {"model": ErrorResponse, "description": "update failed"},
     },
-    summary="写入决策信号用户反馈",
-    description="按 signal_id upsert 最新 useful/not_useful 反馈。",
+    summary="\u5199\u5165\u51b3\u7b56\u4fe1\u53f7user\u53cd\u9988",
+    description="\u6309 signal_id upsert \u6700\u65b0 useful/not_useful \u53cd\u9988.",
     operation_id="putDecisionSignalFeedback",
 )
 def put_feedback(signal_id: int, request: DecisionSignalFeedbackRequest) -> DecisionSignalFeedbackItem:
@@ -501,15 +501,15 @@ def put_feedback(signal_id: int, request: DecisionSignalFeedbackRequest) -> Deci
     response_model=DecisionSignalItem,
     responses={
         **AUTH_RESPONSE,
-        400: {"model": ErrorResponse, "description": "状态非法"},
-        404: {"model": ErrorResponse, "description": "信号不存在"},
-        422: {"model": ErrorResponse, "description": "请求体或路径参数校验失败"},
-        500: {"model": ErrorResponse, "description": "更新失败"},
+        400: {"model": ErrorResponse, "description": "status\u975e\u6cd5"},
+        404: {"model": ErrorResponse, "description": "\u4fe1\u53f7does not exist"},
+        422: {"model": ErrorResponse, "description": "request\u4f53or\u8def\u5f84parametervalidation failed"},
+        500: {"model": ErrorResponse, "description": "update failed"},
     },
-    summary="更新决策信号状态",
+    summary="\u66f4\u65b0\u51b3\u7b56\u4fe1\u53f7status",
     description=(
-        "只更新合法状态和可选 metadata；传入 metadata 时按整包替换保存。"
-        "expired/invalidated/closed/archived 等 terminal 状态不能直接 PATCH 回 active。"
+        "\u53ea\u66f4\u65b0\u5408\u6cd5status\u548coptional metadata；\u4f20\u5165 metadata \u65f6\u6309\u6574\u5305\u66ff\u6362\u4fdd\u5b58."
+        "expired/invalidated/closed/archived \u7b49 terminal status\u4e0d\u80fd\u76f4\u63a5 PATCH \u56de active."
     ),
     operation_id="updateDecisionSignalStatus",
 )

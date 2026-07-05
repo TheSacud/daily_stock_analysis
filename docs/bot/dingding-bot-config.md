@@ -1,39 +1,49 @@
-# 钉钉企业机器人配置
+# DingTalk Enterprise Bot Configuration
 
-## 钉钉机器人
-钉钉机器人接收消息需要使用企业机器人能力
-https://open.dingtalk.com/document/dingstart/configure-the-robot-application
+## DingTalk Bot
 
-接收消息分为 `Http模式`（需要配置公网地址） 和 `Stream模式` 两种, 推荐使用 `Stream模式`
+DingTalk bots receive messages through the enterprise bot capability.
 
-创建应用步骤：https://open.dingtalk.com/document/dingstart/create-application
+Reference: https://open.dingtalk.com/document/dingstart/configure-the-robot-application
 
-应用开发 > 企业内部应用 > 钉钉应用 > 创建应用 > 添加应用能力 > 机器人
+Message receiving supports `HTTP mode`, which requires a public callback address, and `Stream mode`. `Stream mode` is recommended.
 
-### 添加机器人
+Create an application: https://open.dingtalk.com/document/dingstart/create-application
+
+Path in the console: App Development > Enterprise Internal Apps > DingTalk App > Create App > Add App Capability > Bot.
+
+### Add The Bot
 
 ![img.png](add-dingding-bot.png)
 
-### 配置机器人使用 Stream模式
+### Configure Stream Mode
 
 ![configbot.png](configbot.png)
 
-### 获取应用凭证
+### Get Application Credentials
+
 ![img.png](appkey.png)
 
-### 配置钉钉凭证
-把钉钉应用凭证配置到配置文件中
+### Configure DingTalk Credentials
+
+Add the DingTalk application credentials to the project configuration.
+
 ![img.png](envconfig.png)
 
-### 发布应用
+### Publish The Application
+
 ![img.png](img.png)
 
 ![img.png](group.png)
 
 ![img.png](add-group-bot.png)
 
-### 往下滚动会看到增加的企业机器人
+### Find The Added Enterprise Bot
+
+Scroll down until the newly added enterprise bot appears.
+
 ![img_1.png](img_1.png)
 
-### 测试机器人命令
+### Test Bot Commands
+
 ![img_3.png](img_3.png)

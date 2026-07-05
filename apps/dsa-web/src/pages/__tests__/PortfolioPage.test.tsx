@@ -234,7 +234,7 @@ function makeDecisionSignal(overrides: Partial<DecisionSignalItem> = {}): Decisi
   return {
     id: 100,
     stockCode: '600519',
-    stockName: '贵州茅台',
+    stockName: '\u8d35\u5dde\u8305\u53f0',
     market: 'cn',
     sourceType: 'analysis',
     sourceReportId: 1,
@@ -251,9 +251,9 @@ function makeDecisionSignal(overrides: Partial<DecisionSignalItem> = {}): Decisi
     stopLoss: null,
     targetPrice: null,
     invalidation: null,
-    watchConditions: '观察量能',
-    reason: '趋势延续',
-    riskSummary: '短线回撤风险',
+    watchConditions: '\u89c2\u5bdf\u91cf\u80fd',
+    reason: '\u8d8b\u52bf\u5ef6\u7eed',
+    riskSummary: '\u77ed\u7ebf\u56de\u64a4\u98ce\u9669',
     catalystSummary: null,
     evidence: undefined,
     dataQualitySummary: undefined,
@@ -303,7 +303,7 @@ describe('PortfolioPage FX refresh', () => {
       errorCount: 0,
     });
     listImportBrokers.mockResolvedValue({
-      brokers: [{ broker: 'huatai', aliases: [], displayName: '华泰' }],
+      brokers: [{ broker: 'huatai', aliases: [], displayName: '\u534e\u6cf0' }],
     });
     listTrades.mockResolvedValue({ items: [], total: 0, page: 1, pageSize: 20 });
     listCashLedger.mockResolvedValue({ items: [], total: 0, page: 1, pageSize: 20 });
@@ -330,7 +330,7 @@ describe('PortfolioPage FX refresh', () => {
       taskId: 'task-portfolio-1',
       traceId: 'task-portfolio-1',
       status: 'pending',
-      message: '分析任务已加入队列: HK00700',
+      message: '\u5206\u6790\u4efb\u52a1\u5df2\u52a0\u5165\u961f\u5217: HK00700',
       analysisPhase: 'auto',
     });
     getLatestDecisionSignals.mockResolvedValue({ items: [], total: 0, page: 1, pageSize: 1 });
@@ -359,8 +359,8 @@ describe('PortfolioPage FX refresh', () => {
 
     await waitForInitialLoad();
 
-    expect(await screen.findByText('过期')).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: '刷新汇率' })).toBeInTheDocument();
+    expect(await screen.findByText('\u8fc7\u671f')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: '\u5237\u65b0\u6c47\u7387' })).toBeInTheDocument();
   });
 
   it('shows aggregate partial valuation limitations near summary totals', async () => {
@@ -373,9 +373,9 @@ describe('PortfolioPage FX refresh', () => {
 
     await waitForInitialLoad();
 
-    expect(await screen.findByText('组合估值限制')).toBeInTheDocument();
-    expect(screen.getByText(/实时行情为尽力获取/)).toBeInTheDocument();
-    expect(screen.getByText(/汇率与成本基础为部分口径/)).toBeInTheDocument();
+    expect(await screen.findByText('\u7ec4\u5408\u4f30\u503c\u9650\u5236')).toBeInTheDocument();
+    expect(screen.getByText(/\u5b9e\u65f6\u884c\u60c5\u4e3a\u5c3d\u529b\u83b7\u53d6/)).toBeInTheDocument();
+    expect(screen.getByText(/\u6c47\u7387\u4e0e\u6210\u672c\u57fa\u7840\u4e3a\u90e8\u5206\u53e3\u5f84/)).toBeInTheDocument();
   });
 
   it('renders portfolio risk drawdown labels in English UI mode', async () => {
@@ -391,7 +391,7 @@ describe('PortfolioPage FX refresh', () => {
     expect(screen.getByText('Scope')).toBeInTheDocument();
     expect(screen.getByText('AI risk signals')).toBeInTheDocument();
     expect(screen.getByText('No defensive signals')).toBeInTheDocument();
-    expect(screen.queryByText('回撤监控')).not.toBeInTheDocument();
+    expect(screen.queryByText('\u56de\u64a4\u76d1\u63a7')).not.toBeInTheDocument();
   });
 
   it('renders portfolio decision signal risk summary', async () => {
@@ -421,11 +421,11 @@ describe('PortfolioPage FX refresh', () => {
 
     await waitForInitialLoad();
 
-    expect(screen.getByText('AI 风险信号')).toBeInTheDocument();
-    expect(screen.getByText(/风险信号: 2/)).toBeInTheDocument();
-    expect(screen.getByText(/卖出: 1 · 减仓: 0 · 预警: 1/)).toBeInTheDocument();
-    expect(screen.getByText('600519 · 卖出')).toBeInTheDocument();
-    expect(screen.getByText('300750 · 预警')).toBeInTheDocument();
+    expect(screen.getByText('AI \u98ce\u9669\u4fe1\u53f7')).toBeInTheDocument();
+    expect(screen.getByText(/\u98ce\u9669\u4fe1\u53f7: 2/)).toBeInTheDocument();
+    expect(screen.getByText(/\u5356\u51fa: 1 · \u51cf\u4ed3: 0 · \u9884\u8b66: 1/)).toBeInTheDocument();
+    expect(screen.getByText('600519 · \u5356\u51fa')).toBeInTheDocument();
+    expect(screen.getByText('300750 · \u9884\u8b66')).toBeInTheDocument();
     expect(screen.queryByText('600519 · sell')).not.toBeInTheDocument();
     expect(screen.queryByText('300750 · alert')).not.toBeInTheDocument();
   });
@@ -441,7 +441,7 @@ describe('PortfolioPage FX refresh', () => {
             accountId: 1,
             symbol: '600519',
             market: 'cn',
-            signal: makeDecisionSignal({ id: 203, action: 'sell', actionLabel: '卖出' }),
+            signal: makeDecisionSignal({ id: 203, action: 'sell', actionLabel: '\u5356\u51fa' }),
           },
         ],
       },
@@ -453,7 +453,7 @@ describe('PortfolioPage FX refresh', () => {
 
     expect(screen.getByText('AI risk signals')).toBeInTheDocument();
     expect(screen.getByText('600519 · Sell')).toBeInTheDocument();
-    expect(screen.queryByText('600519 · 卖出')).not.toBeInTheDocument();
+    expect(screen.queryByText('600519 · \u5356\u51fa')).not.toBeInTheDocument();
     expect(screen.queryByText('600519 · sell')).not.toBeInTheDocument();
   });
 
@@ -471,7 +471,7 @@ describe('PortfolioPage FX refresh', () => {
 
     await waitForInitialLoad();
 
-    expect(screen.getByText('信号风险暂不可用')).toBeInTheDocument();
+    expect(screen.getByText('\u4fe1\u53f7\u98ce\u9669\u6682\u4e0d\u53ef\u7528')).toBeInTheDocument();
   });
 
   it('refreshes FX for a single selected account and only reloads snapshot/risk', async () => {
@@ -495,16 +495,16 @@ describe('PortfolioPage FX refresh', () => {
     const riskCallsBeforeRefresh = getRisk.mock.calls.length;
     const tradeCallsBeforeRefresh = listTrades.mock.calls.length;
 
-    fireEvent.click(screen.getByRole('button', { name: '刷新汇率' }));
+    fireEvent.click(screen.getByRole('button', { name: '\u5237\u65b0\u6c47\u7387' }));
 
     await waitFor(() => expect(refreshFx).toHaveBeenCalledWith({ accountId: 1 }));
-    expect(await screen.findByText('汇率已刷新，共更新 1 对。')).toBeInTheDocument();
+    expect(await screen.findByText('\u6c47\u7387\u5df2\u5237\u65b0，\u5171\u66f4\u65b0 1 \u5bf9。')).toBeInTheDocument();
     await waitFor(() => expect(getSnapshot).toHaveBeenCalledTimes(snapshotCallsBeforeRefresh + 1));
     await waitFor(() => expect(getRisk).toHaveBeenCalledTimes(riskCallsBeforeRefresh + 1));
     expect(listTrades).toHaveBeenCalledTimes(tradeCallsBeforeRefresh);
     expect(listCashLedger).not.toHaveBeenCalled();
     expect(listCorporateActions).not.toHaveBeenCalled();
-    expect(screen.getByText('最新')).toBeInTheDocument();
+    expect(screen.getByText('\u6700\u65b0')).toBeInTheDocument();
   });
 
   it('refreshes FX for the full portfolio without sending accountId and shows neutral feedback when no pair exists', async () => {
@@ -523,10 +523,10 @@ describe('PortfolioPage FX refresh', () => {
 
     await waitForInitialLoad();
 
-    fireEvent.click(screen.getByRole('button', { name: '刷新汇率' }));
+    fireEvent.click(screen.getByRole('button', { name: '\u5237\u65b0\u6c47\u7387' }));
 
     await waitFor(() => expect(refreshFx).toHaveBeenCalledWith({ accountId: undefined }));
-    expect(await screen.findByText('当前范围无可刷新的汇率对。')).toBeInTheDocument();
+    expect(await screen.findByText('\u5f53\u524d\u8303\u56f4\u65e0\u53ef\u5237\u65b0\u7684\u6c47\u7387\u5bf9。')).toBeInTheDocument();
   });
 
   it('shows disabled feedback when FX online refresh is disabled even without a disabled reason', async () => {
@@ -544,9 +544,9 @@ describe('PortfolioPage FX refresh', () => {
 
     await waitForInitialLoad();
 
-    fireEvent.click(screen.getByRole('button', { name: '刷新汇率' }));
+    fireEvent.click(screen.getByRole('button', { name: '\u5237\u65b0\u6c47\u7387' }));
 
-    expect(await screen.findByText('汇率在线刷新已被禁用。')).toBeInTheDocument();
+    expect(await screen.findByText('\u6c47\u7387\u5728\u7ebf\u5237\u65b0\u5df2\u88ab\u7981\u7528。')).toBeInTheDocument();
   });
 
   it('renders backend-provided position valuation fields and stale missing-price hint', async () => {
@@ -563,8 +563,8 @@ describe('PortfolioPage FX refresh', () => {
     expect(screen.getByText('420.0000')).toBeInTheDocument();
     expect(screen.getByText('HKD 4,200.00')).toBeInTheDocument();
     expect(screen.getByText('+5.00%')).toBeInTheDocument();
-    expect(screen.getByText('收盘价 · 2026-03-18')).toBeInTheDocument();
-    expect(screen.getByText('缺价')).toBeInTheDocument();
+    expect(screen.getByText('\u6536\u76d8\u4ef7 · 2026-03-18')).toBeInTheDocument();
+    expect(screen.getByText('\u7f3a\u4ef7')).toBeInTheDocument();
     expect(screen.getAllByText('--').length).toBeGreaterThanOrEqual(2);
 
     const hkRow = screen.getByText('HK00700').closest('tr');
@@ -585,15 +585,15 @@ describe('PortfolioPage FX refresh', () => {
     const latestSignal = makeDecisionSignal({
       id: 101,
       stockCode: '600519',
-      riskSummary: '分页后的风险摘要',
-      watchConditions: '分页后的观察条件',
+      riskSummary: '\u5206\u9875\u540e\u7684\u98ce\u9669\u6458\u8981',
+      watchConditions: '\u5206\u9875\u540e\u7684\u89c2\u5bdf\u6761\u4ef6',
     });
     getLatestDecisionSignals.mockResolvedValueOnce({ items: [latestSignal], total: 1, page: 1, pageSize: 1 });
 
     render(<PortfolioPage />);
 
     expect(await screen.findByText('600519')).toBeInTheDocument();
-    expect(await screen.findByText('分页后的风险摘要')).toBeInTheDocument();
+    expect(await screen.findByText('\u5206\u9875\u540e\u7684\u98ce\u9669\u6458\u8981')).toBeInTheDocument();
     expect(decisionSignalsApi.getLatest).toHaveBeenCalledWith('600519', {
       market: 'cn',
       limit: 1,
@@ -606,13 +606,13 @@ describe('PortfolioPage FX refresh', () => {
     getSnapshot.mockResolvedValue(makeSnapshot({ positions: [position] }));
     getLatestDecisionSignals
       .mockResolvedValueOnce({
-        items: [makeDecisionSignal({ stockCode: '600519', riskSummary: '旧 AI 风险' })],
+        items: [makeDecisionSignal({ stockCode: '600519', riskSummary: '\u65e7 AI \u98ce\u9669' })],
         total: 1,
         page: 1,
         pageSize: 1,
       })
       .mockResolvedValueOnce({
-        items: [makeDecisionSignal({ stockCode: '600519', riskSummary: '新 AI 风险' })],
+        items: [makeDecisionSignal({ stockCode: '600519', riskSummary: '\u65b0 AI \u98ce\u9669' })],
         total: 1,
         page: 1,
         pageSize: 1,
@@ -620,12 +620,12 @@ describe('PortfolioPage FX refresh', () => {
 
     render(<PortfolioPage />);
 
-    expect(await screen.findByText('旧 AI 风险')).toBeInTheDocument();
-    fireEvent.click(screen.getByRole('button', { name: '刷新数据' }));
+    expect(await screen.findByText('\u65e7 AI \u98ce\u9669')).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: '\u5237\u65b0\u6570\u636e' }));
 
-    expect(await screen.findByText('新 AI 风险')).toBeInTheDocument();
+    expect(await screen.findByText('\u65b0 AI \u98ce\u9669')).toBeInTheDocument();
     await waitFor(() => expect(getLatestDecisionSignals).toHaveBeenCalledTimes(2));
-    expect(screen.queryByText('旧 AI 风险')).not.toBeInTheDocument();
+    expect(screen.queryByText('\u65e7 AI \u98ce\u9669')).not.toBeInTheDocument();
   });
 
   it('waits for the selected-account snapshot before loading account-scoped holding signals', async () => {
@@ -643,7 +643,7 @@ describe('PortfolioPage FX refresh', () => {
       }))
       .mockReturnValueOnce(accountTwoSnapshot.promise);
     getLatestDecisionSignals.mockResolvedValue({
-      items: [makeDecisionSignal({ stockCode: '600519', riskSummary: '账号信号' })],
+      items: [makeDecisionSignal({ stockCode: '600519', riskSummary: '\u8d26\u53f7\u4fe1\u53f7' })],
       total: 1,
       page: 1,
       pageSize: 1,
@@ -651,7 +651,7 @@ describe('PortfolioPage FX refresh', () => {
 
     render(<PortfolioPage />);
 
-    expect(await screen.findByText('账号信号')).toBeInTheDocument();
+    expect(await screen.findByText('\u8d26\u53f7\u4fe1\u53f7')).toBeInTheDocument();
     const signalCallsBeforeSwitch = getLatestDecisionSignals.mock.calls.length;
 
     const accountSelect = screen.getAllByRole('combobox')[0];
@@ -660,7 +660,7 @@ describe('PortfolioPage FX refresh', () => {
     await waitFor(() => {
       expect(getSnapshot).toHaveBeenLastCalledWith({ accountId: 2, costMethod: 'fifo', includeRealtime: false });
     });
-    expect(screen.queryByText('账号信号')).not.toBeInTheDocument();
+    expect(screen.queryByText('\u8d26\u53f7\u4fe1\u53f7')).not.toBeInTheDocument();
     expect(getLatestDecisionSignals).toHaveBeenCalledTimes(signalCallsBeforeSwitch);
 
     await act(async () => {
@@ -708,7 +708,7 @@ describe('PortfolioPage FX refresh', () => {
     getLatestDecisionSignals
       .mockReturnValueOnce(oldSignals.promise)
       .mockResolvedValueOnce({
-        items: [makeDecisionSignal({ stockCode: '600519', riskSummary: '新账号信号' })],
+        items: [makeDecisionSignal({ stockCode: '600519', riskSummary: '\u65b0\u8d26\u53f7\u4fe1\u53f7' })],
         total: 1,
         page: 1,
         pageSize: 1,
@@ -721,11 +721,11 @@ describe('PortfolioPage FX refresh', () => {
     const accountSelect = screen.getAllByRole('combobox')[0];
     fireEvent.change(accountSelect, { target: { value: '2' } });
 
-    expect(await screen.findByText('新账号信号')).toBeInTheDocument();
+    expect(await screen.findByText('\u65b0\u8d26\u53f7\u4fe1\u53f7')).toBeInTheDocument();
 
     await act(async () => {
       oldSignals.resolve({
-        items: [makeDecisionSignal({ stockCode: '600519', riskSummary: '旧账号晚返回信号' })],
+        items: [makeDecisionSignal({ stockCode: '600519', riskSummary: '\u65e7\u8d26\u53f7\u665a\u8fd4\u56de\u4fe1\u53f7' })],
         total: 1,
         page: 1,
         pageSize: 1,
@@ -733,8 +733,8 @@ describe('PortfolioPage FX refresh', () => {
       await oldSignals.promise;
     });
 
-    expect(screen.getByText('新账号信号')).toBeInTheDocument();
-    expect(screen.queryByText('旧账号晚返回信号')).not.toBeInTheDocument();
+    expect(screen.getByText('\u65b0\u8d26\u53f7\u4fe1\u53f7')).toBeInTheDocument();
+    expect(screen.queryByText('\u65e7\u8d26\u53f7\u665a\u8fd4\u56de\u4fe1\u53f7')).not.toBeInTheDocument();
   });
 
   it('matches holding signals by stock-code equivalence and leaves unmatched rows empty', async () => {
@@ -747,7 +747,7 @@ describe('PortfolioPage FX refresh', () => {
     getLatestDecisionSignals.mockImplementation(async (stockCode: string) => {
       if (stockCode.includes('600519')) {
         return {
-          items: [makeDecisionSignal({ id: 1, stockCode: '600519', market: 'cn', riskSummary: 'A 股风险' })],
+          items: [makeDecisionSignal({ id: 1, stockCode: '600519', market: 'cn', riskSummary: 'A \u80a1\u98ce\u9669' })],
           total: 1,
           page: 1,
           pageSize: 1,
@@ -755,7 +755,7 @@ describe('PortfolioPage FX refresh', () => {
       }
       if (stockCode.includes('00700')) {
         return {
-          items: [makeDecisionSignal({ id: 2, stockCode: 'HK00700', market: 'hk', riskSummary: '港股风险', watchConditions: '观察回购' })],
+          items: [makeDecisionSignal({ id: 2, stockCode: 'HK00700', market: 'hk', riskSummary: '\u6e2f\u80a1\u98ce\u9669', watchConditions: '\u89c2\u5bdf\u56de\u8d2d' })],
           total: 1,
           page: 1,
           pageSize: 1,
@@ -766,8 +766,8 @@ describe('PortfolioPage FX refresh', () => {
 
     render(<PortfolioPage />);
 
-    expect(await screen.findAllByText('A 股风险')).toHaveLength(2);
-    expect(screen.getByText('港股风险')).toBeInTheDocument();
+    expect(await screen.findAllByText('A \u80a1\u98ce\u9669')).toHaveLength(2);
+    expect(screen.getByText('\u6e2f\u80a1\u98ce\u9669')).toBeInTheDocument();
     const latestLookupSymbols = getLatestDecisionSignals.mock.calls.map(([stockCode]) => String(stockCode));
     expect(latestLookupSymbols.filter((stockCode) => stockCode.includes('600519'))).toEqual(['600519']);
     expect(getLatestDecisionSignals).toHaveBeenCalledTimes(3);
@@ -787,7 +787,7 @@ describe('PortfolioPage FX refresh', () => {
     ] }));
     getLatestDecisionSignals
       .mockResolvedValueOnce({
-        items: [makeDecisionSignal({ stockCode: '600519', riskSummary: '已加载风险' })],
+        items: [makeDecisionSignal({ stockCode: '600519', riskSummary: '\u5df2\u52a0\u8f7d\u98ce\u9669' })],
         total: 1,
         page: 1,
         pageSize: 1,
@@ -796,8 +796,8 @@ describe('PortfolioPage FX refresh', () => {
 
     render(<PortfolioPage />);
 
-    expect(await screen.findByText('已加载风险')).toBeInTheDocument();
-    expect(await screen.findByText('AI 建议降级')).toBeInTheDocument();
+    expect(await screen.findByText('\u5df2\u52a0\u8f7d\u98ce\u9669')).toBeInTheDocument();
+    expect(await screen.findByText('AI \u5efa\u8bae\u964d\u7ea7')).toBeInTheDocument();
     expect(screen.getByText(/latest AAPL failed/)).toBeInTheDocument();
   });
 
@@ -807,7 +807,7 @@ describe('PortfolioPage FX refresh', () => {
       { symbol: '600519', market: 'cn', currency: 'CNY', quantity: 2, avgCost: 1500, totalCost: 3000, lastPrice: 1600, marketValueBase: 3200, unrealizedPnlBase: 200, unrealizedPnlPct: 6.67, valuationCurrency: 'CNY', priceSource: 'history_close', priceDate: '2026-06-17', priceStale: false, priceAvailable: true },
     ] }));
     getLatestDecisionSignals.mockResolvedValueOnce({
-      items: [makeDecisionSignal({ stockCode: '600519', riskSummary: '唯一 latest 风险' })],
+      items: [makeDecisionSignal({ stockCode: '600519', riskSummary: '\u552f\u4e00 latest \u98ce\u9669' })],
       total: 1,
       page: 1,
       pageSize: 1,
@@ -815,7 +815,7 @@ describe('PortfolioPage FX refresh', () => {
 
     render(<PortfolioPage />);
 
-    expect(await screen.findAllByText('唯一 latest 风险')).toHaveLength(2);
+    expect(await screen.findAllByText('\u552f\u4e00 latest \u98ce\u9669')).toHaveLength(2);
     expect(getLatestDecisionSignals).toHaveBeenCalledTimes(1);
     expect(decisionSignalsApi.list).not.toHaveBeenCalled();
   });
@@ -858,7 +858,7 @@ describe('PortfolioPage FX refresh', () => {
 
     const row = screen.getByText('HK00700').closest('tr');
     expect(row).not.toBeNull();
-    fireEvent.click(within(row as HTMLTableRowElement).getByRole('button', { name: '分析' }));
+    fireEvent.click(within(row as HTMLTableRowElement).getByRole('button', { name: '\u5206\u6790' }));
 
     await waitFor(() => {
       expect(analyzePosition).toHaveBeenCalledWith('HK00700', {
@@ -867,7 +867,7 @@ describe('PortfolioPage FX refresh', () => {
         force: false,
       });
     });
-    expect(await screen.findByText('已提交 HK00700 分析任务：task-portfolio-1')).toBeInTheDocument();
+    expect(await screen.findByText('\u5df2\u63d0\u4ea4 HK00700 \u5206\u6790\u4efb\u52a1：task-portfolio-1')).toBeInTheDocument();
   });
 
   it('prefers disabled feedback over empty-pair feedback when refresh is disabled', async () => {
@@ -886,10 +886,10 @@ describe('PortfolioPage FX refresh', () => {
 
     await waitForInitialLoad();
 
-    fireEvent.click(screen.getByRole('button', { name: '刷新汇率' }));
+    fireEvent.click(screen.getByRole('button', { name: '\u5237\u65b0\u6c47\u7387' }));
 
-    expect(await screen.findByText('汇率在线刷新已被禁用。')).toBeInTheDocument();
-    expect(screen.queryByText('当前范围无可刷新的汇率对。')).not.toBeInTheDocument();
+    expect(await screen.findByText('\u6c47\u7387\u5728\u7ebf\u5237\u65b0\u5df2\u88ab\u7981\u7528。')).toBeInTheDocument();
+    expect(screen.queryByText('\u5f53\u524d\u8303\u56f4\u65e0\u53ef\u5237\u65b0\u7684\u6c47\u7387\u5bf9。')).not.toBeInTheDocument();
   });
 
   it('shows warning feedback when FX refresh still falls back to stale rates', async () => {
@@ -906,9 +906,9 @@ describe('PortfolioPage FX refresh', () => {
 
     await waitForInitialLoad();
 
-    fireEvent.click(screen.getByRole('button', { name: '刷新汇率' }));
+    fireEvent.click(screen.getByRole('button', { name: '\u5237\u65b0\u6c47\u7387' }));
 
-    expect(await screen.findByText(/stale\/fallback 汇率/)).toBeInTheDocument();
+    expect(await screen.findByText(/stale\/fallback \u6c47\u7387/)).toBeInTheDocument();
   });
 
   it('shows warning feedback when FX refresh returns online errors without stale pairs', async () => {
@@ -929,9 +929,9 @@ describe('PortfolioPage FX refresh', () => {
     const riskCallsBeforeRefresh = getRisk.mock.calls.length;
     const tradeCallsBeforeRefresh = listTrades.mock.calls.length;
 
-    fireEvent.click(screen.getByRole('button', { name: '刷新汇率' }));
+    fireEvent.click(screen.getByRole('button', { name: '\u5237\u65b0\u6c47\u7387' }));
 
-    expect(await screen.findByText(/在线刷新未完全成功/)).toBeInTheDocument();
+    expect(await screen.findByText(/\u5728\u7ebf\u5237\u65b0\u672a\u5b8c\u5168\u6210\u529f/)).toBeInTheDocument();
     await waitFor(() => expect(getSnapshot).toHaveBeenCalledTimes(snapshotCallsBeforeRefresh + 1));
     await waitFor(() => expect(getRisk).toHaveBeenCalledTimes(riskCallsBeforeRefresh + 1));
     expect(listTrades).toHaveBeenCalledTimes(tradeCallsBeforeRefresh);
@@ -943,8 +943,8 @@ describe('PortfolioPage FX refresh', () => {
     refreshFx.mockRejectedValueOnce(
       createApiError(
         createParsedApiError({
-          title: '刷新失败',
-          message: '汇率服务暂时不可用',
+          title: '\u5237\u65b0\u5931\u8d25',
+          message: '\u6c47\u7387\u670d\u52a1\u6682\u65f6\u4e0d\u53ef\u7528',
         }),
       ),
     );
@@ -953,12 +953,12 @@ describe('PortfolioPage FX refresh', () => {
 
     await waitForInitialLoad();
 
-    const refreshButton = screen.getByRole('button', { name: '刷新汇率' });
+    const refreshButton = screen.getByRole('button', { name: '\u5237\u65b0\u6c47\u7387' });
     fireEvent.click(refreshButton);
 
-    const fxAlertTitle = await screen.findByText('刷新失败');
-    expect(fxAlertTitle.closest('[role="alert"]')).toHaveTextContent('汇率服务暂时不可用');
-    await waitFor(() => expect(screen.getByRole('button', { name: '刷新汇率' })).not.toBeDisabled());
+    const fxAlertTitle = await screen.findByText('\u5237\u65b0\u5931\u8d25');
+    expect(fxAlertTitle.closest('[role="alert"]')).toHaveTextContent('\u6c47\u7387\u670d\u52a1\u6682\u65f6\u4e0d\u53ef\u7528');
+    await waitFor(() => expect(screen.getByRole('button', { name: '\u5237\u65b0\u6c47\u7387' })).not.toBeDisabled());
   });
 
   it('does not keep success feedback when snapshot reload fails after FX refresh succeeds', async () => {
@@ -967,8 +967,8 @@ describe('PortfolioPage FX refresh', () => {
       .mockRejectedValueOnce(
         createApiError(
           createParsedApiError({
-            title: '快照刷新失败',
-            message: '无法加载最新持仓快照',
+            title: '\u5feb\u7167\u5237\u65b0\u5931\u8d25',
+            message: '\u65e0\u6cd5\u52a0\u8f7d\u6700\u65b0\u6301\u4ed3\u5feb\u7167',
           }),
         ),
       );
@@ -977,12 +977,12 @@ describe('PortfolioPage FX refresh', () => {
 
     await waitForInitialLoad();
 
-    fireEvent.click(screen.getByRole('button', { name: '刷新汇率' }));
+    fireEvent.click(screen.getByRole('button', { name: '\u5237\u65b0\u6c47\u7387' }));
 
-    const fxAlertTitle = await screen.findByText('快照刷新失败');
-    expect(fxAlertTitle.closest('[role="alert"]')).toHaveTextContent('无法加载最新持仓快照');
-    await waitFor(() => expect(screen.queryByText('汇率已刷新，共更新 1 对。')).not.toBeInTheDocument());
-    await waitFor(() => expect(screen.getByRole('button', { name: '刷新汇率' })).not.toBeDisabled());
+    const fxAlertTitle = await screen.findByText('\u5feb\u7167\u5237\u65b0\u5931\u8d25');
+    expect(fxAlertTitle.closest('[role="alert"]')).toHaveTextContent('\u65e0\u6cd5\u52a0\u8f7d\u6700\u65b0\u6301\u4ed3\u5feb\u7167');
+    await waitFor(() => expect(screen.queryByText('\u6c47\u7387\u5df2\u5237\u65b0，\u5171\u66f4\u65b0 1 \u5bf9。')).not.toBeInTheDocument());
+    await waitFor(() => expect(screen.getByRole('button', { name: '\u5237\u65b0\u6c47\u7387' })).not.toBeDisabled());
   });
 
   it('drops late FX refresh results after switching to another account scope', async () => {
@@ -1012,12 +1012,12 @@ describe('PortfolioPage FX refresh', () => {
     fireEvent.change(accountSelect, { target: { value: '1' } });
     await waitFor(() => expect(getSnapshot).toHaveBeenLastCalledWith({ accountId: 1, costMethod: 'fifo', includeRealtime: false }));
 
-    fireEvent.click(screen.getByRole('button', { name: '刷新汇率' }));
-    expect(await screen.findByRole('button', { name: '刷新中...' })).toBeDisabled();
+    fireEvent.click(screen.getByRole('button', { name: '\u5237\u65b0\u6c47\u7387' }));
+    expect(await screen.findByRole('button', { name: '\u5237\u65b0\u4e2d...' })).toBeDisabled();
 
     fireEvent.change(accountSelect, { target: { value: '2' } });
     await waitFor(() => expect(getSnapshot).toHaveBeenLastCalledWith({ accountId: 2, costMethod: 'fifo', includeRealtime: false }));
-    await waitFor(() => expect(screen.getByRole('button', { name: '刷新汇率' })).not.toBeDisabled());
+    await waitFor(() => expect(screen.getByRole('button', { name: '\u5237\u65b0\u6c47\u7387' })).not.toBeDisabled());
 
     const snapshotCallsAfterSwitch = getSnapshot.mock.calls.length;
     const riskCallsAfterSwitch = getRisk.mock.calls.length;
@@ -1036,7 +1036,7 @@ describe('PortfolioPage FX refresh', () => {
 
     expect(getSnapshot).toHaveBeenCalledTimes(snapshotCallsAfterSwitch);
     expect(getRisk).toHaveBeenCalledTimes(riskCallsAfterSwitch);
-    expect(screen.queryByText('汇率已刷新，共更新 1 对。')).not.toBeInTheDocument();
+    expect(screen.queryByText('\u6c47\u7387\u5df2\u5237\u65b0，\u5171\u66f4\u65b0 1 \u5bf9。')).not.toBeInTheDocument();
   });
 
   it('drops late FX refresh results after switching cost method', async () => {
@@ -1056,12 +1056,12 @@ describe('PortfolioPage FX refresh', () => {
 
     const costMethodSelect = screen.getAllByRole('combobox')[1];
 
-    fireEvent.click(screen.getByRole('button', { name: '刷新汇率' }));
-    expect(await screen.findByRole('button', { name: '刷新中...' })).toBeDisabled();
+    fireEvent.click(screen.getByRole('button', { name: '\u5237\u65b0\u6c47\u7387' }));
+    expect(await screen.findByRole('button', { name: '\u5237\u65b0\u4e2d...' })).toBeDisabled();
 
     fireEvent.change(costMethodSelect, { target: { value: 'avg' } });
     await waitFor(() => expect(getSnapshot).toHaveBeenLastCalledWith({ accountId: undefined, costMethod: 'avg', includeRealtime: false }));
-    await waitFor(() => expect(screen.getByRole('button', { name: '刷新汇率' })).not.toBeDisabled());
+    await waitFor(() => expect(screen.getByRole('button', { name: '\u5237\u65b0\u6c47\u7387' })).not.toBeDisabled());
 
     const snapshotCallsAfterSwitch = getSnapshot.mock.calls.length;
     const riskCallsAfterSwitch = getRisk.mock.calls.length;
@@ -1080,7 +1080,7 @@ describe('PortfolioPage FX refresh', () => {
 
     expect(getSnapshot).toHaveBeenCalledTimes(snapshotCallsAfterSwitch);
     expect(getRisk).toHaveBeenCalledTimes(riskCallsAfterSwitch);
-    expect(screen.queryByText('汇率已刷新，共更新 1 对。')).not.toBeInTheDocument();
+    expect(screen.queryByText('\u6c47\u7387\u5df2\u5237\u65b0，\u5171\u66f4\u65b0 1 \u5bf9。')).not.toBeInTheDocument();
   });
 
   it('deactivates the selected account from the account toolbar and reloads accounts', async () => {
@@ -1096,13 +1096,13 @@ describe('PortfolioPage FX refresh', () => {
     fireEvent.change(accountSelect, { target: { value: '1' } });
 
     await waitFor(() => expect(getSnapshot).toHaveBeenLastCalledWith({ accountId: 1, costMethod: 'fifo', includeRealtime: false }));
-    fireEvent.click(screen.getByRole('button', { name: '删除账户' }));
+    fireEvent.click(screen.getByRole('button', { name: '\u5220\u9664\u8d26\u6237' }));
 
-    const dialog = await screen.findByText('删除持仓账户');
+    const dialog = await screen.findByText('\u5220\u9664\u6301\u4ed3\u8d26\u6237');
     expect(dialog.closest('[role="dialog"]') ?? document.body).toHaveTextContent(
-      '删除后该账户会从默认列表、快照、风险和录入入口隐藏',
+      '\u5220\u9664\u540e\u8be5\u8d26\u6237\u4f1a\u4ece\u9ed8\u8ba4\u5217\u8868、\u5feb\u7167、\u98ce\u9669\u548c\u5f55\u5165\u5165\u53e3\u9690\u85cf',
     );
-    fireEvent.click(screen.getByRole('button', { name: '确认删除' }));
+    fireEvent.click(screen.getByRole('button', { name: '\u786e\u8ba4\u5220\u9664' }));
 
     await waitFor(() => expect(deleteAccount).toHaveBeenCalledWith(1));
     await waitFor(() => expect(getAccounts).toHaveBeenCalledTimes(2));

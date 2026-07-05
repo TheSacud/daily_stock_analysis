@@ -187,12 +187,12 @@ def test_sina_and_tencent_history_calls_use_timeout_wrapper(
     assert captured["kwargs"]["start_date"] == "20260501"
     assert captured["kwargs"]["end_date"] == "20260525"
     assert captured["kwargs"]["adjust"] == "qfq"
-    assert list(df.columns)[:7] == ["日期", "开盘", "最高", "最低", "收盘", "成交量", "成交额"]
+    assert list(df.columns)[:7] == ["\u65e5\u671f", "\u5f00\u76d8", "\u6700\u9ad8", "\u6700\u4f4e", "\u6536\u76d8", "\u6210\u4ea4\u91cf", "\u6210\u4ea4\u989d"]
 
 
 def test_stock_data_falls_back_after_sina_timeout(monkeypatch) -> None:
     fetcher = AkshareFetcher(sleep_min=0, sleep_max=0)
-    tx_df = pd.DataFrame({"日期": ["2026-05-25"], "收盘": [10.2]})
+    tx_df = pd.DataFrame({"\u65e5\u671f": ["2026-05-25"], "\u6536\u76d8": [10.2]})
 
     monkeypatch.setattr(fetcher, "_fetch_stock_data_em", lambda *args: pd.DataFrame())
     monkeypatch.setattr(

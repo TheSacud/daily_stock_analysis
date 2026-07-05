@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 """
-大盘复盘市场区域配置
+market reviewmarket\u533a\u57dfconfig
 
-定义各市场区域的指数、新闻搜索词、Prompt 提示等元数据，
-供 MarketAnalyzer 按 region 切换 A 股/港股/美股/日韩复盘行为。
+\u5b9a\u4e49\u5404market\u533a\u57df\u7684index、newssearch\u8bcd、Prompt \u63d0\u793a\u7b49\u5143\u6570\u636e;
+\u4f9b MarketAnalyzer \u6309 region \u5207\u6362 A \u80a1/HK stock/US stock/\u65e5\u97e9\u590d\u76d8\u884c\u4e3a.
 """
 
 from dataclasses import dataclass
@@ -12,18 +12,18 @@ from typing import List
 
 @dataclass
 class MarketProfile:
-    """大盘复盘市场区域配置"""
+    """market reviewmarket\u533a\u57dfconfig"""
 
     region: str  # "cn" | "hk" | "us" | "jp" | "kr"
-    # 用于判断整体走势的指数代码，cn 用上证 000001，us 用标普 SPX
+    # \u7528\u4e8e\u5224\u65ad\u6574\u4f53\u8d70\u52bf\u7684indexcode; cn \u7528\u4e0a\u8bc1 000001; us \u7528\u6807\u666e SPX
     mood_index_code: str
-    # 新闻搜索关键词
+    # newssearch\u5173\u952e\u8bcd
     news_queries: List[str]
-    # 指数点评 Prompt 提示语
+    # index\u70b9\u8bc4 Prompt \u63d0\u793a\u8bed
     prompt_index_hint: str
-    # 市场概况是否包含涨跌家数、涨停跌停（A 股有，美股无）
+    # market\u6982\u51b5\u662f\u5426\u5305\u542bchange\u5bb6\u6570、\u6da8\u505c\u8dcc\u505c (A \u80a1\u6709; US stock\u65e0)
     has_market_stats: bool
-    # 市场概况是否包含板块涨跌（A 股有，美股暂无）
+    # market\u6982\u51b5\u662f\u5426\u5305\u542bsectorchange (A \u80a1\u6709; US stock\u6682\u65e0)
     has_sector_rankings: bool
 
 
@@ -31,11 +31,11 @@ CN_PROFILE = MarketProfile(
     region="cn",
     mood_index_code="000001",
     news_queries=[
-        "A股 大盘 复盘",
-        "股市 行情 分析",
-        "A股 市场 热点 板块",
+        "A-share \u5927\u76d8 \u590d\u76d8",
+        "\u80a1\u5e02 \u884c\u60c5 analyze",
+        "A-share market \u70ed\u70b9 sector",
     ],
-    prompt_index_hint="分析上证、深证、创业板等各指数走势特点",
+    prompt_index_hint="analyze\u4e0a\u8bc1、\u6df1\u8bc1、\u521b\u4e1a\u677f\u7b49\u5404index\u8d70\u52bf\u7279\u70b9",
     has_market_stats=True,
     has_sector_rankings=True,
 )
@@ -44,11 +44,11 @@ US_PROFILE = MarketProfile(
     region="us",
     mood_index_code="SPX",
     news_queries=[
-        "美股 大盘",
+        "US stock \u5927\u76d8",
         "US stock market",
         "S&P 500 NASDAQ",
     ],
-    prompt_index_hint="分析标普500、纳斯达克、道指等各指数走势特点",
+    prompt_index_hint="analyze\u6807\u666e500、\u7eb3\u65af\u8fbe\u514b、\u9053\u6307\u7b49\u5404index\u8d70\u52bf\u7279\u70b9",
     has_market_stats=False,
     has_sector_rankings=False,
 )
@@ -57,11 +57,11 @@ HK_PROFILE = MarketProfile(
     region="hk",
     mood_index_code="HSI",
     news_queries=[
-        "港股 大盘 复盘",
+        "HK stock \u5927\u76d8 \u590d\u76d8",
         "Hong Kong stock market",
-        "恒生指数 行情",
+        "\u6052\u751findex \u884c\u60c5",
     ],
-    prompt_index_hint="分析恒生指数、恒生科技指数、国企指数等各指数走势特点",
+    prompt_index_hint="analyze\u6052\u751findex、\u6052\u751f\u79d1\u6280index、\u56fd\u4f01index\u7b49\u5404index\u8d70\u52bf\u7279\u70b9",
     has_market_stats=False,
     has_sector_rankings=False,
 )
@@ -70,11 +70,11 @@ JP_PROFILE = MarketProfile(
     region="jp",
     mood_index_code="N225",
     news_queries=[
-        "日本股市 日经225",
+        "\u65e5\u672c\u80a1\u5e02 \u65e5\u7ecf225",
         "Japan stock market Nikkei TOPIX",
-        "日经225 东证指数 行情",
+        "\u65e5\u7ecf225 \u4e1c\u8bc1index \u884c\u60c5",
     ],
-    prompt_index_hint="分析日经225、东证指数等日本主要指数走势特点",
+    prompt_index_hint="analyze\u65e5\u7ecf225、\u4e1c\u8bc1index\u7b49\u65e5\u672c\u4e3b\u8981index\u8d70\u52bf\u7279\u70b9",
     has_market_stats=False,
     has_sector_rankings=False,
 )
@@ -83,18 +83,18 @@ KR_PROFILE = MarketProfile(
     region="kr",
     mood_index_code="KS11",
     news_queries=[
-        "韩国股市 KOSPI",
+        "\u97e9\u56fd\u80a1\u5e02 KOSPI",
         "Korea stock market KOSPI KOSDAQ",
-        "KOSPI KOSDAQ 行情",
+        "KOSPI KOSDAQ \u884c\u60c5",
     ],
-    prompt_index_hint="分析 KOSPI、KOSDAQ 等韩国主要指数走势特点",
+    prompt_index_hint="analyze KOSPI、KOSDAQ \u7b49\u97e9\u56fd\u4e3b\u8981index\u8d70\u52bf\u7279\u70b9",
     has_market_stats=False,
     has_sector_rankings=False,
 )
 
 
 def get_profile(region: str) -> MarketProfile:
-    """根据 region 返回对应的 MarketProfile"""
+    """\u6839\u636e region \u8fd4\u56de\u5bf9\u5e94\u7684 MarketProfile"""
     if region == "us":
         return US_PROFILE
     if region == "hk":

@@ -66,17 +66,17 @@ class GotifySender:
     ) -> bool:
         """Publish a notification to Gotify using JSON and header auth."""
         if not self._is_gotify_configured():
-            logger.warning("Gotify 配置不完整，跳过推送")
+            logger.warning("Gotify config\u4e0d\u5b8c\u6574; skipping\u63a8\u9001")
             return False
 
         endpoint = self._resolve_gotify_endpoint()
         if not endpoint:
-            logger.error("GOTIFY_URL 必须是 Gotify server base URL，不包含 /message")
+            logger.error("GOTIFY_URL \u5fc5\u987b\u662f Gotify server base URL; \u4e0d\u5305\u542b /message")
             return False
 
         if title is None:
             date_str = datetime.now().strftime("%Y-%m-%d")
-            title = f"📈 股票分析报告 - {date_str}"
+            title = f"📈 \u80a1\u7968analyzereport - {date_str}"
 
         headers = {
             "Content-Type": "application/json; charset=utf-8",
@@ -102,20 +102,20 @@ class GotifySender:
                 verify=self._webhook_verify_ssl,
             )
             if 200 <= response.status_code < 300:
-                logger.info("Gotify 消息发送成功")
+                logger.info("Gotify message sent successfully")
                 return True
 
-            logger.error("Gotify 请求失败: HTTP %s", response.status_code)
-            logger.debug("Gotify 响应内容: %s", response.text)
+            logger.error("Gotify requestfailed: HTTP %s", response.status_code)
+            logger.debug("Gotify \u54cd\u5e94\u5185\u5bb9: %s", response.text)
             return False
         except requests.exceptions.Timeout:
-            logger.error("发送 Gotify 消息失败: 请求超时")
+            logger.error("\u53d1\u9001 Gotify \u6d88\u606ffailed: request timed out")
             return False
         except requests.exceptions.RequestException as exc:
-            logger.error("发送 Gotify 消息失败: 网络请求异常")
-            logger.debug("Gotify 请求异常类型: %s", type(exc).__name__)
+            logger.error("\u53d1\u9001 Gotify \u6d88\u606ffailed: \u7f51\u7edcrequest\u5f02\u5e38")
+            logger.debug("Gotify request\u5f02\u5e38\u7c7b\u578b: %s", type(exc).__name__)
             return False
         except Exception as exc:
-            logger.error("发送 Gotify 消息失败: 未知异常")
-            logger.debug("Gotify 未知异常类型: %s", type(exc).__name__)
+            logger.error("\u53d1\u9001 Gotify \u6d88\u606ffailed: unknown\u5f02\u5e38")
+            logger.debug("Gotify unknown\u5f02\u5e38\u7c7b\u578b: %s", type(exc).__name__)
             return False

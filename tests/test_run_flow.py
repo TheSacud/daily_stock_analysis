@@ -52,7 +52,7 @@ def _overview(*, blocks: list[dict]) -> dict:
         "created_at": "2026-06-08T10:00:05",
         "subject": {
             "code": "600519",
-            "stock_name": "贵州茅台",
+            "stock_name": "\u8d35\u5dde\u8305\u53f0",
             "market": "cn",
         },
         "blocks": blocks,
@@ -173,7 +173,7 @@ def _history_record(
     context_snapshot: dict | None,
     raw_result: dict | None = None,
     code: str = "600519",
-    name: str = "贵州茅台",
+    name: str = "\u8d35\u5dde\u8305\u53f0",
     report_type: str = "detailed",
 ) -> SimpleNamespace:
     return SimpleNamespace(
@@ -237,9 +237,9 @@ class RunFlowTestCase(unittest.TestCase):
             task_id="task-active",
             trace_id="trace-active",
             stock_code="600519",
-            stock_name="贵州茅台",
+            stock_name="\u8d35\u5dde\u8305\u53f0",
             status=TaskStatus.PENDING,
-            message="任务已加入队列",
+            message="\u4efb\u52a1\u5df2\u52a0\u5165\u961f\u5217",
             created_at=datetime(2026, 6, 8, 10, 0, 0),
         )
 
@@ -258,9 +258,9 @@ class RunFlowTestCase(unittest.TestCase):
             task_id="task-active",
             trace_id="trace-active",
             stock_code="600519",
-            stock_name="贵州茅台",
+            stock_name="\u8d35\u5dde\u8305\u53f0",
             status=TaskStatus.PROCESSING,
-            message="正在分析中",
+            message="\u6b63\u5728\u5206\u6790\u4e2d",
             created_at=datetime(2026, 6, 8, 10, 0, 0),
             started_at=datetime(2026, 6, 8, 10, 0, 1),
             flow_events=[
@@ -270,15 +270,15 @@ class RunFlowTestCase(unittest.TestCase):
                     "severity": "success",
                     "type": "provider_run",
                     "node_id": "provider_daily_unit_1",
-                    "title": "日线K线成功",
-                    "message": "日线K线 UnitFetcher 成功",
+                    "title": "\u65e5\u7ebfK\u7ebf\u6210\u529f",
+                    "message": "\u65e5\u7ebfK\u7ebf UnitFetcher \u6210\u529f",
                     "metadata": {
                         "provider": "UnitFetcher",
                         "node": {
                             "id": "provider_daily_unit_1",
                             "lane": "data_source",
                             "kind": "data_source",
-                            "label": "日线K线 · UnitFetcher",
+                            "label": "\u65e5\u7ebfK\u7ebf · UnitFetcher",
                             "status": "success",
                             "provider": "UnitFetcher",
                             "record_count": 30,
@@ -299,7 +299,7 @@ class RunFlowTestCase(unittest.TestCase):
             task_id="task-active-providers",
             trace_id="trace-active-providers",
             stock_code="600519",
-            stock_name="贵州茅台",
+            stock_name="\u8d35\u5dde\u8305\u53f0",
             status=TaskStatus.PROCESSING,
             created_at=datetime(2026, 6, 8, 10, 0, 0),
             flow_events=[
@@ -309,7 +309,7 @@ class RunFlowTestCase(unittest.TestCase):
                     "severity": "success",
                     "type": "provider_run",
                     "node_id": "provider_daily_unit_1",
-                    "title": "日线K线成功",
+                    "title": "\u65e5\u7ebfK\u7ebf\u6210\u529f",
                     "metadata": {
                         "provider": "DailyFetcher",
                         "data_type": "daily_data",
@@ -317,7 +317,7 @@ class RunFlowTestCase(unittest.TestCase):
                             "id": "provider_daily_unit_1",
                             "lane": "data_source",
                             "kind": "data_source",
-                            "label": "日线K线 · DailyFetcher",
+                            "label": "\u65e5\u7ebfK\u7ebf · DailyFetcher",
                             "status": "success",
                             "provider": "DailyFetcher",
                         },
@@ -329,7 +329,7 @@ class RunFlowTestCase(unittest.TestCase):
                     "severity": "success",
                     "type": "provider_run",
                     "node_id": "provider_news_unit_1",
-                    "title": "新闻舆情成功",
+                    "title": "\u65b0\u95fb\u8206\u60c5\u6210\u529f",
                     "metadata": {
                         "provider": "NewsFetcher",
                         "data_type": "news_search",
@@ -337,7 +337,7 @@ class RunFlowTestCase(unittest.TestCase):
                             "id": "provider_news_unit_1",
                             "lane": "data_source",
                             "kind": "data_source",
-                            "label": "新闻舆情 · NewsFetcher",
+                            "label": "\u65b0\u95fb\u8206\u60c5 · NewsFetcher",
                             "status": "success",
                             "provider": "NewsFetcher",
                         },
@@ -397,7 +397,7 @@ class RunFlowTestCase(unittest.TestCase):
                 task_id="task-provider-contract",
                 trace_id="trace-provider-contract",
                 stock_code="600519",
-                stock_name="贵州茅台",
+                stock_name="\u8d35\u5dde\u8305\u53f0",
                 status=TaskStatus.PROCESSING,
                 created_at=datetime(2026, 6, 8, 10, 0, 0),
                 flow_events=flow_events,
@@ -472,7 +472,7 @@ class RunFlowTestCase(unittest.TestCase):
                 task_id="task-started",
                 trace_id="trace-started",
                 stock_code="600519",
-                stock_name="贵州茅台",
+                stock_name="\u8d35\u5dde\u8305\u53f0",
                 status=TaskStatus.PROCESSING,
                 created_at=datetime(2026, 6, 8, 10, 0, 0),
                 flow_events=flow_events,
@@ -534,7 +534,7 @@ class RunFlowTestCase(unittest.TestCase):
                 task_id="task-chip-started",
                 trace_id="trace-chip-started",
                 stock_code="600519",
-                stock_name="贵州茅台",
+                stock_name="\u8d35\u5dde\u8305\u53f0",
                 status=TaskStatus.PROCESSING,
                 created_at=datetime(2026, 6, 8, 10, 0, 0),
                 flow_events=flow_events,
@@ -546,7 +546,7 @@ class RunFlowTestCase(unittest.TestCase):
         self.assertEqual(len(chip_nodes), 1)
         self.assertEqual(chip_nodes[0].status, "success")
         self.assertEqual(chip_nodes[0].record_count, 1)
-        self.assertEqual(chip_nodes[0].label, "筹码结构 · ChipFetcher")
+        self.assertEqual(chip_nodes[0].label, "\u7b79\u7801\u7ed3\u6784 · ChipFetcher")
         self.assertIn("provider_run_started", {event.type for event in snapshot.events})
 
     def test_llm_started_and_result_match_by_call_type_when_model_alias_differs(self) -> None:
@@ -578,7 +578,7 @@ class RunFlowTestCase(unittest.TestCase):
                 task_id="task-llm-alias",
                 trace_id="trace-llm-alias",
                 stock_code="600519",
-                stock_name="贵州茅台",
+                stock_name="\u8d35\u5dde\u8305\u53f0",
                 status=TaskStatus.PROCESSING,
                 created_at=datetime(2026, 6, 8, 10, 0, 0),
                 flow_events=flow_events,
@@ -623,7 +623,7 @@ class RunFlowTestCase(unittest.TestCase):
                 task_id="task-completed-live",
                 trace_id="trace-completed-live",
                 stock_code="600519",
-                stock_name="贵州茅台",
+                stock_name="\u8d35\u5dde\u8305\u53f0",
                 status=TaskStatus.COMPLETED,
                 created_at=datetime(2026, 6, 8, 10, 0, 0),
                 completed_at=datetime(2026, 6, 8, 10, 2, 0),
@@ -664,7 +664,7 @@ class RunFlowTestCase(unittest.TestCase):
                 blocks=[
                     {
                         "key": "quote",
-                        "label": "行情",
+                        "label": "\u884c\u60c5",
                         "status": "available",
                         "source": "QuoteFetcher",
                         "warnings": [],
@@ -672,7 +672,7 @@ class RunFlowTestCase(unittest.TestCase):
                     },
                     {
                         "key": "daily_bars",
-                        "label": "日线",
+                        "label": "\u65e5\u7ebf",
                         "status": "available",
                         "source": "DailyFetcher",
                         "warnings": [],
@@ -680,7 +680,7 @@ class RunFlowTestCase(unittest.TestCase):
                     },
                     {
                         "key": "news",
-                        "label": "新闻",
+                        "label": "\u65b0\u95fb",
                         "status": "available",
                         "source": "SearchProvider",
                         "warnings": [],
@@ -711,7 +711,7 @@ class RunFlowTestCase(unittest.TestCase):
                 blocks=[
                     {
                         "key": "quote",
-                        "label": "行情",
+                        "label": "\u884c\u60c5",
                         "status": "available",
                         "source": "SecondQuote",
                         "warnings": [],
@@ -780,7 +780,7 @@ class RunFlowTestCase(unittest.TestCase):
                 blocks=[
                     {
                         "key": "daily_bars",
-                        "label": "日线",
+                        "label": "\u65e5\u7ebf",
                         "status": "available",
                         "source": "TickFlowFetcher",
                         "warnings": [],
@@ -788,7 +788,7 @@ class RunFlowTestCase(unittest.TestCase):
                     },
                     {
                         "key": "quote",
-                        "label": "行情",
+                        "label": "\u884c\u60c5",
                         "status": "fallback",
                         "source": "AkshareFetcher",
                         "warnings": ["tickflow_realtime_fallback"],
@@ -849,7 +849,7 @@ class RunFlowTestCase(unittest.TestCase):
                         "success": False,
                         "latency_ms": 500,
                         "error_type": "NoUsableNews",
-                        "error_message_sanitized": "过滤后无有效新闻",
+                        "error_message_sanitized": "\u8fc7\u6ee4\u540e\u65e0\u6709\u6548\u65b0\u95fb",
                         "created_at": "2026-06-08T10:00:01",
                     },
                     {
@@ -873,8 +873,8 @@ class RunFlowTestCase(unittest.TestCase):
         node_labels = {node.label for node in snapshot.nodes}
         edge_payload = [edge.model_dump(by_alias=True) for edge in snapshot.edges]
 
-        self.assertIn("新闻舆情 · Tavily", node_labels)
-        self.assertIn("新闻舆情 · SearXNG", node_labels)
+        self.assertIn("\u65b0\u95fb\u8206\u60c5 · Tavily", node_labels)
+        self.assertIn("\u65b0\u95fb\u8206\u60c5 · SearXNG", node_labels)
         self.assertTrue(any(edge["kind"] == "fallback" for edge in edge_payload))
         self.assertTrue(any(event.type == "provider_run" and event.node_id.endswith("searxng_2") for event in snapshot.events))
 
@@ -886,7 +886,7 @@ class RunFlowTestCase(unittest.TestCase):
                 blocks=[
                     {
                         "key": "news",
-                        "label": "新闻",
+                        "label": "\u65b0\u95fb",
                         "status": "missing",
                         "source": None,
                         "warnings": [],
@@ -894,7 +894,7 @@ class RunFlowTestCase(unittest.TestCase):
                     },
                     {
                         "key": "fundamentals",
-                        "label": "基本面",
+                        "label": "\u57fa\u672c\u9762",
                         "status": "not_supported",
                         "source": None,
                         "warnings": [],
@@ -917,7 +917,7 @@ class RunFlowTestCase(unittest.TestCase):
             blocks=[
                 {
                     "key": "news",
-                    "label": "新闻",
+                    "label": "\u65b0\u95fb",
                     "status": "missing",
                     "source": None,
                     "warnings": [],
@@ -965,7 +965,7 @@ class RunFlowTestCase(unittest.TestCase):
                 blocks=[
                     {
                         "key": "quote",
-                        "label": "行情",
+                        "label": "\u884c\u60c5",
                         "status": "available",
                         "source": "QuoteFetcher",
                         "warnings": [],
@@ -1026,7 +1026,7 @@ class RunFlowTestCase(unittest.TestCase):
             _history_record(
                 context_snapshot=context_snapshot,
                 code="MARKET",
-                name="大盘复盘",
+                name="\u5927\u76d8\u590d\u76d8",
                 report_type="market_review",
             )
         )
@@ -1069,15 +1069,15 @@ class RunFlowTestCase(unittest.TestCase):
             _history_record(
                 context_snapshot=context_snapshot,
                 code="MARKET",
-                name="大盘复盘",
+                name="\u5927\u76d8\u590d\u76d8",
                 report_type="market_review",
             )
         )
 
         provider_labels = {node.label for node in snapshot.nodes if node.kind == "data_source"}
         self.assertEqual(snapshot.stock_code, "MARKET")
-        self.assertNotIn("日线K线 · StockFetcher", provider_labels)
-        self.assertIn("新闻舆情 · Tavily", provider_labels)
+        self.assertNotIn("\u65e5\u7ebfK\u7ebf · StockFetcher", provider_labels)
+        self.assertIn("\u65b0\u95fb\u8206\u60c5 · Tavily", provider_labels)
 
     def test_stock_run_flow_filters_nested_market_context_artifacts(self) -> None:
         context_snapshot = {
@@ -1145,7 +1145,7 @@ class RunFlowTestCase(unittest.TestCase):
                 blocks=[
                     {
                         "key": "quote",
-                        "label": "行情",
+                        "label": "\u884c\u60c5",
                         "status": "available",
                         "source": "Akshare",
                         "warnings": [],
@@ -1158,16 +1158,16 @@ class RunFlowTestCase(unittest.TestCase):
         snapshot = build_history_run_flow_snapshot(_history_record(context_snapshot=context_snapshot))
 
         self.assertEqual(
-            [node.label for node in snapshot.nodes if node.label == "保存报告"],
-            ["保存报告"],
+            [node.label for node in snapshot.nodes if node.label == "\u4fdd\u5b58\u62a5\u544a"],
+            ["\u4fdd\u5b58\u62a5\u544a"],
         )
         self.assertEqual(
-            [node.label for node in snapshot.nodes if node.label.startswith("推送通知")],
-            ["推送通知 · report"],
+            [node.label for node in snapshot.nodes if node.label.startswith("\u63a8\u9001\u901a\u77e5")],
+            ["\u63a8\u9001\u901a\u77e5 · report"],
         )
         provider_labels = {node.label for node in snapshot.nodes if node.kind == "data_source"}
-        self.assertNotIn("新闻舆情 · MarketNews", provider_labels)
-        self.assertIn("新闻舆情 · StockNews", provider_labels)
+        self.assertNotIn("\u65b0\u95fb\u8206\u60c5 · MarketNews", provider_labels)
+        self.assertIn("\u65b0\u95fb\u8206\u60c5 · StockNews", provider_labels)
         notification = next(node for node in snapshot.nodes if node.id.startswith("notification_report"))
         self.assertEqual(notification.attempts, 0)
 
@@ -1186,8 +1186,8 @@ class RunFlowTestCase(unittest.TestCase):
         try:
             with patch("src.storage.DatabaseManager.get_instance", return_value=fake_db):
                 saved = _persist_market_review_history(
-                    review_report="大盘复盘报告",
-                    markdown_report="# 大盘复盘报告",
+                    review_report="\u5927\u76d8\u590d\u76d8\u62a5\u544a",
+                    markdown_report="# \u5927\u76d8\u590d\u76d8\u62a5\u544a",
                     region="cn",
                     config=config,
                     query_id="query-flow",
@@ -1223,7 +1223,7 @@ class RunFlowTestCase(unittest.TestCase):
             task_id="query-flow",
             trace_id="trace-flow",
             stock_code="600519",
-            stock_name="贵州茅台",
+            stock_name="\u8d35\u5dde\u8305\u53f0",
             status=TaskStatus.COMPLETED,
             report_type="detailed",
         )
@@ -1248,7 +1248,7 @@ class RunFlowTestCase(unittest.TestCase):
             task_id="market-query-flow",
             trace_id="trace-market-flow",
             stock_code="cn",
-            stock_name="大盘复盘",
+            stock_name="\u5927\u76d8\u590d\u76d8",
             status=TaskStatus.COMPLETED,
             report_type="market-review",
         )
@@ -1275,7 +1275,7 @@ class RunFlowTestCase(unittest.TestCase):
                 blocks=[
                     {
                         "key": "daily_bars",
-                        "label": "日线",
+                        "label": "\u65e5\u7ebf",
                         "status": "fetch_failed",
                         "source": "UnsafeFetcher",
                         "warnings": ["failed"],

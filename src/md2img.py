@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 """
 ===================================
-Markdown 转图片工具模块
+Markdown \u8f6c\u56fe\u7247\u5de5\u5177\u6a21chunks
 ===================================
 
-将 Markdown 转为 PNG 图片（用于不支持 Markdown 的通知渠道）。
-支持 wkhtmltoimage (imgkit) 与 markdown-to-file (m2f)，后者对 emoji 支持更好 (Issue #455)。
+\u5c06 Markdown \u8f6c\u4e3a PNG \u56fe\u7247 (\u7528\u4e8edoes not support Markdown \u7684notification channel).
+\u652f\u6301 wkhtmltoimage (imgkit) \u4e0e markdown-to-file (m2f); \u540e\u8005\u5bf9 emoji \u652f\u6301\u66f4\u597d (Issue #455).
 
 Security note: imgkit passes HTML to wkhtmltoimage via stdin, not argv, so
 command injection from content is not applicable. Output is rasterized to PNG

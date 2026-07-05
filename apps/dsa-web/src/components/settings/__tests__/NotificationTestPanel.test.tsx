@@ -49,8 +49,8 @@ describe('NotificationTestPanel', () => {
 
     expect(screen.getByRole('option', { name: 'ntfy' })).toBeInTheDocument();
     expect(screen.getByRole('option', { name: 'Gotify' })).toBeInTheDocument();
-    fireEvent.change(screen.getByLabelText('渠道'), { target: { value: 'custom' } });
-    fireEvent.click(screen.getByRole('button', { name: /发送测试/ }));
+    fireEvent.change(screen.getByLabelText('\u6e20\u9053'), { target: { value: 'custom' } });
+    fireEvent.click(screen.getByRole('button', { name: /\u53d1\u9001\u6d4b\u8bd5/ }));
 
     await waitFor(() => expect(testNotificationChannel).toHaveBeenCalledWith(expect.objectContaining({
       channel: 'custom',
@@ -58,7 +58,7 @@ describe('NotificationTestPanel', () => {
       maskToken: '******',
       timeoutSeconds: 20,
     })));
-    expect(await screen.findByText('测试成功')).toBeInTheDocument();
+    expect(await screen.findByText('\u6d4b\u8bd5\u6210\u529f')).toBeInTheDocument();
     expect(screen.getByText('HTTP 200')).toBeInTheDocument();
     expect(screen.getByText('https://example.com/hook?token=***')).toBeInTheDocument();
   });
@@ -89,11 +89,11 @@ describe('NotificationTestPanel', () => {
       </UiLanguageProvider>
     );
 
-    const titleInput = screen.getByLabelText('标题');
-    const contentInput = screen.getByLabelText('正文');
+    const titleInput = screen.getByLabelText('\u6807\u9898');
+    const contentInput = screen.getByLabelText('\u6b63\u6587');
 
-    expect(titleInput).toHaveValue('DSA 通知测试');
-    expect(contentInput).toHaveValue('这是一条来自 DSA Web 设置页的通知测试消息。');
+    expect(titleInput).toHaveValue('DSA \u901a\u77e5\u6d4b\u8bd5');
+    expect(contentInput).toHaveValue('\u8fd9\u662f\u4e00\u6761\u6765\u81ea DSA Web \u8bbe\u7f6e\u9875\u7684\u901a\u77e5\u6d4b\u8bd5\u6d88\u606f。');
 
     fireEvent.click(screen.getByRole('button', { name: 'switch-en' }));
 
@@ -102,7 +102,7 @@ describe('NotificationTestPanel', () => {
       expect(contentInput).toHaveValue('This is a test notification from the DSA Web settings page.');
     });
 
-    fireEvent.click(screen.getByRole('button', { name: /发送测试|Send test/ }));
+    fireEvent.click(screen.getByRole('button', { name: /\u53d1\u9001\u6d4b\u8bd5|Send test/ }));
     await waitFor(() => expect(testNotificationChannel).toHaveBeenCalledWith(expect.objectContaining({
       title: 'DSA notification test',
       content: 'This is a test notification from the DSA Web settings page.',
@@ -136,21 +136,21 @@ describe('NotificationTestPanel', () => {
       </UiLanguageProvider>
     );
 
-    const titleInput = screen.getByLabelText('标题');
-    const contentInput = screen.getByLabelText('正文');
+    const titleInput = screen.getByLabelText('\u6807\u9898');
+    const contentInput = screen.getByLabelText('\u6b63\u6587');
 
-    fireEvent.change(titleInput, { target: { value: '自定义标题' } });
-    fireEvent.change(contentInput, { target: { value: '自定义正文' } });
+    fireEvent.change(titleInput, { target: { value: '\u81ea\u5b9a\u4e49\u6807\u9898' } });
+    fireEvent.change(contentInput, { target: { value: '\u81ea\u5b9a\u4e49\u6b63\u6587' } });
 
     fireEvent.click(screen.getByRole('button', { name: 'switch-en' }));
-    expect(titleInput).toHaveValue('自定义标题');
-    expect(contentInput).toHaveValue('自定义正文');
+    expect(titleInput).toHaveValue('\u81ea\u5b9a\u4e49\u6807\u9898');
+    expect(contentInput).toHaveValue('\u81ea\u5b9a\u4e49\u6b63\u6587');
   });
 
   it('renders custom webhook partial failure attempts', async () => {
     testNotificationChannel.mockResolvedValueOnce({
       success: true,
-      message: '自定义 Webhook 通知测试部分成功（1/2）',
+      message: '\u81ea\u5b9a\u4e49 Webhook \u901a\u77e5\u6d4b\u8bd5\u90e8\u5206\u6210\u529f（1/2）',
       errorCode: null,
       stage: 'notification_send',
       retryable: true,
@@ -188,11 +188,11 @@ describe('NotificationTestPanel', () => {
       />,
     );
 
-    fireEvent.change(screen.getByLabelText('渠道'), { target: { value: 'custom' } });
-    fireEvent.click(screen.getByRole('button', { name: /发送测试/ }));
+    fireEvent.change(screen.getByLabelText('\u6e20\u9053'), { target: { value: 'custom' } });
+    fireEvent.click(screen.getByRole('button', { name: /\u53d1\u9001\u6d4b\u8bd5/ }));
 
-    expect(await screen.findByText('测试成功')).toBeInTheDocument();
-    expect(screen.getByText(/部分成功/)).toBeInTheDocument();
+    expect(await screen.findByText('\u6d4b\u8bd5\u6210\u529f')).toBeInTheDocument();
+    expect(screen.getByText(/\u90e8\u5206\u6210\u529f/)).toBeInTheDocument();
     expect(screen.getAllByText('HTTP 500').length).toBeGreaterThanOrEqual(1);
     expect(screen.getByText('HTTP 200')).toBeInTheDocument();
     expect(screen.getByText('http_500')).toHaveClass('text-warning');
@@ -202,7 +202,7 @@ describe('NotificationTestPanel', () => {
   it('renders retryable timeout diagnostics', async () => {
     testNotificationChannel.mockResolvedValueOnce({
       success: false,
-      message: '通知测试异常: timeout',
+      message: '\u901a\u77e5\u6d4b\u8bd5\u5f02\u5e38: timeout',
       errorCode: 'timeout',
       stage: 'notification_send',
       retryable: true,
@@ -229,9 +229,9 @@ describe('NotificationTestPanel', () => {
       />,
     );
 
-    fireEvent.click(screen.getByRole('button', { name: /发送测试/ }));
+    fireEvent.click(screen.getByRole('button', { name: /\u53d1\u9001\u6d4b\u8bd5/ }));
 
-    expect(await screen.findByText('测试失败')).toBeInTheDocument();
+    expect(await screen.findByText('\u6d4b\u8bd5\u5931\u8d25')).toBeInTheDocument();
     const timeoutEntries = screen.getAllByText('timeout');
     expect(timeoutEntries[0]).toBeInTheDocument();
     expect(screen.getByText('https://qyapi.example.com/cgi-bin/webhook/send?key=***')).toBeInTheDocument();

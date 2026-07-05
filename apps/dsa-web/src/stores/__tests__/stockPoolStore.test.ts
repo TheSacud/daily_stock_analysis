@@ -29,9 +29,9 @@ const historyItem = {
   id: 1,
   queryId: 'q-1',
   stockCode: '600519',
-  stockName: '贵州茅台',
+  stockName: '\u8d35\u5dde\u8305\u53f0',
   sentimentScore: 82,
-  operationAdvice: '买入',
+  operationAdvice: '\u4e70\u5165',
   createdAt: '2026-03-18T08:00:00Z',
 };
 
@@ -40,14 +40,14 @@ const historyReport = {
     id: 1,
     queryId: 'q-1',
     stockCode: '600519',
-    stockName: '贵州茅台',
+    stockName: '\u8d35\u5dde\u8305\u53f0',
     reportType: 'detailed' as const,
     createdAt: '2026-03-18T08:00:00Z',
   },
   summary: {
-    analysisSummary: '趋势维持强势',
-    operationAdvice: '继续观察买点',
-    trendPrediction: '短线震荡偏强',
+    analysisSummary: '\u8d8b\u52bf\u7ef4\u6301\u5f3a\u52bf',
+    operationAdvice: '\u7ee7\u7eed\u89c2\u5bdf\u4e70\u70b9',
+    trendPrediction: '\u77ed\u7ebf\u9707\u8361\u504f\u5f3a',
     sentimentScore: 78,
   },
 };
@@ -59,7 +59,7 @@ const marketReviewHistoryReport = {
     id: 10,
     queryId: 'q-10',
     stockCode: '',
-    stockName: '大盘复盘',
+    stockName: '\u5927\u76d8\u590d\u76d8',
     reportType: 'market_review' as const,
   },
 };
@@ -68,7 +68,7 @@ function createTask(overrides: Partial<TaskInfo> = {}): TaskInfo {
   return {
     taskId: 'task-1',
     stockCode: '600519',
-    stockName: '贵州茅台',
+    stockName: '\u8d35\u5dde\u8305\u53f0',
     status: 'processing',
     progress: 50,
     reportType: 'detailed',
@@ -268,7 +268,7 @@ describe('stockPoolStore', () => {
       id: 10,
       queryId: 'market-review-q-10',
       stockCode: 'MARKET',
-      stockName: '大盘复盘',
+      stockName: '\u5927\u76d8\u590d\u76d8',
       reportType: 'market_review' as const,
     };
     useStockPoolStore.setState({
@@ -313,9 +313,9 @@ describe('stockPoolStore', () => {
       id: 10,
       queryId: 'market-review-q-10',
       stockCode: 'MARKET',
-      stockName: '大盘复盘',
+      stockName: '\u5927\u76d8\u590d\u76d8',
       reportType: 'market_review' as const,
-      operationAdvice: '查看复盘',
+      operationAdvice: '\u67e5\u770b\u590d\u76d8',
       sentimentScore: 50,
     };
     vi.mocked(historyApi.getList).mockResolvedValue({
@@ -344,7 +344,7 @@ describe('stockPoolStore', () => {
       id,
       queryId: `market-review-q-${id}`,
       stockCode: 'MARKET',
-      stockName: '大盘复盘',
+      stockName: '\u5927\u76d8\u590d\u76d8',
       reportType: 'market_review' as const,
     });
     const loadedItems = Array.from({ length: 20 }, (_, index) => createMarketReviewItem(index + 1));
@@ -392,7 +392,7 @@ describe('stockPoolStore', () => {
       id: 10,
       queryId: 'market-review-q-10',
       stockCode: 'MARKET',
-      stockName: '大盘复盘',
+      stockName: '\u5927\u76d8\u590d\u76d8',
       reportType: 'market_review' as const,
     };
     useStockPoolStore.setState({
@@ -487,7 +487,7 @@ describe('stockPoolStore', () => {
 
   it('surfaces duplicate task errors without replacing the dashboard error state', async () => {
     vi.mocked(analysisApi.analyzeAsync).mockRejectedValue(
-      new DuplicateTaskError('600519', 'task-1', '股票 600519 正在分析中'),
+      new DuplicateTaskError('600519', 'task-1', '\u80a1\u7968 600519 \u6b63\u5728\u5206\u6790\u4e2d'),
     );
 
     useStockPoolStore.getState().setQuery('600519');
@@ -505,7 +505,7 @@ describe('stockPoolStore', () => {
     await useStockPoolStore.getState().submitAnalysis();
 
     const state = useStockPoolStore.getState();
-    expect(state.inputError).toBe('请输入有效的股票代码或股票名称');
+    expect(state.inputError).toBe('\u8bf7\u8f93\u5165\u6709\u6548\u7684\u80a1\u7968\u4ee3\u7801\u6216\u80a1\u7968\u540d\u79f0');
     expect(state.isAnalyzing).toBe(false);
     expect(analysisApi.analyzeAsync).not.toHaveBeenCalled();
   });
@@ -520,7 +520,7 @@ describe('stockPoolStore', () => {
 
     await useStockPoolStore.getState().submitAnalysis({
       stockCode: '00700.HK',
-      stockName: '腾讯控股',
+      stockName: '\u817e\u8baf\u63a7\u80a1',
       originalQuery: '00700',
       selectionSource: 'autocomplete',
     });
@@ -531,7 +531,7 @@ describe('stockPoolStore', () => {
     expect(analysisApi.analyzeAsync).toHaveBeenCalledWith(expect.objectContaining({
       stockCode: '00700.HK',
       reportType: 'detailed',
-      stockName: '腾讯控股',
+      stockName: '\u817e\u8baf\u63a7\u80a1',
       originalQuery: '00700',
       selectionSource: 'autocomplete',
       notify: true,
@@ -665,7 +665,7 @@ describe('stockPoolStore', () => {
       id: 10,
       queryId: 'q-10',
       stockCode: 'HK00700',
-      stockName: '腾讯控股',
+      stockName: '\u817e\u8baf\u63a7\u80a1',
     };
     const olderTencentReport = {
       ...historyReport,
@@ -674,7 +674,7 @@ describe('stockPoolStore', () => {
         id: 10,
         queryId: 'q-10',
         stockCode: 'HK00700',
-        stockName: '腾讯控股',
+        stockName: '\u817e\u8baf\u63a7\u80a1',
       },
     };
     const latestTencentItem = {
@@ -709,7 +709,7 @@ describe('stockPoolStore', () => {
 
     await useStockPoolStore.getState().refreshHistoryForCompletedTask(createTask({
       stockCode: '00700.HK',
-      stockName: '腾讯控股',
+      stockName: '\u817e\u8baf\u63a7\u80a1',
       status: 'completed',
       progress: 100,
     }));
@@ -927,7 +927,7 @@ describe('stockPoolStore', () => {
     const pendingTask = {
       taskId: 'task-1',
       stockCode: '600519',
-      stockName: '贵州茅台',
+      stockName: '\u8d35\u5dde\u8305\u53f0',
       status: 'pending' as const,
       progress: 0,
       reportType: 'detailed',
@@ -977,7 +977,7 @@ describe('stockPoolStore', () => {
     const pendingTask = {
       taskId: 'task-1',
       stockCode: '600519',
-      stockName: '贵州茅台',
+      stockName: '\u8d35\u5dde\u8305\u53f0',
       status: 'pending' as const,
       progress: 0,
       reportType: 'detailed',
@@ -1000,7 +1000,7 @@ describe('stockPoolStore', () => {
     const pendingTask = {
       taskId: 'task-1',
       stockCode: '600519',
-      stockName: '贵州茅台',
+      stockName: '\u8d35\u5dde\u8305\u53f0',
       status: 'pending' as const,
       progress: 0,
       reportType: 'detailed',
@@ -1028,7 +1028,7 @@ describe('stockPoolStore', () => {
       progress: 100,
       reportType: 'detailed',
       createdAt: '2026-03-18T08:00:00Z',
-      error: '分析失败',
+      error: '\u5206\u6790\u5931\u8d25',
     });
 
     const state = useStockPoolStore.getState();
@@ -1081,11 +1081,11 @@ describe('stockPoolStore', () => {
 
   it('upserts pending and processing tasks from the backend snapshot', async () => {
     const existingTask = createTask({ taskId: 'task-existing', progress: 30 });
-    const updatedTask = createTask({ taskId: 'task-existing', progress: 80, message: 'LLM 正在生成分析结果' });
+    const updatedTask = createTask({ taskId: 'task-existing', progress: 80, message: 'LLM \u6b63\u5728\u751f\u6210\u5206\u6790\u7ed3\u679c' });
     const newTask = createTask({
       taskId: 'task-new',
       stockCode: '000001',
-      stockName: '平安银行',
+      stockName: '\u5e73\u5b89\u94f6\u884c',
       status: 'pending',
       progress: 0,
     });
@@ -1116,7 +1116,7 @@ describe('stockPoolStore', () => {
     const staleSnapshot = createDeferred<TaskListResponse>();
     const freshSnapshot = createDeferred<TaskListResponse>();
     const staleTask = createTask({ taskId: 'task-stale' });
-    const freshTask = createTask({ taskId: 'task-fresh', stockCode: '000001', stockName: '平安银行' });
+    const freshTask = createTask({ taskId: 'task-fresh', stockCode: '000001', stockName: '\u5e73\u5b89\u94f6\u884c' });
     vi.mocked(analysisApi.getTasks)
       .mockReturnValueOnce(staleSnapshot.promise)
       .mockReturnValueOnce(freshSnapshot.promise);
@@ -1135,7 +1135,7 @@ describe('stockPoolStore', () => {
 
   it('does not prune local tasks when the backend active-task snapshot is incomplete', async () => {
     const localTask = createTask({ taskId: 'task-local' });
-    const remoteTask = createTask({ taskId: 'task-remote', stockCode: '000001', stockName: '平安银行' });
+    const remoteTask = createTask({ taskId: 'task-remote', stockCode: '000001', stockName: '\u5e73\u5b89\u94f6\u884c' });
     useStockPoolStore.getState().syncTaskCreated(localTask);
     vi.mocked(analysisApi.getTasks).mockResolvedValue(
       createTaskListResponse([remoteTask], { processing: 2, total: 2 }),
@@ -1152,7 +1152,7 @@ describe('stockPoolStore', () => {
       taskId: 'task-cancel-requested',
       status: 'cancel_requested',
       progress: 60,
-      message: '正在取消任务',
+      message: '\u6b63\u5728\u53d6\u6d88\u4efb\u52a1',
     });
     useStockPoolStore.getState().syncTaskCreated(staleTask);
     vi.mocked(analysisApi.getTasks).mockResolvedValue(

@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 """
 ===================================
-健康检查接口
+\u5065\u5eb7\u68c0check\u63a5\u53e3
 ===================================
 
-职责：
-1. 提供 /api/v1/health 健康检查接口
-2. 用于负载均衡器和监控系统
+\u804c\u8d23:
+1. \u63d0\u4f9b /api/v1/health \u5065\u5eb7\u68c0check\u63a5\u53e3
+2. \u7528\u4e8e\u8d1f\u8f7d\u5747\u8861\u5668\u548c\u76d1\u63a7\u7cfb\u7edf
 """
 
 from datetime import datetime
@@ -21,12 +21,12 @@ router = APIRouter()
 @router.get("/health", response_model=HealthResponse)
 async def health_check() -> HealthResponse:
     """
-    健康检查接口
-    
-    用于负载均衡器或监控系统检查服务状态
-    
+    \u5065\u5eb7\u68c0check\u63a5\u53e3
+
+    \u7528\u4e8e\u8d1f\u8f7d\u5747\u8861\u5668or\u76d1\u63a7\u7cfb\u7edf\u68c0check\u670d\u52a1status
+
     Returns:
-        HealthResponse: 包含服务状态和时间戳
+        HealthResponse: \u5305\u542b\u670d\u52a1status\u548c\u65f6\u95f4\u6233
     """
     return HealthResponse(
         status="ok",

@@ -4,7 +4,7 @@
 import sys
 import os
 
-# 确保项目根目录在 sys.path
+# \u786e\u4fdd\u9879\u76ee\u6839\u76ee\u5f55\u5728 sys.path
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 if PROJECT_ROOT not in sys.path:
     sys.path.insert(0, PROJECT_ROOT)
@@ -12,12 +12,12 @@ if PROJECT_ROOT not in sys.path:
 from src.utils.data_processing import normalize_signal_attribution_values, normalize_dashboard_signal_attribution
 from src.schemas.report_schema import Dashboard, SignalAttribution
 
-# AnalysisResult 在 analyzer.py 中定义
+# AnalysisResult \u5728 analyzer.py \u4e2d\u5b9a\u4e49
 from src.analyzer import AnalysisResult
 
 
 class TestNormalizeSignalAttribution:
-    """测试归一化函数（接在 _parse_response 之前执行）"""
+    """\u6d4b\u8bd5\u5f52\u4e00\u5316\u51fd\u6570（\u63a5\u5728 _parse_response \u4e4b\u524d\u6267\u884c）"""
 
     def test_string_percentage_conversion(self):
         d = {"technical_indicators": "70%", "news_sentiment": "0%", "fundamentals": "15%", "market_conditions": "15%"}
@@ -45,13 +45,13 @@ class TestNormalizeSignalAttribution:
     def test_partial_none_no_normalization(self):
         d = {"technical_indicators": 70, "news_sentiment": None, "fundamentals": 30, "market_conditions": None}
         normalize_signal_attribution_values(d)
-        # 只有两个有效值，不归一化
+        # \u53ea\u6709\u4e24\u4e2a\u6709\u6548\u503c，\u4e0d\u5f52\u4e00\u5316
         assert d["technical_indicators"] == 70
         assert d["news_sentiment"] is None
 
 
 class TestNormalizeDashboardSignalAttribution:
-    """测试 dashboard 级别的归一化（直接在 dashboard dict 上操作）"""
+    """\u6d4b\u8bd5 dashboard \u7ea7\u522b\u7684\u5f52\u4e00\u5316（\u76f4\u63a5\u5728 dashboard dict \u4e0a\u64cd\u4f5c）"""
 
     def test_inplace_normalization(self):
         dashboard = {
@@ -68,45 +68,45 @@ class TestNormalizeDashboardSignalAttribution:
 
     def test_no_signal_attribution_key(self):
         dashboard = {"core_conclusion": {}}
-        normalize_dashboard_signal_attribution(dashboard)  # 不应报错
+        normalize_dashboard_signal_attribution(dashboard)  # \u4e0d\u5e94\u62a5\u9519
         assert "signal_attribution" not in dashboard
 
     def test_signal_attribution_none(self):
         dashboard = {"signal_attribution": None}
-        normalize_dashboard_signal_attribution(dashboard)  # 不应报错
+        normalize_dashboard_signal_attribution(dashboard)  # \u4e0d\u5e94\u62a5\u9519
 
 
 class TestParseResponseIntegration:
     """
-    测试 _parse_response 能正确解析 signal_attribution。
-    由于 _parse_response 是实例方法且依赖很多配置，这里用集成测试验证归一化函数被正确调用。
+    \u6d4b\u8bd5 _parse_response \u80fd\u6b63\u786e\u89e3\u6790 signal_attribution。
+    \u7531\u4e8e _parse_response \u662f\u5b9e\u4f8b\u65b9\u6cd5\u4e14\u4f9d\u8d56\u5f88\u591a\u914d\u7f6e，\u8fd9\u91cc\u7528\u96c6\u6210\u6d4b\u8bd5\u9a8c\u8bc1\u5f52\u4e00\u5316\u51fd\u6570\u88ab\u6b63\u786e\u8c03\u7528。
     """
 
     def test_normalization_called_in_parse_response(self):
         """
-        验证：如果 LLM 返回字符串百分比，归一化后变成 int。
-        通过直接测试 _parse_response 的归一化调用来验证。
+        \u9a8c\u8bc1：\u5982\u679c LLM \u8fd4\u56de\u5b57\u7b26\u4e32\u767e\u5206\u6bd4，\u5f52\u4e00\u5316\u540e\u53d8\u6210 int。
+        \u901a\u8fc7\u76f4\u63a5\u6d4b\u8bd5 _parse_response \u7684\u5f52\u4e00\u5316\u8c03\u7528\u6765\u9a8c\u8bc1。
         """
-        # 模拟 LLM 返回的 data dict
+        # \u6a21\u62df LLM \u8fd4\u56de\u7684 data dict
         data = {
             "sentiment_score": 50,
-            "trend_prediction": "震荡",
-            "operation_advice": "持有",
+            "trend_prediction": "\u9707\u8361",
+            "operation_advice": "\u6301\u6709",
             "decision_type": "hold",
-            "confidence_level": "中",
-            "analysis_summary": "测试",
+            "confidence_level": "\u4e2d",
+            "analysis_summary": "\u6d4b\u8bd5",
             "dashboard": {
                 "signal_attribution": {
                     "technical_indicators": "70%",
                     "news_sentiment": "0%",
                     "fundamentals": "15%",
                     "market_conditions": "15%",
-                    "strongest_bullish_signal": "MACD金叉",
+                    "strongest_bullish_signal": "MACD\u91d1\u53c9",
                     "strongest_bearish_signal": None,
                 }
             },
         }
-        # 手动调用归一化（模拟 _parse_response 的行为）
+        # \u624b\u52a8\u8c03\u7528\u5f52\u4e00\u5316（\u6a21\u62df _parse_response \u7684\u884c\u4e3a）
         normalize_dashboard_signal_attribution(data.get("dashboard"))
         sa = data["dashboard"]["signal_attribution"]
         assert sa["technical_indicators"] == 70
@@ -114,48 +114,48 @@ class TestParseResponseIntegration:
 
 
 class TestHistoryServiceDisplay:
-    """测试 HistoryService._generate_single_stock_markdown 能展示 signal_attribution"""
+    """\u6d4b\u8bd5 HistoryService._generate_single_stock_markdown \u80fd\u5c55\u793a signal_attribution"""
 
     def test_signal_attribution_in_markdown(self):
-        """验证 markdown 报告包含信号归因段落"""
+        """\u9a8c\u8bc1 markdown \u62a5\u544a\u5305\u542b\u4fe1\u53f7\u5f52\u56e0\u6bb5\u843d"""
         from src.services.history_service import HistoryService
 
         result = AnalysisResult(
             code="600519",
-            name="贵州茅台",
+            name="\u8d35\u5dde\u8305\u53f0",
             sentiment_score=50,
-            trend_prediction="震荡",
-            operation_advice="持有",
+            trend_prediction="\u9707\u8361",
+            operation_advice="\u6301\u6709",
             dashboard={
                 "signal_attribution": {
                     "technical_indicators": 70,
                     "news_sentiment": 0,
                     "fundamentals": 15,
                     "market_conditions": 15,
-                    "strongest_bullish_signal": "MACD金叉",
+                    "strongest_bullish_signal": "MACD\u91d1\u53c9",
                     "strongest_bearish_signal": None,
                 }
             },
         )
 
-        # 创建一个 mock record
+        # \u521b\u5efa\u4e00\u4e2a mock record
         class MockRecord:
             created_at = None
 
         markdown = HistoryService()._generate_single_stock_markdown(result, MockRecord())
-        assert "信号归因" in markdown or "Signal Attribution" in markdown
+        assert "\u4fe1\u53f7\u5f52\u56e0" in markdown or "Signal Attribution" in markdown
         assert "70%" in markdown or "70%" in markdown
 
     def test_no_signal_attribution_no_section(self):
-        """验证没有 signal_attribution 时不显示段落"""
+        """\u9a8c\u8bc1\u6ca1\u6709 signal_attribution \u65f6\u4e0d\u663e\u793a\u6bb5\u843d"""
         from src.services.history_service import HistoryService
 
         result = AnalysisResult(
             code="600519",
-            name="贵州茅台",
+            name="\u8d35\u5dde\u8305\u53f0",
             sentiment_score=50,
-            trend_prediction="震荡",
-            operation_advice="持有",
+            trend_prediction="\u9707\u8361",
+            operation_advice="\u6301\u6709",
             dashboard={},
         )
 
@@ -163,7 +163,7 @@ class TestHistoryServiceDisplay:
             created_at = None
 
         markdown = HistoryService()._generate_single_stock_markdown(result, MockRecord())
-        assert "信号归因" not in markdown
+        assert "\u4fe1\u53f7\u5f52\u56e0" not in markdown
 
 
 if __name__ == "__main__":

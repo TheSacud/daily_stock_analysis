@@ -337,7 +337,7 @@ class TestSkillManager(unittest.TestCase):
         instructions = self.manager.get_skill_instructions()
         self.assertIn("Test Skill (demo)", instructions)
         self.assertIn("Instructions for demo", instructions)
-        self.assertIn("技能 1:", instructions)
+        self.assertIn("\u6280\u80fd 1:", instructions)
 
     def test_get_required_tools(self):
         s1 = _make_skill("s1")
@@ -573,18 +573,18 @@ class TestYAMLStrategyLoading(unittest.TestCase):
 
         yaml_content = """
 name: test_yaml_strategy
-display_name: 测试YAML策略
-description: 一个用于测试的策略
+display_name: \u6d4b\u8bd5YAML\u7b56\u7565
+description: \u4e00\u4e2a\u7528\u4e8e\u6d4b\u8bd5\u7684\u7b56\u7565
 category: trend
 core_rules: [1, 3]
 required_tools:
   - analyze_trend
   - get_daily_history
 instructions: |
-  **测试策略**
+  **\u6d4b\u8bd5\u7b56\u7565**
 
-  这是一个用自然语言编写的测试策略。
-  判断标准：当 MA5 > MA10 时买入。
+  \u8fd9\u662f\u4e00\u4e2a\u7528\u81ea\u7136\u8bed\u8a00\u7f16\u5199\u7684\u6d4b\u8bd5\u7b56\u7565。
+  \u5224\u65ad\u6807\u51c6：\u5f53 MA5 > MA10 \u65f6\u4e70\u5165。
 """
         with tempfile.NamedTemporaryFile(mode='w', suffix='.yaml', delete=False, encoding='utf-8') as f:
             f.write(yaml_content)
@@ -594,11 +594,11 @@ instructions: |
             skill = load_skill_from_yaml(tmp_path)
             self.assertIsInstance(skill, Skill)
             self.assertEqual(skill.name, "test_yaml_strategy")
-            self.assertEqual(skill.display_name, "测试YAML策略")
+            self.assertEqual(skill.display_name, "\u6d4b\u8bd5YAML\u7b56\u7565")
             self.assertEqual(skill.category, "trend")
             self.assertEqual(skill.core_rules, [1, 3])
             self.assertEqual(skill.required_tools, ["analyze_trend", "get_daily_history"])
-            self.assertIn("自然语言", skill.instructions)
+            self.assertIn("\u81ea\u7136\u8bed\u8a00", skill.instructions)
             self.assertFalse(skill.enabled)
         finally:
             os.unlink(tmp_path)
@@ -610,9 +610,9 @@ instructions: |
 
         yaml_content = """
 name: minimal
-display_name: 最简策略
-description: 最简描述
-instructions: 用自然语言描述的策略内容
+display_name: \u6700\u7b80\u7b56\u7565
+description: \u6700\u7b80\u63cf\u8ff0
+instructions: \u7528\u81ea\u7136\u8bed\u8a00\u63cf\u8ff0\u7684\u7b56\u7565\u5185\u5bb9
 """
         with tempfile.NamedTemporaryFile(mode='w', suffix='.yaml', delete=False, encoding='utf-8') as f:
             f.write(yaml_content)
@@ -634,15 +634,15 @@ instructions: 用自然语言描述的策略内容
 
         yaml_content = """
 name: metadata_skill
-display_name: 元数据技能
-description: 带有默认元数据的技能
-aliases: [别名一, 别名二]
+display_name: \u5143\u6570\u636e\u6280\u80fd
+description: \u5e26\u6709\u9ed8\u8ba4\u5143\u6570\u636e\u7684\u6280\u80fd
+aliases: [\u522b\u540d\u4e00, \u522b\u540d\u4e8c]
 default_active: true
 default_router: true
 default_priority: 15
 market_regimes: [trending_up, volatile]
 instructions: |
-  这是一个测试技能。
+  \u8fd9\u662f\u4e00\u4e2a\u6d4b\u8bd5\u6280\u80fd。
 """
         with tempfile.NamedTemporaryFile(mode='w', suffix='.yaml', delete=False, encoding='utf-8') as f:
             f.write(yaml_content)
@@ -650,7 +650,7 @@ instructions: |
 
         try:
             skill = load_skill_from_yaml(tmp_path)
-            self.assertEqual(skill.aliases, ["别名一", "别名二"])
+            self.assertEqual(skill.aliases, ["\u522b\u540d\u4e00", "\u522b\u540d\u4e8c"])
             self.assertTrue(skill.default_active)
             self.assertTrue(skill.default_router)
             self.assertEqual(skill.default_priority, 15)
@@ -665,7 +665,7 @@ instructions: |
 
         yaml_content = """
 name: incomplete
-display_name: 不完整
+display_name: \u4e0d\u5b8c\u6574
 """
         with tempfile.NamedTemporaryFile(mode='w', suffix='.yaml', delete=False, encoding='utf-8') as f:
             f.write(yaml_content)
@@ -695,9 +695,9 @@ display_name: 不完整
                 with open(os.path.join(tmpdir, f"{name}.yaml"), 'w', encoding='utf-8') as f:
                     f.write(f"""
 name: {name}
-display_name: 策略{chr(65 + i)}
-description: 描述{chr(65 + i)}
-instructions: 自然语言策略描述 {name}
+display_name: \u7b56\u7565{chr(65 + i)}
+description: \u63cf\u8ff0{chr(65 + i)}
+instructions: \u81ea\u7136\u8bed\u8a00\u7b56\u7565\u63cf\u8ff0 {name}
 """)
 
             # Create an invalid YAML file (should be skipped)
@@ -767,7 +767,7 @@ When explaining code, always include an ASCII diagram.
                 """---
 name: rotation-scout
 description: Track sector rotation leaders
-aliases: [轮动, 龙头侦察]
+aliases: [\u8f6e\u52a8, \u9f99\u5934\u4fa6\u5bdf]
 default-active: true
 default-router: true
 default-priority: 12
@@ -778,7 +778,7 @@ Track hot sectors and leading stocks.
                 encoding="utf-8",
             )
             skill = load_skill_from_markdown(skill_dir / "SKILL.md")
-            self.assertEqual(skill.aliases, ["轮动", "龙头侦察"])
+            self.assertEqual(skill.aliases, ["\u8f6e\u52a8", "\u9f99\u5934\u4fa6\u5bdf"])
             self.assertTrue(skill.default_active)
             self.assertTrue(skill.default_router)
             self.assertEqual(skill.default_priority, 12)
@@ -833,14 +833,14 @@ Use RESTful naming and consistent validation.
             with open(os.path.join(tmpdir, "dragon_head.yaml"), 'w', encoding='utf-8') as f:
                 f.write("""
 name: dragon_head
-display_name: 自定义龙头策略
-description: 我自己的龙头策略
-instructions: 按照我的规则分析龙头股
+display_name: \u81ea\u5b9a\u4e49\u9f99\u5934\u7b56\u7565
+description: \u6211\u81ea\u5df1\u7684\u9f99\u5934\u7b56\u7565
+instructions: \u6309\u7167\u6211\u7684\u89c4\u5219\u5206\u6790\u9f99\u5934\u80a1
 """)
             manager.load_custom_strategies(tmpdir)
 
             overridden = manager.get("dragon_head")
-            self.assertEqual(overridden.display_name, "自定义龙头策略")
+            self.assertEqual(overridden.display_name, "\u81ea\u5b9a\u4e49\u9f99\u5934\u7b56\u7565")
             self.assertIn(tmpdir, overridden.source)
         finally:
             import shutil

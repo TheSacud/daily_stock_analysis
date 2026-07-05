@@ -65,7 +65,7 @@ def _screening_task_not_found(task_id: str) -> HTTPException:
     return api_error(
         404,
         "alphasift_screen_task_not_found",
-        f"选股任务 {task_id} 不存在或已过期",
+        f"\u9009\u80a1task {task_id} does not existorhas expired",
     )
 
 
@@ -136,7 +136,7 @@ def alphasift_start_screen_task(
         task_queue.update_task_progress(
             task_id,
             20,
-            "正在执行 AlphaSift 选股，外部数据源较慢时会持续后台运行",
+            "\u6b63\u5728\u6267\u884c AlphaSift \u9009\u80a1; \u5916\u90e8data source\u8f83\u6162\u65f6\u4f1a\u6301\u7eed\u540e\u53f0\u8fd0\u884c",
         )
         result = _service(config).screen(
             strategy=request.strategy,
@@ -146,7 +146,7 @@ def alphasift_start_screen_task(
         task_queue.update_task_progress(
             task_id,
             90,
-            f"选股已完成，正在整理 {result.get('candidate_count', 0)} 条候选",
+            f"\u9009\u80a1completed; \u6b63\u5728\u6574\u7406 {result.get('candidate_count', 0)} \u6761\u5019\u9009",
         )
         return result
 
@@ -155,7 +155,7 @@ def alphasift_start_screen_task(
         stock_code="alphasift_screen",
         stock_name=f"{request.strategy} / {request.market}",
         report_type="alphasift_screen",
-        message="AlphaSift 选股任务已提交",
+        message="AlphaSift \u9009\u80a1task\u5df2\u63d0\u4ea4",
         task_id=task_id,
         trace_id=task_id,
     )
@@ -163,7 +163,7 @@ def alphasift_start_screen_task(
         task_id=task.task_id,
         trace_id=task.trace_id or task.task_id,
         status=task.status.value if isinstance(task.status, QueueTaskStatus) else str(task.status),
-        message=task.message or "AlphaSift 选股任务已提交",
+        message=task.message or "AlphaSift \u9009\u80a1task\u5df2\u63d0\u4ea4",
         strategy=request.strategy,
         market=request.market,
         max_results=request.max_results,

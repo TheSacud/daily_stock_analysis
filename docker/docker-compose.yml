@@ -1,11 +1,11 @@
 # ===================================
-# A股自选股智能分析系统 - Docker Compose
+# A\u80a1\u81ea\u9009\u80a1\u667a\u80fd\u5206\u6790\u7cfb\u7edf - Docker Compose
 # ===================================
-# 
-# 使用方式:
-#   定时模式: docker-compose -f ./docker/docker-compose.yml up -d
-#   FastAPI模式: docker-compose -f ./docker/docker-compose.yml up -d server
-#   同时启动: docker-compose -f ./docker/docker-compose.yml up -d analyzer server
+#
+# \u4f7f\u7528\u65b9\u5f0f:
+#   \u5b9a\u65f6\u6a21\u5f0f: docker-compose -f ./docker/docker-compose.yml up -d
+#   FastAPI\u6a21\u5f0f: docker-compose -f ./docker/docker-compose.yml up -d server
+#   \u540c\u65f6\u542f\u52a8: docker-compose -f ./docker/docker-compose.yml up -d analyzer server
 
 name: daily-stock-analysis
 version: '3.8'
@@ -16,8 +16,8 @@ x-common: &common
     dockerfile: docker/Dockerfile
   restart: unless-stopped
 
-  # 环境变量（从 .env 文件加载）。不要将 ../.env 作为单文件 volume 挂载到 /app/.env，
-  # 否则 Docker mount point 会阻止配置保存时的 os.replace 原子更新。
+  # \u73af\u5883\u53d8\u91cf（\u4ece .env \u6587\u4ef6\u52a0\u8f7d）。\u4e0d\u8981\u5c06 ../.env \u4f5c\u4e3a\u5355\u6587\u4ef6 volume \u6302\u8f7d\u5230 /app/.env，
+  # \u5426\u5219 Docker mount point \u4f1a\u963b\u6b62\u914d\u7f6e\u4fdd\u5b58\u65f6\u7684 os.replace \u539f\u5b50\u66f4\u65b0。
   env_file:
     - ../.env
 
@@ -29,7 +29,7 @@ x-common: &common
     # Longbridge OAuth token cache persistence; entrypoint repairs container-side ownership for dsa user.
     # Create ../longbridge_tokens on the host before copying an authorized token cache into it.
     - ../longbridge_tokens:/home/dsa/.longbridge
-    # 如需覆盖前端静态资源，可挂载本地 static 目录
+    # \u5982\u9700\u8986\u76d6\u524d\u7aef\u9759\u6001\u8d44\u6e90，\u53ef\u6302\u8f7d\u672c\u5730 static \u76ee\u5f55
     # - ../static:/app/static:ro
 
   environment:
@@ -37,9 +37,9 @@ x-common: &common
 
     # Web/API service bind address (must be 0.0.0.0 inside container)
     - WEBUI_HOST=0.0.0.0
-    # API_PORT 从 .env 文件读取，无需在此硬编码
+    # API_PORT \u4ece .env \u6587\u4ef6\u8bfb\u53d6，\u65e0\u9700\u5728\u6b64\u786c\u7f16\u7801
 
-    # 代理设置（如果需要）
+    # \u4ee3\u7406\u8bbe\u7f6e（\u5982\u679c\u9700\u8981）
     # - http_proxy=http://host.docker.internal:10809
     # - https_proxy=http://host.docker.internal:10809
   logging:
@@ -47,8 +47,8 @@ x-common: &common
     options:
       max-size: "10m"
       max-file: "3"
-  # 资源限制：完整分析建议 1G+；512M 仅适合轻量 Web/API、单股、低并发场景，
-  # 且建议设置 MAX_WORKERS=1 并避免同时启动 analyzer 和 server。
+  # \u8d44\u6e90\u9650\u5236：\u5b8c\u6574\u5206\u6790\u5efa\u8bae 1G+；512M \u4ec5\u9002\u5408\u8f7b\u91cf Web/API、\u5355\u80a1、\u4f4e\u5e76\u53d1\u573a\u666f，
+  # \u4e14\u5efa\u8bae\u8bbe\u7f6e MAX_WORKERS=1 \u5e76\u907f\u514d\u540c\u65f6\u542f\u52a8 analyzer \u548c server。
   deploy:
     resources:
       limits:
@@ -57,16 +57,16 @@ x-common: &common
         memory: 512M
 
 services:
-  # 定时任务模式
+  # \u5b9a\u65f6\u4efb\u52a1\u6a21\u5f0f
   analyzer:
     <<: *common
     container_name: stock-analyzer
 
-  # FastAPI 模式
+  # FastAPI \u6a21\u5f0f
   server:
     <<: *common
     container_name: stock-server
     command: ["python", "main.py", "--serve-only", "--host", "0.0.0.0", "--port", "${API_PORT:-8000}"]
-    # 若使用 network_mode: host，则以下 ports 映射无效，端口由 command 中的 --port 指定
+    # \u82e5\u4f7f\u7528 network_mode: host，\u5219\u4ee5\u4e0b ports \u6620\u5c04\u65e0\u6548，\u7aef\u53e3\u7531 command \u4e2d\u7684 --port \u6307\u5b9a
     ports:
       - "${API_PORT:-8000}:${API_PORT:-8000}"

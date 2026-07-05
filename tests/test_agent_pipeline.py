@@ -169,7 +169,7 @@ class TestAgentConfig(unittest.TestCase):
                 name="bull_trend",
                 display_name="bull_trend",
                 description="bull_trend desc",
-                instructions="测试指令",
+                instructions="\u6d4b\u8bd5\u6307\u4ee4",
                 default_active=True,
                 default_router=True,
                 default_priority=100,
@@ -177,7 +177,7 @@ class TestAgentConfig(unittest.TestCase):
                 source="builtin",
             )
         ]
-        skill_manager.get_skill_instructions.return_value = "测试指令"
+        skill_manager.get_skill_instructions.return_value = "\u6d4b\u8bd5\u6307\u4ee4"
 
         with patch.dict(sys.modules, {
             "litellm": MagicMock(),
@@ -232,7 +232,7 @@ class TestAgentConfig(unittest.TestCase):
                 name="bull_trend",
                 display_name="bull_trend",
                 description="bull_trend desc",
-                instructions="测试指令",
+                instructions="\u6d4b\u8bd5\u6307\u4ee4",
                 default_active=True,
                 default_router=True,
                 default_priority=100,
@@ -240,7 +240,7 @@ class TestAgentConfig(unittest.TestCase):
                 source="builtin",
             )
         ]
-        skill_manager.get_skill_instructions.return_value = "测试指令"
+        skill_manager.get_skill_instructions.return_value = "\u6d4b\u8bd5\u6307\u4ee4"
 
         with patch.dict(sys.modules, {
             "litellm": MagicMock(),
@@ -295,7 +295,7 @@ class TestAgentConfig(unittest.TestCase):
                 name="bull_trend",
                 display_name="bull_trend",
                 description="bull_trend desc",
-                instructions="测试指令",
+                instructions="\u6d4b\u8bd5\u6307\u4ee4",
                 default_active=True,
                 default_router=True,
                 default_priority=100,
@@ -303,7 +303,7 @@ class TestAgentConfig(unittest.TestCase):
                 source="builtin",
             )
         ]
-        skill_manager.get_skill_instructions.return_value = "测试指令"
+        skill_manager.get_skill_instructions.return_value = "\u6d4b\u8bd5\u6307\u4ee4"
 
         with self.assertLogs("src.agent.factory", level="WARNING") as logs:
             with patch.dict(sys.modules, {
@@ -435,7 +435,7 @@ class TestAgentFactorySkillBaseline(unittest.TestCase):
             instructions="bull_trend instructions",
         )
 
-        self.assertIn("严进策略", kwargs["default_skill_policy"])
+        self.assertIn("\u4e25\u8fdb\u7b56\u7565", kwargs["default_skill_policy"])
         self.assertTrue(kwargs["use_legacy_default_prompt"])
         skill_manager.activate.assert_called_once_with(["bull_trend"])
 
@@ -456,7 +456,7 @@ class TestAgentFactorySkillBaseline(unittest.TestCase):
             instructions="bull_trend instructions",
         )
 
-        self.assertIn("严进策略", kwargs["default_skill_policy"])
+        self.assertIn("\u4e25\u8fdb\u7b56\u7565", kwargs["default_skill_policy"])
         self.assertTrue(kwargs["use_legacy_default_prompt"])
         skill_manager.activate.assert_called_once_with(["bull_trend"])
 
@@ -498,7 +498,7 @@ class TestAgentFactorySkillBaseline(unittest.TestCase):
             instructions="bull_trend instructions",
         )
 
-        self.assertIn("严进策略", kwargs["default_skill_policy"])
+        self.assertIn("\u4e25\u8fdb\u7b56\u7565", kwargs["default_skill_policy"])
         self.assertTrue(kwargs["use_legacy_default_prompt"])
         skill_manager.activate.assert_called_once_with(["bull_trend"])
 
@@ -597,13 +597,13 @@ class TestAgentResultConversion(unittest.TestCase):
         from src.enums import ReportType
 
         dashboard = {
-            "stock_name": "贵州茅台",
+            "stock_name": "\u8d35\u5dde\u8305\u53f0",
             "sentiment_score": 80,
-            "trend_prediction": "看多",
-            "operation_advice": "持有",
+            "trend_prediction": "\u770b\u591a",
+            "operation_advice": "\u6301\u6709",
             "decision_type": "hold",
-            "confidence_level": "高",
-            "dashboard": {"core_conclusion": {"one_sentence": "看好"}},
+            "confidence_level": "\u9ad8",
+            "dashboard": {"core_conclusion": {"one_sentence": "\u770b\u597d"}},
             "analysis_summary": "Testing",
             "key_points": "Strong",
             "risk_warning": "High valuation",
@@ -634,15 +634,15 @@ class TestAgentResultConversion(unittest.TestCase):
         )
 
         result = pipeline._agent_result_to_analysis_result(
-            agent_result, "600519", "贵州茅台", ReportType.SIMPLE, "q123"
+            agent_result, "600519", "\u8d35\u5dde\u8305\u53f0", ReportType.SIMPLE, "q123"
         )
 
         self.assertIsNotNone(result)
         self.assertTrue(result.success)
         self.assertEqual(result.code, "600519")
-        self.assertEqual(result.name, "贵州茅台")
+        self.assertEqual(result.name, "\u8d35\u5dde\u8305\u53f0")
         self.assertEqual(result.sentiment_score, 80)
-        self.assertEqual(result.trend_prediction, "看多")
+        self.assertEqual(result.trend_prediction, "\u770b\u591a")
         self.assertEqual(result.decision_type, "hold")
         self.assertIn("agent:gemini", result.data_sources)
         self.assertIsNotNone(result.dashboard)
@@ -655,22 +655,22 @@ class TestAgentResultConversion(unittest.TestCase):
         from src.enums import ReportType
 
         dashboard = {
-            "stock_name": "贵州茅台",
+            "stock_name": "\u8d35\u5dde\u8305\u53f0",
             "sentiment_score": 80,
-            "trend_prediction": "看多",
-            "operation_advice": "持有",
+            "trend_prediction": "\u770b\u591a",
+            "operation_advice": "\u6301\u6709",
             "decision_type": "hold",
-            "confidence_level": "中",
+            "confidence_level": "\u4e2d",
             "phase_decision": {
                 "phase_context": {"phase": "intraday", "market": "cn"},
-                "action_window": "盘中跟踪",
-                "immediate_action": "等待确认",
-                "watch_conditions": ["放量突破"],
+                "action_window": "\u76d8\u4e2d\u8ddf\u8e2a",
+                "immediate_action": "\u7b49\u5f85\u786e\u8ba4",
+                "watch_conditions": ["\u653e\u91cf\u7a81\u7834"],
                 "next_check_time": "14:30",
-                "confidence_reason": "等待确认",
+                "confidence_reason": "\u7b49\u5f85\u786e\u8ba4",
                 "data_limitations": [],
             },
-            "dashboard": {"core_conclusion": {"one_sentence": "看好"}},
+            "dashboard": {"core_conclusion": {"one_sentence": "\u770b\u597d"}},
             "analysis_summary": "Testing",
         }
 
@@ -682,11 +682,11 @@ class TestAgentResultConversion(unittest.TestCase):
         )
 
         result = pipeline._agent_result_to_analysis_result(
-            agent_result, "600519", "贵州茅台", ReportType.SIMPLE, "q-phase"
+            agent_result, "600519", "\u8d35\u5dde\u8305\u53f0", ReportType.SIMPLE, "q-phase"
         )
 
         self.assertEqual(result.dashboard["phase_decision"]["phase_context"]["phase"], "intraday")
-        self.assertEqual(result.dashboard["phase_decision"]["watch_conditions"], ["放量突破"])
+        self.assertEqual(result.dashboard["phase_decision"]["watch_conditions"], ["\u653e\u91cf\u7a81\u7834"])
 
     def test_convert_failed_dashboard(self):
         """Failed AgentResult should produce a minimal AnalysisResult."""
@@ -703,13 +703,13 @@ class TestAgentResultConversion(unittest.TestCase):
         )
 
         result = pipeline._agent_result_to_analysis_result(
-            agent_result, "600519", "贵州茅台", ReportType.SIMPLE, "q123"
+            agent_result, "600519", "\u8d35\u5dde\u8305\u53f0", ReportType.SIMPLE, "q123"
         )
 
         self.assertIsNotNone(result)
         self.assertFalse(result.success)
         self.assertEqual(result.sentiment_score, 50)
-        self.assertEqual(result.operation_advice, "观望")
+        self.assertEqual(result.operation_advice, "\u89c2\u671b")
         self.assertIn("Max steps exceeded", result.error_message)
 
     def test_convert_agent_dashboard_preserves_explicit_action(self):
@@ -724,26 +724,26 @@ class TestAgentResultConversion(unittest.TestCase):
             content="{}",
             dashboard={
                 "sentiment_score": 52,
-                "trend_prediction": "震荡",
-                "operation_advice": "持有观察",
+                "trend_prediction": "\u9707\u8361",
+                "operation_advice": "\u6301\u6709\u89c2\u5bdf",
                 "decision_type": "hold",
                 "action": "watch",
-                "analysis_summary": "等待确认",
+                "analysis_summary": "\u7b49\u5f85\u786e\u8ba4",
             },
             provider="gemini",
         )
 
         result = pipeline._agent_result_to_analysis_result(
-            agent_result, "600519", "贵州茅台", ReportType.SIMPLE, "q-action"
+            agent_result, "600519", "\u8d35\u5dde\u8305\u53f0", ReportType.SIMPLE, "q-action"
         )
         raw_result = result.to_dict()
 
-        self.assertEqual(result.operation_advice, "持有观察")
+        self.assertEqual(result.operation_advice, "\u6301\u6709\u89c2\u5bdf")
         self.assertEqual(result.decision_type, "hold")
         self.assertEqual(result.action, "watch")
-        self.assertEqual(result.action_label, "观望")
+        self.assertEqual(result.action_label, "\u89c2\u671b")
         self.assertEqual(raw_result["action"], "watch")
-        self.assertEqual(raw_result["action_label"], "观望")
+        self.assertEqual(raw_result["action_label"], "\u89c2\u671b")
 
     def test_final_action_refresh_preserves_explicit_action_when_advice_is_unchanged(self):
         """Pre-save refresh must not overwrite an explicit Agent action without a final advice rewrite."""
@@ -757,17 +757,17 @@ class TestAgentResultConversion(unittest.TestCase):
             content="{}",
             dashboard={
                 "sentiment_score": 52,
-                "trend_prediction": "震荡",
-                "operation_advice": "持有观察",
+                "trend_prediction": "\u9707\u8361",
+                "operation_advice": "\u6301\u6709\u89c2\u5bdf",
                 "decision_type": "hold",
                 "action": "watch",
-                "analysis_summary": "等待确认",
+                "analysis_summary": "\u7b49\u5f85\u786e\u8ba4",
             },
             provider="gemini",
         )
 
         result = pipeline._agent_result_to_analysis_result(
-            agent_result, "600519", "贵州茅台", ReportType.SIMPLE, "q-action-preserve"
+            agent_result, "600519", "\u8d35\u5dde\u8305\u53f0", ReportType.SIMPLE, "q-action-preserve"
         )
         previous_operation_advice = result.operation_advice
 
@@ -778,11 +778,11 @@ class TestAgentResultConversion(unittest.TestCase):
         )
         raw_result = result.to_dict()
 
-        self.assertEqual(result.operation_advice, "持有观察")
+        self.assertEqual(result.operation_advice, "\u6301\u6709\u89c2\u5bdf")
         self.assertEqual(result.action, "watch")
-        self.assertEqual(result.action_label, "观望")
+        self.assertEqual(result.action_label, "\u89c2\u671b")
         self.assertEqual(raw_result["action"], "watch")
-        self.assertEqual(raw_result["action_label"], "观望")
+        self.assertEqual(raw_result["action_label"], "\u89c2\u671b")
 
     def test_final_action_refresh_ignores_stale_pre_guardrail_action(self):
         """Post-processing can rewrite advice; refreshed action must follow the final advice."""
@@ -796,20 +796,20 @@ class TestAgentResultConversion(unittest.TestCase):
             content="{}",
             dashboard={
                 "sentiment_score": 68,
-                "trend_prediction": "震荡",
-                "operation_advice": "买入",
+                "trend_prediction": "\u9707\u8361",
+                "operation_advice": "\u4e70\u5165",
                 "decision_type": "buy",
                 "action": "buy",
-                "analysis_summary": "等待确认",
+                "analysis_summary": "\u7b49\u5f85\u786e\u8ba4",
             },
             provider="gemini",
         )
 
         result = pipeline._agent_result_to_analysis_result(
-            agent_result, "600519", "贵州茅台", ReportType.SIMPLE, "q-action-refresh"
+            agent_result, "600519", "\u8d35\u5dde\u8305\u53f0", ReportType.SIMPLE, "q-action-refresh"
         )
         previous_operation_advice = result.operation_advice
-        result.operation_advice = "持有观察"
+        result.operation_advice = "\u6301\u6709\u89c2\u5bdf"
         result.decision_type = "hold"
 
         pipeline._refresh_decision_action_for_final_result(
@@ -819,7 +819,7 @@ class TestAgentResultConversion(unittest.TestCase):
         )
 
         self.assertEqual(result.action, "hold")
-        self.assertEqual(result.action_label, "持有")
+        self.assertEqual(result.action_label, "\u6301\u6709")
 
     def test_convert_invalid_dashboard_preserves_local_trend_result(self):
         """Invalid Agent dashboard should not erase already-computed trend data."""
@@ -845,7 +845,7 @@ class TestAgentResultConversion(unittest.TestCase):
         result = pipeline._agent_result_to_analysis_result(
             agent_result,
             "600519",
-            "贵州茅台",
+            "\u8d35\u5dde\u8305\u53f0",
             ReportType.SIMPLE,
             "q-trend-fallback",
             trend_result=trend_result,
@@ -854,8 +854,8 @@ class TestAgentResultConversion(unittest.TestCase):
         self.assertIsNotNone(result)
         self.assertTrue(result.success)
         self.assertEqual(result.sentiment_score, 64)
-        self.assertEqual(result.trend_prediction, "多头排列")
-        self.assertEqual(result.operation_advice, "买入")
+        self.assertEqual(result.trend_prediction, "\u591a\u5934\u6392\u5217")
+        self.assertEqual(result.operation_advice, "\u4e70\u5165")
         self.assertEqual(result.decision_type, "buy")
         self.assertIn("trend:fallback", result.data_sources)
 
@@ -880,13 +880,13 @@ class TestAgentResultConversion(unittest.TestCase):
             buy_signal=BuySignal.BUY,
             signal_score=68,
             support_levels=[112.3],
-            risk_factors=["跌破 MA20 需止损"],
+            risk_factors=["\u8dcc\u7834 MA20 \u9700\u6b62\u635f"],
         )
 
         result = pipeline._agent_result_to_analysis_result(
             agent_result,
             "600519",
-            "贵州茅台",
+            "\u8d35\u5dde\u8305\u53f0",
             ReportType.SIMPLE,
             "q-empty-dashboard",
             trend_result=trend_result,
@@ -895,10 +895,10 @@ class TestAgentResultConversion(unittest.TestCase):
         ok, missing = check_content_integrity(result)
         self.assertTrue(ok, missing)
         self.assertEqual(result.sentiment_score, 68)
-        self.assertEqual(result.analysis_summary, "趋势结论：多头排列；操作建议：买入。")
+        self.assertEqual(result.analysis_summary, "\u8d8b\u52bf\u7ed3\u8bba：\u591a\u5934\u6392\u5217；\u64cd\u4f5c\u5efa\u8bae：\u4e70\u5165。")
         self.assertEqual(result.dashboard["sentiment_score"], 68)
         self.assertEqual(result.dashboard["core_conclusion"]["one_sentence"], result.analysis_summary)
-        self.assertEqual(result.dashboard["intelligence"]["risk_alerts"], ["跌破 MA20 需止损"])
+        self.assertEqual(result.dashboard["intelligence"]["risk_alerts"], ["\u8dcc\u7834 MA20 \u9700\u6b62\u635f"])
         self.assertEqual(result.dashboard["battle_plan"]["sniper_points"]["stop_loss"], 112.3)
 
     def test_convert_dict_operation_advice_missing_decision_type_preserves_buy_signal(self):
@@ -913,10 +913,10 @@ class TestAgentResultConversion(unittest.TestCase):
             content="{}",
             dashboard={
                 "operation_advice": {
-                    "has_position": "买入",
-                    "no_position": "观望",
+                    "has_position": "\u4e70\u5165",
+                    "no_position": "\u89c2\u671b",
                 },
-                "trend_prediction": "看多",
+                "trend_prediction": "\u770b\u591a",
                 "sentiment_score": 74,
             },
             provider="ollama",
@@ -925,12 +925,12 @@ class TestAgentResultConversion(unittest.TestCase):
         result = pipeline._agent_result_to_analysis_result(
             agent_result,
             "600519",
-            "贵州茅台",
+            "\u8d35\u5dde\u8305\u53f0",
             ReportType.SIMPLE,
             "q-dict-advice",
         )
 
-        self.assertEqual(result.operation_advice, "买入")
+        self.assertEqual(result.operation_advice, "\u4e70\u5165")
         self.assertEqual(result.decision_type, "buy")
 
     def test_convert_missing_decision_type_preserves_conditional_hold_advice(self):
@@ -945,7 +945,7 @@ class TestAgentResultConversion(unittest.TestCase):
             success=True,
             content="{}",
             dashboard={
-                "operation_advice": "不跌破支撑位继续持有",
+                "operation_advice": "\u4e0d\u8dcc\u7834\u652f\u6491\u4f4d\u7ee7\u7eed\u6301\u6709",
                 "sentiment_score": 72,
             },
             provider="gemini",
@@ -960,13 +960,13 @@ class TestAgentResultConversion(unittest.TestCase):
         result = pipeline._agent_result_to_analysis_result(
             agent_result,
             "600519",
-            "贵州茅台",
+            "\u8d35\u5dde\u8305\u53f0",
             ReportType.SIMPLE,
             "q-conditional-hold-advice",
             trend_result=trend_result,
         )
 
-        self.assertEqual(result.operation_advice, "不跌破支撑位继续持有")
+        self.assertEqual(result.operation_advice, "\u4e0d\u8dcc\u7834\u652f\u6491\u4f4d\u7ee7\u7eed\u6301\u6709")
         self.assertEqual(result.decision_type, "hold")
 
     def test_convert_empty_top_level_advice_uses_nested_dashboard_advice(self):
@@ -982,8 +982,8 @@ class TestAgentResultConversion(unittest.TestCase):
             dashboard={
                 "operation_advice": {},
                 "dashboard": {
-                    "operation_advice": "减仓",
-                    "trend_prediction": "看空",
+                    "operation_advice": "\u51cf\u4ed3",
+                    "trend_prediction": "\u770b\u7a7a",
                     "sentiment_score": 42,
                 },
             },
@@ -993,14 +993,14 @@ class TestAgentResultConversion(unittest.TestCase):
         result = pipeline._agent_result_to_analysis_result(
             agent_result,
             "600519",
-            "贵州茅台",
+            "\u8d35\u5dde\u8305\u53f0",
             ReportType.SIMPLE,
             "q-nested-advice",
         )
 
-        self.assertEqual(result.operation_advice, "减仓")
+        self.assertEqual(result.operation_advice, "\u51cf\u4ed3")
         self.assertEqual(result.decision_type, "sell")
-        self.assertEqual(result.dashboard["operation_advice"], "减仓")
+        self.assertEqual(result.dashboard["operation_advice"], "\u51cf\u4ed3")
 
     def test_convert_placeholder_top_level_advice_uses_nested_dashboard_advice(self):
         """Placeholder advice dict should not block nested dashboard fallback."""
@@ -1014,12 +1014,12 @@ class TestAgentResultConversion(unittest.TestCase):
             content="{}",
             dashboard={
                 "operation_advice": {
-                    "has_position": "待补充",
+                    "has_position": "\u5f85\u8865\u5145",
                     "no_position": "TBD",
                 },
                 "dashboard": {
-                    "operation_advice": "减仓",
-                    "trend_prediction": "看空",
+                    "operation_advice": "\u51cf\u4ed3",
+                    "trend_prediction": "\u770b\u7a7a",
                     "sentiment_score": 42,
                 },
             },
@@ -1029,14 +1029,14 @@ class TestAgentResultConversion(unittest.TestCase):
         result = pipeline._agent_result_to_analysis_result(
             agent_result,
             "600519",
-            "贵州茅台",
+            "\u8d35\u5dde\u8305\u53f0",
             ReportType.SIMPLE,
             "q-placeholder-advice",
         )
 
-        self.assertEqual(result.operation_advice, "减仓")
+        self.assertEqual(result.operation_advice, "\u51cf\u4ed3")
         self.assertEqual(result.decision_type, "sell")
-        self.assertEqual(result.dashboard["operation_advice"], "减仓")
+        self.assertEqual(result.dashboard["operation_advice"], "\u51cf\u4ed3")
 
     def test_convert_malformed_top_level_summary_uses_nested_dashboard_summary(self):
         """Malformed top-level analysis_summary should not block nested dashboard fallback."""
@@ -1051,9 +1051,9 @@ class TestAgentResultConversion(unittest.TestCase):
             dashboard={
                 "analysis_summary": [],
                 "dashboard": {
-                    "analysis_summary": "AI 已给出的摘要",
-                    "trend_prediction": "看多",
-                    "operation_advice": "持有",
+                    "analysis_summary": "AI \u5df2\u7ed9\u51fa\u7684\u6458\u8981",
+                    "trend_prediction": "\u770b\u591a",
+                    "operation_advice": "\u6301\u6709",
                     "sentiment_score": 73,
                 },
             },
@@ -1063,13 +1063,13 @@ class TestAgentResultConversion(unittest.TestCase):
         result = pipeline._agent_result_to_analysis_result(
             agent_result,
             "600519",
-            "贵州茅台",
+            "\u8d35\u5dde\u8305\u53f0",
             ReportType.SIMPLE,
             "q-nested-summary",
         )
 
-        self.assertEqual(result.analysis_summary, "AI 已给出的摘要")
-        self.assertEqual(result.dashboard["analysis_summary"], "AI 已给出的摘要")
+        self.assertEqual(result.analysis_summary, "AI \u5df2\u7ed9\u51fa\u7684\u6458\u8981")
+        self.assertEqual(result.dashboard["analysis_summary"], "AI \u5df2\u7ed9\u51fa\u7684\u6458\u8981")
 
     def test_convert_non_string_summary_falls_back_to_nested_or_local_summary(self):
         """Non-string analysis_summary should trigger fallback to nested summary or local fallback."""
@@ -1084,11 +1084,11 @@ class TestAgentResultConversion(unittest.TestCase):
                 content="{}",
                 dashboard={
                     "analysis_summary": raw_summary,
-                    "trend_prediction": "看多",
+                    "trend_prediction": "\u770b\u591a",
                     "dashboard": {
-                        "analysis_summary": "AI 已给出的摘要",
+                        "analysis_summary": "AI \u5df2\u7ed9\u51fa\u7684\u6458\u8981",
                     },
-                    "operation_advice": "持有",
+                    "operation_advice": "\u6301\u6709",
                     "sentiment_score": 73,
                 },
                 provider="gemini",
@@ -1097,13 +1097,13 @@ class TestAgentResultConversion(unittest.TestCase):
             result = pipeline._agent_result_to_analysis_result(
                 agent_result,
                 "600519",
-                "贵州茅台",
+                "\u8d35\u5dde\u8305\u53f0",
                 ReportType.SIMPLE,
                 f"q-summary-non-string-{raw_summary}",
             )
 
-            self.assertEqual(result.analysis_summary, "AI 已给出的摘要")
-            self.assertEqual(result.dashboard["analysis_summary"], "AI 已给出的摘要")
+            self.assertEqual(result.analysis_summary, "AI \u5df2\u7ed9\u51fa\u7684\u6458\u8981")
+            self.assertEqual(result.dashboard["analysis_summary"], "AI \u5df2\u7ed9\u51fa\u7684\u6458\u8981")
 
     def test_convert_malformed_scalar_fields_fallback_to_trend_result(self):
         """Malformed non-scalar scalar fields should not be treated as valid values."""
@@ -1134,19 +1134,19 @@ class TestAgentResultConversion(unittest.TestCase):
         result = pipeline._agent_result_to_analysis_result(
             agent_result,
             "600519",
-            "贵州茅台",
+            "\u8d35\u5dde\u8305\u53f0",
             ReportType.SIMPLE,
             "q-malformed-scalars",
             trend_result=trend_result,
         )
 
         self.assertEqual(result.sentiment_score, 66)
-        self.assertEqual(result.trend_prediction, "多头排列")
-        self.assertEqual(result.operation_advice, "买入")
+        self.assertEqual(result.trend_prediction, "\u591a\u5934\u6392\u5217")
+        self.assertEqual(result.operation_advice, "\u4e70\u5165")
         self.assertEqual(result.decision_type, "buy")
         self.assertEqual(result.dashboard["sentiment_score"], 66)
-        self.assertEqual(result.dashboard["trend_prediction"], "多头排列")
-        self.assertEqual(result.dashboard["operation_advice"], "买入")
+        self.assertEqual(result.dashboard["trend_prediction"], "\u591a\u5934\u6392\u5217")
+        self.assertEqual(result.dashboard["operation_advice"], "\u4e70\u5165")
     def test_convert_empty_dashboard_backfills_localized_trend_fallback_for_en(self):
         """English reports should keep trend/advice fallback values localized."""
         pipeline = self._make_pipeline()
@@ -1172,7 +1172,7 @@ class TestAgentResultConversion(unittest.TestCase):
         result = pipeline._agent_result_to_analysis_result(
             agent_result,
             "600519",
-            "贵州茅台",
+            "\u8d35\u5dde\u8305\u53f0",
             ReportType.SIMPLE,
             "q-en-fallback",
             trend_result=trend_result,
@@ -1205,8 +1205,8 @@ class TestAgentResultConversion(unittest.TestCase):
             content="{}",
             dashboard={
                 "sentiment_score": 65,
-                "trend_prediction": "看空",
-                "operation_advice": "减仓",
+                "trend_prediction": "\u770b\u7a7a",
+                "operation_advice": "\u51cf\u4ed3",
             },
             provider="gemini",
         )
@@ -1220,13 +1220,13 @@ class TestAgentResultConversion(unittest.TestCase):
         result = pipeline._agent_result_to_analysis_result(
             agent_result,
             "600519",
-            "贵州茅台",
+            "\u8d35\u5dde\u8305\u53f0",
             ReportType.SIMPLE,
             "q-advice-vs-trend",
             trend_result=trend_result,
         )
 
-        self.assertEqual(result.operation_advice, "减仓")
+        self.assertEqual(result.operation_advice, "\u51cf\u4ed3")
         self.assertEqual(result.decision_type, "sell")
 
     def test_convert_partial_dashboard_uses_trend_fallback_for_missing_scalars(self):
@@ -1241,11 +1241,11 @@ class TestAgentResultConversion(unittest.TestCase):
             success=True,
             content="{}",
             dashboard={
-                "stock_name": "贵州茅台",
+                "stock_name": "\u8d35\u5dde\u8305\u53f0",
                 "dashboard": {
-                    "core_conclusion": {"one_sentence": "AI 已给出的核心结论"},
-                    "intelligence": {"risk_alerts": ["AI 风险"]},
-                    "battle_plan": {"sniper_points": {"take_profit": "120元"}},
+                    "core_conclusion": {"one_sentence": "AI \u5df2\u7ed9\u51fa\u7684\u6838\u5fc3\u7ed3\u8bba"},
+                    "intelligence": {"risk_alerts": ["AI \u98ce\u9669"]},
+                    "battle_plan": {"sniper_points": {"take_profit": "120\u5143"}},
                 },
             },
             provider="gemini",
@@ -1256,26 +1256,26 @@ class TestAgentResultConversion(unittest.TestCase):
             buy_signal=BuySignal.BUY,
             signal_score=66,
             support_levels=[108.5],
-            risk_factors=["跌破 MA20"],
+            risk_factors=["\u8dcc\u7834 MA20"],
         )
 
         result = pipeline._agent_result_to_analysis_result(
             agent_result,
             "600519",
-            "贵州茅台",
+            "\u8d35\u5dde\u8305\u53f0",
             ReportType.SIMPLE,
             "q-partial-dashboard",
             trend_result=trend_result,
         )
 
         self.assertEqual(result.sentiment_score, 66)
-        self.assertEqual(result.trend_prediction, "多头排列")
-        self.assertEqual(result.operation_advice, "买入")
+        self.assertEqual(result.trend_prediction, "\u591a\u5934\u6392\u5217")
+        self.assertEqual(result.operation_advice, "\u4e70\u5165")
         self.assertEqual(result.decision_type, "buy")
         self.assertEqual(result.dashboard["sentiment_score"], 66)
-        self.assertEqual(result.dashboard["operation_advice"], "买入")
-        self.assertEqual(result.dashboard["core_conclusion"]["one_sentence"], "AI 已给出的核心结论")
-        self.assertEqual(result.dashboard["intelligence"]["risk_alerts"], ["AI 风险"])
+        self.assertEqual(result.dashboard["operation_advice"], "\u4e70\u5165")
+        self.assertEqual(result.dashboard["core_conclusion"]["one_sentence"], "AI \u5df2\u7ed9\u51fa\u7684\u6838\u5fc3\u7ed3\u8bba")
+        self.assertEqual(result.dashboard["intelligence"]["risk_alerts"], ["AI \u98ce\u9669"])
         self.assertEqual(result.dashboard["battle_plan"]["sniper_points"]["stop_loss"], 108.5)
         self.assertIn("trend:fallback", result.data_sources)
 
@@ -1293,8 +1293,8 @@ class TestAgentResultConversion(unittest.TestCase):
             content="{}",
             dashboard={
                 "dashboard": {
-                    "core_conclusion": {"one_sentence": "AI 已给出的核心结论"},
-                    "intelligence": {"risk_alerts": "待补充"},
+                    "core_conclusion": {"one_sentence": "AI \u5df2\u7ed9\u51fa\u7684\u6838\u5fc3\u7ed3\u8bba"},
+                    "intelligence": {"risk_alerts": "\u5f85\u8865\u5145"},
                 },
             },
             provider="gemini",
@@ -1305,13 +1305,13 @@ class TestAgentResultConversion(unittest.TestCase):
             buy_signal=BuySignal.BUY,
             signal_score=66,
             support_levels=[108.5],
-            risk_factors=["涨幅过快", "回撤放大"],
+            risk_factors=["\u6da8\u5e45\u8fc7\u5feb", "\u56de\u64a4\u653e\u5927"],
         )
 
         result = pipeline._agent_result_to_analysis_result(
             agent_result,
             "600519",
-            "贵州茅台",
+            "\u8d35\u5dde\u8305\u53f0",
             ReportType.SIMPLE,
             "q-risk-alerts-string-placeholder",
             trend_result=trend_result,
@@ -1319,7 +1319,7 @@ class TestAgentResultConversion(unittest.TestCase):
 
         ok, missing = check_content_integrity(result)
         self.assertTrue(ok, missing)
-        self.assertEqual(result.dashboard["intelligence"]["risk_alerts"], ["涨幅过快", "回撤放大"])
+        self.assertEqual(result.dashboard["intelligence"]["risk_alerts"], ["\u6da8\u5e45\u8fc7\u5feb", "\u56de\u64a4\u653e\u5927"])
 
     def test_convert_placeholder_dashboard_is_completed_from_local_context(self):
         """Placeholder dashboard blocks should be completed without falling back to neutral defaults."""
@@ -1334,9 +1334,9 @@ class TestAgentResultConversion(unittest.TestCase):
             success=True,
             content="{}",
             dashboard={
-                "stock_name": "贵州茅台",
+                "stock_name": "\u8d35\u5dde\u8305\u53f0",
                 "dashboard": {
-                    "core_conclusion": {"one_sentence": "待补充"},
+                    "core_conclusion": {"one_sentence": "\u5f85\u8865\u5145"},
                     "intelligence": {},
                     "battle_plan": {"sniper_points": {"stop_loss": ""}},
                 },
@@ -1348,13 +1348,13 @@ class TestAgentResultConversion(unittest.TestCase):
             trend_status=TrendStatus.BULL,
             buy_signal=BuySignal.BUY,
             signal_score=62,
-            risk_factors=["趋势跌破支撑需减仓"],
+            risk_factors=["\u8d8b\u52bf\u8dcc\u7834\u652f\u6491\u9700\u51cf\u4ed3"],
         )
 
         result = pipeline._agent_result_to_analysis_result(
             agent_result,
             "600519",
-            "贵州茅台",
+            "\u8d35\u5dde\u8305\u53f0",
             ReportType.SIMPLE,
             "q-placeholder-dashboard",
             trend_result=trend_result,
@@ -1365,8 +1365,8 @@ class TestAgentResultConversion(unittest.TestCase):
         self.assertEqual(result.sentiment_score, 62)
         self.assertEqual(result.dashboard["sentiment_score"], 62)
         self.assertEqual(result.dashboard["core_conclusion"]["one_sentence"], result.analysis_summary)
-        self.assertEqual(result.dashboard["intelligence"]["risk_alerts"], ["趋势跌破支撑需减仓"])
-        self.assertEqual(result.dashboard["battle_plan"]["sniper_points"]["stop_loss"], "待补充")
+        self.assertEqual(result.dashboard["intelligence"]["risk_alerts"], ["\u8d8b\u52bf\u8dcc\u7834\u652f\u6491\u9700\u51cf\u4ed3"])
+        self.assertEqual(result.dashboard["battle_plan"]["sniper_points"]["stop_loss"], "\u5f85\u8865\u5145")
 
     def test_convert_invalid_dashboard_normalizes_strong_trend_decision_type(self):
         """Fallback preserves strong advice text while keeping stable decision_type values."""
@@ -1377,8 +1377,8 @@ class TestAgentResultConversion(unittest.TestCase):
         from src.stock_analyzer import BuySignal, TrendAnalysisResult, TrendStatus
 
         cases = [
-            (BuySignal.STRONG_BUY, "buy", "强烈买入"),
-            (BuySignal.STRONG_SELL, "sell", "强烈卖出"),
+            (BuySignal.STRONG_BUY, "buy", "\u5f3a\u70c8\u4e70\u5165"),
+            (BuySignal.STRONG_SELL, "sell", "\u5f3a\u70c8\u5356\u51fa"),
         ]
 
         for buy_signal, expected_decision, expected_advice in cases:
@@ -1399,7 +1399,7 @@ class TestAgentResultConversion(unittest.TestCase):
                 result = pipeline._agent_result_to_analysis_result(
                     agent_result,
                     "600519",
-                    "贵州茅台",
+                    "\u8d35\u5dde\u8305\u53f0",
                     ReportType.SIMPLE,
                     "q-trend-fallback",
                     trend_result=trend_result,
@@ -1419,19 +1419,19 @@ class TestAgentResultConversion(unittest.TestCase):
             success=True,
             content="{}",
             dashboard={
-                "stock_name": "科创芯片ETF",
+                "stock_name": "\u79d1\u521b\u82af\u7247ETF",
                 "sentiment_score": 75,
-                "trend_prediction": "震荡偏多",
-                "operation_advice": "持有",
+                "trend_prediction": "\u9707\u8361\u504f\u591a",
+                "operation_advice": "\u6301\u6709",
                 "decision_type": "hold",
             },
             provider="gemini",
         )
 
         result = pipeline._agent_result_to_analysis_result(
-            agent_result, "588200", "股票588200", ReportType.SIMPLE, "q-placeholder"
+            agent_result, "588200", "\u80a1\u7968588200", ReportType.SIMPLE, "q-placeholder"
         )
-        self.assertEqual(result.name, "科创芯片ETF")
+        self.assertEqual(result.name, "\u79d1\u521b\u82af\u7247ETF")
 
     def test_convert_keeps_input_stock_name_when_valid(self):
         """When input name is already valid, do not overwrite with dashboard value."""
@@ -1444,19 +1444,19 @@ class TestAgentResultConversion(unittest.TestCase):
             success=True,
             content="{}",
             dashboard={
-                "stock_name": "错误名称",
+                "stock_name": "\u9519\u8bef\u540d\u79f0",
                 "sentiment_score": 70,
-                "trend_prediction": "看多",
-                "operation_advice": "持有",
+                "trend_prediction": "\u770b\u591a",
+                "operation_advice": "\u6301\u6709",
                 "decision_type": "hold",
             },
             provider="gemini",
         )
 
         result = pipeline._agent_result_to_analysis_result(
-            agent_result, "600519", "贵州茅台", ReportType.SIMPLE, "q-valid"
+            agent_result, "600519", "\u8d35\u5dde\u8305\u53f0", ReportType.SIMPLE, "q-valid"
         )
-        self.assertEqual(result.name, "贵州茅台")
+        self.assertEqual(result.name, "\u8d35\u5dde\u8305\u53f0")
 
 
 # ============================================================
@@ -1672,10 +1672,10 @@ class TestAnalyzeWithAgentStockName(unittest.TestCase):
                 success=True,
                 content="{}",
                 dashboard={
-                    "stock_name": "科创芯片ETF",
+                    "stock_name": "\u79d1\u521b\u82af\u7247ETF",
                     "sentiment_score": 78,
-                    "trend_prediction": "震荡偏多",
-                    "operation_advice": "持有",
+                    "trend_prediction": "\u9707\u8361\u504f\u591a",
+                    "operation_advice": "\u6301\u6709",
                     "decision_type": "hold",
                 },
                 provider="gemini",
@@ -1696,21 +1696,21 @@ class TestAnalyzeWithAgentStockName(unittest.TestCase):
                 code="588200",
                 report_type=ReportType.SIMPLE,
                 query_id="q-news",
-                stock_name="股票588200",
+                stock_name="\u80a1\u7968588200",
                 realtime_quote=None,
                 chip_data=None
             )
 
             self.assertIsNotNone(result)
-            self.assertEqual(result.name, "科创芯片ETF")
+            self.assertEqual(result.name, "\u79d1\u521b\u82af\u7247ETF")
             pipeline.search_service.search_stock_news.assert_called_once_with(
                 stock_code="588200",
-                stock_name="科创芯片ETF",
+                stock_name="\u79d1\u521b\u82af\u7247ETF",
                 max_results=5
             )
             pipeline.db.save_news_intel.assert_called_once()
             saved_kwargs = pipeline.db.save_news_intel.call_args.kwargs
-            self.assertEqual(saved_kwargs["name"], "科创芯片ETF")
+            self.assertEqual(saved_kwargs["name"], "\u79d1\u521b\u82af\u7247ETF")
 
     def test_analyze_with_agent_keeps_dashboard_top_level_fields_after_stability(self):
         """Decision stability downgrade in agent flow should sync dashboard and top-level decision fields."""
@@ -1753,12 +1753,12 @@ class TestAnalyzeWithAgentStockName(unittest.TestCase):
                 content="{}",
                 dashboard={
                     "sentiment_score": 30,
-                    "trend_prediction": "震荡",
-                    "operation_advice": "卖出",
+                    "trend_prediction": "\u9707\u8361",
+                    "operation_advice": "\u5356\u51fa",
                     "decision_type": "sell",
-                    "analysis_summary": "原始建议",
+                    "analysis_summary": "\u539f\u59cb\u5efa\u8bae",
                     "dashboard": {
-                        "core_conclusion": {"one_sentence": "初始结论"},
+                        "core_conclusion": {"one_sentence": "\u521d\u59cb\u7ed3\u8bba"},
                     },
                 },
                 provider="gemini",
@@ -1790,7 +1790,7 @@ class TestAnalyzeWithAgentStockName(unittest.TestCase):
                 code="002812",
                 report_type=ReportType.SIMPLE,
                 query_id="q-agent-stability",
-                stock_name="恩捷股份",
+                stock_name="\u6069\u6377\u80a1\u4efd",
                 realtime_quote={"price": 30.4, "change_pct": -2.1},
                 chip_data=None,
                 fundamental_context=fundamental_context,
@@ -1799,9 +1799,9 @@ class TestAnalyzeWithAgentStockName(unittest.TestCase):
 
             self.assertIsNotNone(result)
             self.assertEqual(result.decision_type, "hold")
-            self.assertEqual(result.operation_advice, "洗盘观察")
+            self.assertEqual(result.operation_advice, "\u6d17\u76d8\u89c2\u5bdf")
             self.assertEqual(result.dashboard.get("decision_type"), "hold")
-            self.assertEqual(result.dashboard.get("operation_advice"), "洗盘观察")
+            self.assertEqual(result.dashboard.get("operation_advice"), "\u6d17\u76d8\u89c2\u5bdf")
             self.assertEqual(result.dashboard.get("sentiment_score"), result.sentiment_score)
 
     def test_analyze_with_agent_phase_integrity_fills_missing_phase_decision(self):
@@ -1858,13 +1858,13 @@ class TestAnalyzeWithAgentStockName(unittest.TestCase):
                 content="{}",
                 dashboard={
                     "sentiment_score": 62,
-                    "trend_prediction": "震荡",
-                    "operation_advice": "减仓",
+                    "trend_prediction": "\u9707\u8361",
+                    "operation_advice": "\u51cf\u4ed3",
                     "decision_type": "sell",
-                    "confidence_level": "中",
-                    "analysis_summary": "盘中风险偏高",
+                    "confidence_level": "\u4e2d",
+                    "analysis_summary": "\u76d8\u4e2d\u98ce\u9669\u504f\u9ad8",
                     "dashboard": {
-                        "core_conclusion": {"one_sentence": "盘中风险偏高"},
+                        "core_conclusion": {"one_sentence": "\u76d8\u4e2d\u98ce\u9669\u504f\u9ad8"},
                         "intelligence": {"risk_alerts": []},
                     },
                 },
@@ -1891,7 +1891,7 @@ class TestAnalyzeWithAgentStockName(unittest.TestCase):
                 code="600519",
                 report_type=ReportType.SIMPLE,
                 query_id="q-agent-phase-integrity",
-                stock_name="贵州茅台",
+                stock_name="\u8d35\u5dde\u8305\u53f0",
                 realtime_quote=None,
                 chip_data=None,
                 market_phase_context=phase_context,
@@ -1903,11 +1903,11 @@ class TestAnalyzeWithAgentStockName(unittest.TestCase):
             self.assertTrue(ok, missing)
             phase_decision = result.dashboard["phase_decision"]
             self.assertEqual(phase_decision["phase_context"]["phase"], "intraday")
-            self.assertEqual(phase_decision["action_window"], "模型未提供阶段化行动窗口")
-            self.assertEqual(phase_decision["immediate_action"], "模型未提供阶段化即时动作")
+            self.assertEqual(phase_decision["action_window"], "\u6a21\u578b\u672a\u63d0\u4f9b\u9636\u6bb5\u5316\u884c\u52a8\u7a97\u53e3")
+            self.assertEqual(phase_decision["immediate_action"], "\u6a21\u578b\u672a\u63d0\u4f9b\u9636\u6bb5\u5316\u5373\u65f6\u52a8\u4f5c")
             self.assertEqual(phase_decision["watch_conditions"], [])
-            self.assertEqual(phase_decision["next_check_time"], "模型未提供下一次检查点")
-            self.assertEqual(phase_decision["confidence_reason"], "模型未提供阶段化置信度理由")
+            self.assertEqual(phase_decision["next_check_time"], "\u6a21\u578b\u672a\u63d0\u4f9b\u4e0b\u4e00\u6b21\u68c0\u67e5\u70b9")
+            self.assertEqual(phase_decision["confidence_reason"], "\u6a21\u578b\u672a\u63d0\u4f9b\u9636\u6bb5\u5316\u7f6e\u4fe1\u5ea6\u7406\u7531")
 
     def test_analyze_with_agent_preserves_chip_structure_when_prefetch_missing(self):
         """Agent tool chip metrics should not be cleared when prefetch chip_data is unavailable."""
@@ -1951,8 +1951,8 @@ class TestAnalyzeWithAgentStockName(unittest.TestCase):
                 content="{}",
                 dashboard={
                     "sentiment_score": 70,
-                    "trend_prediction": "震荡",
-                    "operation_advice": "持有",
+                    "trend_prediction": "\u9707\u8361",
+                    "operation_advice": "\u6301\u6709",
                     "decision_type": "hold",
                     "dashboard": {
                         "data_perspective": {
@@ -1960,7 +1960,7 @@ class TestAnalyzeWithAgentStockName(unittest.TestCase):
                                 "profit_ratio": "52.0%",
                                 "avg_cost": 1850.0,
                                 "concentration": "0.00%",
-                                "chip_health": "健康",
+                                "chip_health": "\u5065\u5eb7",
                             }
                         }
                     },
@@ -1975,7 +1975,7 @@ class TestAnalyzeWithAgentStockName(unittest.TestCase):
                 code="600519",
                 report_type=ReportType.SIMPLE,
                 query_id="q-agent-chip",
-                stock_name="贵州茅台",
+                stock_name="\u8d35\u5dde\u8305\u53f0",
                 realtime_quote=None,
                 chip_data=None,
             )
@@ -1986,7 +1986,7 @@ class TestAnalyzeWithAgentStockName(unittest.TestCase):
             self.assertNotIn("chip_unavailable_reason", dp)
 
     def test_analyze_with_agent_history_context_includes_diagnostic_snapshot(self):
-        """Agent 分析入库存档时应保留 diagnostics 快照，避免历史诊断返回 unknown。"""
+        """Agent \u5206\u6790\u5165\u5e93\u5b58\u6863\u65f6\u5e94\u4fdd\u7559 diagnostics \u5feb\u7167，\u907f\u514d\u5386\u53f2\u8bca\u65ad\u8fd4\u56de unknown。"""
         with patch('src.core.pipeline.get_config') as mock_config, \
              patch('src.core.pipeline.get_db'), \
              patch('src.core.pipeline.DataFetcherManager'), \
@@ -2027,12 +2027,12 @@ class TestAnalyzeWithAgentStockName(unittest.TestCase):
                 return_value=SimpleNamespace(
                     success=True,
                     code="588200",
-                    name="科创芯片ETF",
+                    name="\u79d1\u521b\u82af\u7247ETF",
                     model_used="agent-model",
                     sentiment_score=70,
-                    operation_advice="持有",
-                    trend_prediction="震荡",
-                    analysis_summary="测试摘要",
+                    operation_advice="\u6301\u6709",
+                    trend_prediction="\u9707\u8361",
+                    analysis_summary="\u6d4b\u8bd5\u6458\u8981",
                 )
             )
 
@@ -2040,7 +2040,7 @@ class TestAnalyzeWithAgentStockName(unittest.TestCase):
             mock_executor.run.return_value = SimpleNamespace(
                 success=True,
                 provider="agent-provider",
-                dashboard={"stock_name": "科创芯片ETF"},
+                dashboard={"stock_name": "\u79d1\u521b\u82af\u7247ETF"},
             )
             with patch('src.agent.factory.build_agent_executor', return_value=mock_executor):
                 mock_diagnostic_snapshot.return_value = {"trace_id": "trace-1391", "query_id": "q-1391"}
@@ -2050,7 +2050,7 @@ class TestAnalyzeWithAgentStockName(unittest.TestCase):
                     code="588200",
                     report_type=ReportType.SIMPLE,
                     query_id="q-1391",
-                    stock_name="科创芯片ETF",
+                    stock_name="\u79d1\u521b\u82af\u7247ETF",
                     realtime_quote=None,
                     chip_data=None,
                 )
@@ -2060,7 +2060,7 @@ class TestAnalyzeWithAgentStockName(unittest.TestCase):
             history_context = call_kwargs["context_snapshot"]
             self.assertIn("diagnostics", history_context)
             self.assertEqual(history_context["diagnostics"]["trace_id"], "trace-1391")
-            self.assertEqual(history_context["stock_name"], "科创芯片ETF")
+            self.assertEqual(history_context["stock_name"], "\u79d1\u521b\u82af\u7247ETF")
 
 
 # ============================================================
@@ -2124,7 +2124,7 @@ class TestAgentConstructionChain(unittest.TestCase):
         skill_manager = SkillManager()
         test_skill = Skill(
             name="test_skill",
-            display_name="测试策略",
+            display_name="\u6d4b\u8bd5\u7b56\u7565",
             description="A test skill",
             instructions="Test instructions for analysis.",
             category="trend",
@@ -2133,7 +2133,7 @@ class TestAgentConstructionChain(unittest.TestCase):
         skill_manager.register(test_skill)
         skill_manager.activate(["test_skill"])
         instructions = skill_manager.get_skill_instructions()
-        self.assertIn("测试策略", instructions)
+        self.assertIn("\u6d4b\u8bd5\u7b56\u7565", instructions)
 
         # Build LLM adapter with mocked config (no real API keys)
         mock_cfg = MagicMock()
@@ -2803,9 +2803,9 @@ class TestSafeInt(unittest.TestCase):
         self.assertEqual(safe_int("80"), 80)
 
     def test_string_with_unit(self):
-        """LLM may return '80分' instead of 80."""
+        """LLM may return '80\u5206' instead of 80."""
         safe_int = self._get_safe_int()
-        self.assertEqual(safe_int("80分"), 80)
+        self.assertEqual(safe_int("80\u5206"), 80)
 
     def test_string_with_percent(self):
         safe_int = self._get_safe_int()
@@ -2858,9 +2858,9 @@ class TestSkillActivation(unittest.TestCase):
 
         manager = SkillManager()
         # Create test skills instead of importing deleted Python modules
-        skill1 = Skill(name="dragon_head", display_name="龙头策略",
+        skill1 = Skill(name="dragon_head", display_name="\u9f99\u5934\u7b56\u7565",
                        description="test", instructions="test")
-        skill2 = Skill(name="shrink_pullback", display_name="缩量回踩",
+        skill2 = Skill(name="shrink_pullback", display_name="\u7f29\u91cf\u56de\u8e29",
                        description="test", instructions="test")
         manager.register(skill1)
         manager.register(skill2)
@@ -2873,11 +2873,11 @@ class TestSkillActivation(unittest.TestCase):
         from src.agent.skills.base import SkillManager, Skill
 
         manager = SkillManager()
-        skill1 = Skill(name="dragon_head", display_name="龙头策略",
+        skill1 = Skill(name="dragon_head", display_name="\u9f99\u5934\u7b56\u7565",
                        description="test", instructions="test")
-        skill2 = Skill(name="shrink_pullback", display_name="缩量回踩",
+        skill2 = Skill(name="shrink_pullback", display_name="\u7f29\u91cf\u56de\u8e29",
                        description="test", instructions="test")
-        skill3 = Skill(name="volume_breakout", display_name="放量突破",
+        skill3 = Skill(name="volume_breakout", display_name="\u653e\u91cf\u7a81\u7834",
                        description="test", instructions="test")
         manager.register(skill1)
         manager.register(skill2)
@@ -2935,15 +2935,15 @@ class TestSkillActivation(unittest.TestCase):
             from src.enums import ReportType
             pipeline = StockAnalysisPipeline(config=mock_cfg)
 
-            # Dashboard with "80分" instead of 80
+            # Dashboard with "80\u5206" instead of 80
             agent_result = AgentResult(
                 success=True,
                 content="{}",
                 dashboard={
                     "stock_name": "TestCo",
-                    "sentiment_score": "80分",
-                    "trend_prediction": "看多",
-                    "operation_advice": "买入",
+                    "sentiment_score": "80\u5206",
+                    "trend_prediction": "\u770b\u591a",
+                    "operation_advice": "\u4e70\u5165",
                     "decision_type": "buy",
                 },
                 provider="gemini",

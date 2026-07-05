@@ -1,4 +1,4 @@
-<div align="center">
+﻿<div align="center">
 
 # AI Stock Analysis System
 
@@ -17,9 +17,9 @@
 
 Analyze your watchlist daily -> generate a decision dashboard -> push to Telegram / Discord / Slack / Email / WeChat Work / Feishu.
 
-[**Product Preview**](#-product-preview) · [**Key Features**](#-key-features) · [**Quick Start**](#-quick-start) · [**Sample Output**](#-sample-output) · [**Documentation Index**](./INDEX_EN.md) · [**Full Guide**](./full-guide_EN.md)
+[**Product Preview**](#-product-preview) · [**Key Features**](#-key-features) · [**Quick Start**](#-quick-start) · [**Sample Output**](#-sample-output) · [**Documentation Index**](./INDEX.md) · [**Full Guide**](./full-guide.md)
 
-English | [简体中文](../README.md) | [繁體中文](README_CHT.md)
+English
 
 </div>
 
@@ -49,7 +49,7 @@ English | [简体中文](../README.md) | [繁體中文](README_CHT.md)
 | Smart import & autocomplete | Image, CSV/Excel, clipboard import; code/name/pinyin/alias autocomplete |
 | Automation & notifications | GitHub Actions, Docker, local scheduler, FastAPI service, and WeChat Work / Feishu / Telegram / Discord / Slack / Email delivery |
 
-> Detailed fields, fundamental P0 timeout semantics, trading rules, data-source priority, Web/API behavior, and troubleshooting live in the [Full Guide](./full-guide_EN.md).
+> Detailed fields, fundamental P0 timeout semantics, trading rules, data-source priority, Web/API behavior, and troubleshooting live in the [Full Guide](./full-guide.md).
 
 ### Tech Stack & Data Sources
 
@@ -60,7 +60,7 @@ English | [简体中文](../README.md) | [繁體中文](README_CHT.md)
 | News Search | [Anspire](https://open.anspire.cn/?share_code=QFBC0FYC), [SerpAPI](https://serpapi.com/baidu-search-api?utm_source=github_daily_stock_analysis), [Tavily](https://tavily.com/), [Bocha](https://open.bocha.cn/), [Brave](https://brave.com/search/api/), [MiniMax](https://platform.minimaxi.com/), SearXNG |
 | Social Sentiment | [Stock Sentiment API](https://api.adanos.org/docs) for Reddit / X / Polymarket, US stocks only |
 
-> Full behavior is documented in [Data Source Configuration](./full-guide_EN.md#data-source-configuration).
+> Full behavior is documented in [Data Source Configuration](./full-guide.md#data-source-configuration).
 
 ## 🚀 Quick Start
 
@@ -78,7 +78,7 @@ Open your forked repository, then go to `Settings` -> `Secrets and variables` ->
 
 **AI model configuration (configure at least one)**
 
-Start with one provider and one API key. For multi-model routing, image recognition, local models, or advanced routing, see the [LLM Config Guide](./LLM_CONFIG_GUIDE_EN.md).
+Start with one provider and one API key. For multi-model routing, image recognition, local models, or advanced routing, see the [LLM Config Guide](./LLM_CONFIG_GUIDE.md).
 
 | Secret Name | Description | Required |
 |-------------|-------------|:--------:|
@@ -102,7 +102,7 @@ Start with one provider and one API key. For multi-model routing, image recognit
 | `SLACK_BOT_TOKEN` + `SLACK_CHANNEL_ID` | Slack bot |
 | `EMAIL_SENDER` + `EMAIL_PASSWORD` | Email push |
 
-More channels, signatures, email groups, and Markdown-to-image settings are in [Notification Configuration](./full-guide_EN.md#notification-channel-configuration).
+More channels, signatures, email groups, and Markdown-to-image settings are in [Notification Configuration](./full-guide.md#notification-channel-configuration).
 
 **Watchlist (required)**
 
@@ -124,7 +124,7 @@ News search strongly improves sentiment, announcements, events, and catalyst qua
 | `MINIMAX_API_KEYS` | [MiniMax](https://platform.minimaxi.com/), structured search results | Optional |
 | `SEARXNG_BASE_URLS` | Self-hosted SearXNG instances for quota-free fallback | Optional |
 
-More search providers, social sentiment, and fallback behavior are in [Search Configuration](./full-guide_EN.md#search-service-configuration).
+More search providers, social sentiment, and fallback behavior are in [Search Configuration](./full-guide.md#search-service-configuration).
 
 **Market data sources (optional)**
 
@@ -136,7 +136,7 @@ More search providers, social sentiment, and fallback behavior are in [Search Co
 | `TUSHARE_TOKEN` | A-shares | Improves historical data stability |
 | `LONGBRIDGE_OAUTH_CLIENT_ID` + `LONGBRIDGE_OAUTH_TOKEN_CACHE_B64` | HK/US stocks | Fills in volume ratio, turnover rate, P/E, and other fields |
 
-> See [Data Source Configuration](./full-guide_EN.md#data-source-configuration).
+> See [Data Source Configuration](./full-guide.md#data-source-configuration).
 
 #### 3. Enable Actions
 
@@ -148,7 +148,7 @@ Open the `Actions` tab and click `I understand my workflows, go ahead and enable
 
 #### Done
 
-By default, the workflow runs every weekday at 18:00 Beijing time and skips non-trading days. Forced runs, trading-day checks, and resume rules are covered in the [Full Guide](./full-guide_EN.md#scheduled-task-configuration).
+By default, the workflow runs every weekday at 18:00 Beijing time and skips non-trading days. Forced runs, trading-day checks, and resume rules are covered in the [Full Guide](./full-guide.md#scheduled-task-configuration).
 
 ### Option 2: Local / Docker Deployment
 
@@ -177,7 +177,7 @@ python main.py --schedule
 python main.py --serve-only
 ```
 
-> Docker deployment, scheduling, and cloud-server WebUI access are documented in the [Full Guide](./full-guide_EN.md).
+> Docker deployment, scheduling, and cloud-server WebUI access are documented in the [Full Guide](./full-guide.md).
 
 ## 📱 Sample Output
 
@@ -217,7 +217,7 @@ Up: 3920 | Down: 1349 | Limit up: 155 | Limit down: 3
 
 ## ⚙️ Configuration
 
-Full environment variables, model routing, notification channels, data-source priority, trading rules, fundamental P0 semantics, and deployment details are in the [Full Guide](./full-guide_EN.md).
+Full environment variables, model routing, notification channels, data-source priority, trading rules, fundamental P0 semantics, and deployment details are in the [Full Guide](./full-guide.md).
 
 ## 🖥️ Web UI
 
@@ -228,7 +228,7 @@ python main.py --webui
 python main.py --webui-only
 ```
 
-Visit `http://127.0.0.1:8000`. Authentication, smart import, autocomplete, report copying, and cloud-server access are documented in [Local WebUI Management](./full-guide_EN.md#local-webui-management-interface).
+Visit `http://127.0.0.1:8000`. Authentication, smart import, autocomplete, report copying, and cloud-server access are documented in [Local WebUI Management](./full-guide.md#local-webui-management-interface).
 
 ## 🤖 Agent Strategy Chat
 
@@ -239,7 +239,7 @@ After configuring any available AI API key, the Web `/chat` page can use strateg
 - Supports follow-up questions, session export, notification sending, and background execution
 - Supports custom strategy files and experimental multi-agent orchestration
 
-> Agent parameters, `skill` naming compatibility, multi-agent mode, and budget guards are covered in the [Full Guide](./full-guide_EN.md#local-webui-management-interface) and [LLM Config Guide](./LLM_CONFIG_GUIDE_EN.md).
+> Agent parameters, `skill` naming compatibility, multi-agent mode, and budget guards are covered in the [Full Guide](./full-guide.md#local-webui-management-interface) and [LLM Config Guide](./LLM_CONFIG_GUIDE.md).
 
 ## 🧩 Related Projects
 

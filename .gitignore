@@ -1,16 +1,16 @@
-# 环境变量文件（包含敏感信息，禁止提交）
+# \u73af\u5883\u53d8\u91cf\u6587\u4ef6（\u5305\u542b\u654f\u611f\u4fe1\u606f，\u7981\u6b62\u63d0\u4ea4）
 .env
 .env.*
 *.env
 *.env.local
 .env.*.local
 
-# 测试文件（可能包含敏感配置）
-# 仅忽略仓库根目录下的临时 test_*.py 脚本；tests/ 目录下的单元测试需要纳入版本控制。
+# \u6d4b\u8bd5\u6587\u4ef6（\u53ef\u80fd\u5305\u542b\u654f\u611f\u914d\u7f6e）
+# \u4ec5\u5ffd\u7565\u4ed3\u5e93\u6839\u76ee\u5f55\u4e0b\u7684\u4e34\u65f6 test_*.py \u811a\u672c；tests/ \u76ee\u5f55\u4e0b\u7684\u5355\u5143\u6d4b\u8bd5\u9700\u8981\u7eb3\u5165\u7248\u672c\u63a7\u5236。
 /test_*.py
 /test.sh
 
-# 本地评审与高级路由配置（可能包含敏感信息或临时分析产物）
+# \u672c\u5730\u8bc4\u5ba1\u4e0e\u9ad8\u7ea7\u8def\u7531\u914d\u7f6e（\u53ef\u80fd\u5305\u542b\u654f\u611f\u4fe1\u606f\u6216\u4e34\u65f6\u5206\u6790\u4ea7\u7269）
 /.codex
 /.tmp
 /review.md
@@ -39,7 +39,7 @@ wheels/
 .installed.cfg
 *.egg
 
-# 虚拟环境
+# \u865a\u62df\u73af\u5883
 venv/
 ENV/
 env/
@@ -53,7 +53,7 @@ env/
 *~
 .cursorrules
 
-# 数据和日志
+# \u6570\u636e\u548c\u65e5\u5fd7
 /data/
 /.llm_usage_hmac_secret
 **/.llm_usage_hmac_secret
@@ -63,11 +63,11 @@ reports/
 *.sqlite
 *.sqlite3
 
-# 系统文件
+# \u7cfb\u7edf\u6587\u4ef6
 .DS_Store
 Thumbs.db
 
-# 测试
+# \u6d4b\u8bd5
 .pytest_cache/
 .coverage
 htmlcov/

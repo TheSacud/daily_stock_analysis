@@ -61,7 +61,7 @@ def isolated_db(tmp_path):
 def _payload(**overrides):
     payload = {
         "stock_code": "SH600519",
-        "stock_name": "贵州茅台",
+        "stock_name": "\u8d35\u5dde\u8305\u53f0",
         "market": "cn",
         "source_type": "analysis",
         "source_report_id": 101,
@@ -72,7 +72,7 @@ def _payload(**overrides):
         "confidence": 0.72,
         "score": 83,
         "horizon": "3d",
-        "reason": "放量突破",
+        "reason": "\u653e\u91cf\u7a81\u7834",
     }
     payload.update(overrides)
     return payload
@@ -83,13 +83,13 @@ def _history_result(**overrides):
 
     result = AnalysisResult(
         code="600519",
-        name="贵州茅台",
+        name="\u8d35\u5dde\u8305\u53f0",
         sentiment_score=68,
-        trend_prediction="震荡偏强",
-        operation_advice="持有观察",
+        trend_prediction="\u9707\u8361\u504f\u5f3a",
+        operation_advice="\u6301\u6709\u89c2\u5bdf",
         decision_type="hold",
-        confidence_level="中",
-        analysis_summary="趋势仍在，但等待量能确认。",
+        confidence_level="\u4e2d",
+        analysis_summary="\u8d8b\u52bf\u4ecd\u5728，\u4f46\u7b49\u5f85\u91cf\u80fd\u786e\u8ba4。",
         report_language="zh",
     )
     result.dashboard = {
@@ -98,7 +98,7 @@ def _history_result(**overrides):
                 "ideal_buy": "1680",
                 "stop_loss": "1600",
             },
-            "action_checklist": ["回踩不破支撑"],
+            "action_checklist": ["\u56de\u8e29\u4e0d\u7834\u652f\u6491"],
         }
     }
     for key, value in overrides.items():
@@ -121,7 +121,7 @@ def test_service_normalizes_fields_and_partial_plan_quality(isolated_db) -> None
     assert item["stock_code"] == "600519"
     assert item["market"] == "cn"
     assert item["action"] == "buy"
-    assert item["action_label"] == "买入"
+    assert item["action_label"] == "\u4e70\u5165"
     assert item["confidence"] == 0.72
     assert item["score"] == 83
     assert item["entry_low"] == 1680.5
@@ -242,7 +242,7 @@ def test_list_signals_lazily_backfills_analysis_history_signal(isolated_db) -> N
         result=_history_result(),
         query_id="query-lazy-signal",
         report_type="simple",
-        news_content="新闻摘要",
+        news_content="\u65b0\u95fb\u6458\u8981",
         context_snapshot={"market_phase_summary": {"phase": "postmarket"}},
         save_snapshot=True,
     )
@@ -263,9 +263,9 @@ def test_list_signals_lazily_backfills_analysis_history_signal(isolated_db) -> N
     assert item["trace_id"] == "query-lazy-signal"
     assert item["trigger_source"] == "history"
     assert item["action"] == "hold"
-    assert item["action_label"] == "持有"
-    assert item["reason"] == "趋势仍在，但等待量能确认。"
-    assert item["watch_conditions"] == '["回踩不破支撑"]'
+    assert item["action_label"] == "\u6301\u6709"
+    assert item["reason"] == "\u8d8b\u52bf\u4ecd\u5728，\u4f46\u7b49\u5f85\u91cf\u80fd\u786e\u8ba4。"
+    assert item["watch_conditions"] == '["\u56de\u8e29\u4e0d\u7834\u652f\u6491"]'
     assert item["status"] == "expired"
     assert item["metadata"]["decision_profile"] == "balanced"
     assert item["metadata"]["profile_source"] == "backfill_defaulted"
@@ -300,7 +300,7 @@ def test_list_signals_backfill_uses_saved_intraday_ttl_metadata(
         result=_history_result(),
         query_id=f"query-lazy-signal-ttl-{market_phase_summary['phase']}",
         report_type="simple",
-        news_content="新闻摘要",
+        news_content="\u65b0\u95fb\u6458\u8981",
         context_snapshot={"market_phase_summary": market_phase_summary},
         save_snapshot=True,
     )
@@ -326,14 +326,14 @@ def test_list_signals_backfill_converts_naive_history_created_at_for_invalidatio
 ) -> None:
     record_id = isolated_db.save_analysis_history(
         result=_history_result(
-            operation_advice="买入",
+            operation_advice="\u4e70\u5165",
             decision_type="buy",
             action="buy",
-            action_label="买入",
+            action_label="\u4e70\u5165",
         ),
         query_id="query-lazy-signal-local-tz",
         report_type="simple",
-        news_content="新闻摘要",
+        news_content="\u65b0\u95fb\u6458\u8981",
         context_snapshot={"market_phase_summary": {"phase": "postmarket"}},
         save_snapshot=True,
     )
@@ -376,15 +376,15 @@ def test_list_signals_backfill_converts_naive_history_created_at_for_invalidatio
 def test_list_signals_invalidates_stale_backfill_when_newer_opposing_signal_exists(isolated_db) -> None:
     record_id = isolated_db.save_analysis_history(
         result=_history_result(
-            operation_advice="买入",
+            operation_advice="\u4e70\u5165",
             decision_type="buy",
             action="buy",
-            action_label="买入",
-            analysis_summary="旧报告建议买入。",
+            action_label="\u4e70\u5165",
+            analysis_summary="\u65e7\u62a5\u544a\u5efa\u8bae\u4e70\u5165。",
         ),
         query_id="query-stale-backfill-buy",
         report_type="simple",
-        news_content="新闻摘要",
+        news_content="\u65b0\u95fb\u6458\u8981",
         context_snapshot={"market_phase_summary": {"phase": "postmarket"}},
         save_snapshot=True,
     )
@@ -420,10 +420,10 @@ def test_list_signals_invalidates_stale_backfill_when_newer_opposing_signal_exis
 
 def test_list_signals_does_not_backfill_market_review_history(isolated_db) -> None:
     record_id = isolated_db.save_analysis_history(
-        result=_history_result(code="MARKET", name="大盘复盘", operation_advice="查看复盘"),
+        result=_history_result(code="MARKET", name="\u5927\u76d8\u590d\u76d8", operation_advice="\u67e5\u770b\u590d\u76d8"),
         query_id="query-lazy-market-review",
         report_type="market_review",
-        news_content="复盘正文",
+        news_content="\u590d\u76d8\u6b63\u6587",
         context_snapshot=None,
         save_snapshot=False,
     )
@@ -442,7 +442,7 @@ def test_list_signals_does_not_backfill_ambiguous_history_advice(isolated_db) ->
         result=_history_result(operation_advice="", decision_type="", action=None, action_label=None),
         query_id="query-lazy-ambiguous-signal",
         report_type="simple",
-        news_content="新闻摘要",
+        news_content="\u65b0\u95fb\u6458\u8981",
         context_snapshot=None,
         save_snapshot=False,
     )
@@ -461,7 +461,7 @@ def test_list_signals_does_not_backfill_ambiguous_history_default_decision_type_
         result=_history_result(operation_advice="", action=None, action_label=None),
         query_id="query-lazy-ambiguous-hold",
         report_type="simple",
-        news_content="新闻摘要",
+        news_content="\u65b0\u95fb\u6458\u8981",
         context_snapshot=None,
         save_snapshot=False,
     )
@@ -480,14 +480,14 @@ def test_list_signals_does_not_backfill_ambiguous_history_default_decision_type_
 ) -> None:
     record_id = isolated_db.save_analysis_history(
         result=_history_result(
-            operation_advice="买盘增强，继续观察",
+            operation_advice="\u4e70\u76d8\u589e\u5f3a，\u7ee7\u7eed\u89c2\u5bdf",
             decision_type="hold",
             action=None,
             action_label=None,
         ),
         query_id="query-lazy-ambiguous-noisy-hold",
         report_type="simple",
-        news_content="新闻摘要",
+        news_content="\u65b0\u95fb\u6458\u8981",
         context_snapshot=None,
         save_snapshot=False,
     )
@@ -508,7 +508,7 @@ def test_list_signals_explicit_stock_identities_override_holding_only_and_inters
             source_report_id=171501,
             trace_id="trace-explicit-identity-000001",
             stock_code="000001",
-            stock_name="平安银行",
+            stock_name="\u5e73\u5b89\u94f6\u884c",
             action="sell",
         )
     )
@@ -559,10 +559,10 @@ def test_list_signals_explicit_empty_stock_identities_returns_empty_without_wide
 
 def test_list_signals_explicit_stock_identities_do_not_trigger_history_backfill(isolated_db) -> None:
     record_id = isolated_db.save_analysis_history(
-        result=_history_result(operation_advice="卖出", decision_type="sell", action="sell", action_label="卖出"),
+        result=_history_result(operation_advice="\u5356\u51fa", decision_type="sell", action="sell", action_label="\u5356\u51fa"),
         query_id="query-explicit-identity-no-backfill",
         report_type="simple",
-        news_content="新闻摘要",
+        news_content="\u65b0\u95fb\u6458\u8981",
         context_snapshot={"market_phase_summary": {"phase": "postmarket"}},
         save_snapshot=True,
     )
@@ -593,7 +593,7 @@ def test_service_plan_quality_slots_and_explicit_override(isolated_db) -> None:
             entry_high=1700,
             stop_loss=1600,
             target_price=1850,
-            invalidation="跌破 1600",
+            invalidation="\u8dcc\u7834 1600",
         )
     )
     assert complete["item"]["plan_quality"] == "complete"
@@ -606,7 +606,7 @@ def test_service_plan_quality_slots_and_explicit_override(isolated_db) -> None:
             entry_low=1680,
             stop_loss=1600,
             target_price=1850,
-            invalidation="跌破 1600",
+            invalidation="\u8dcc\u7834 1600",
         )
     )
     assert explicit["item"]["plan_quality"] == "unknown"

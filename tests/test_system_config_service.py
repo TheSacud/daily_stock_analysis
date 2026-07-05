@@ -1195,7 +1195,7 @@ class SystemConfigServiceTestCase(unittest.TestCase):
         self.assertEqual(checks["llm_primary"]["status"], "configured")
         self.assertEqual(checks["stock_list"]["status"], "configured")
         self.assertEqual(checks["llm_agent"]["status"], "needs_action")
-        self.assertIn("local CLI 主生成方式不会被自动继承", checks["llm_agent"]["message"])
+        self.assertIn("local CLI \u4e3b\u751f\u6210\u65b9\u5f0f\u4e0d\u4f1a\u88ab\u81ea\u52a8\u7ee7\u627f", checks["llm_agent"]["message"])
         self.assertEqual(status["required_missing_keys"], ["llm_agent"])
 
     def test_get_setup_status_codex_cli_missing_reports_backend_path(self) -> None:
@@ -1211,9 +1211,9 @@ class SystemConfigServiceTestCase(unittest.TestCase):
 
         checks = {check["key"]: check for check in status["checks"]}
         self.assertEqual(checks["llm_primary"]["status"], "needs_action")
-        self.assertIn("后端进程当前 PATH", checks["llm_primary"]["message"])
-        self.assertIn("Codex CLI 交互窗口", checks["llm_primary"]["next_step"])
-        self.assertNotIn("请先安装并登录", checks["llm_primary"]["next_step"])
+        self.assertIn("\u540e\u7aef\u8fdb\u7a0b\u5f53\u524d PATH", checks["llm_primary"]["message"])
+        self.assertIn("Codex CLI \u4ea4\u4e92\u7a97\u53e3", checks["llm_primary"]["next_step"])
+        self.assertNotIn("\u8bf7\u5148\u5b89\u88c5\u5e76\u767b\u5f55", checks["llm_primary"]["next_step"])
 
     def test_get_setup_status_codex_primary_agent_model_explains_litellm_split(self) -> None:
         self._rewrite_env(
@@ -1230,8 +1230,8 @@ class SystemConfigServiceTestCase(unittest.TestCase):
 
         checks = {check["key"]: check for check in status["checks"]}
         self.assertEqual(checks["llm_agent"]["status"], "configured")
-        self.assertIn("普通分析使用 Codex CLI", checks["llm_agent"]["message"])
-        self.assertIn("Agent 工具调用仍使用 LiteLLM 主模型", checks["llm_agent"]["message"])
+        self.assertIn("\u666e\u901a\u5206\u6790\u4f7f\u7528 Codex CLI", checks["llm_agent"]["message"])
+        self.assertIn("Agent \u5de5\u5177\u8c03\u7528\u4ecd\u4f7f\u7528 LiteLLM \u4e3b\u6a21\u578b", checks["llm_agent"]["message"])
 
     def test_get_setup_status_codex_primary_agent_inherited_model_explains_litellm_split(self) -> None:
         self._rewrite_env(
@@ -1249,7 +1249,7 @@ class SystemConfigServiceTestCase(unittest.TestCase):
         checks = {check["key"]: check for check in status["checks"]}
         self.assertEqual(checks["llm_agent"]["status"], "configured")
         self.assertIn(
-            "普通分析使用 Codex CLI；Agent 工具调用仍使用 LiteLLM 主模型: openai/gpt-5.5",
+            "\u666e\u901a\u5206\u6790\u4f7f\u7528 Codex CLI；Agent \u5de5\u5177\u8c03\u7528\u4ecd\u4f7f\u7528 LiteLLM \u4e3b\u6a21\u578b: openai/gpt-5.5",
             checks["llm_agent"]["message"],
         )
 
@@ -1276,7 +1276,7 @@ class SystemConfigServiceTestCase(unittest.TestCase):
         self.assertIn("Hermes", checks["llm_agent"]["message"])
         self.assertIn("llm_agent", status["required_missing_keys"])
         self.assertNotIn(
-            "Agent 工具调用仍使用 LiteLLM 主模型",
+            "Agent \u5de5\u5177\u8c03\u7528\u4ecd\u4f7f\u7528 LiteLLM \u4e3b\u6a21\u578b",
             checks["llm_agent"]["message"],
         )
 
@@ -1293,7 +1293,7 @@ class SystemConfigServiceTestCase(unittest.TestCase):
 
         checks = {check["key"]: check for check in status["checks"]}
         self.assertEqual(checks["llm_agent"]["status"], "needs_action")
-        self.assertIn("暂不支持 codex_cli", checks["llm_agent"]["message"])
+        self.assertIn("\u6682\u4e0d\u652f\u6301 codex_cli", checks["llm_agent"]["message"])
 
     def test_get_setup_status_rejects_agent_claude_and_opencode_tool_backends(self) -> None:
         for backend in ("claude_code_cli", "opencode_cli"):
@@ -1309,7 +1309,7 @@ class SystemConfigServiceTestCase(unittest.TestCase):
 
                 checks = {check["key"]: check for check in status["checks"]}
                 self.assertEqual(checks["llm_agent"]["status"], "needs_action")
-                self.assertIn(f"暂不支持 {backend}", checks["llm_agent"]["message"])
+                self.assertIn(f"\u6682\u4e0d\u652f\u6301 {backend}", checks["llm_agent"]["message"])
 
     def test_get_setup_status_accepts_opencode_without_model_override(self) -> None:
         self._rewrite_env(
@@ -1339,8 +1339,8 @@ class SystemConfigServiceTestCase(unittest.TestCase):
 
         checks = {check["key"]: check for check in status["checks"]}
         self.assertEqual(checks["llm_agent"]["status"], "needs_action")
-        self.assertIn("未检测到可用 LiteLLM 模型配置", checks["llm_agent"]["message"])
-        self.assertNotIn("需要 LiteLLM backend", checks["llm_agent"]["message"])
+        self.assertIn("\u672a\u68c0\u6d4b\u5230\u53ef\u7528 LiteLLM \u6a21\u578b\u914d\u7f6e", checks["llm_agent"]["message"])
+        self.assertNotIn("\u9700\u8981 LiteLLM backend", checks["llm_agent"]["message"])
 
     def test_get_setup_status_accepts_anspire_one_key_llm(self) -> None:
         self._rewrite_env(
@@ -2269,7 +2269,7 @@ class SystemConfigServiceTestCase(unittest.TestCase):
         context_profile_schema = items["AGENT_CONTEXT_COMPRESSION_PROFILE"]["schema"]
         self.assertEqual(
             [option["label"] for option in context_profile_schema["options"]],
-            ["成本优先", "均衡推荐", "长上下文原文优先"],
+            ["\u6210\u672c\u4f18\u5148", "\u5747\u8861\u63a8\u8350", "\u957f\u4e0a\u4e0b\u6587\u539f\u6587\u4f18\u5148"],
         )
         self.assertEqual(
             context_profile_schema["validation"]["enum"],
@@ -2822,7 +2822,7 @@ class SystemConfigServiceTestCase(unittest.TestCase):
             )
 
         self.assertTrue(payload["success"])
-        self.assertIn("部分成功", payload["message"])
+        self.assertIn("\u90e8\u5206\u6210\u529f", payload["message"])
         self.assertIn("1/2", payload["message"])
         self.assertEqual(len(payload["attempts"]), 2)
         self.assertFalse(payload["attempts"][0]["success"])
@@ -2859,7 +2859,7 @@ class SystemConfigServiceTestCase(unittest.TestCase):
         self.assertFalse(payload["success"])
         self.assertEqual(payload["error_code"], "send_failed")
         self.assertTrue(payload["retryable"])
-        self.assertIn("失败", payload["message"])
+        self.assertIn("\u5931\u8d25", payload["message"])
         self.assertIn("0/2", payload["message"])
         self.assertEqual(len(payload["attempts"]), 2)
         self.assertTrue(all(attempt["retryable"] for attempt in payload["attempts"]))
@@ -3224,11 +3224,11 @@ class SystemConfigServiceTestCase(unittest.TestCase):
 
         self.assertTrue(response["success"])
         joined = " | ".join(response["warnings"])
-        self.assertIn("Hermes Phase 3 不支持", joined)
+        self.assertIn("Hermes Phase 3 \u4e0d\u652f\u6301", joined)
         self.assertIn("LLM_HERMES_API_KEYS", joined)
         self.assertIn("LLM_HERMES_EXTRA_HEADERS", joined)
         self.assertIn("LLM_HERMES_API_KEY", joined)
-        self.assertIn(".env 备份", joined)
+        self.assertIn(".env \u5907\u4efd", joined)
         current_map = self.manager.read_config_map()
         self.assertEqual(current_map["LLM_HERMES_API_KEYS"], "")
         self.assertEqual(current_map["LLM_HERMES_EXTRA_HEADERS"], "")
@@ -3924,7 +3924,7 @@ class SystemConfigServiceTestCase(unittest.TestCase):
         run_warning = next(
             warning
             for warning in response["warnings"]
-            if "RUN_IMMEDIATELY 已写入 .env" in warning
+            if "RUN_IMMEDIATELY \u5df2\u5199\u5165 .env" in warning
         )
         schedule_warning = next(
             warning
@@ -3937,14 +3937,14 @@ class SystemConfigServiceTestCase(unittest.TestCase):
             if "SCHEDULE_RUN_IMMEDIATELY" in warning
         )
 
-        self.assertIn("非 schedule 模式", run_warning)
-        self.assertNotIn("以 schedule 模式", run_warning)
+        self.assertIn("\u975e schedule \u6a21\u5f0f", run_warning)
+        self.assertNotIn("\u4ee5 schedule \u6a21\u5f0f", run_warning)
         self.assertIn("runtime scheduler", schedule_warning)
         self.assertIn("CLI schedule", schedule_warning)
         self.assertIn("SCHEDULE_RUN_IMMEDIATELY", schedule_run_warning)
-        self.assertIn("不会因为本次保存启动、停止或重建 scheduler", schedule_run_warning)
-        self.assertIn("以 schedule 模式重新启动后生效", schedule_run_warning)
-        self.assertNotIn("它属于启动期单次运行配置", schedule_run_warning)
+        self.assertIn("\u4e0d\u4f1a\u56e0\u4e3a\u672c\u6b21\u4fdd\u5b58\u542f\u52a8、\u505c\u6b62\u6216\u91cd\u5efa scheduler", schedule_run_warning)
+        self.assertIn("\u4ee5 schedule \u6a21\u5f0f\u91cd\u65b0\u542f\u52a8\u540e\u751f\u6548", schedule_run_warning)
+        self.assertNotIn("\u5b83\u5c5e\u4e8e\u542f\u52a8\u671f\u5355\u6b21\u8fd0\u884c\u914d\u7f6e", schedule_run_warning)
 
     def test_update_appends_schedule_time_runtime_rebind_warning(self) -> None:
         response = self.service.update(
@@ -3957,14 +3957,14 @@ class SystemConfigServiceTestCase(unittest.TestCase):
         schedule_time_warning = next(
             warning
             for warning in response["warnings"]
-            if "SCHEDULE_TIME=09:30 已写入 .env" in warning
+            if "SCHEDULE_TIME=09:30 \u5df2\u5199\u5165 .env" in warning
         )
 
-        self.assertIn("已经以 schedule 模式运行", schedule_time_warning)
-        self.assertIn("自动重建 daily job", schedule_time_warning)
-        self.assertIn("不会启动 scheduler", schedule_time_warning)
-        self.assertNotIn("重启当前进程", schedule_time_warning)
-        self.assertNotIn("不会因为本次保存启动、停止或重建 scheduler", schedule_time_warning)
+        self.assertIn("\u5df2\u7ecf\u4ee5 schedule \u6a21\u5f0f\u8fd0\u884c", schedule_time_warning)
+        self.assertIn("\u81ea\u52a8\u91cd\u5efa daily job", schedule_time_warning)
+        self.assertIn("\u4e0d\u4f1a\u542f\u52a8 scheduler", schedule_time_warning)
+        self.assertNotIn("\u91cd\u542f\u5f53\u524d\u8fdb\u7a0b", schedule_time_warning)
+        self.assertNotIn("\u4e0d\u4f1a\u56e0\u4e3a\u672c\u6b21\u4fdd\u5b58\u542f\u52a8、\u505c\u6b62\u6216\u91cd\u5efa scheduler", schedule_time_warning)
 
     def test_update_schedule_time_blank_warning_reports_effective_default(self) -> None:
         response = self.service.update(
@@ -3975,7 +3975,7 @@ class SystemConfigServiceTestCase(unittest.TestCase):
 
         self.assertTrue(response["success"])
         self.assertTrue(
-            any("SCHEDULE_TIME=18:00 已写入 .env" in warning for warning in response["warnings"]),
+            any("SCHEDULE_TIME=18:00 \u5df2\u5199\u5165 .env" in warning for warning in response["warnings"]),
             response["warnings"],
         )
 
@@ -3996,9 +3996,9 @@ class SystemConfigServiceTestCase(unittest.TestCase):
             if "WEBUI_HOST" in warning and "WEBUI_PORT" in warning
         )
 
-        self.assertIn("启动期监听配置", bind_warning)
-        self.assertIn("不会因为本次保存重新绑定监听地址或端口", bind_warning)
-        self.assertIn("重启当前进程、Docker 容器或服务管理器后生效", bind_warning)
+        self.assertIn("\u542f\u52a8\u671f\u76d1\u542c\u914d\u7f6e", bind_warning)
+        self.assertIn("\u4e0d\u4f1a\u56e0\u4e3a\u672c\u6b21\u4fdd\u5b58\u91cd\u65b0\u7ed1\u5b9a\u76d1\u542c\u5730\u5740\u6216\u7aef\u53e3", bind_warning)
+        self.assertIn("\u91cd\u542f\u5f53\u524d\u8fdb\u7a0b、Docker \u5bb9\u5668\u6216\u670d\u52a1\u7ba1\u7406\u5668\u540e\u751f\u6548", bind_warning)
 
     def test_update_warns_when_runtime_model_references_are_cleared(self) -> None:
         self._rewrite_env(
@@ -4030,10 +4030,10 @@ class SystemConfigServiceTestCase(unittest.TestCase):
         warning = next(
             warning
             for warning in response["warnings"]
-            if "已同步清理失效的运行时模型引用" in warning
+            if "\u5df2\u540c\u6b65\u6e05\u7406\u5931\u6548\u7684\u8fd0\u884c\u65f6\u6a21\u578b\u5f15\u7528" in warning
         )
-        self.assertIn("主模型 / Agent 主模型 / Vision 模型 / 备选模型中的失效项", warning)
-        self.assertIn("桌面端导出备份", warning)
+        self.assertIn("\u4e3b\u6a21\u578b / Agent \u4e3b\u6a21\u578b / Vision \u6a21\u578b / \u5907\u9009\u6a21\u578b\u4e2d\u7684\u5931\u6548\u9879", warning)
+        self.assertIn("\u684c\u9762\u7aef\u5bfc\u51fa\u5907\u4efd", warning)
 
     def test_update_market_review_region_does_not_trigger_runtime_model_cleanup(self) -> None:
         litellm_config_path = Path(self.temp_dir.name) / "litellm_config.yaml"
@@ -4082,7 +4082,7 @@ class SystemConfigServiceTestCase(unittest.TestCase):
         self.assertEqual(current_map["OPENAI_MODEL"], "gpt-4.1")
         self.assertEqual(current_map["ANTHROPIC_MODEL"], "claude-sonnet-4-6")
         self.assertFalse(
-            any("已同步清理失效的运行时模型引用" in warning for warning in response["warnings"]),
+            any("\u5df2\u540c\u6b65\u6e05\u7406\u5931\u6548\u7684\u8fd0\u884c\u65f6\u6a21\u578b\u5f15\u7528" in warning for warning in response["warnings"]),
             response["warnings"],
         )
 

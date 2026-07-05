@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 """
 ===================================
-WebUI 启动脚本
+WebUI \u542f\u52a8\u811a\u672c
 ===================================
 
-用于启动 Web 服务界面。
-直接运行 `python webui.py` 将启动 Web 后端服务。
+\u7528\u4e8e\u542f\u52a8 Web \u670d\u52a1\u754c\u9762。
+\u76f4\u63a5\u8fd0\u884c `python webui.py` \u5c06\u542f\u52a8 Web \u540e\u7aef\u670d\u52a1。
 
-等效命令：
+\u7b49\u6548\u547d\u4ee4：
     python main.py --webui-only
 
 Usage:
@@ -25,14 +25,14 @@ logger = logging.getLogger(__name__)
 
 def main() -> int:
     """
-    启动 Web 服务
+    \u542f\u52a8 Web \u670d\u52a1
     """
-    # 兼容旧版环境变量名
+    # \u517c\u5bb9\u65e7\u7248\u73af\u5883\u53d8\u91cf\u540d
     host = os.getenv("WEBUI_HOST", os.getenv("API_HOST", "127.0.0.1"))
     port = int(os.getenv("WEBUI_PORT", os.getenv("API_PORT", "8000")))
 
-    print(f"正在启动 Web 服务: http://{host}:{port}")
-    print(f"API 文档: http://{host}:{port}/docs")
+    print(f"\u6b63\u5728\u542f\u52a8 Web \u670d\u52a1: http://{host}:{port}")
+    print(f"API \u6587\u6863: http://{host}:{port}/docs")
     print()
 
     try:

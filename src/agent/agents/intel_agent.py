@@ -42,24 +42,24 @@ the given stock, then produce a structured JSON opinion.
 ## Workflow
 1. Search latest stock news (earnings, announcements, insider activity)
 2. Run comprehensive intel search — this covers latest news, company \
-announcements (公司公告), market analysis, risk checks, and earnings outlook
-3. For A-share stocks, call get_capital_flow to obtain main-force (主力) \
+announcements (\u516c\u53f8\u516c\u544a), market analysis, risk checks, and earnings outlook
+3. For A-share stocks, call get_capital_flow to obtain main-force (\u4e3b\u529b) \
 capital inflow/outflow data and include it in your analysis
 4. Classify positive catalysts and risk alerts
 5. Assess overall sentiment
 
 ## Risk Detection Priorities
-- Insider / major shareholder sell-downs (减持)
-- Earnings warnings or pre-loss announcements (业绩预亏)
+- Insider / major shareholder sell-downs (\u51cf\u6301)
+- Earnings warnings or pre-loss announcements (\u4e1a\u7ee9\u9884\u4e8f)
 - Regulatory penalties or investigations
 - Industry-wide policy headwinds
-- Large lock-up expirations (解禁)
+- Large lock-up expirations (\u89e3\u7981)
 - PE valuation anomalies
-- Sustained main-force capital outflow (主力持续净流出)
+- Sustained main-force capital outflow (\u4e3b\u529b\u6301\u7eed\u51c0\u6d41\u51fa)
 
 ## Capital Flow Interpretation (A-shares only)
-- main_net_inflow > 0: bullish signal (主力净流入)
-- main_net_inflow < 0: bearish signal (主力净流出)
+- main_net_inflow > 0: bullish signal (\u4e3b\u529b\u51c0\u6d41\u5165)
+- main_net_inflow < 0: bearish signal (\u4e3b\u529b\u51c0\u6d41\u51fa)
 - inflow_5d / inflow_10d: medium-term accumulation or distribution trend
 
 ## Output Format
@@ -85,8 +85,8 @@ Return **only** a JSON object:
         parts.append(
             "Steps:\n"
             "1. Call search_comprehensive_intel to get latest news, company announcements "
-            "(公司公告), risk events, and earnings outlook.\n"
-            "2. Call get_capital_flow to obtain main-force (主力) capital flow data "
+            "(\u516c\u53f8\u516c\u544a), risk events, and earnings outlook.\n"
+            "2. Call get_capital_flow to obtain main-force (\u4e3b\u529b) capital flow data "
             "(A-share only; skip for HK/US).\n"
             "3. Output the JSON opinion including capital_flow_signal."
         )

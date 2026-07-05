@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 """
 ===================================
-平台适配器基类
+\u5e73\u53f0\u9002\u914d\u5668\u57fa\u7c7b
 ===================================
 
-定义平台适配器的抽象基类，各平台必须继承此类。
+\u5b9a\u4e49\u5e73\u53f0\u9002\u914d\u5668\u7684\u62bd\u8c61\u57fa\u7c7b; \u5404\u5e73\u53f0\u5fc5\u987b\u7ee7\u627f\u6b64\u7c7b.
 """
 
 from abc import ABC, abstractmethod
@@ -15,92 +15,92 @@ from bot.models import BotMessage, BotResponse, WebhookResponse
 
 class BotPlatform(ABC):
     """
-    平台适配器抽象基类
-    
-    负责：
-    1. 验证 Webhook 请求签名
-    2. 解析平台消息为统一格式
-    3. 将响应转换为平台格式
-    
-    使用示例：
+    \u5e73\u53f0\u9002\u914d\u5668\u62bd\u8c61\u57fa\u7c7b
+
+    \u8d1f\u8d23:
+    1. \u9a8c\u8bc1 Webhook request\u7b7e\u540d
+    2. \u89e3\u6790\u5e73\u53f0\u6d88\u606f\u4e3a\u7edf\u4e00\u683c\u5f0f
+    3. \u5c06\u54cd\u5e94\u8f6c\u6362\u4e3a\u5e73\u53f0\u683c\u5f0f
+
+    \u4f7f\u7528\u793a\u4f8b:
         class MyPlatform(BotPlatform):
             @property
             def platform_name(self) -> str:
                 return "myplatform"
-            
+
             def verify_request(self, headers, body) -> bool:
-                # 验证签名逻辑
+                # \u9a8c\u8bc1\u7b7e\u540d\u903b\u8f91
                 return True
-            
+
             def parse_message(self, data) -> Optional[BotMessage]:
-                # 解析消息逻辑
+                # \u89e3\u6790\u6d88\u606f\u903b\u8f91
                 return BotMessage(...)
-            
+
             def format_response(self, response, message) -> WebhookResponse:
-                # 格式化响应逻辑
+                # \u683c\u5f0f\u5316\u54cd\u5e94\u903b\u8f91
                 return WebhookResponse.success({"text": response.text})
     """
-    
+
     @property
     @abstractmethod
     def platform_name(self) -> str:
         """
-        平台标识名称
-        
-        用于路由匹配和日志标识，如 "feishu", "dingtalk"
+        \u5e73\u53f0\u6807\u8bc6name
+
+        \u7528\u4e8e\u8def\u7531\u5339\u914d\u548clog\u6807\u8bc6; \u5982 "feishu", "dingtalk"
         """
         pass
-    
+
     @abstractmethod
     def verify_request(self, headers: Dict[str, str], body: bytes) -> bool:
         """
-        验证请求签名
-        
-        各平台有不同的签名验证机制，需要单独实现。
-        
+        \u9a8c\u8bc1request\u7b7e\u540d
+
+        \u5404\u5e73\u53f0\u6709\u4e0d\u540c\u7684\u7b7e\u540d\u9a8c\u8bc1\u673a\u5236; \u9700\u8981\u5355\u72ec\u5b9e\u73b0.
+
         Args:
-            headers: HTTP 请求头
-            body: 请求体原始字节
-            
+            headers: HTTP request\u5934
+            body: request\u4f53\u539f\u59cb\u5b57\u8282
+
         Returns:
-            签名是否有效
+            \u7b7e\u540d\u662f\u5426\u6709\u6548
         """
         pass
-    
+
     @abstractmethod
     def parse_message(self, data: Dict[str, Any]) -> Optional[BotMessage]:
         """
-        解析平台消息为统一格式
-        
-        将平台特定的消息格式转换为 BotMessage。
-        如果不是需要处理的消息类型（如事件回调），返回 None。
-        
+        \u89e3\u6790\u5e73\u53f0\u6d88\u606f\u4e3a\u7edf\u4e00\u683c\u5f0f
+
+        \u5c06\u5e73\u53f0\u7279\u5b9a\u7684\u6d88\u606f\u683c\u5f0f\u8f6c\u6362\u4e3a BotMessage.
+        \u5982\u679c\u4e0d\u662f\u9700\u8981\u5904\u7406\u7684\u6d88\u606f\u7c7b\u578b (\u5982\u4e8b\u4ef6\u56de\u8c03); \u8fd4\u56de None.
+
         Args:
-            data: 解析后的 JSON 数据
-            
+            data: \u89e3\u6790\u540e\u7684 JSON \u6570\u636e
+
         Returns:
-            BotMessage 对象，或 None（不需要处理）
+            BotMessage \u5bf9\u8c61; or None (\u4e0d\u9700\u8981\u5904\u7406)
         """
         pass
-    
+
     @abstractmethod
     def format_response(
-        self, 
-        response: BotResponse, 
+        self,
+        response: BotResponse,
         message: BotMessage
     ) -> WebhookResponse:
         """
-        将统一响应转换为平台格式
-        
+        \u5c06\u7edf\u4e00\u54cd\u5e94\u8f6c\u6362\u4e3a\u5e73\u53f0\u683c\u5f0f
+
         Args:
-            response: 统一响应对象
-            message: 原始消息对象（用于获取回复目标等信息）
-            
+            response: \u7edf\u4e00\u54cd\u5e94\u5bf9\u8c61
+            message: \u539f\u59cb\u6d88\u606f\u5bf9\u8c61 (\u7528\u4e8e\u83b7\u53d6\u56de\u590d\u76ee\u6807\u7b49info)
+
         Returns:
-            WebhookResponse 对象
+            WebhookResponse \u5bf9\u8c61
         """
         pass
-    
+
     def send_followup(
         self,
         response: 'BotResponse',
@@ -119,51 +119,51 @@ class BotPlatform(ABC):
 
     def handle_challenge(self, data: Dict[str, Any]) -> Optional[WebhookResponse]:
         """
-        处理平台验证请求
-        
-        部分平台在配置 Webhook 时会发送验证请求，需要返回特定响应。
-        子类可重写此方法。
-        
+        \u5904\u7406\u5e73\u53f0\u9a8c\u8bc1request
+
+        \u90e8\u5206\u5e73\u53f0\u5728config Webhook \u65f6\u4f1a\u53d1\u9001\u9a8c\u8bc1request; \u9700\u8981\u8fd4\u56de\u7279\u5b9a\u54cd\u5e94.
+        \u5b50\u7c7b\u53ef\u91cd\u5199\u6b64\u65b9\u6cd5.
+
         Args:
-            data: 请求数据
-            
+            data: request\u6570\u636e
+
         Returns:
-            验证响应，或 None（不是验证请求）
+            \u9a8c\u8bc1\u54cd\u5e94; or None (\u4e0d\u662f\u9a8c\u8bc1request)
         """
         return None
-    
+
     def handle_webhook(
-        self, 
-        headers: Dict[str, str], 
+        self,
+        headers: Dict[str, str],
         body: bytes,
         data: Dict[str, Any]
     ) -> Tuple[Optional[BotMessage], Optional[WebhookResponse]]:
         """
-        处理 Webhook 请求
-        
-        这是主入口方法，协调验证、解析等流程。
-        
+        \u5904\u7406 Webhook request
+
+        \u8fd9\u662f\u4e3b\u5165\u53e3\u65b9\u6cd5; \u534f\u8c03\u9a8c\u8bc1、\u89e3\u6790\u7b49\u6d41\u7a0b.
+
         Args:
-            headers: HTTP 请求头
-            body: 请求体原始字节
-            data: 解析后的 JSON 数据
-            
+            headers: HTTP request\u5934
+            body: request\u4f53\u539f\u59cb\u5b57\u8282
+            data: \u89e3\u6790\u540e\u7684 JSON \u6570\u636e
+
         Returns:
-            (BotMessage, WebhookResponse) 元组
-            - 如果是验证请求：(None, challenge_response)
-            - 如果是普通消息：(message, None) - 响应将在命令处理后生成
-            - 如果验证失败或无需处理：(None, error_response 或 None)
+            (BotMessage, WebhookResponse) \u5143\u7ec4
+            - \u5982\u679c\u662f\u9a8c\u8bc1request: (None, challenge_response)
+            - \u5982\u679c\u662f\u666e\u901a\u6d88\u606f: (message, None) - \u54cd\u5e94\u5c06\u5728command\u5904\u7406\u540e\u751f\u6210
+            - \u5982\u679c\u9a8c\u8bc1failedor\u65e0\u9700\u5904\u7406: (None, error_response or None)
         """
-        # 1. 检查是否是验证请求
+        # 1. \u68c0check\u662f\u5426\u662f\u9a8c\u8bc1request
         challenge_response = self.handle_challenge(data)
         if challenge_response:
             return None, challenge_response
-        
-        # 2. 验证请求签名
+
+        # 2. \u9a8c\u8bc1request\u7b7e\u540d
         if not self.verify_request(headers, body):
             return None, WebhookResponse.error("Invalid signature", 403)
-        
-        # 3. 解析消息
+
+        # 3. \u89e3\u6790\u6d88\u606f
         message = self.parse_message(data)
-        
+
         return message, None

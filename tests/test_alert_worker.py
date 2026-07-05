@@ -103,7 +103,7 @@ class AlertIndicatorHelperTestCase(unittest.TestCase):
             "rsi_threshold",
             "TEST",
             rsi_params,
-            pd.DataFrame({"日期": pd.date_range("2026-01-01", periods=3), "收盘": [10, 9, 11]}),
+            pd.DataFrame({"\u65e5\u671f": pd.date_range("2026-01-01", periods=3), "\u6536\u76d8": [10, 9, 11]}),
         )
 
         macd_params = normalize_indicator_parameters("macd_cross", {
@@ -321,16 +321,16 @@ class AlertWorkerTestCase(unittest.TestCase):
         signal_service = DecisionSignalService()
         signal_service.create_signal({
             "stock_code": "600519",
-            "stock_name": "贵州茅台",
+            "stock_name": "\u8d35\u5dde\u8305\u53f0",
             "market": "cn",
             "source_type": "analysis",
             "source_report_id": 1390,
             "trace_id": "analysis-1390",
             "trigger_source": "api",
             "action": "sell",
-            "reason": "跌破关键支撑",
-            "watch_conditions": "观察能否收回均线",
-            "risk_summary": "下行风险扩大",
+            "reason": "\u8dcc\u7834\u5173\u952e\u652f\u6491",
+            "watch_conditions": "\u89c2\u5bdf\u80fd\u5426\u6536\u56de\u5747\u7ebf",
+            "risk_summary": "\u4e0b\u884c\u98ce\u9669\u6269\u5927",
         })
         notifier = self._notifier()
         worker = AlertWorker(
@@ -355,9 +355,9 @@ class AlertWorkerTestCase(unittest.TestCase):
         self.assertEqual(summary["id"], all_signals[0]["id"])
         self.assertEqual(summary["action"], "sell")
         alert_text = notifier.send_with_results.call_args.args[0]
-        self.assertIn("AI 决策信号", alert_text)
-        self.assertIn("跌破关键支撑", alert_text)
-        self.assertIn("观察能否收回均线", alert_text)
+        self.assertIn("AI \u51b3\u7b56\u4fe1\u53f7", alert_text)
+        self.assertIn("\u8dcc\u7834\u5173\u952e\u652f\u6491", alert_text)
+        self.assertIn("\u89c2\u5bdf\u80fd\u5426\u6536\u56de\u5747\u7ebf", alert_text)
 
     def test_p6_triggered_stock_alert_creates_alert_signal_when_no_active_signal(self) -> None:
         self._create_rule(target="600519")
@@ -1223,8 +1223,8 @@ class AlertWorkerTestCase(unittest.TestCase):
             "trade_date": "2026-03-07",
             "status": "red",
             "score": 35,
-            "label": "偏防守",
-            "temperature_label": "偏弱",
+            "label": "\u504f\u9632\u5b88",
+            "temperature_label": "\u504f\u5f31",
             "reasons": ["test"],
             "guidance": "test",
             "dimensions": {

@@ -35,12 +35,12 @@ _PHASE_CONTEXT_KEYS = (
 )
 
 _ZH_POSTMARKET_RECAP_PATTERNS = (
-    "今日收盘后",
-    "收盘后复盘",
-    "盘后复盘",
-    "明日重点关注",
-    "明天重点关注",
-    "完整交易日复盘",
+    "\u4eca\u65e5\u6536\u76d8\u540e",
+    "\u6536\u76d8\u540e\u590d\u76d8",
+    "\u76d8\u540e\u590d\u76d8",
+    "\u660e\u65e5\u91cd\u70b9\u5173\u6ce8",
+    "\u660e\u5929\u91cd\u70b9\u5173\u6ce8",
+    "\u5b8c\u6574\u4ea4\u6613\u65e5\u590d\u76d8",
 )
 
 _EN_POSTMARKET_RECAP_PATTERNS = (
@@ -55,17 +55,17 @@ _EN_POSTMARKET_RECAP_PATTERNS = (
 )
 
 _IMMEDIATE_ACTION_MARKERS_ZH = (
-    "立即买入",
-    "马上买入",
-    "立即加仓",
-    "马上加仓",
-    "立即卖出",
-    "马上卖出",
-    "立即减仓",
-    "马上减仓",
+    "\u7acb\u5373\u4e70\u5165",
+    "\u9a6c\u4e0a\u4e70\u5165",
+    "\u7acb\u5373\u52a0\u4ed3",
+    "\u9a6c\u4e0a\u52a0\u4ed3",
+    "\u7acb\u5373\u5356\u51fa",
+    "\u9a6c\u4e0a\u5356\u51fa",
+    "\u7acb\u5373\u51cf\u4ed3",
+    "\u9a6c\u4e0a\u51cf\u4ed3",
 )
 _IMMEDIATE_ACTION_MARKERS_EN = ("buy now", "sell now", "immediate buy", "immediate sell", "add now", "reduce now")
-_NEGATION_PREFIXES_ZH = ("暂不", "不建议", "禁止", "不要", "无需", "避免", "不能", "不可", "不宜", "勿", "不")
+_NEGATION_PREFIXES_ZH = ("\u6682\u4e0d", "\u4e0d\u5efa\u8bae", "\u7981\u6b62", "\u4e0d\u8981", "\u65e0\u9700", "\u907f\u514d", "\u4e0d\u80fd", "\u4e0d\u53ef", "\u4e0d\u5b9c", "\u52ff", "\u4e0d")
 _NEGATION_PREFIXES_EN = ("do not", "don't", "dont", "not", "no", "avoid", "hold off", "without")
 
 _KO_POSTMARKET_RECAP_PATTERNS = (
@@ -161,7 +161,7 @@ def apply_phase_decision_guardrails(
         reason = _reason_text(
             language,
             en="Core quote, daily-bar, or technical data is degraded; high confidence was capped.",
-            zh="核心行情、日线或技术数据受限，已限制高置信结论。",
+            zh="\u6838\u5fc3\u884c\u60c5、daily dataor\u6280\u672f\u6570\u636e\u53d7\u9650; \u5df2limitHigh\u7f6e\u4fe1\u7ed3\u8bba.",
             ko="핵심 시세·일봉·기술 데이터가 제한되어 높은 신뢰도를 하향 조정했습니다.",
         )
         _append_reason(phase_decision, reason)
@@ -176,7 +176,7 @@ def apply_phase_decision_guardrails(
         reason = _reason_text(
             language,
             en="Current market phase does not support immediate intraday buy/sell action.",
-            zh="当前市场阶段不支持即时盘中买卖动作。",
+            zh="\u5f53\u524dmarket\u9636\u6bb5does not support\u5373\u65f6\u76d8Medium\u4e70\u5356\u52a8\u4f5c.",
             ko="현재 시장 단계에서는 즉시 장중 매수/매도 동작을 지원하지 않습니다.",
         )
         _append_reason(phase_decision, reason)
@@ -189,7 +189,7 @@ def apply_phase_decision_guardrails(
         reason = _reason_text(
             language,
             en="Intraday output contained post-market recap wording; replaced with phase-safe action wording.",
-            zh="盘中输出包含盘后复盘口吻，已替换为阶段安全动作表述。",
+            zh="\u76d8Medium\u8f93\u51fa\u5305\u542b\u76d8\u540e\u590d\u76d8\u53e3\u543b; \u5df2\u66ff\u6362\u4e3a\u9636\u6bb5\u5b89\u5168\u52a8\u4f5c\u8868\u8ff0.",
             ko="장중 출력에 장 마감 후 리뷰 표현이 있어 단계에 맞는 안전한 표현으로 교체했습니다.",
         )
         _replace_postmarket_recap_fields(result, phase_decision, language=language)
@@ -261,7 +261,7 @@ def _phase_warning_limitations(summary: Optional[Mapping[str, Any]], *, language
         return [f"market phase warning: {item}" for item in warnings]
     if language == "ko":
         return [f"시장 단계 경고: {item}" for item in warnings]
-    return [f"市场阶段提醒：{item}" for item in warnings]
+    return [f"market\u9636\u6bb5\u63d0\u9192: {item}" for item in warnings]
 
 
 def _merge_limitations(*groups: Any, limit: int = 5) -> List[str]:
@@ -277,7 +277,7 @@ def _merge_limitations(*groups: Any, limit: int = 5) -> List[str]:
 
 def _is_high_confidence(value: Any) -> bool:
     text = _safe_text(value).lower()
-    return text in {"高", "high", "높음"}
+    return text in {"High", "high", "높음"}
 
 
 def _has_immediate_buy_sell_signal(
@@ -357,7 +357,7 @@ def _replace_postmarket_recap_fields(
             "This is an intraday phase; use live state, watch conditions, and the next "
             "check point rather than post-market recap wording."
         ),
-        zh="当前处于盘中阶段，应以实时状态、观察条件和下一次检查点为准，避免盘后复盘口径。",
+        zh="\u5f53\u524d\u5904\u4e8e\u76d8Medium\u9636\u6bb5; \u5e94\u4ee5\u5b9e\u65f6status、\u89c2\u5bdf\u6761\u4ef6\u548c\u4e0b\u4e00\u6b21\u68c0check\u70b9\u4e3a\u51c6; \u907f\u514d\u76d8\u540e\u590d\u76d8\u53e3\u5f84.",
         ko="현재 장중 단계이므로 장 마감 후 리뷰 표현 대신 실시간 상태·관찰 조건·다음 점검 시점을 기준으로 합니다.",
     )
     if _contains_any(core.get("one_sentence"), _patterns(language)):
@@ -384,28 +384,28 @@ def _adjustment_limitation_text(adjustment: str, *, language: str) -> str:
         return _reason_text(
             language,
             en="post-market recap wording adjusted",
-            zh="已修正盘后复盘口吻",
+            zh="\u5df2\u4fee\u6b63\u76d8\u540e\u590d\u76d8\u53e3\u543b",
             ko="장 마감 후 리뷰 표현을 수정함",
         )
     if adjustment == "non_intraday_action_adjusted":
         return _reason_text(
             language,
             en="non-intraday immediate action adjusted",
-            zh="非盘中阶段已修正即时买卖动作",
+            zh="\u975e\u76d8Medium\u9636\u6bb5\u5df2\u4fee\u6b63\u5373\u65f6\u4e70\u5356\u52a8\u4f5c",
             ko="비장중 단계의 즉시 매매 동작을 수정함",
         )
     if adjustment == "confidence_capped_non_intraday_action":
         return _reason_text(
             language,
             en="confidence capped for non-intraday action",
-            zh="非盘中阶段已限制买卖置信度",
+            zh="\u975e\u76d8Medium\u9636\u6bb5\u5df2limit\u4e70\u5356\u7f6e\u4fe1\u5ea6",
             ko="비장중 단계 매매에 대해 신뢰도를 제한함",
         )
     if adjustment == "confidence_capped_core_data_degraded":
         return _reason_text(
             language,
             en="confidence capped due to degraded core data",
-            zh="核心数据受限已降低置信度",
+            zh="\u6838\u5fc3\u6570\u636e\u53d7\u9650\u5df2\u964dLow\u7f6e\u4fe1\u5ea6",
             ko="핵심 데이터 제한으로 신뢰도를 낮춤",
         )
     return adjustment
@@ -415,7 +415,7 @@ def _safe_wait_action(language: str) -> str:
     return _reason_text(
         language,
         en="Wait for intraday confirmation; do not chase.",
-        zh="等待盘中确认，禁止追高。",
+        zh="waiting\u76d8Medium\u786e\u8ba4; \u7981\u6b62\u8ffdHigh.",
         ko="장중 확인을 기다리고 추격 매수하지 마세요.",
     )
 

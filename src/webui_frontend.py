@@ -34,7 +34,7 @@ _BUILD_INPUT_DIRS = ("src", "public")
 
 
 def _is_truthy_env(var_name: str, default: str = "true") -> bool:
-    """解析常见的环境变量真值/假值表达（大小写不敏感）。"""
+    """\u89e3\u6790\u5e38\u89c1\u7684\u73af\u5883\u53d8\u91cf\u771f\u503c/\u5047\u503c\u8868\u8fbe (\u5927\u5c0f\u5199\u4e0d\u654f\u611f)."""
     value = os.getenv(var_name, default).strip().lower()
     return value not in _FALSEY_ENV_VALUES
 
@@ -107,14 +107,14 @@ def _needs_frontend_build(frontend_dir: Path, force_build: bool) -> tuple[bool, 
 def _run_frontend_commands(commands: Sequence[Sequence[str]], frontend_dir: Path) -> bool:
     try:
         for command in commands:
-            logger.info("执行前端命令: %s", " ".join(command))
+            logger.info("\u6267\u884c\u524d\u7aefcommand: %s", " ".join(command))
             subprocess.run(command, cwd=frontend_dir, check=True)
-        logger.info("前端静态资源构建完成")
+        logger.info("\u524d\u7aef\u9759\u6001\u8d44\u6e90\u6784\u5efa\u5b8c\u6210")
         return True
     except subprocess.CalledProcessError as exc:
         cmd_display = " ".join(exc.cmd) if isinstance(exc.cmd, (list, tuple)) else str(exc.cmd)
         logger.error(
-            "前端命令执行失败（exit_code=%s）: %s",
+            "\u524d\u7aefcommand execution failed (exit_code=%s): %s",
             getattr(exc, "returncode", "N/A"),
             cmd_display,
         )
@@ -128,10 +128,10 @@ def _manual_build_command(frontend_dir: Path) -> str:
 
 
 def _has_static_assets(static_dir: Path) -> bool:
-    """检查 static/assets/ 是否存在且包含 CSS/JS 文件。
+    """\u68c0check static/assets/ \u662f\u5426\u5b58\u5728\u4e14\u5305\u542b CSS/JS \u6587\u4ef6.
 
-    index.html 存在但 assets/ 为空或缺失时，浏览器无法加载样式与脚本，
-    会导致页面元素异常放大、布局错乱（纯裸 HTML 渲染）。
+    index.html \u5b58\u5728\u4f46 assets/ \u4e3a\u7a7aor\u7f3a\u5931\u65f6; \u6d4f\u89c8\u5668\u65e0\u6cd5load\u6837\u5f0f\u4e0e\u811a\u672c;
+    \u4f1a\u5bfc\u81f4\u9875\u9762\u5143\u7d20\u5f02\u5e38\u653e\u5927、\u5e03\u5c40\u9519\u4e71 (\u7eaf\u88f8 HTML \u6e32\u67d3).
     """
     assets_dir = static_dir / "assets"
     if not assets_dir.is_dir():
@@ -146,22 +146,22 @@ def _has_static_assets(static_dir: Path) -> bool:
 
 
 def _warn_if_assets_missing(artifact_index: Path, frontend_dir: Path) -> None:
-    """当 index.html 存在但 assets/ 缺失时，发出页面显示异常警告。"""
+    """\u5f53 index.html \u5b58\u5728\u4f46 assets/ \u7f3a\u5931\u65f6; \u53d1\u51fa\u9875\u9762\u663e\u793a\u5f02\u5e38warning."""
     static_dir = artifact_index.parent
     assets_dir = static_dir / "assets"
     if not _has_static_assets(static_dir):
         logger.warning(
-            "检测到 %s 但 %s 目录不存在或无 CSS/JS 文件，"
-            "WebUI 将因缺少样式与脚本而显示异常（元素过大、布局错乱）",
+            "\u68c0\u6d4b\u5230 %s \u4f46 %s \u76ee\u5f55does not existor\u65e0 CSS/JS \u6587\u4ef6; "
+            "WebUI \u5c06\u56e0\u7f3a\u5c11\u6837\u5f0f\u4e0e\u811a\u672c\u800c\u663e\u793a\u5f02\u5e38 (\u5143\u7d20\u8fc7\u5927、\u5e03\u5c40\u9519\u4e71)",
             artifact_index,
             assets_dir,
         )
         logger.warning(
-            "请重新构建前端以修复此问题: %s",
+            "\u8bf7\u91cd\u65b0\u6784\u5efa\u524d\u7aef\u4ee5\u4fee\u590d\u6b64question: %s",
             _manual_build_command(frontend_dir),
         )
         logger.warning(
-            "Docker 用户请执行: docker-compose -f ./docker/docker-compose.yml build --no-cache"
+            "Docker user\u8bf7\u6267\u884c: docker-compose -f ./docker/docker-compose.yml build --no-cache"
         )
 
 
@@ -183,33 +183,33 @@ def prepare_webui_frontend_assets() -> bool:
 
     if not auto_build_enabled:
         if artifact_index.exists():
-            logger.info("WEBUI_AUTO_BUILD=false，检测到前端静态产物: %s", artifact_index)
+            logger.info("WEBUI_AUTO_BUILD=false; \u68c0\u6d4b\u5230\u524d\u7aef\u9759\u6001\u4ea7\u7269: %s", artifact_index)
             _warn_if_assets_missing(artifact_index, frontend_dir)
             return True
-        logger.warning("未检测到 WebUI 前端静态产物: %s", artifact_index)
-        logger.warning("当前配置 WEBUI_AUTO_BUILD=false，不会在后端启动时自动编译前端")
-        logger.warning("请先手动构建前端: %s", _manual_build_command(frontend_dir))
-        logger.warning("如需启动时自动构建，可设置 WEBUI_AUTO_BUILD=true")
+        logger.warning("\u672a\u68c0\u6d4b\u5230 WebUI \u524d\u7aef\u9759\u6001\u4ea7\u7269: %s", artifact_index)
+        logger.warning("\u5f53\u524dconfig WEBUI_AUTO_BUILD=false; \u4e0d\u4f1a\u5728\u540e\u7aefstarted\u65f6\u81ea\u52a8\u7f16\u8bd1\u524d\u7aef")
+        logger.warning("\u8bf7\u5148\u624b\u52a8\u6784\u5efa\u524d\u7aef: %s", _manual_build_command(frontend_dir))
+        logger.warning("\u5982\u9700started\u65f6\u81ea\u52a8\u6784\u5efa; \u53ef\u8bbe\u7f6e WEBUI_AUTO_BUILD=true")
         return False
 
     force_build = _is_truthy_env("WEBUI_FORCE_BUILD", "false")
     needs_build, artifact_index = _needs_frontend_build(frontend_dir=frontend_dir, force_build=force_build)
 
     if not needs_build:
-        logger.info("检测到可直接复用的前端静态产物，跳过运行时自动构建: %s", artifact_index)
+        logger.info("\u68c0\u6d4b\u5230\u53ef\u76f4\u63a5\u590d\u7528\u7684\u524d\u7aef\u9759\u6001\u4ea7\u7269; skipping\u8fd0\u884c\u65f6\u81ea\u52a8\u6784\u5efa: %s", artifact_index)
         _warn_if_assets_missing(artifact_index, frontend_dir)
         return True
 
     package_json = frontend_dir / "package.json"
     if not package_json.exists():
-        logger.warning("未找到前端项目，无法自动构建: %s", package_json)
-        logger.warning("可先手动检查前端目录或关闭 WEBUI_AUTO_BUILD")
+        logger.warning("\u672a\u627e\u5230\u524d\u7aef\u9879\u76ee; \u65e0\u6cd5\u81ea\u52a8\u6784\u5efa: %s", package_json)
+        logger.warning("\u53ef\u5148\u624b\u52a8\u68c0check\u524d\u7aef\u76ee\u5f55or\u5173\u95ed WEBUI_AUTO_BUILD")
         return False
 
     npm_path = shutil.which("npm")
     if not npm_path:
-        logger.warning("未检测到 npm，无法自动构建前端")
-        logger.warning("请先手动构建前端静态资源: %s", _manual_build_command(frontend_dir))
+        logger.warning("\u672a\u68c0\u6d4b\u5230 npm; \u65e0\u6cd5\u81ea\u52a8\u6784\u5efa\u524d\u7aef")
+        logger.warning("\u8bf7\u5148\u624b\u52a8\u6784\u5efa\u524d\u7aef\u9759\u6001\u8d44\u6e90: %s", _manual_build_command(frontend_dir))
         return False
 
     lock_file = frontend_dir / "package-lock.json"
@@ -228,7 +228,7 @@ def prepare_webui_frontend_assets() -> bool:
         commands.append([npm_path, "run", "build"])
 
     logger.info(
-        "前端构建检查结果: needs_install=%s, needs_build=%s, artifact=%s",
+        "\u524d\u7aef\u6784\u5efa\u68c0checkresult: needs_install=%s, needs_build=%s, artifact=%s",
         needs_install,
         needs_build,
         artifact_index,

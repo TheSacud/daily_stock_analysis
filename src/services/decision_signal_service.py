@@ -358,7 +358,7 @@ class DecisionSignalService:
                 trend_prediction=raw.get("trend_prediction") or getattr(record, "trend_prediction", None) or "",
                 operation_advice=raw.get("operation_advice") or getattr(record, "operation_advice", None) or "",
                 decision_type=raw.get("decision_type") or "",
-                confidence_level=raw.get("confidence_level") or "中",
+                confidence_level=raw.get("confidence_level") or "Medium",
                 report_language=normalize_report_language(raw.get("report_language")),
                 action=history_action,
                 action_label=history_action_label,
@@ -487,19 +487,19 @@ class DecisionSignalService:
                     ]
                 )
             hints = (
-                "等待",
-                "待",
-                "需要确认",
-                "缺少确认",
-                "未确认",
-                "回踩",
-                "支撑",
-                "压力",
-                "风险",
-                "资金",
-                "突破",
-                "不追",
-                "不宜",
+                "waiting",
+                "\u5f85",
+                "\u9700\u8981\u786e\u8ba4",
+                "\u7f3a\u5c11\u786e\u8ba4",
+                "\u672a\u786e\u8ba4",
+                "\u56de\u8e29",
+                "\u652f\u6491",
+                "\u538b\u529b",
+                "\u98ce\u9669",
+                "\u8d44\u91d1",
+                "\u7a81\u7834",
+                "\u4e0d\u8ffd",
+                "\u4e0d\u5b9c",
             )
             for candidate in candidates:
                 text = str(candidate or "").strip()

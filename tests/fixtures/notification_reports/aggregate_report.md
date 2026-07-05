@@ -1,21 +1,21 @@
-# A股智能分析日报
+# A\u80a1\u667a\u80fd\u5206\u6790\u65e5\u62a5
 
-## 今日结论
+## \u4eca\u65e5\u7ed3\u8bba
 
-- 市场风险偏好回升，短线资金偏向高股息与 AI 算力。
-- 默认仍发送完整报告，本样例用于验证不同通知渠道的格式化保真。
+- \u5e02\u573a\u98ce\u9669\u504f\u597d\u56de\u5347，\u77ed\u7ebf\u8d44\u91d1\u504f\u5411\u9ad8\u80a1\u606f\u4e0e AI \u7b97\u529b。
+- \u9ed8\u8ba4\u4ecd\u53d1\u9001\u5b8c\u6574\u62a5\u544a，\u672c\u6837\u4f8b\u7528\u4e8e\u9a8c\u8bc1\u4e0d\u540c\u901a\u77e5\u6e20\u9053\u7684\u683c\u5f0f\u5316\u4fdd\u771f。
 
-| 股票 | 信号 | 建议 |
+| \u80a1\u7968 | \u4fe1\u53f7 | \u5efa\u8bae |
 | --- | --- | --- |
-| 600519 | 趋势强势 | 逢低关注 |
-| AAPL | 震荡整理 | 等待放量 |
+| 600519 | \u8d8b\u52bf\u5f3a\u52bf | \u9022\u4f4e\u5173\u6ce8 |
+| AAPL | \u9707\u8361\u6574\u7406 | \u7b49\u5f85\u653e\u91cf |
 
-## 风险提示
+## \u98ce\u9669\u63d0\u793a
 
-> 样例不构成投资建议。
+> \u6837\u4f8b\u4e0d\u6784\u6210\u6295\u8d44\u5efa\u8bae。
 
 ```text
 volume_signal = "watch"
 ```
 
-[查看完整报告](https://example.com/reports/daily-stock-analysis)
+[\u67e5\u770b\u5b8c\u6574\u62a5\u544a](https://example.com/reports/daily-stock-analysis)

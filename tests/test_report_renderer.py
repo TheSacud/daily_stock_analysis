@@ -22,10 +22,10 @@ from src.services.report_renderer import render
 
 def _make_result(
     code: str = "600519",
-    name: str = "贵州茅台",
+    name: str = "\u8d35\u5dde\u8305\u53f0",
     sentiment_score: int = 72,
-    operation_advice: str = "持有",
-    analysis_summary: str = "稳健",
+    operation_advice: str = "\u6301\u6709",
+    analysis_summary: str = "\u7a33\u5065",
     decision_type: str = "hold",
     dashboard: dict = None,
     report_language: str = "zh",
@@ -33,14 +33,14 @@ def _make_result(
 ) -> AnalysisResult:
     if dashboard is None:
         dashboard = {
-            "core_conclusion": {"one_sentence": "持有观望"},
+            "core_conclusion": {"one_sentence": "\u6301\u6709\u89c2\u671b"},
             "intelligence": {"risk_alerts": []},
             "battle_plan": {"sniper_points": {"stop_loss": "110"}},
         }
     return AnalysisResult(
         code=code,
         name=name,
-        trend_prediction="看多",
+        trend_prediction="\u770b\u591a",
         sentiment_score=sentiment_score,
         operation_advice=operation_advice,
         analysis_summary=analysis_summary,
@@ -62,9 +62,9 @@ def _make_renderer_config(show_llm_model: bool = True) -> MagicMock:
 def _with_decision_signal_summary(result: AnalysisResult) -> AnalysisResult:
     result.decision_signal_summary = {
         "action": "sell",
-        "action_label": "卖出",
+        "action_label": "\u5356\u51fa",
         "horizon": "1d",
-        "reason": "技术面走弱",
+        "reason": "\u6280\u672f\u9762\u8d70\u5f31",
     }
     return result
 
@@ -77,18 +77,18 @@ class TestReportRenderer(unittest.TestCase):
         r = _make_result()
         out = render("markdown", [r], summary_only=True)
         self.assertIsNotNone(out)
-        self.assertIn("决策仪表盘", out)
-        self.assertIn("贵州茅台", out)
-        self.assertIn("持有", out)
+        self.assertIn("\u51b3\u7b56\u4eea\u8868\u76d8", out)
+        self.assertIn("\u8d35\u5dde\u8305\u53f0", out)
+        self.assertIn("\u6301\u6709", out)
 
     def test_render_markdown_full(self) -> None:
         """Markdown platform renders full report."""
         r = _make_result()
         out = render("markdown", [r], summary_only=False)
         self.assertIsNotNone(out)
-        self.assertIn("核心结论", out)
-        self.assertIn("作战计划", out)
-        self.assertNotIn("盘中决策护栏", out)
+        self.assertIn("\u6838\u5fc3\u7ed3\u8bba", out)
+        self.assertIn("\u4f5c\u6218\u8ba1\u5212", out)
+        self.assertNotIn("\u76d8\u4e2d\u51b3\u7b56\u62a4\u680f", out)
 
     def test_render_markdown_keeps_decision_signal_out_of_summary(self) -> None:
         """Markdown summary stays compact while full details keep DecisionSignal excerpts."""
@@ -96,29 +96,29 @@ class TestReportRenderer(unittest.TestCase):
 
         summary_out = render("markdown", [r], summary_only=True)
         self.assertIsNotNone(summary_out)
-        self.assertNotIn("AI 决策信号", summary_out)
+        self.assertNotIn("AI \u51b3\u7b56\u4fe1\u53f7", summary_out)
 
         full_out = render("markdown", [r], summary_only=False)
         self.assertIsNotNone(full_out)
         summary_section, detail_section = full_out.split("---", 1)
-        self.assertNotIn("AI 决策信号", summary_section)
-        self.assertIn("AI 决策信号", detail_section)
-        self.assertIn("动作: 卖出", detail_section)
-        self.assertIn("周期: 1d", detail_section)
-        self.assertIn("理由: 技术面走弱", detail_section)
+        self.assertNotIn("AI \u51b3\u7b56\u4fe1\u53f7", summary_section)
+        self.assertIn("AI \u51b3\u7b56\u4fe1\u53f7", detail_section)
+        self.assertIn("\u52a8\u4f5c: \u5356\u51fa", detail_section)
+        self.assertIn("\u5468\u671f: 1d", detail_section)
+        self.assertIn("\u7406\u7531: \u6280\u672f\u9762\u8d70\u5f31", detail_section)
 
     def test_render_markdown_phase_decision_section(self) -> None:
         """Markdown renders phase_decision when present."""
         r = _make_result(
             dashboard={
-                "core_conclusion": {"one_sentence": "等待确认"},
+                "core_conclusion": {"one_sentence": "\u7b49\u5f85\u786e\u8ba4"},
                 "intelligence": {"risk_alerts": []},
                 "phase_decision": {
-                    "action_window": "盘中跟踪",
-                    "immediate_action": "等待确认",
-                    "watch_conditions": ["放量突破"],
+                    "action_window": "\u76d8\u4e2d\u8ddf\u8e2a",
+                    "immediate_action": "\u7b49\u5f85\u786e\u8ba4",
+                    "watch_conditions": ["\u653e\u91cf\u7a81\u7834"],
                     "next_check_time": "14:30",
-                    "confidence_reason": "数据质量可用",
+                    "confidence_reason": "\u6570\u636e\u8d28\u91cf\u53ef\u7528",
                     "data_limitations": ["quote: stale"],
                 },
                 "battle_plan": {"sniper_points": {"stop_loss": "110"}},
@@ -128,16 +128,16 @@ class TestReportRenderer(unittest.TestCase):
         out = render("markdown", [r], summary_only=False)
 
         self.assertIsNotNone(out)
-        self.assertIn("盘中决策护栏", out)
-        self.assertIn("盘中跟踪", out)
-        self.assertIn("放量突破", out)
+        self.assertIn("\u76d8\u4e2d\u51b3\u7b56\u62a4\u680f", out)
+        self.assertIn("\u76d8\u4e2d\u8ddf\u8e2a", out)
+        self.assertIn("\u653e\u91cf\u7a81\u7834", out)
         self.assertIn("quote: stale", out)
 
     def test_render_markdown_skips_context_only_phase_decision_shape(self) -> None:
         """Markdown skips mechanically shaped phase_decision without actionable content."""
         r = _make_result(
             dashboard={
-                "core_conclusion": {"one_sentence": "持有观望"},
+                "core_conclusion": {"one_sentence": "\u6301\u6709\u89c2\u671b"},
                 "intelligence": {"risk_alerts": []},
                 "phase_decision": {
                     "phase_context": {"phase": "intraday", "market": "cn"},
@@ -155,14 +155,14 @@ class TestReportRenderer(unittest.TestCase):
         out = render("markdown", [r], summary_only=False)
 
         self.assertIsNotNone(out)
-        self.assertNotIn("盘中决策护栏", out)
+        self.assertNotIn("\u76d8\u4e2d\u51b3\u7b56\u62a4\u680f", out)
 
     def test_render_wechat(self) -> None:
         """Wechat platform renders."""
         r = _make_result()
         out = render("wechat", [r])
         self.assertIsNotNone(out)
-        self.assertIn("贵州茅台", out)
+        self.assertIn("\u8d35\u5dde\u8305\u53f0", out)
 
     def test_render_wechat_keeps_decision_signal_out_of_summary(self) -> None:
         """Wechat summary-only stays compact while full details keep DecisionSignal excerpts."""
@@ -170,22 +170,22 @@ class TestReportRenderer(unittest.TestCase):
 
         summary_out = render("wechat", [r], summary_only=True)
         self.assertIsNotNone(summary_out)
-        self.assertNotIn("AI 决策信号", summary_out)
+        self.assertNotIn("AI \u51b3\u7b56\u4fe1\u53f7", summary_out)
 
         full_out = render("wechat", [r], summary_only=False)
         self.assertIsNotNone(full_out)
-        self.assertIn("AI 决策信号", full_out)
-        self.assertIn("动作: 卖出", full_out)
-        self.assertIn("周期: 1d", full_out)
-        self.assertIn("理由: 技术面走弱", full_out)
+        self.assertIn("AI \u51b3\u7b56\u4fe1\u53f7", full_out)
+        self.assertIn("\u52a8\u4f5c: \u5356\u51fa", full_out)
+        self.assertIn("\u5468\u671f: 1d", full_out)
+        self.assertIn("\u7406\u7531: \u6280\u672f\u9762\u8d70\u5f31", full_out)
 
     def test_render_brief(self) -> None:
         """Brief platform renders 3-5 sentence summary."""
         r = _make_result()
         out = render("brief", [r])
         self.assertIsNotNone(out)
-        self.assertIn("决策简报", out)
-        self.assertIn("贵州茅台", out)
+        self.assertIn("\u51b3\u7b56\u7b80\u62a5", out)
+        self.assertIn("\u8d35\u5dde\u8305\u53f0", out)
 
     def test_render_brief_omits_decision_signal_excerpt(self) -> None:
         r = _with_decision_signal_summary(_make_result())
@@ -193,7 +193,7 @@ class TestReportRenderer(unittest.TestCase):
         out = render("brief", [r])
 
         self.assertIsNotNone(out)
-        self.assertNotIn("AI 决策信号", out)
+        self.assertNotIn("AI \u51b3\u7b56\u4fe1\u53f7", out)
 
     def test_render_brief_respects_model_visibility_toggle(self) -> None:
         r = _make_result(model_used="gemini/gemini-2.5-flash")
@@ -205,8 +205,8 @@ class TestReportRenderer(unittest.TestCase):
 
         self.assertIsNotNone(visible)
         self.assertIsNotNone(hidden)
-        self.assertIn("分析模型: gemini/gemini-2.5-flash", visible)
-        self.assertNotIn("分析模型", hidden)
+        self.assertIn("\u5206\u6790\u6a21\u578b: gemini/gemini-2.5-flash", visible)
+        self.assertNotIn("\u5206\u6790\u6a21\u578b", hidden)
         self.assertNotIn("gemini/gemini-2.5-flash", hidden)
 
     def test_render_templates_show_compact_market_status_only(self) -> None:
@@ -228,12 +228,12 @@ class TestReportRenderer(unittest.TestCase):
         out = render("brief", [r])
 
         self.assertIsNotNone(out)
-        self.assertIn("市场状态：A股 · 盘中", out)
-        self.assertNotIn("阶段：intraday", out)
-        self.assertNotIn("盘中数据提示", out)
-        self.assertNotIn("数据质量: limited", out)
-        self.assertNotIn("限制: quote: stale", out)
-        self.assertNotIn("限制: news: missing", out)
+        self.assertIn("\u5e02\u573a\u72b6\u6001：A\u80a1 · \u76d8\u4e2d", out)
+        self.assertNotIn("\u9636\u6bb5：intraday", out)
+        self.assertNotIn("\u76d8\u4e2d\u6570\u636e\u63d0\u793a", out)
+        self.assertNotIn("\u6570\u636e\u8d28\u91cf: limited", out)
+        self.assertNotIn("\u9650\u5236: quote: stale", out)
+        self.assertNotIn("\u9650\u5236: news: missing", out)
         self.assertNotIn("technical: fallback", out)
         self.assertNotIn("raw context pack", out)
 
@@ -243,13 +243,13 @@ class TestReportRenderer(unittest.TestCase):
         out = render("brief", [r])
 
         self.assertIsNotNone(out)
-        self.assertNotIn("摘要来源", out)
+        self.assertNotIn("\u6458\u8981\u6765\u6e90", out)
         self.assertNotIn("evaluator snapshot", out)
 
     def test_render_market_status_preserves_input_order(self) -> None:
         cn = _make_result(
             code="600519",
-            name="贵州茅台",
+            name="\u8d35\u5dde\u8305\u53f0",
             sentiment_score=60,
         )
         cn.market_phase_summary = {"market": "cn", "phase": "postmarket"}
@@ -263,8 +263,8 @@ class TestReportRenderer(unittest.TestCase):
         out = render("markdown", [cn, us], summary_only=True)
 
         self.assertIsNotNone(out)
-        self.assertIn("市场状态：A股 · 盘后", out)
-        self.assertNotIn("市场状态：美股 · 盘前", out)
+        self.assertIn("\u5e02\u573a\u72b6\u6001：A\u80a1 · \u76d8\u540e", out)
+        self.assertNotIn("\u5e02\u573a\u72b6\u6001：\u7f8e\u80a1 · \u76d8\u524d", out)
 
     def test_render_markdown_footer_uses_consistent_separator(self) -> None:
         r = _make_result(model_used="gemini/gemini-2.5-flash")
@@ -273,9 +273,9 @@ class TestReportRenderer(unittest.TestCase):
             out = render("markdown", [r], summary_only=True)
 
         self.assertIsNotNone(out)
-        self.assertIn("报告生成时间：", out)
-        self.assertIn("分析模型：gemini/gemini-2.5-flash", out)
-        self.assertNotIn("分析模型: gemini/gemini-2.5-flash", out)
+        self.assertIn("\u62a5\u544a\u751f\u6210\u65f6\u95f4：", out)
+        self.assertIn("\u5206\u6790\u6a21\u578b：gemini/gemini-2.5-flash", out)
+        self.assertNotIn("\u5206\u6790\u6a21\u578b: gemini/gemini-2.5-flash", out)
 
     def test_render_markdown_in_english(self) -> None:
         """Markdown renderer switches headings and summary labels for English reports."""
@@ -325,13 +325,13 @@ class TestReportRenderer(unittest.TestCase):
     def test_render_markdown_collapses_unavailable_chip_structure(self) -> None:
         r = _make_result(
             dashboard={
-                "core_conclusion": {"one_sentence": "持有观望"},
+                "core_conclusion": {"one_sentence": "\u6301\u6709\u89c2\u671b"},
                 "data_perspective": {
                     "chip_structure": {
-                        "profit_ratio": "数据缺失，无法判断",
-                        "avg_cost": "数据缺失，无法判断",
-                        "concentration": "数据缺失，无法判断",
-                        "chip_health": "数据缺失，无法判断",
+                        "profit_ratio": "\u6570\u636e\u7f3a\u5931，\u65e0\u6cd5\u5224\u65ad",
+                        "avg_cost": "\u6570\u636e\u7f3a\u5931，\u65e0\u6cd5\u5224\u65ad",
+                        "concentration": "\u6570\u636e\u7f3a\u5931，\u65e0\u6cd5\u5224\u65ad",
+                        "chip_health": "\u6570\u636e\u7f3a\u5931，\u65e0\u6cd5\u5224\u65ad",
                     }
                 },
             }
@@ -340,8 +340,8 @@ class TestReportRenderer(unittest.TestCase):
         out = render("markdown", [r], summary_only=False)
 
         self.assertIsNotNone(out)
-        self.assertIn("**筹码**: 筹码分布未启用或数据源暂不可用，未纳入筹码判断。", out)
-        self.assertEqual(out.count("数据缺失，无法判断"), 0)
+        self.assertIn("**\u7b79\u7801**: \u7b79\u7801\u5206\u5e03\u672a\u542f\u7528\u6216\u6570\u636e\u6e90\u6682\u4e0d\u53ef\u7528，\u672a\u7eb3\u5165\u7b79\u7801\u5224\u65ad。", out)
+        self.assertEqual(out.count("\u6570\u636e\u7f3a\u5931，\u65e0\u6cd5\u5224\u65ad"), 0)
 
     def test_render_unknown_platform_returns_none(self) -> None:
         """Unknown platform returns None (caller fallback)."""

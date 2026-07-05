@@ -48,7 +48,7 @@ vi.mock('recharts', () => ({
 const baseSignal: DecisionSignalItem = {
   id: 1,
   stockCode: '600519',
-  stockName: '贵州茅台',
+  stockName: '\u8d35\u5dde\u8305\u53f0',
   market: 'cn',
   sourceType: 'analysis',
   sourceReportId: 3001,
@@ -142,7 +142,7 @@ describe('DecisionSignalTimeline', () => {
   it('shows truncated warning and opens a selected point', () => {
     const { onSelect } = renderTimeline({ truncated: true });
 
-    expect(screen.getByText('仅展示最近 100 条信号，请缩小时间范围。')).toBeInTheDocument();
+    expect(screen.getByText('\u4ec5\u5c55\u793a\u6700\u8fd1 100 \u6761\u4fe1\u53f7，\u8bf7\u7f29\u5c0f\u65f6\u95f4\u8303\u56f4。')).toBeInTheDocument();
     fireEvent.click(screen.getByTestId('timeline-click-1'));
 
     expect(onSelect).toHaveBeenCalledWith(baseSignal);
@@ -155,7 +155,7 @@ describe('DecisionSignalTimeline', () => {
       </UiLanguageProvider>,
     );
 
-    expect(screen.getByText('暂无时间线信号')).toBeInTheDocument();
+    expect(screen.getByText('\u6682\u65e0\u65f6\u95f4\u7ebf\u4fe1\u53f7')).toBeInTheDocument();
 
     rerender(
       <UiLanguageProvider>

@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 """
 ===================================
-Discord 平台适配器
+Discord \u5e73\u53f0\u9002\u914d\u5668
 ===================================
 
-负责：
-1. 验证 Discord Webhook 请求
-2. 解析 Discord 消息为统一格式
-3. 将响应转换为 Discord 格式
+\u8d1f\u8d23:
+1. \u9a8c\u8bc1 Discord Webhook request
+2. \u89e3\u6790 Discord \u6d88\u606f\u4e3a\u7edf\u4e00\u683c\u5f0f
+3. \u5c06\u54cd\u5e94\u8f6c\u6362\u4e3a Discord \u683c\u5f0f
 """
 
 import logging
@@ -27,7 +27,7 @@ logger = logging.getLogger(__name__)
 
 
 class DiscordPlatform(BotPlatform):
-    """Discord 平台适配器"""
+    """Discord \u5e73\u53f0\u9002\u914d\u5668"""
 
     def __init__(self):
         from src.config import get_config
@@ -36,28 +36,28 @@ class DiscordPlatform(BotPlatform):
         self._interactions_public_key = (
             getattr(config, "discord_interactions_public_key", None) or ""
         ).strip()
-    
+
     @property
     def platform_name(self) -> str:
-        """平台标识名称"""
+        """\u5e73\u53f0\u6807\u8bc6name"""
         return "discord"
-    
+
     def verify_request(self, headers: Dict[str, str], body: bytes) -> bool:
-        """验证 Discord Webhook 请求签名
-        
-        Discord Webhook 签名验证：
-        1. 从请求头获取 X-Signature-Ed25519 和 X-Signature-Timestamp
-        2. 使用公钥验证签名
-        
+        """\u9a8c\u8bc1 Discord Webhook request\u7b7e\u540d
+
+        Discord Webhook \u7b7e\u540d\u9a8c\u8bc1:
+        1. \u4ecerequest\u5934\u83b7\u53d6 X-Signature-Ed25519 \u548c X-Signature-Timestamp
+        2. \u4f7f\u7528\u516c\u94a5\u9a8c\u8bc1\u7b7e\u540d
+
         Args:
-            headers: HTTP 请求头
-            body: 请求体原始字节
-            
+            headers: HTTP request\u5934
+            body: request\u4f53\u539f\u59cb\u5b57\u8282
+
         Returns:
-            签名是否有效
+            \u7b7e\u540d\u662f\u5426\u6709\u6548
         """
         if not self._interactions_public_key:
-            logger.warning("[Discord] 未配置 interactions public key，拒绝请求")
+            logger.warning("[Discord] not configured interactions public key; request rejected")
             return False
 
         normalized_headers = {str(k).lower(): v for k, v in headers.items()}
@@ -65,26 +65,26 @@ class DiscordPlatform(BotPlatform):
         timestamp = normalized_headers.get("x-signature-timestamp", "")
 
         if not signature or not timestamp:
-            logger.warning("[Discord] 缺少签名头，拒绝请求")
+            logger.warning("[Discord] missing signature headers; request rejected")
             return False
 
-        # 校验 timestamp 格式与时效性，防止重放攻击
+        # \u6821\u9a8c timestamp \u683c\u5f0f\u4e0e\u65f6\u6548; \u9632\u6b62\u91cd\u653e\u653b\u51fb
         try:
             ts_int = int(timestamp)
         except (TypeError, ValueError):
-            logger.warning("[Discord] 非法的 timestamp：必须为 Unix 秒整数，拒绝请求")
+            logger.warning("[Discord] invalid timestamp: must be Unix seconds integer; request rejected")
             return False
 
         try:
             now_ts = int(time.time())
         except Exception as exc:
-            logger.warning("[Discord] 获取当前时间失败: %s，拒绝请求", exc)
+            logger.warning("[Discord] failed to get current time: %s; request rejected", exc)
             return False
 
-        # 允许的时间窗口：±5 分钟
+        # \u5141\u8bb8\u7684\u65f6\u95f4\u7a97\u53e3: ±5 \u5206\u949f
         if abs(now_ts - ts_int) > 300:
             logger.warning(
-                "[Discord] 请求 timestamp 超出允许窗口，可能为重放攻击：timestamp=%s, now=%s",
+                "[Discord] request timestamp \u8d85\u51fa\u5141\u8bb8\u7a97\u53e3; \u53ef\u80fd\u4e3a\u91cd\u653e\u653b\u51fb: timestamp=%s, now=%s",
                 ts_int,
                 now_ts,
             )
@@ -94,19 +94,19 @@ class DiscordPlatform(BotPlatform):
             verify_key = VerifyKey(bytes.fromhex(self._interactions_public_key))
             signature_bytes = bytes.fromhex(signature)
         except ValueError:
-            logger.warning("[Discord] 公钥或签名不是合法十六进制，拒绝请求")
+            logger.warning("[Discord] public key or signature is not valid hex; request rejected")
             return False
         except Exception as exc:
-            logger.warning("[Discord] 无法加载签名公钥: %s", exc)
+            logger.warning("[Discord] unable to load signature public key: %s", exc)
             return False
 
         try:
             verify_key.verify(timestamp.encode("utf-8") + body, signature_bytes)
         except BadSignatureError:
-            logger.warning("[Discord] 签名验证失败")
+            logger.warning("[Discord] signature verification failed")
             return False
         except Exception as exc:
-            logger.warning("[Discord] 签名校验异常: %s", exc)
+            logger.warning("[Discord] signature validation exception: %s", exc)
             return False
 
         return True
@@ -117,7 +117,7 @@ class DiscordPlatform(BotPlatform):
         body: bytes,
         data: Dict[str, Any],
     ) -> Tuple[Optional[BotMessage], Optional[WebhookResponse]]:
-        """Discord 需要先验签，再处理 ping/challenge。"""
+        """Discord \u9700\u8981\u5148\u9a8c\u7b7e; \u518d\u5904\u7406 ping/challenge."""
         if not self.verify_request(headers, body):
             return None, WebhookResponse.error("Invalid Discord signature", 401)
 
@@ -134,15 +134,15 @@ class DiscordPlatform(BotPlatform):
             return message, WebhookResponse.success({"type": 5})
 
         return message, None
-    
+
     def parse_message(self, data: Dict[str, Any]) -> Optional[BotMessage]:
-        """解析 Discord 消息为统一格式
-        
+        """\u89e3\u6790 Discord \u6d88\u606f\u4e3a\u7edf\u4e00\u683c\u5f0f
+
         Args:
-            data: 解析后的 JSON 数据
-            
+            data: \u89e3\u6790\u540e\u7684 JSON \u6570\u636e
+
         Returns:
-            BotMessage 对象，或 None（不需要处理）
+            BotMessage \u5bf9\u8c61; or None (\u4e0d\u9700\u8981\u5904\u7406)
         """
         interaction_type = data.get("type")
         if interaction_type != 2:
@@ -187,19 +187,19 @@ class DiscordPlatform(BotPlatform):
                 "_interaction_name": interaction_data.get("name", ""),
             },
         )
-    
+
     def format_response(self, response: Any, message: BotMessage) -> WebhookResponse:
-        """将统一响应转换为 Discord 格式
-        
-        对于 Interaction（type=2）请求，返回 Discord Interaction Response
-        callback 格式（type=4 CHANNEL_MESSAGE_WITH_SOURCE + nested data）。
-        
+        """\u5c06\u7edf\u4e00\u54cd\u5e94\u8f6c\u6362\u4e3a Discord \u683c\u5f0f
+
+        \u5bf9\u4e8e Interaction (type=2)request; \u8fd4\u56de Discord Interaction Response
+        callback \u683c\u5f0f (type=4 CHANNEL_MESSAGE_WITH_SOURCE + nested data).
+
         Args:
-            response: 统一响应对象
-            message: 原始消息对象
-            
+            response: \u7edf\u4e00\u54cd\u5e94\u5bf9\u8c61
+            message: \u539f\u59cb\u6d88\u606f\u5bf9\u8c61
+
         Returns:
-            WebhookResponse 对象
+            WebhookResponse \u5bf9\u8c61
         """
         content = response.text if hasattr(response, "text") else str(response)
 
@@ -212,7 +212,7 @@ class DiscordPlatform(BotPlatform):
             },
         }
 
-        # Interaction（slash-command）需要 Interaction Response 回调格式
+        # Interaction (slash-command)\u9700\u8981 Interaction Response \u56de\u8c03\u683c\u5f0f
         if message.raw_data.get("type") == 2:
             discord_response = {
                 "type": 4,  # CHANNEL_MESSAGE_WITH_SOURCE
@@ -222,7 +222,7 @@ class DiscordPlatform(BotPlatform):
             discord_response = message_data
 
         return WebhookResponse.success(discord_response)
-    
+
     # Discord message content hard limit
     DISCORD_MAX_CONTENT_LENGTH = 2000
 
@@ -239,7 +239,7 @@ class DiscordPlatform(BotPlatform):
         interaction_token = raw.get("token", "")
         if not application_id or not interaction_token:
             logger.warning(
-                "[Discord] 缺少 application_id 或 interaction token，无法发送 follow-up"
+                "[Discord] \u7f3a\u5c11 application_id or interaction token; \u65e0\u6cd5\u53d1\u9001 follow-up"
             )
             return False
 
@@ -252,7 +252,7 @@ class DiscordPlatform(BotPlatform):
                 content, self.DISCORD_MAX_CONTENT_LENGTH
             )
         except (ValueError, Exception) as exc:
-            logger.warning("[Discord] 消息分块失败: %s，尝试整段发送", exc)
+            logger.warning("[Discord] message chunking failed: %s; trying whole-message send", exc)
             chunks = [content]
 
         base_url = (
@@ -279,7 +279,7 @@ class DiscordPlatform(BotPlatform):
                     )
                 if resp.status_code >= 300:
                     logger.error(
-                        "[Discord] follow-up chunk %d/%d 发送失败: %s %s",
+                        "[Discord] follow-up chunk %d/%d send failed: %s %s",
                         idx + 1,
                         len(chunks),
                         resp.status_code,
@@ -288,7 +288,7 @@ class DiscordPlatform(BotPlatform):
                     success = False
             except Exception as exc:
                 logger.error(
-                    "[Discord] follow-up chunk %d/%d 请求异常: %s",
+                    "[Discord] follow-up chunk %d/%d request\u5f02\u5e38: %s",
                     idx + 1,
                     len(chunks),
                     exc,
@@ -296,32 +296,32 @@ class DiscordPlatform(BotPlatform):
                 success = False
 
         if success:
-            logger.info("[Discord] follow-up 消息发送成功 (%d 块)", len(chunks))
+            logger.info("[Discord] follow-up message sent successfully (%d chunks)", len(chunks))
         return success
 
     def handle_challenge(self, data: Dict[str, Any]) -> Optional[WebhookResponse]:
-        """处理 Discord 验证请求
-        
-        Discord 在配置 Webhook 时会发送验证请求
-        
+        """\u5904\u7406 Discord \u9a8c\u8bc1request
+
+        Discord \u5728config Webhook \u65f6\u4f1a\u53d1\u9001\u9a8c\u8bc1request
+
         Args:
-            data: 请求数据
-            
+            data: request\u6570\u636e
+
         Returns:
-            验证响应，或 None（不是验证请求）
+            \u9a8c\u8bc1\u54cd\u5e94; or None (\u4e0d\u662f\u9a8c\u8bc1request)
         """
-        # Discord Webhook 验证请求类型是 1
+        # Discord Webhook \u9a8c\u8bc1request\u7c7b\u578b\u662f 1
         if data.get("type") == 1:
             return WebhookResponse.success({
                 "type": 1
             })
-        
-        # Discord 命令交互验证
+
+        # Discord command\u4ea4\u4e92\u9a8c\u8bc1
         if "challenge" in data:
             return WebhookResponse.success({
                 "challenge": data["challenge"]
             })
-        
+
         return None
 
     def _build_command_content(self, interaction_data: Dict[str, Any]) -> str:

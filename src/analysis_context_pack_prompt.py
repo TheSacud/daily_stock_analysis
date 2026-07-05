@@ -8,12 +8,12 @@ from typing import Any, Dict, Iterable, List, Optional
 
 
 BLOCK_LABELS_ZH = {
-    "quote": "行情",
-    "daily_bars": "日线",
-    "technical": "技术",
-    "chip": "筹码",
-    "fundamentals": "基本面",
-    "news": "新闻",
+    "quote": "\u884c\u60c5",
+    "daily_bars": "daily data",
+    "technical": "\u6280\u672f",
+    "chip": "\u7b79\u7801",
+    "fundamentals": "fundamentals",
+    "news": "news",
 }
 
 BLOCK_LABELS_EN = {
@@ -26,14 +26,14 @@ BLOCK_LABELS_EN = {
 }
 
 STATUS_LABELS_ZH = {
-    "available": "可用",
-    "missing": "缺失",
-    "not_supported": "不支持",
-    "fallback": "降级",
-    "stale": "过期",
-    "estimated": "估算",
-    "partial": "部分可用",
-    "fetch_failed": "抓取失败",
+    "available": "\u53ef\u7528",
+    "missing": "\u7f3a\u5931",
+    "not_supported": "does not support",
+    "fallback": "\u964d\u7ea7",
+    "stale": "\u8fc7\u671f",
+    "estimated": "\u4f30\u7b97",
+    "partial": "\u90e8\u5206\u53ef\u7528",
+    "fetch_failed": "\u6293\u53d6failed",
 }
 
 STATUS_LABELS_EN = {
@@ -48,10 +48,10 @@ STATUS_LABELS_EN = {
 }
 
 QUALITY_LEVEL_LABELS_ZH = {
-    "good": "良好",
-    "usable": "可用",
-    "limited": "受限",
-    "poor": "较差",
+    "good": "\u826f\u597d",
+    "usable": "\u53ef\u7528",
+    "limited": "\u53d7\u9650",
+    "poor": "\u8f83\u5dee",
 }
 
 QUALITY_LEVEL_LABELS_EN = {
@@ -165,18 +165,18 @@ _pack_to_dict = analysis_context_pack_to_dict
 
 
 def _format_zh(payload: Dict[str, Any]) -> str:
-    lines = ["", "## 分析上下文包摘要"]
+    lines = ["", "## analyze\u4e0a\u4e0b\u6587\u5305summary"]
     lines.extend(_subject_lines(payload, lang="zh"))
     block_lines = _block_lines(payload, lang="zh")
     if block_lines:
-        lines.append("- 数据块状态：")
+        lines.append("- \u6570\u636echunksstatus: ")
         lines.extend(f"  - {line}" for line in block_lines)
     metadata_lines = _metadata_lines(payload, lang="zh")
     if metadata_lines:
         lines.extend(metadata_lines)
     warnings = _list_strings(_nested(payload, "data_quality", "warnings"))
     if warnings:
-        lines.append(f"- 数据质量提醒：{_join_text(warnings, lang='zh')}")
+        lines.append(f"- \u6570\u636e\u8d28\u91cf\u63d0\u9192: {_join_text(warnings, lang='zh')}")
     lines.extend(_data_limitation_lines(payload, lang="zh"))
     return "\n".join(lines) + "\n"
 
@@ -219,17 +219,17 @@ def _subject_lines(payload: Dict[str, Any], *, lang: str) -> List[str]:
             line += f"; {', '.join(details)}"
         return [line]
 
-    label = code or "未知标的"
+    label = code or "unknown\u6807\u7684"
     if name:
-        label += f"（{name}）"
-    line = f"- 标的：{label}"
+        label += f" ({name})"
+    line = f"- \u6807\u7684: {label}"
     details = []
     if market:
-        details.append(f"市场={market}")
+        details.append(f"market={market}")
     if version:
         details.append(f"pack_version={version}")
     if details:
-        line += f"；{'，'.join(details)}"
+        line += f"；{'; '.join(details)}"
     return [line]
 
 
@@ -259,7 +259,7 @@ def _block_lines(payload: Dict[str, Any], *, lang: str) -> List[str]:
 
         warnings = _list_strings(block.get("warnings"))
         if warnings:
-            warning_label = "warnings" if lang == "en" else "告警"
+            warning_label = "warnings" if lang == "en" else "\u544a\u8b66"
             parts.append(f"{warning_label}={_join_text(warnings, lang=lang)}")
 
         reasons = _item_missing_reasons(block.get("items"))
@@ -281,12 +281,12 @@ def _metadata_lines(payload: Dict[str, Any], *, lang: str) -> List[str]:
     return [
         f"- News result count: {news_count}"
         if lang == "en"
-        else f"- 新闻结果数：{news_count}"
+        else f"- newsresult\u6570: {news_count}"
     ]
 
 
 def _data_limitation_lines(payload: Dict[str, Any], *, lang: str) -> List[str]:
-    lines = ["", "## Data Limitations" if lang == "en" else "## 数据限制"]
+    lines = ["", "## Data Limitations" if lang == "en" else "## \u6570\u636elimit"]
     data_quality = payload.get("data_quality")
     if not isinstance(data_quality, Mapping):
         data_quality = {}
@@ -300,9 +300,9 @@ def _data_limitation_lines(payload: Dict[str, Any], *, lang: str) -> List[str]:
             if level_text:
                 line += f" ({level_text})"
         else:
-            line = f"- 数据质量评分：{score}/100"
+            line = f"- \u6570\u636e\u8d28\u91cf\u8bc4\u5206: {score}/100"
             if level_text:
-                line += f"（{level_text}）"
+                line += f" ({level_text})"
         lines.append(line)
 
     limitations = _localized_limitations(
@@ -310,8 +310,8 @@ def _data_limitation_lines(payload: Dict[str, Any], *, lang: str) -> List[str]:
         lang=lang,
     )
     if limitations:
-        label = "Known limitations" if lang == "en" else "已知限制"
-        separator = ": " if lang == "en" else "："
+        label = "Known limitations" if lang == "en" else "\u5df2\u77e5limit"
+        separator = ": " if lang == "en" else ": "
         lines.append(f"- {label}{separator}{_join_text(limitations, lang=lang)}")
 
     lines.extend(_phase_data_quality_constraint_lines(payload, lang=lang))
@@ -325,8 +325,8 @@ def _data_limitation_lines(payload: Dict[str, Any], *, lang: str) -> List[str]:
             )
         else:
             lines.append(
-                "- 置信度规则：当 quote、daily_bars 或 technical 为 stale、fallback、missing、"
-                "fetch_failed、partial 或 estimated 时，最终 JSON 的 confidence_level 不得为高。"
+                "- \u7f6e\u4fe1\u5ea6\u89c4\u5219: \u5f53 quote、daily_bars or technical \u4e3a stale、fallback、missing、"
+                "fetch_failed、partial or estimated \u65f6; \u6700\u7ec8 JSON \u7684 confidence_level \u4e0d\u5f97\u4e3aHigh."
             )
 
     if lang == "en":
@@ -341,11 +341,11 @@ def _data_limitation_lines(payload: Dict[str, Any], *, lang: str) -> List[str]:
         )
     else:
         lines.append(
-            "- 分析规则：辅助数据块缺失只限制对应分析段落，不要把缺失本身解释为利好或利空。"
+            "- analyze\u89c4\u5219: \u8f85\u52a9\u6570\u636echunks\u7f3a\u5931\u53ealimit\u5bf9\u5e94analyze\u6bb5\u843d; \u4e0d\u8981\u628a\u7f3a\u5931\u672c\u8eab\u89e3\u91ca\u4e3a\u5229\u597dor\u5229\u7a7a."
         )
         lines.append(
-            "- 安全规则：只使用本摘要中的 status、source、warnings 和 missing_reason；"
-            "不要复述 raw payload、新闻正文、趋势原始值、secret、token 或 webhook。"
+            "- \u5b89\u5168\u89c4\u5219: \u53ea\u4f7f\u7528\u672csummaryMedium\u7684 status、source、warnings \u548c missing_reason；"
+            "\u4e0d\u8981\u590d\u8ff0 raw payload、news\u6b63\u6587、\u8d8b\u52bf\u539f\u59cb\u503c、secret、token or webhook."
         )
     return lines
 
@@ -366,7 +366,7 @@ def _localized_limitations(limitations: List[str], *, lang: str) -> List[str]:
         if not label or not status_label:
             continue
         result.append(
-            f"{label}: {status_label}" if lang == "en" else f"{label}：{status_label}"
+            f"{label}: {status_label}" if lang == "en" else f"{label}: {status_label}"
         )
     return result[:5]
 
@@ -415,17 +415,17 @@ def _phase_data_quality_constraint_lines(payload: Dict[str, Any], *, lang: str) 
 
     if phase in INTRADAY_MARKET_PHASES:
         return [
-            "- 阶段数据规则：盘中判断受实时行情、日线或技术数据质量限制；"
-            "给出短线结论前必须说明这些限制。"
+            "- \u9636\u6bb5\u6570\u636e\u89c4\u5219: \u76d8Medium\u5224\u65ad\u53d7realtime quote、daily dataor\u6280\u672f\u6570\u636e\u8d28\u91cflimit；"
+            "\u7ed9\u51fa\u77ed\u7ebf\u7ed3\u8bba\u524d\u5fc5\u987b\u8bf4\u660e\u8fd9\u4e9blimit."
         ]
     if phase == "premarket":
         return [
-            "- 阶段数据规则：开盘计划受数据新鲜度或降级状态限制；"
-            "不得把降级行情描述成今日走势已经发生。"
+            "- \u9636\u6bb5\u6570\u636e\u89c4\u5219: \u5f00\u76d8\u8ba1\u5212\u53d7\u6570\u636e\u65b0\u9c9c\u5ea6or\u964d\u7ea7statuslimit；"
+            "\u4e0d\u5f97\u628a\u964d\u7ea7\u884c\u60c5\u63cf\u8ff0\u6210\u4eca\u65e5\u8d70\u52bf\u5df2\u7ecf\u53d1\u751f."
         ]
     if phase in CONSERVATIVE_MARKET_PHASES:
         return [
-            "- 阶段数据规则：只能保守使用当前可用数据，不得补全不存在的盘中事实。"
+            "- \u9636\u6bb5\u6570\u636e\u89c4\u5219: \u53ea\u80fd\u4fdd\u5b88\u4f7f\u7528\u5f53\u524d\u53ef\u7528\u6570\u636e; \u4e0d\u5f97\u8865\u5168does not exist\u7684\u76d8Medium\u4e8b\u5b9e."
         ]
     return []
 

@@ -21,7 +21,7 @@ describe('normalizeQuery', () => {
   describe('normalizeQuery - Query normalization', () => {
     test('removes leading and trailing spaces', () => {
       expect(normalizeQuery('  600519  ')).toBe('600519');
-      expect(normalizeQuery('  茅台  ')).toBe('茅台');
+      expect(normalizeQuery('  \u8305\u53f0  ')).toBe('\u8305\u53f0');
     });
 
     test('converts to lowercase', () => {
@@ -39,7 +39,7 @@ describe('normalizeQuery', () => {
     });
 
     test('normalizes full-width latin characters to ASCII', () => {
-      expect(normalizeQuery('万科Ａ')).toBe('万科a');
+      expect(normalizeQuery('\u4e07\u79d1Ａ')).toBe('\u4e07\u79d1a');
       expect(normalizeQuery('wkＡ')).toBe('wka');
     });
 
@@ -56,9 +56,9 @@ describe('normalizeQuery', () => {
 
   describe('isChineseChar - Chinese character detection', () => {
     test('identifies Chinese characters', () => {
-      expect(isChineseChar('茅')).toBe(true);
-      expect(isChineseChar('台')).toBe(true);
-      expect(isChineseChar('股')).toBe(true);
+      expect(isChineseChar('\u8305')).toBe(true);
+      expect(isChineseChar('\u53f0')).toBe(true);
+      expect(isChineseChar('\u80a1')).toBe(true);
     });
 
     test('rejects non-Chinese characters', () => {
@@ -69,9 +69,9 @@ describe('normalizeQuery', () => {
     });
 
     test('boundary characters: CJK range', () => {
-      // 一  (\u4e00)
+      // \u4e00  (\u4e00)
       expect(isChineseChar('\u4e00')).toBe(true);
-      // 龥  (\u9fa5)
+      // \u9fa5  (\u9fa5)
       expect(isChineseChar('\u9fa5')).toBe(true);
       // Out of range
       expect(isChineseChar('\u9fa6')).toBe(false);
@@ -80,13 +80,13 @@ describe('normalizeQuery', () => {
 
   describe('containsChinese - Contains Chinese detection', () => {
     test('pure Chinese strings', () => {
-      expect(containsChinese('贵州茅台')).toBe(true);
-      expect(containsChinese('腾讯')).toBe(true);
+      expect(containsChinese('\u8d35\u5dde\u8305\u53f0')).toBe(true);
+      expect(containsChinese('\u817e\u8baf')).toBe(true);
     });
 
     test('mixed Chinese-English strings', () => {
-      expect(containsChinese('600519贵州茅台')).toBe(true);
-      expect(containsChinese('AAPL苹果')).toBe(true);
+      expect(containsChinese('600519\u8d35\u5dde\u8305\u53f0')).toBe(true);
+      expect(containsChinese('AAPL\u82f9\u679c')).toBe(true);
     });
 
     test('pure English strings', () => {
@@ -202,8 +202,8 @@ describe('normalizeQuery', () => {
     });
 
     test('rejects Chinese names', () => {
-      expect(isStockCodeLike('贵州茅台')).toBe(false);
-      expect(isStockCodeLike('腾讯')).toBe(false);
+      expect(isStockCodeLike('\u8d35\u5dde\u8305\u53f0')).toBe(false);
+      expect(isStockCodeLike('\u817e\u8baf')).toBe(false);
     });
 
     test('rejects pinyin', () => {
@@ -222,9 +222,9 @@ describe('normalizeQuery', () => {
 
   describe('isStockNameLike - Check if looks like stock name', () => {
     test('identifies Chinese names', () => {
-      expect(isStockNameLike('贵州茅台')).toBe(true);
-      expect(isStockNameLike('腾讯控股')).toBe(true);
-      expect(isStockNameLike('平安银行')).toBe(true);
+      expect(isStockNameLike('\u8d35\u5dde\u8305\u53f0')).toBe(true);
+      expect(isStockNameLike('\u817e\u8baf\u63a7\u80a1')).toBe(true);
+      expect(isStockNameLike('\u5e73\u5b89\u94f6\u884c')).toBe(true);
     });
 
     test('rejects English codes', () => {
@@ -238,8 +238,8 @@ describe('normalizeQuery', () => {
     });
 
     test('identifies mixed Chinese-English', () => {
-      expect(isStockNameLike('贵州茅台600519')).toBe(true);
-      expect(isStockNameLike('AAPL苹果')).toBe(true);
+      expect(isStockNameLike('\u8d35\u5dde\u8305\u53f0600519')).toBe(true);
+      expect(isStockNameLike('AAPL\u82f9\u679c')).toBe(true);
     });
 
     test('handles empty strings', () => {
@@ -271,8 +271,8 @@ describe('normalizeQuery', () => {
     });
 
     test('rejects Chinese characters', () => {
-      expect(isPinyinLike('茅台maotai')).toBe(false);
-      expect(isPinyinLike('贵州')).toBe(false);
+      expect(isPinyinLike('\u8305\u53f0maotai')).toBe(false);
+      expect(isPinyinLike('\u8d35\u5dde')).toBe(false);
     });
 
     test('handles empty strings', () => {
@@ -298,7 +298,7 @@ describe('normalizeQuery', () => {
     });
 
     test('special Unicode characters', () => {
-      expect(normalizeQuery('股票🚀')).toBe('股票🚀');
+      expect(normalizeQuery('\u80a1\u7968🚀')).toBe('\u80a1\u7968🚀');
       expect(normalizeQuery('©2023')).toBe('©2023');
     });
   });

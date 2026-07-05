@@ -20,7 +20,7 @@ def parse_sniper_value(value: Any) -> Optional[float]:
         parsed = float(value)
         return parsed if parsed > 0 else None
 
-    text = str(value).replace(",", "").replace("，", "").strip()
+    text = str(value).replace(",", "").replace("; ", "").strip()
     if not text or text in {"-", "—", "N/A"}:
         return None
 
@@ -30,8 +30,8 @@ def parse_sniper_value(value: Any) -> Optional[float]:
     except ValueError:
         pass
 
-    colon_pos = max(text.rfind("："), text.rfind(":"))
-    yuan_pos = text.find("元", colon_pos + 1 if colon_pos != -1 else 0)
+    colon_pos = max(text.rfind(": "), text.rfind(":"))
+    yuan_pos = text.find("\u5143", colon_pos + 1 if colon_pos != -1 else 0)
     if yuan_pos != -1:
         segment_start = colon_pos + 1 if colon_pos != -1 else 0
         segment = text[segment_start:yuan_pos]
@@ -49,7 +49,7 @@ def parse_sniper_value(value: Any) -> Optional[float]:
                 pass
 
     paren_pos = len(text)
-    for paren_char in ("(", "（"):
+    for paren_char in ("(", " ("):
         pos = text.find(paren_char)
         if pos != -1:
             paren_pos = min(paren_pos, pos)

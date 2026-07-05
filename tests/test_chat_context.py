@@ -462,7 +462,7 @@ def test_over_trigger_generates_summary_and_updates_covered_message_id() -> None
     )
     adapter = MagicMock()
     adapter.call_text.return_value = SimpleNamespace(
-        content="## 会话摘要\n新摘要",
+        content="## \u4f1a\u8bdd\u6458\u8981\n\u65b0\u6458\u8981",
         provider="openai",
         model="openai/test-model",
         usage={"prompt_tokens": 1, "completion_tokens": 2, "total_tokens": 3},
@@ -493,7 +493,7 @@ def test_summary_compression_does_not_persist_agent_usage_without_provider_usage
     )
     adapter = MagicMock()
     adapter.call_text.return_value = SimpleNamespace(
-        content="## 会话摘要\n新摘要",
+        content="## \u4f1a\u8bdd\u6458\u8981\n\u65b0\u6458\u8981",
         provider="openai",
         model="openai/test-model",
         usage={},
@@ -521,7 +521,7 @@ def test_summary_compression_does_not_persist_metadata_only_provider_usage() -> 
     )
     adapter = MagicMock()
     adapter.call_text.return_value = SimpleNamespace(
-        content="## 会话摘要\n新摘要",
+        content="## \u4f1a\u8bdd\u6458\u8981\n\u65b0\u6458\u8981",
         provider="openai",
         model="openai/test-model",
         usage=normalize_litellm_usage(
@@ -553,7 +553,7 @@ def test_summary_compression_persists_invalid_provider_usage_diagnostics() -> No
     usage = normalize_litellm_usage({"prompt_tokens": -1}, model="openai/gpt-4o")
     adapter = MagicMock()
     adapter.call_text.return_value = SimpleNamespace(
-        content="## 会话摘要\n新摘要",
+        content="## \u4f1a\u8bdd\u6458\u8981\n\u65b0\u6458\u8981",
         provider="openai",
         model="openai/test-model",
         usage=usage,
@@ -583,7 +583,7 @@ def test_summary_compression_persists_agent_usage_with_provider_usage() -> None:
     usage = {"total_tokens": 3}
     adapter = MagicMock()
     adapter.call_text.return_value = SimpleNamespace(
-        content="## 会话摘要\n新摘要",
+        content="## \u4f1a\u8bdd\u6458\u8981\n\u65b0\u6458\u8981",
         provider="openai",
         model="openai/test-model",
         usage=usage,

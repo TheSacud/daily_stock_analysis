@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 """
-data_provider/yfinance_fetcher 中港股指数获取逻辑的单元测试
+data_provider/yfinance_fetcher \u4e2d\u6e2f\u80a1\u6307\u6570\u83b7\u53d6\u903b\u8f91\u7684\u5355\u5143\u6d4b\u8bd5
 
-使用 unittest.mock 模拟 yfinance API 响应，覆盖：
-- _get_hk_main_indices 港股指数批量获取
-- 港股指数 Yahoo Finance 符号映射正确性
-- 部分/全部失败的降级场景
+\u4f7f\u7528 unittest.mock \u6a21\u62df yfinance API \u54cd\u5e94，\u8986\u76d6：
+- _get_hk_main_indices \u6e2f\u80a1\u6307\u6570\u6279\u91cf\u83b7\u53d6
+- \u6e2f\u80a1\u6307\u6570 Yahoo Finance \u7b26\u53f7\u6620\u5c04\u6b63\u786e\u6027
+- \u90e8\u5206/\u5168\u90e8\u5931\u8d25\u7684\u964d\u7ea7\u573a\u666f
 """
 import sys
 import os
@@ -13,16 +13,16 @@ import unittest
 from unittest.mock import MagicMock, patch
 import pandas as pd
 
-# 在导入 data_provider 前 mock 可能缺失的依赖，避免环境差异导致测试无法运行
+# \u5728\u5bfc\u5165 data_provider \u524d mock \u53ef\u80fd\u7f3a\u5931\u7684\u4f9d\u8d56，\u907f\u514d\u73af\u5883\u5dee\u5f02\u5bfc\u81f4\u6d4b\u8bd5\u65e0\u6cd5\u8fd0\u884c
 if 'fake_useragent' not in sys.modules:
     sys.modules['fake_useragent'] = MagicMock()
 
-# 确保能导入项目模块
+# \u786e\u4fdd\u80fd\u5bfc\u5165\u9879\u76ee\u6a21\u5757
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 
 def _make_mock_hist(close: float, prev_close: float, high: float = None, low: float = None) -> pd.DataFrame:
-    """构造模拟的 history DataFrame，包含计算涨跌幅所需字段"""
+    """\u6784\u9020\u6a21\u62df\u7684 history DataFrame，\u5305\u542b\u8ba1\u7b97\u6da8\u8dcc\u5e45\u6240\u9700\u5b57\u6bb5"""
     high = high if high is not None else close + 100
     low = low if low is not None else close - 100
     return pd.DataFrame({
@@ -35,7 +35,7 @@ def _make_mock_hist(close: float, prev_close: float, high: float = None, low: fl
 
 
 def _make_mock_yf(hist_df: pd.DataFrame):
-    """构造模拟的 yf 模块，Ticker().history() 返回给定 DataFrame"""
+    """\u6784\u9020\u6a21\u62df\u7684 yf \u6a21\u5757，Ticker().history() \u8fd4\u56de\u7ed9\u5b9a DataFrame"""
     mock_ticker = MagicMock()
     mock_ticker.history.return_value = hist_df
     mock_yf = MagicMock()
@@ -44,14 +44,14 @@ def _make_mock_yf(hist_df: pd.DataFrame):
 
 
 class TestHkIndexSymbolMapping(unittest.TestCase):
-    """验证港股指数 Yahoo Finance 符号映射的正确性"""
+    """\u9a8c\u8bc1\u6e2f\u80a1\u6307\u6570 Yahoo Finance \u7b26\u53f7\u6620\u5c04\u7684\u6b63\u786e\u6027"""
 
     def setUp(self):
         from data_provider.yfinance_fetcher import YfinanceFetcher
         self.fetcher = YfinanceFetcher()
 
     def test_hk_indices_mapping_symbols(self):
-        """港股指数映射应使用正确的 Yahoo Finance 符号"""
+        """\u6e2f\u80a1\u6307\u6570\u6620\u5c04\u5e94\u4f7f\u7528\u6b63\u786e\u7684 Yahoo Finance \u7b26\u53f7"""
         mock_yf = MagicMock()
         mock_ticker = MagicMock()
         mock_ticker.history.return_value = pd.DataFrame()
@@ -59,15 +59,15 @@ class TestHkIndexSymbolMapping(unittest.TestCase):
 
         self.fetcher._get_hk_main_indices(mock_yf)
 
-        # 收集所有 Ticker() 调用的参数
+        # \u6536\u96c6\u6240\u6709 Ticker() \u8c03\u7528\u7684\u53c2\u6570
         ticker_calls = [call.args[0] for call in mock_yf.Ticker.call_args_list]
 
-        self.assertIn('^HSI', ticker_calls, '恒生指数应使用 ^HSI')
-        self.assertIn('HSTECH.HK', ticker_calls, '恒生科技指数应使用 HSTECH.HK，而非 ^HSTECH')
-        self.assertIn('^HSCE', ticker_calls, '国企指数应使用 ^HSCE，而非 ^HSCEI')
+        self.assertIn('^HSI', ticker_calls, '\u6052\u751f\u6307\u6570\u5e94\u4f7f\u7528 ^HSI')
+        self.assertIn('HSTECH.HK', ticker_calls, '\u6052\u751f\u79d1\u6280\u6307\u6570\u5e94\u4f7f\u7528 HSTECH.HK，\u800c\u975e ^HSTECH')
+        self.assertIn('^HSCE', ticker_calls, '\u56fd\u4f01\u6307\u6570\u5e94\u4f7f\u7528 ^HSCE，\u800c\u975e ^HSCEI')
 
     def test_hk_indices_mapping_no_invalid_symbols(self):
-        """确保不再使用已知错误的旧映射符号"""
+        """\u786e\u4fdd\u4e0d\u518d\u4f7f\u7528\u5df2\u77e5\u9519\u8bef\u7684\u65e7\u6620\u5c04\u7b26\u53f7"""
         mock_yf = MagicMock()
         mock_ticker = MagicMock()
         mock_ticker.history.return_value = pd.DataFrame()
@@ -77,19 +77,19 @@ class TestHkIndexSymbolMapping(unittest.TestCase):
 
         ticker_calls = [call.args[0] for call in mock_yf.Ticker.call_args_list]
 
-        self.assertNotIn('^HSTECH', ticker_calls, '^HSTECH 不是有效的 Yahoo Finance 符号')
-        self.assertNotIn('^HSCEI', ticker_calls, '^HSCEI 不是有效的 Yahoo Finance 符号')
+        self.assertNotIn('^HSTECH', ticker_calls, '^HSTECH \u4e0d\u662f\u6709\u6548\u7684 Yahoo Finance \u7b26\u53f7')
+        self.assertNotIn('^HSCEI', ticker_calls, '^HSCEI \u4e0d\u662f\u6709\u6548\u7684 Yahoo Finance \u7b26\u53f7')
 
 
 class TestGetHkMainIndices(unittest.TestCase):
-    """_get_hk_main_indices 港股指数批量获取测试"""
+    """_get_hk_main_indices \u6e2f\u80a1\u6307\u6570\u6279\u91cf\u83b7\u53d6\u6d4b\u8bd5"""
 
     def setUp(self):
         from data_provider.yfinance_fetcher import YfinanceFetcher
         self.fetcher = YfinanceFetcher()
 
     def test_returns_list_when_all_succeed(self):
-        """全部指数取数成功时返回包含三个指数的列表"""
+        """\u5168\u90e8\u6307\u6570\u53d6\u6570\u6210\u529f\u65f6\u8fd4\u56de\u5305\u542b\u4e09\u4e2a\u6307\u6570\u7684\u5217\u8868"""
         mock_hist = _make_mock_hist(close=20000.0, prev_close=19800.0)
         mock_yf = _make_mock_yf(mock_hist)
 
@@ -111,7 +111,7 @@ class TestGetHkMainIndices(unittest.TestCase):
             self.assertIn('amplitude', item)
 
     def test_returns_correct_computed_values(self):
-        """验证涨跌幅和振幅的计算结果"""
+        """\u9a8c\u8bc1\u6da8\u8dcc\u5e45\u548c\u632f\u5e45\u7684\u8ba1\u7b97\u7ed3\u679c"""
         mock_hist = _make_mock_hist(
             close=20000.0, prev_close=19800.0, high=20200.0, low=19700.0
         )
@@ -130,7 +130,7 @@ class TestGetHkMainIndices(unittest.TestCase):
         self.assertAlmostEqual(item['amplitude'], expected_amplitude)
 
     def test_handles_partial_failure(self):
-        """部分指数 history 为空时仍返回能取到数据的指数"""
+        """\u90e8\u5206\u6307\u6570 history \u4e3a\u7a7a\u65f6\u4ecd\u8fd4\u56de\u80fd\u53d6\u5230\u6570\u636e\u7684\u6307\u6570"""
         call_count = [0]
 
         def history_side_effect(period):
@@ -151,7 +151,7 @@ class TestGetHkMainIndices(unittest.TestCase):
         self.assertEqual(len(result), 1)
 
     def test_returns_none_when_all_fail(self):
-        """全部取数失败时返回 None"""
+        """\u5168\u90e8\u53d6\u6570\u5931\u8d25\u65f6\u8fd4\u56de None"""
         mock_yf = _make_mock_yf(pd.DataFrame())
 
         result = self.fetcher._get_hk_main_indices(mock_yf)
@@ -159,7 +159,7 @@ class TestGetHkMainIndices(unittest.TestCase):
         self.assertIsNone(result)
 
     def test_handles_ticker_exception(self):
-        """Ticker.history 抛异常时跳过该指数，不整体失败"""
+        """Ticker.history \u629b\u5f02\u5e38\u65f6\u8df3\u8fc7\u8be5\u6307\u6570，\u4e0d\u6574\u4f53\u5931\u8d25"""
         mock_ticker = MagicMock()
         mock_ticker.history.side_effect = Exception("Network error")
         mock_yf = MagicMock()
@@ -170,7 +170,7 @@ class TestGetHkMainIndices(unittest.TestCase):
         self.assertIsNone(result)
 
     def test_return_codes_match_expected_keys(self):
-        """返回的 code 字段应为 HSI/HSTECH/HSCEI，与 MarketAnalyzer prompt 一致"""
+        """\u8fd4\u56de\u7684 code \u5b57\u6bb5\u5e94\u4e3a HSI/HSTECH/HSCEI，\u4e0e MarketAnalyzer prompt \u4e00\u81f4"""
         mock_hist = _make_mock_hist(close=20000.0, prev_close=19800.0)
         mock_yf = _make_mock_yf(mock_hist)
 
@@ -184,14 +184,14 @@ class TestGetHkMainIndices(unittest.TestCase):
 
 
 class TestGetMainIndicesDispatch(unittest.TestCase):
-    """get_main_indices region 分发测试"""
+    """get_main_indices region \u5206\u53d1\u6d4b\u8bd5"""
 
     def setUp(self):
         from data_provider.yfinance_fetcher import YfinanceFetcher
         self.fetcher = YfinanceFetcher()
 
     def test_region_hk_dispatches_to_hk_method(self):
-        """region='hk' 应委托给 _get_hk_main_indices"""
+        """region='hk' \u5e94\u59d4\u6258\u7ed9 _get_hk_main_indices"""
         mock_yf = MagicMock()
         with patch.dict('sys.modules', {'yfinance': mock_yf}):
             with patch.object(self.fetcher, '_get_hk_main_indices', return_value=[{'code': 'HSI'}]) as mock_hk:

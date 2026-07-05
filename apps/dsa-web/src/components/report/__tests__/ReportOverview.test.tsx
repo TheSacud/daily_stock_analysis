@@ -5,16 +5,16 @@ import { ReportOverview } from '../ReportOverview';
 const baseMeta = {
   queryId: 'q-1',
   stockCode: '600519',
-  stockName: '贵州茅台',
+  stockName: '\u8d35\u5dde\u8305\u53f0',
   reportType: 'detailed' as const,
   reportLanguage: 'zh' as const,
   createdAt: '2026-03-21T08:00:00Z',
 };
 
 const baseSummary = {
-  analysisSummary: '趋势维持强势',
-  operationAdvice: '继续观察买点',
-  trendPrediction: '短线震荡偏强',
+  analysisSummary: '\u8d8b\u52bf\u7ef4\u6301\u5f3a\u52bf',
+  operationAdvice: '\u7ee7\u7eed\u89c2\u5bdf\u4e70\u70b9',
+  trendPrediction: '\u77ed\u7ebf\u9707\u8361\u504f\u5f3a',
   sentimentScore: 78,
 };
 
@@ -44,9 +44,9 @@ describe('ReportOverview', () => {
       />,
     );
 
-    expect(screen.getByLabelText('市场阶段: CN · 盘中')).toBeInTheDocument();
-    expect(screen.getByText('市场阶段: CN · 盘中')).toBeVisible();
-    expect(screen.getByLabelText('日线未完成')).toBeInTheDocument();
+    expect(screen.getByLabelText('\u5e02\u573a\u9636\u6bb5: CN · \u76d8\u4e2d')).toBeInTheDocument();
+    expect(screen.getByText('\u5e02\u573a\u9636\u6bb5: CN · \u76d8\u4e2d')).toBeVisible();
+    expect(screen.getByLabelText('\u65e5\u7ebf\u672a\u5b8c\u6210')).toBeInTheDocument();
   });
 
   it('renders English final market phase and partial-bar labels', () => {
@@ -104,15 +104,15 @@ describe('ReportOverview', () => {
       />,
     );
 
-    expect(screen.getByText('市场阶段: 阶段未知')).toBeVisible();
-    expect(screen.queryByText('日线未完成')).not.toBeInTheDocument();
+    expect(screen.getByText('\u5e02\u573a\u9636\u6bb5: \u9636\u6bb5\u672a\u77e5')).toBeVisible();
+    expect(screen.queryByText('\u65e5\u7ebf\u672a\u5b8c\u6210')).not.toBeInTheDocument();
   });
 
   it('does not render a market phase placeholder for legacy reports', () => {
     render(<ReportOverview meta={baseMeta} summary={baseSummary} />);
 
-    expect(screen.queryByText(/市场阶段/)).not.toBeInTheDocument();
-    expect(screen.queryByText('日线未完成')).not.toBeInTheDocument();
+    expect(screen.queryByText(/\u5e02\u573a\u9636\u6bb5/)).not.toBeInTheDocument();
+    expect(screen.queryByText('\u65e5\u7ebf\u672a\u5b8c\u6210')).not.toBeInTheDocument();
   });
 
   it('renders related boards with leading and lagging markers', () => {
@@ -122,30 +122,30 @@ describe('ReportOverview', () => {
         summary={baseSummary}
         details={{
           belongBoards: [
-            { name: ' 白酒 ', type: '行业' },
-            { name: '消费', type: '概念' },
-            { name: '新能源' },
+            { name: ' \u767d\u9152 ', type: '\u884c\u4e1a' },
+            { name: '\u6d88\u8d39', type: '\u6982\u5ff5' },
+            { name: '\u65b0\u80fd\u6e90' },
           ],
           sectorRankings: {
-            top: [{ name: '白酒', changePct: 2.31 }],
-            bottom: [{ name: '新能源', changePct: -1.2 }],
+            top: [{ name: '\u767d\u9152', changePct: 2.31 }],
+            bottom: [{ name: '\u65b0\u80fd\u6e90', changePct: -1.2 }],
           },
           conceptRankings: {
-            top: [{ name: '消费', changePct: 4.56 }],
+            top: [{ name: '\u6d88\u8d39', changePct: 4.56 }],
             bottom: [],
           },
         }}
       />,
     );
 
-    expect(screen.getByText('关联板块')).toBeInTheDocument();
-    expect(screen.getByText('白酒')).toBeInTheDocument();
-    expect(screen.getAllByText('领涨')).toHaveLength(2);
+    expect(screen.getByText('\u5173\u8054\u677f\u5757')).toBeInTheDocument();
+    expect(screen.getByText('\u767d\u9152')).toBeInTheDocument();
+    expect(screen.getAllByText('\u9886\u6da8')).toHaveLength(2);
     expect(screen.getByText('+2.31%')).toBeInTheDocument();
     expect(screen.getByText('+4.56%')).toBeInTheDocument();
-    expect(screen.getByText('领跌')).toBeInTheDocument();
+    expect(screen.getByText('\u9886\u8dcc')).toBeInTheDocument();
     expect(screen.getByText('-1.20%')).toBeInTheDocument();
-    expect(screen.queryByText('中性')).not.toBeInTheDocument();
+    expect(screen.queryByText('\u4e2d\u6027')).not.toBeInTheDocument();
   });
 
   it('does not apply industry ranking to a concept board with the same name', () => {
@@ -154,30 +154,30 @@ describe('ReportOverview', () => {
         meta={baseMeta}
         summary={baseSummary}
         details={{
-          belongBoards: [{ name: '白酒', type: '概念' }],
+          belongBoards: [{ name: '\u767d\u9152', type: '\u6982\u5ff5' }],
           sectorRankings: {
-            top: [{ name: '白酒', changePct: 2.31 }],
+            top: [{ name: '\u767d\u9152', changePct: 2.31 }],
             bottom: [],
           },
           conceptRankings: {
             top: [],
-            bottom: [{ name: '白酒', changePct: -3.2 }],
+            bottom: [{ name: '\u767d\u9152', changePct: -3.2 }],
           },
         }}
       />,
     );
 
-    expect(screen.getByText('白酒')).toBeInTheDocument();
-    expect(screen.getByText('关联板块')).toBeInTheDocument();
-    expect(screen.getByText('领跌')).toBeInTheDocument();
+    expect(screen.getByText('\u767d\u9152')).toBeInTheDocument();
+    expect(screen.getByText('\u5173\u8054\u677f\u5757')).toBeInTheDocument();
+    expect(screen.getByText('\u9886\u8dcc')).toBeInTheDocument();
     expect(screen.getByText('-3.20%')).toBeInTheDocument();
     expect(screen.queryByText('+2.31%')).not.toBeInTheDocument();
   });
 
   it('renders untyped boards in a single related-board row with ranking matches', () => {
-    const conceptRankingBoard = '榜单样例甲';
-    const fallbackConceptBoard = '未标注板块';
-    const sectorRankingBoard = '榜单样例乙';
+    const conceptRankingBoard = '\u699c\u5355\u6837\u4f8b\u7532';
+    const fallbackConceptBoard = '\u672a\u6807\u6ce8\u677f\u5757';
+    const sectorRankingBoard = '\u699c\u5355\u6837\u4f8b\u4e59';
 
     render(
       <ReportOverview
@@ -201,7 +201,7 @@ describe('ReportOverview', () => {
       />,
     );
 
-    const relatedBoardsRegion = screen.getByRole('region', { name: '关联板块' });
+    const relatedBoardsRegion = screen.getByRole('region', { name: '\u5173\u8054\u677f\u5757' });
 
     expect(within(relatedBoardsRegion).getByText(sectorRankingBoard)).toBeInTheDocument();
     expect(within(relatedBoardsRegion).getByText(conceptRankingBoard)).toBeInTheDocument();
@@ -216,22 +216,22 @@ describe('ReportOverview', () => {
         summary={baseSummary}
         details={{
           belongBoards: [
-            { name: '白酒', type: '行业' },
-            { name: '消费', type: '概念' },
-            { name: '高端制造' },
-            { name: '沪股通' },
+            { name: '\u767d\u9152', type: '\u884c\u4e1a' },
+            { name: '\u6d88\u8d39', type: '\u6982\u5ff5' },
+            { name: '\u9ad8\u7aef\u5236\u9020' },
+            { name: '\u6caa\u80a1\u901a' },
           ],
         }}
       />,
     );
 
-    const actionAdviceTitle = screen.getByText('操作建议');
-    const relatedBoardsRegion = screen.getByRole('region', { name: '关联板块' });
+    const actionAdviceTitle = screen.getByText('\u64cd\u4f5c\u5efa\u8bae');
+    const relatedBoardsRegion = screen.getByRole('region', { name: '\u5173\u8054\u677f\u5757' });
     const boardLists = container.querySelectorAll('.home-related-board-list');
 
     expect(actionAdviceTitle.compareDocumentPosition(relatedBoardsRegion) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
-    expect(screen.getByText('关联板块')).toBeInTheDocument();
-    expect(screen.getByText('沪股通')).toBeInTheDocument();
+    expect(screen.getByText('\u5173\u8054\u677f\u5757')).toBeInTheDocument();
+    expect(screen.getByText('\u6caa\u80a1\u901a')).toBeInTheDocument();
     expect(boardLists[0]).toHaveClass(
       'flex-nowrap',
       'overflow-x-auto',
@@ -248,16 +248,16 @@ describe('ReportOverview', () => {
         meta={baseMeta}
         summary={baseSummary}
         details={{
-          belongBoards: [{ name: '半导体', type: '行业' }],
+          belongBoards: [{ name: '\u534a\u5bfc\u4f53', type: '\u884c\u4e1a' }],
         }}
       />,
     );
 
-    expect(screen.getByText('关联板块')).toBeInTheDocument();
-    expect(screen.getByText('半导体')).toBeInTheDocument();
-    expect(screen.queryByText('中性')).not.toBeInTheDocument();
-    expect(screen.queryByText('领涨')).not.toBeInTheDocument();
-    expect(screen.queryByText('领跌')).not.toBeInTheDocument();
+    expect(screen.getByText('\u5173\u8054\u677f\u5757')).toBeInTheDocument();
+    expect(screen.getByText('\u534a\u5bfc\u4f53')).toBeInTheDocument();
+    expect(screen.queryByText('\u4e2d\u6027')).not.toBeInTheDocument();
+    expect(screen.queryByText('\u9886\u6da8')).not.toBeInTheDocument();
+    expect(screen.queryByText('\u9886\u8dcc')).not.toBeInTheDocument();
   });
 
   it('shows only the board when a matching ranking has no change percent', () => {
@@ -266,26 +266,26 @@ describe('ReportOverview', () => {
         meta={baseMeta}
         summary={baseSummary}
         details={{
-          belongBoards: [{ name: '白酒', type: '行业' }],
+          belongBoards: [{ name: '\u767d\u9152', type: '\u884c\u4e1a' }],
           sectorRankings: {
-            top: [{ name: '白酒' }],
+            top: [{ name: '\u767d\u9152' }],
             bottom: [],
           },
         }}
       />,
     );
 
-    expect(screen.getByText('关联板块')).toBeInTheDocument();
-    expect(screen.getByText('白酒')).toBeInTheDocument();
-    expect(screen.queryByText('行业')).not.toBeInTheDocument();
-    expect(screen.queryByText('领涨')).not.toBeInTheDocument();
-    expect(screen.queryByText('领跌')).not.toBeInTheDocument();
+    expect(screen.getByText('\u5173\u8054\u677f\u5757')).toBeInTheDocument();
+    expect(screen.getByText('\u767d\u9152')).toBeInTheDocument();
+    expect(screen.queryByText('\u884c\u4e1a')).not.toBeInTheDocument();
+    expect(screen.queryByText('\u9886\u6da8')).not.toBeInTheDocument();
+    expect(screen.queryByText('\u9886\u8dcc')).not.toBeInTheDocument();
   });
 
   it('hides related boards section when no boards are available', () => {
     render(<ReportOverview meta={baseMeta} summary={baseSummary} details={{ belongBoards: [] }} />);
 
-    expect(screen.queryByText('板块联动')).not.toBeInTheDocument();
+    expect(screen.queryByText('\u677f\u5757\u8054\u52a8')).not.toBeInTheDocument();
   });
 
   it('fails open on malformed ranking payloads', () => {
@@ -294,18 +294,18 @@ describe('ReportOverview', () => {
         meta={baseMeta}
         summary={baseSummary}
         details={{
-          belongBoards: [{ name: ' 白酒 ' }],
+          belongBoards: [{ name: ' \u767d\u9152 ' }],
           sectorRankings: {
             top: {} as unknown as never[],
-            bottom: [{ name: '白酒', changePct: '-2.5%' as unknown as number }],
+            bottom: [{ name: '\u767d\u9152', changePct: '-2.5%' as unknown as number }],
           },
         }}
       />,
     );
 
-    expect(screen.getByText('关联板块')).toBeInTheDocument();
-    expect(screen.getByText('白酒')).toBeInTheDocument();
-    expect(screen.getByText('领跌')).toBeInTheDocument();
+    expect(screen.getByText('\u5173\u8054\u677f\u5757')).toBeInTheDocument();
+    expect(screen.getByText('\u767d\u9152')).toBeInTheDocument();
+    expect(screen.getByText('\u9886\u8dcc')).toBeInTheDocument();
     expect(screen.getByText('-2.50%')).toBeInTheDocument();
   });
 });

@@ -1,15 +1,15 @@
 # -*- coding: utf-8 -*-
 """
 ===================================
-异步任务服务层
+\u5f02\u6b65task\u670d\u52a1\u5c42
 ===================================
 
-职责：
-1. 管理异步分析任务（线程池）
-2. 执行股票分析并推送结果
-3. 查询任务状态和历史
+\u804c\u8d23:
+1. \u7ba1\u7406\u5f02\u6b65analysis task (\u7ebf\u7a0b\u6c60)
+2. \u6267\u884c\u80a1\u7968analyze\u5e76\u63a8\u9001result
+3. querytaskstatus\u548chistory
 
-迁移自 web/services.py 的 AnalysisService 类
+\u8fc1\u79fb\u81ea web/services.py \u7684 AnalysisService \u7c7b
 """
 
 from __future__ import annotations
@@ -30,12 +30,12 @@ logger = logging.getLogger(__name__)
 
 class TaskService:
     """
-    异步任务服务
+    \u5f02\u6b65task\u670d\u52a1
 
-    负责：
-    1. 管理异步分析任务
-    2. 执行股票分析
-    3. 触发通知推送
+    \u8d1f\u8d23:
+    1. \u7ba1\u7406\u5f02\u6b65analysis task
+    2. \u6267\u884c\u80a1\u7968analyze
+    3. \u89e6\u53d1\u901a\u77e5\u63a8\u9001
     """
 
     _instance: Optional['TaskService'] = None
@@ -49,7 +49,7 @@ class TaskService:
 
     @classmethod
     def get_instance(cls) -> 'TaskService':
-        """获取单例实例"""
+        """\u83b7\u53d6\u5355\u4f8b\u5b9e\u4f8b"""
         if cls._instance is None:
             with cls._lock:
                 if cls._instance is None:
@@ -58,7 +58,7 @@ class TaskService:
 
     @property
     def executor(self) -> ThreadPoolExecutor:
-        """获取或创建线程池"""
+        """\u83b7\u53d6or\u521b\u5efa\u7ebf\u7a0b\u6c60"""
         if self._executor is None:
             self._executor = ThreadPoolExecutor(
                 max_workers=self._max_workers,
@@ -75,29 +75,29 @@ class TaskService:
         query_source: str = "bot"
     ) -> Dict[str, Any]:
         """
-        提交异步分析任务
+        \u63d0\u4ea4\u5f02\u6b65analysis task
 
         Args:
-            code: 股票代码
-            report_type: 报告类型枚举
-            source_message: 来源消息（用于回复）
-            save_context_snapshot: 是否保存上下文快照
-            query_source: 任务来源标识（bot/api/cli/system）
+            code: stock code
+            report_type: report type\u679a\u4e3e
+            source_message: source\u6d88\u606f (\u7528\u4e8e\u56de\u590d)
+            save_context_snapshot: \u662f\u5426\u4fdd\u5b58\u4e0a\u4e0b\u6587\u5feb\u7167
+            query_source: tasksource\u6807\u8bc6 (bot/api/cli/system)
 
         Returns:
-            任务信息字典
+            taskinfo\u5b57\u5178
         """
-        # 确保 report_type 是枚举类型
+        # \u786e\u4fdd report_type \u662f\u679a\u4e3e\u7c7b\u578b
         if isinstance(report_type, str):
             report_type = ReportType.from_str(report_type)
 
         normalized_code = resolve_index_stock_code_for_analysis(code)
         if not normalized_code:
-            raise ValueError("股票代码不能为空或仅包含空白字符")
+            raise ValueError("stock codecannot be emptyorcontain only whitespace")
 
         task_id = f"{normalized_code}_{datetime.now().strftime('%Y%m%d_%H%M%S_%f')}"
 
-        # 提交到线程池
+        # \u63d0\u4ea4\u5230\u7ebf\u7a0b\u6c60
         self.executor.submit(
             self._run_analysis,
             normalized_code,
@@ -109,28 +109,28 @@ class TaskService:
         )
 
         logger.info(
-            f"[TaskService] 已提交股票 {normalized_code} 的分析任务, "
+            f"[TaskService] \u5df2\u63d0\u4ea4\u80a1\u7968 {normalized_code} \u7684analysis task, "
             f"task_id={task_id}, report_type={report_type.value}"
         )
 
         return {
             "success": True,
-            "message": "分析任务已提交，将异步执行并推送通知",
+            "message": "analysis task\u5df2\u63d0\u4ea4; \u5c06\u5f02\u6b65\u6267\u884c\u5e76\u63a8\u9001\u901a\u77e5",
             "code": normalized_code,
             "task_id": task_id,
             "report_type": report_type.value
         }
 
     def get_task_status(self, task_id: str) -> Optional[Dict[str, Any]]:
-        """获取任务状态"""
+        """\u83b7\u53d6taskstatus"""
         with self._tasks_lock:
             return self._tasks.get(task_id)
 
     def list_tasks(self, limit: int = 20) -> List[Dict[str, Any]]:
-        """列出最近的任务"""
+        """\u5217\u51fa\u6700\u8fd1\u7684task"""
         with self._tasks_lock:
             tasks = list(self._tasks.values())
-        # 按开始时间倒序
+        # \u6309\u5f00\u59cb\u65f6\u95f4\u5012\u5e8f
         tasks.sort(key=lambda x: x.get('start_time', ''), reverse=True)
         return tasks[:limit]
 
@@ -141,7 +141,7 @@ class TaskService:
         days: int = 30,
         limit: int = 50
     ) -> List[Dict[str, Any]]:
-        """获取分析历史记录"""
+        """\u83b7\u53d6analyzehistory records"""
         db = get_db()
         records = db.get_analysis_history(code=code, query_id=query_id, days=days, limit=limit)
         return [r.to_dict() for r in records]
@@ -156,11 +156,11 @@ class TaskService:
         query_source: str = "bot"
     ) -> Dict[str, Any]:
         """
-        执行单只股票分析
+        \u6267\u884c\u5355stocksanalyze
 
-        内部方法，在线程池中运行
+        \u5185\u90e8\u65b9\u6cd5; \u5728\u7ebf\u7a0b\u6c60Medium\u8fd0\u884c
         """
-        # 初始化任务状态
+        # \u521d\u59cb\u5316taskstatus
         with self._tasks_lock:
             self._tasks[task_id] = {
                 "task_id": task_id,
@@ -173,13 +173,13 @@ class TaskService:
             }
 
         try:
-            # 延迟导入避免循环依赖
+            # \u5ef6\u8fdf\u5bfc\u5165\u907f\u514d\u5faa\u73af\u4f9d\u8d56
             from src.config import get_config
             from main import StockAnalysisPipeline
 
-            logger.info(f"[TaskService] 开始分析股票: {code}")
+            logger.info(f"[TaskService] \u5f00\u59cbanalyze stock: {code}")
 
-            # 创建分析管道
+            # \u521b\u5efaanalyze\u7ba1\u9053
             config = get_config()
             pipeline = StockAnalysisPipeline(
                 config=config,
@@ -190,7 +190,7 @@ class TaskService:
                 save_context_snapshot=save_context_snapshot
             )
 
-            # 执行单只股票分析（启用单股推送）
+            # \u6267\u884c\u5355stocksanalyze (\u542f\u7528\u5355\u80a1\u63a8\u9001)
             result = pipeline.process_single_stock(
                 code=code,
                 skip_analysis=False,
@@ -215,10 +215,10 @@ class TaskService:
                         "result": result_data
                     })
 
-                logger.info(f"[TaskService] 股票 {code} 分析完成: {result.operation_advice}")
+                logger.info(f"[TaskService] \u80a1\u7968 {code} analysis completed: {result.operation_advice}")
                 return {"success": True, "task_id": task_id, "result": result_data}
             else:
-                fail_message = "分析返回空结果"
+                fail_message = "analysis returned empty result"
                 if result is not None:
                     fail_message = result.error_message or fail_message
                 with self._tasks_lock:
@@ -228,12 +228,12 @@ class TaskService:
                         "error": fail_message
                     })
 
-                logger.warning(f"[TaskService] 股票 {code} 分析失败: {fail_message}")
+                logger.warning(f"[TaskService] \u80a1\u7968 {code} analyzefailed: {fail_message}")
                 return {"success": False, "task_id": task_id, "error": fail_message}
 
         except Exception as e:
             error_msg = str(e)
-            logger.error(f"[TaskService] 股票 {code} 分析异常: {error_msg}")
+            logger.error(f"[TaskService] \u80a1\u7968 {code} analyze\u5f02\u5e38: {error_msg}")
 
             with self._tasks_lock:
                 self._tasks[task_id].update({
@@ -246,9 +246,9 @@ class TaskService:
 
 
 # ============================================================
-# 便捷函数
+# \u4fbf\u6377\u51fd\u6570
 # ============================================================
 
 def get_task_service() -> TaskService:
-    """获取任务服务单例"""
+    """\u83b7\u53d6task\u670d\u52a1\u5355\u4f8b"""
     return TaskService.get_instance()

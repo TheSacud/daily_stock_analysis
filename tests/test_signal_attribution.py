@@ -18,7 +18,7 @@ class TestSignalAttributionSchema:
             news_sentiment=0,
             fundamentals=15,
             market_conditions=15,
-            strongest_bullish_signal="MACD金叉",
+            strongest_bullish_signal="MACD\u91d1\u53c9",
             strongest_bearish_signal=None
         )
         # Sum should be normalized to 100
@@ -170,7 +170,7 @@ class TestSignalAttributionSchema:
                 news_sentiment=0,
                 fundamentals=15,
                 market_conditions=15,
-                strongest_bullish_signal="MACD金叉",
+                strongest_bullish_signal="MACD\u91d1\u53c9",
                 strongest_bearish_signal=None
             )
         )
@@ -213,8 +213,8 @@ class TestSignalAttributionLabels:
     def test_zh_labels_content(self):
         """Test Chinese labels content."""
         labels = _REPORT_LABELS["zh"]
-        assert labels["signal_attribution_heading"] == "信号归因分析"
-        assert labels["technical_indicators_label"] == "技术指标"
+        assert labels["signal_attribution_heading"] == "\u4fe1\u53f7\u5f52\u56e0\u5206\u6790"
+        assert labels["technical_indicators_label"] == "\u6280\u672f\u6307\u6807"
 
     def test_en_labels_content(self):
         """Test English labels content."""

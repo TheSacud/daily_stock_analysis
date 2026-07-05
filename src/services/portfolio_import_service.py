@@ -37,40 +37,40 @@ DEFAULT_PARSER_SPECS: Tuple[CsvParserSpec, ...] = (
     CsvParserSpec(
         broker="huatai",
         aliases=(),
-        display_name="华泰",
+        display_name="\u534e\u6cf0",
         column_hints={
-            "trade_date": ("成交日期", "成交时间", "发生日期", "日期"),
-            "symbol": ("证券代码", "股票代码", "代码"),
-            "side": ("买卖标志", "买卖方向", "操作"),
-            "quantity": ("成交数量", "数量", "成交股数"),
-            "price": ("成交均价", "成交价格", "价格", "成交价", "均价"),
-            "trade_uid": ("成交编号", "成交序号", "流水号"),
+            "trade_date": ("\u6210\u4ea4date", "\u6210\u4ea4\u65f6\u95f4", "\u53d1\u751fdate", "date"),
+            "symbol": ("\u8bc1\u5238code", "stock code", "code"),
+            "side": ("\u4e70\u5356\u6807\u5fd7", "\u4e70\u5356\u65b9\u5411", "\u64cd\u4f5c"),
+            "quantity": ("\u6210\u4ea4count", "count", "\u6210\u4ea4\u80a1\u6570"),
+            "price": ("\u6210\u4ea4\u5747\u4ef7", "\u6210\u4ea4price", "price", "\u6210\u4ea4\u4ef7", "\u5747\u4ef7"),
+            "trade_uid": ("\u6210\u4ea4\u7f16\u53f7", "\u6210\u4ea4\u5e8f\u53f7", "\u6d41\u6c34\u53f7"),
         },
     ),
     CsvParserSpec(
         broker="citic",
         aliases=("zhongxin",),
-        display_name="中信",
+        display_name="Medium\u4fe1",
         column_hints={
-            "trade_date": ("发生日期", "成交日期", "日期"),
-            "symbol": ("证券代码", "股票代码", "代码"),
-            "side": ("买卖方向", "买卖标志", "业务名称"),
-            "quantity": ("成交数量", "数量", "成交股数"),
-            "price": ("成交价格", "成交均价", "价格", "成交价"),
-            "trade_uid": ("合同编号", "成交编号", "委托编号"),
+            "trade_date": ("\u53d1\u751fdate", "\u6210\u4ea4date", "date"),
+            "symbol": ("\u8bc1\u5238code", "stock code", "code"),
+            "side": ("\u4e70\u5356\u65b9\u5411", "\u4e70\u5356\u6807\u5fd7", "\u4e1a\u52a1name"),
+            "quantity": ("\u6210\u4ea4count", "count", "\u6210\u4ea4\u80a1\u6570"),
+            "price": ("\u6210\u4ea4price", "\u6210\u4ea4\u5747\u4ef7", "price", "\u6210\u4ea4\u4ef7"),
+            "trade_uid": ("\u5408\u540c\u7f16\u53f7", "\u6210\u4ea4\u7f16\u53f7", "\u59d4\u6258\u7f16\u53f7"),
         },
     ),
     CsvParserSpec(
         broker="cmb",
         aliases=("zhaoshang", "cmbchina"),
-        display_name="招商",
+        display_name="\u62db\u5546",
         column_hints={
-            "trade_date": ("日期", "成交日期", "发生日期"),
-            "symbol": ("证券代码", "股票代码", "代码"),
-            "side": ("交易方向", "买卖方向", "买卖标志"),
-            "quantity": ("成交股数", "成交数量", "数量"),
-            "price": ("成交价", "成交价格", "成交均价", "均价"),
-            "trade_uid": ("流水号", "成交编号", "成交序号"),
+            "trade_date": ("date", "\u6210\u4ea4date", "\u53d1\u751fdate"),
+            "symbol": ("\u8bc1\u5238code", "stock code", "code"),
+            "side": ("\u4ea4\u6613\u65b9\u5411", "\u4e70\u5356\u65b9\u5411", "\u4e70\u5356\u6807\u5fd7"),
+            "quantity": ("\u6210\u4ea4\u80a1\u6570", "\u6210\u4ea4count", "count"),
+            "price": ("\u6210\u4ea4\u4ef7", "\u6210\u4ea4price", "\u6210\u4ea4\u5747\u4ef7", "\u5747\u4ef7"),
+            "trade_uid": ("\u6d41\u6c34\u53f7", "\u6210\u4ea4\u7f16\u53f7", "\u6210\u4ea4\u5e8f\u53f7"),
         },
     ),
 )
@@ -302,10 +302,10 @@ class PortfolioImportService:
         trade_date_raw = self._pick(
             row,
             *(broker_hints.get("trade_date") or ()),
-            "成交日期",
-            "发生日期",
-            "日期",
-            "成交时间",
+            "\u6210\u4ea4date",
+            "\u53d1\u751fdate",
+            "date",
+            "\u6210\u4ea4\u65f6\u95f4",
         )
         trade_date_obj = self._parse_date(trade_date_raw)
         if trade_date_obj is None:
@@ -314,9 +314,9 @@ class PortfolioImportService:
         symbol_raw = self._pick(
             row,
             *(broker_hints.get("symbol") or ()),
-            "证券代码",
-            "股票代码",
-            "代码",
+            "\u8bc1\u5238code",
+            "stock code",
+            "code",
         )
         symbol = canonical_stock_code(str(symbol_raw or "").strip())
         if not symbol:
@@ -325,33 +325,33 @@ class PortfolioImportService:
         side_raw = self._pick(
             row,
             *(broker_hints.get("side") or ()),
-            "买卖标志",
-            "买卖方向",
-            "交易方向",
-            "业务名称",
-            "操作",
+            "\u4e70\u5356\u6807\u5fd7",
+            "\u4e70\u5356\u65b9\u5411",
+            "\u4ea4\u6613\u65b9\u5411",
+            "\u4e1a\u52a1name",
+            "\u64cd\u4f5c",
         )
         side = self._normalize_side(side_raw)
         if side is None:
             return None
 
         quantity = self._parse_float(
-            self._pick(row, *(broker_hints.get("quantity") or ()), "成交数量", "数量", "成交股数")
+            self._pick(row, *(broker_hints.get("quantity") or ()), "\u6210\u4ea4count", "count", "\u6210\u4ea4\u80a1\u6570")
         )
         price = self._parse_float(
-            self._pick(row, *(broker_hints.get("price") or ()), "成交均价", "成交价格", "价格", "成交价", "均价")
+            self._pick(row, *(broker_hints.get("price") or ()), "\u6210\u4ea4\u5747\u4ef7", "\u6210\u4ea4price", "price", "\u6210\u4ea4\u4ef7", "\u5747\u4ef7")
         )
         if quantity is None or quantity <= 0 or price is None or price <= 0:
             return None
 
         fee = 0.0
-        for col in ("手续费", "佣金", "交易费", "规费", "过户费"):
+        for col in ("\u624b\u7eed\u8d39", "\u4f63\u91d1", "\u4ea4\u6613\u8d39", "\u89c4\u8d39", "\u8fc7\u6237\u8d39"):
             value = self._parse_float(self._pick(row, col))
             if value is not None:
                 fee += value
 
         tax = 0.0
-        for col in ("印花税", "税费", "其他税费"):
+        for col in ("\u5370\u82b1\u7a0e", "\u7a0e\u8d39", "other\u7a0e\u8d39"):
             value = self._parse_float(self._pick(row, col))
             if value is not None:
                 tax += value
@@ -359,13 +359,13 @@ class PortfolioImportService:
         trade_uid = self._pick(
             row,
             *(broker_hints.get("trade_uid") or ()),
-            "成交编号",
-            "成交序号",
-            "合同编号",
-            "委托编号",
-            "流水号",
+            "\u6210\u4ea4\u7f16\u53f7",
+            "\u6210\u4ea4\u5e8f\u53f7",
+            "\u5408\u540c\u7f16\u53f7",
+            "\u59d4\u6258\u7f16\u53f7",
+            "\u6d41\u6c34\u53f7",
         )
-        currency = self._pick(row, "币种", "货币")
+        currency = self._pick(row, "\u5e01\u79cd", "\u8d27\u5e01")
 
         return {
             "trade_date": trade_date_obj,
@@ -418,15 +418,15 @@ class PortfolioImportService:
         if not text:
             return None
         compact = text.replace(" ", "")
-        buy_exact = {"buy", "b", "买", "买入", "证券买入", "普通买入"}
-        sell_exact = {"sell", "s", "卖", "卖出", "证券卖出", "普通卖出"}
+        buy_exact = {"buy", "b", "\u4e70", "\u4e70\u5165", "\u8bc1\u5238\u4e70\u5165", "\u666e\u901a\u4e70\u5165"}
+        sell_exact = {"sell", "s", "\u5356", "\u5356\u51fa", "\u8bc1\u5238\u5356\u51fa", "\u666e\u901a\u5356\u51fa"}
         if compact in buy_exact:
             return "buy"
         if compact in sell_exact:
             return "sell"
-        if "买入" in compact or compact.startswith("买"):
+        if "\u4e70\u5165" in compact or compact.startswith("\u4e70"):
             return "buy"
-        if "卖出" in compact or compact.startswith("卖"):
+        if "\u5356\u51fa" in compact or compact.startswith("\u5356"):
             return "sell"
         return None
 

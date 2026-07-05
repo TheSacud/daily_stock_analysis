@@ -233,7 +233,7 @@ def evaluate_notification_noise(
             now=now,
         )
     except Exception as exc:  # pragma: no cover - defensive behavior is tested via monkeypatch.
-        logger.warning("通知降噪判断失败，将继续发送静态通知渠道: %s", exc)
+        logger.warning("\u901a\u77e5\u964d\u566a\u5224\u65adfailed; \u5c06\u7ee7\u7eed\u53d1\u9001\u9759\u6001notification channel: %s", exc)
         return NotificationNoiseDecision(
             should_send=True,
             reason_code="noise_check_failed_open",
@@ -273,14 +273,14 @@ def _evaluate_notification_noise(
 
     if min_severity_raw:
         if min_severity_raw not in NOTIFICATION_SEVERITY_RANK:
-            logger.warning("NOTIFICATION_MIN_SEVERITY=%s 无效，将忽略最低级别过滤", min_severity_raw)
+            logger.warning("NOTIFICATION_MIN_SEVERITY=%s \u65e0\u6548; \u5c06\u5ffd\u7565\u6700Low\u7ea7\u522b\u8fc7\u6ee4", min_severity_raw)
         elif NOTIFICATION_SEVERITY_RANK[resolved_severity] < NOTIFICATION_SEVERITY_RANK[min_severity_raw]:
             return NotificationNoiseDecision(
                 should_send=False,
                 reason_code="min_severity",
                 message=(
-                    f"通知级别 {resolved_severity} 低于最低级别 {min_severity_raw}，"
-                    "已跳过静态通知渠道。"
+                    f"\u901a\u77e5\u7ea7\u522b {resolved_severity} Low\u4e8e\u6700Low\u7ea7\u522b {min_severity_raw}; "
+                    "\u5df2skipping\u9759\u6001notification channel."
                 ),
                 **decision_base,
             )
@@ -290,7 +290,7 @@ def _evaluate_notification_noise(
         return NotificationNoiseDecision(
             should_send=False,
             reason_code="quiet_hours",
-            message=f"当前时间处于静默时段 {quiet_hours_raw}，已跳过静态通知渠道。",
+            message=f"\u5f53\u524d\u65f6\u95f4\u5904\u4e8e\u9759\u9ed8\u65f6\u6bb5 {quiet_hours_raw}; \u5df2skipping\u9759\u6001notification channel.",
             **decision_base,
         )
 
@@ -307,7 +307,7 @@ def _evaluate_notification_noise(
             return NotificationNoiseDecision(
                 should_send=False,
                 reason_code="dedup",
-                message="通知内容在去重 TTL 内已发送，已跳过静态通知渠道。",
+                message="\u901a\u77e5\u5185\u5bb9\u5728\u53bb\u91cd TTL \u5185\u5df2\u53d1\u9001; \u5df2skipping\u9759\u6001notification channel.",
                 dedup_key=dedup_state_key,
                 cooldown_key=cooldown_state_key,
                 **decision_base,
@@ -317,7 +317,7 @@ def _evaluate_notification_noise(
             return NotificationNoiseDecision(
                 should_send=False,
                 reason_code="dedup_inflight",
-                message="同一通知正在发送中，已跳过静态通知渠道。",
+                message="\u540c\u4e00\u901a\u77e5\u6b63\u5728\u53d1\u9001Medium; \u5df2skipping\u9759\u6001notification channel.",
                 dedup_key=dedup_state_key,
                 cooldown_key=cooldown_state_key,
                 **decision_base,
@@ -326,7 +326,7 @@ def _evaluate_notification_noise(
             return NotificationNoiseDecision(
                 should_send=False,
                 reason_code="cooldown",
-                message="通知冷却时间尚未结束，已跳过静态通知渠道。",
+                message="\u901a\u77e5\u51b7\u5374\u65f6\u95f4\u5c1a\u672a\u7ed3\u675f; \u5df2skipping\u9759\u6001notification channel.",
                 dedup_key=dedup_state_key,
                 cooldown_key=cooldown_state_key,
                 **decision_base,
@@ -336,7 +336,7 @@ def _evaluate_notification_noise(
             return NotificationNoiseDecision(
                 should_send=False,
                 reason_code="cooldown_inflight",
-                message="同一通知正在发送中，已跳过静态通知渠道。",
+                message="\u540c\u4e00\u901a\u77e5\u6b63\u5728\u53d1\u9001Medium; \u5df2skipping\u9759\u6001notification channel.",
                 dedup_key=dedup_state_key,
                 cooldown_key=cooldown_state_key,
                 **decision_base,
@@ -382,7 +382,7 @@ def release_notification_noise(decision: NotificationNoiseDecision) -> None:
         with _state_lock:
             _release_reserved_locked(decision)
     except Exception as exc:  # pragma: no cover - defensive branch.
-        logger.warning("通知降噪发送中状态释放失败，忽略该错误: %s", exc)
+        logger.warning("\u901a\u77e5\u964d\u566a\u53d1\u9001Mediumstatus\u91ca\u653efailed; \u5ffd\u7565\u8be5error: %s", exc)
 
 
 def record_notification_noise(decision: NotificationNoiseDecision, now: Optional[datetime] = None) -> None:
@@ -403,4 +403,4 @@ def record_notification_noise(decision: NotificationNoiseDecision, now: Optional
             if decision.cooldown_seconds > 0 and decision.cooldown_key:
                 _cooldown_expires_at[decision.cooldown_key] = now_ts + decision.cooldown_seconds
     except Exception as exc:  # pragma: no cover - defensive branch.
-        logger.warning("通知降噪状态记录失败，忽略该错误: %s", exc)
+        logger.warning("\u901a\u77e5\u964d\u566astatus\u8bb0\u5f55failed; \u5ffd\u7565\u8be5error: %s", exc)

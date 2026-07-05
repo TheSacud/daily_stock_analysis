@@ -33,189 +33,189 @@ from generate_index_from_csv import (
 
 
 class TestExtractSymbol:
-    """测试 Symbol 提取函数"""
+    """\u6d4b\u8bd5 Symbol \u63d0\u53d6\u51fd\u6570"""
 
     def test_a_stock_sz(self):
-        """测试 A股深圳"""
+        """\u6d4b\u8bd5 A\u80a1\u6df1\u5733"""
         result = extract_symbol_from_ts_code("000001.SZ", "CN")
         assert result == "000001"
 
     def test_a_stock_sh(self):
-        """测试 A股上海"""
+        """\u6d4b\u8bd5 A\u80a1\u4e0a\u6d77"""
         result = extract_symbol_from_ts_code("600519.SH", "CN")
         assert result == "600519"
 
     def test_hk_stock(self):
-        """测试港股"""
+        """\u6d4b\u8bd5\u6e2f\u80a1"""
         result = extract_symbol_from_ts_code("00700.HK", "HK")
         assert result == "00700"
 
     def test_us_stock(self):
-        """测试美股"""
+        """\u6d4b\u8bd5\u7f8e\u80a1"""
         result = extract_symbol_from_ts_code("AAPL", "US")
         assert result == "AAPL"
 
     def test_jp_stock_preserves_suffix(self):
-        """测试日股保留 Yahoo 后缀以避免裸代码冲突"""
+        """\u6d4b\u8bd5\u65e5\u80a1\u4fdd\u7559 Yahoo \u540e\u7f00\u4ee5\u907f\u514d\u88f8\u4ee3\u7801\u51b2\u7a81"""
         result = extract_symbol_from_ts_code("7203.T", "JP")
         assert result == "7203.T"
 
     def test_kr_stock_preserves_suffix(self):
-        """测试韩股保留 Yahoo 后缀以避免裸代码冲突"""
+        """\u6d4b\u8bd5\u97e9\u80a1\u4fdd\u7559 Yahoo \u540e\u7f00\u4ee5\u907f\u514d\u88f8\u4ee3\u7801\u51b2\u7a81"""
         result = extract_symbol_from_ts_code("005930.KS", "KR")
         assert result == "005930.KS"
 
     def test_empty_ts_code(self):
-        """测试空 ts_code"""
+        """\u6d4b\u8bd5\u7a7a ts_code"""
         result = extract_symbol_from_ts_code("", "CN")
         assert result is None
 
     def test_none_ts_code(self):
-        """测试 None ts_code"""
+        """\u6d4b\u8bd5 None ts_code"""
         result = extract_symbol_from_ts_code(None, "CN")
         assert result is None
 
 
 class TestDetermineMarket:
-    """测试市场判断函数"""
+    """\u6d4b\u8bd5\u5e02\u573a\u5224\u65ad\u51fd\u6570"""
 
     def test_a_stock_sz(self):
-        """测试 A股深圳"""
+        """\u6d4b\u8bd5 A\u80a1\u6df1\u5733"""
         result = determine_market("000001.SZ")
         assert result == "CN"
 
     def test_a_stock_sh(self):
-        """测试 A股上海"""
+        """\u6d4b\u8bd5 A\u80a1\u4e0a\u6d77"""
         result = determine_market("600519.SH")
         assert result == "CN"
 
     def test_hk_stock(self):
-        """测试港股"""
+        """\u6d4b\u8bd5\u6e2f\u80a1"""
         result = determine_market("00700.HK")
         assert result == "HK"
 
     def test_bse_stock(self):
-        """测试北交所"""
+        """\u6d4b\u8bd5\u5317\u4ea4\u6240"""
         result = determine_market("832566.BJ")
         assert result == "BSE"
 
     def test_us_stock(self):
-        """测试美股"""
+        """\u6d4b\u8bd5\u7f8e\u80a1"""
         result = determine_market("AAPL")
         assert result == "US"
 
     def test_us_stock_tesla(self):
-        """测试美股特斯拉"""
+        """\u6d4b\u8bd5\u7f8e\u80a1\u7279\u65af\u62c9"""
         result = determine_market("TSLA")
         assert result == "US"
 
     def test_us_stock_with_dot_suffix(self):
-        """测试美股带点号后缀（BRK.B）"""
+        """\u6d4b\u8bd5\u7f8e\u80a1\u5e26\u70b9\u53f7\u540e\u7f00（BRK.B）"""
         result = determine_market("BRK.B")
         assert result == "US"
 
     def test_us_stock_class_a(self):
-        """测试美股 A 类股（GOOG.A）"""
+        """\u6d4b\u8bd5\u7f8e\u80a1 A \u7c7b\u80a1（GOOG.A）"""
         result = determine_market("GOOG.A")
         assert result == "US"
 
     def test_us_stock_units(self):
-        """测试美股 Unit（AAPL.U）"""
+        """\u6d4b\u8bd5\u7f8e\u80a1 Unit（AAPL.U）"""
         result = determine_market("AAPL.U")
         assert result == "US"
 
     def test_jp_stock_with_yahoo_suffix(self):
-        """测试日股 Yahoo 后缀"""
+        """\u6d4b\u8bd5\u65e5\u80a1 Yahoo \u540e\u7f00"""
         result = determine_market("7203.T")
         assert result == "JP"
 
     def test_kr_kospi_stock_with_yahoo_suffix(self):
-        """测试韩股 KOSPI Yahoo 后缀"""
+        """\u6d4b\u8bd5\u97e9\u80a1 KOSPI Yahoo \u540e\u7f00"""
         result = determine_market("005930.KS")
         assert result == "KR"
 
     def test_kr_kosdaq_stock_with_yahoo_suffix(self):
-        """测试韩股 KOSDAQ Yahoo 后缀"""
+        """\u6d4b\u8bd5\u97e9\u80a1 KOSDAQ Yahoo \u540e\u7f00"""
         result = determine_market("035720.KQ")
         assert result == "KR"
 
 
 class TestGetStockName:
-    """测试股票名称获取函数"""
+    """\u6d4b\u8bd5\u80a1\u7968\u540d\u79f0\u83b7\u53d6\u51fd\u6570"""
 
     def test_cn_stock_name(self):
-        """测试 A股使用 name 字段"""
-        row = {'name': '平安银行', 'enname': 'Ping An Bank'}
+        """\u6d4b\u8bd5 A\u80a1\u4f7f\u7528 name \u5b57\u6bb5"""
+        row = {'name': '\u5e73\u5b89\u94f6\u884c', 'enname': 'Ping An Bank'}
         result = get_stock_name(row, 'CN')
-        assert result == '平安银行'
+        assert result == '\u5e73\u5b89\u94f6\u884c'
 
     def test_hk_stock_name(self):
-        """测试港股使用 name 字段"""
-        row = {'name': '腾讯控股', 'enname': 'Tencent'}
+        """\u6d4b\u8bd5\u6e2f\u80a1\u4f7f\u7528 name \u5b57\u6bb5"""
+        row = {'name': '\u817e\u8baf\u63a7\u80a1', 'enname': 'Tencent'}
         result = get_stock_name(row, 'HK')
-        assert result == '腾讯控股'
+        assert result == '\u817e\u8baf\u63a7\u80a1'
 
     def test_us_stock_name(self):
-        """测试美股使用 enname 字段"""
-        row = {'name': '苹果', 'enname': 'Apple Inc.'}
+        """\u6d4b\u8bd5\u7f8e\u80a1\u4f7f\u7528 enname \u5b57\u6bb5"""
+        row = {'name': '\u82f9\u679c', 'enname': 'Apple Inc.'}
         result = get_stock_name(row, 'US')
         assert result == 'Apple Inc.'
 
     def test_empty_name(self):
-        """测试空名称"""
+        """\u6d4b\u8bd5\u7a7a\u540d\u79f0"""
         row = {'name': '', 'enname': ''}
         result = get_stock_name(row, 'CN')
         assert result is None
 
     def test_cn_stock_name_strips_ex_rights_prefix(self):
-        """测试 A股除权除息短期前缀不会写入长期索引名称"""
-        row = {'name': 'XD西藏药', 'enname': ''}
+        """\u6d4b\u8bd5 A\u80a1\u9664\u6743\u9664\u606f\u77ed\u671f\u524d\u7f00\u4e0d\u4f1a\u5199\u5165\u957f\u671f\u7d22\u5f15\u540d\u79f0"""
+        row = {'name': 'XD\u897f\u85cf\u836f', 'enname': ''}
         result = get_stock_name(row, 'CN')
-        assert result == '西藏药'
+        assert result == '\u897f\u85cf\u836f'
 
     def test_cn_stock_name_preserves_new_stock_prefix(self):
-        """测试 A股新股前缀保留，等待后续数据包刷新自然消失"""
-        row = {'name': 'N惠康', 'enname': ''}
+        """\u6d4b\u8bd5 A\u80a1\u65b0\u80a1\u524d\u7f00\u4fdd\u7559，\u7b49\u5f85\u540e\u7eed\u6570\u636e\u5305\u5237\u65b0\u81ea\u7136\u6d88\u5931"""
+        row = {'name': 'N\u60e0\u5eb7', 'enname': ''}
         result = get_stock_name(row, 'CN')
-        assert result == 'N惠康'
+        assert result == 'N\u60e0\u5eb7'
 
 
 class TestDataCleaning:
-    """测试数据清洗逻辑"""
+    """\u6d4b\u8bd5\u6570\u636e\u6e05\u6d17\u903b\u8f91"""
 
     def test_valid_cn_stock(self):
-        """测试有效的 A股记录"""
+        """\u6d4b\u8bd5\u6709\u6548\u7684 A\u80a1\u8bb0\u5f55"""
         row = {
             'ts_code': '000001.SZ',
             'symbol': '000001',
-            'name': '平安银行'
+            'name': '\u5e73\u5b89\u94f6\u884c'
         }
         result = parse_stock_row(row, 'CN')
         assert result is not None
         assert result['ts_code'] == '000001.SZ'
         assert result['symbol'] == '000001'
-        assert result['name'] == '平安银行'
+        assert result['name'] == '\u5e73\u5b89\u94f6\u884c'
         assert result['market'] == 'CN'
 
     def test_valid_hk_stock(self):
-        """测试有效的港股记录"""
+        """\u6d4b\u8bd5\u6709\u6548\u7684\u6e2f\u80a1\u8bb0\u5f55"""
         row = {
             'ts_code': '00700.HK',
-            'name': '腾讯控股',
+            'name': '\u817e\u8baf\u63a7\u80a1',
             'enname': 'Tencent'
         }
         result = parse_stock_row(row, 'HK')
         assert result is not None
         assert result['ts_code'] == '00700.HK'
         assert result['symbol'] == '00700'
-        assert result['name'] == '腾讯控股'
+        assert result['name'] == '\u817e\u8baf\u63a7\u80a1'
         assert result['market'] == 'HK'
 
     def test_valid_us_stock(self):
-        """测试有效的美股记录"""
+        """\u6d4b\u8bd5\u6709\u6548\u7684\u7f8e\u80a1\u8bb0\u5f55"""
         row = {
             'ts_code': 'AAPL',
-            'name': '苹果',
+            'name': '\u82f9\u679c',
             'enname': 'Apple Inc.'
         }
         result = parse_stock_row(row, 'US')
@@ -226,7 +226,7 @@ class TestDataCleaning:
         assert result['market'] == 'US'
 
     def test_valid_us_stock_with_dot_suffix(self):
-        """测试有效的美股记录（带点号后缀，如 BRK.B）"""
+        """\u6d4b\u8bd5\u6709\u6548\u7684\u7f8e\u80a1\u8bb0\u5f55（\u5e26\u70b9\u53f7\u540e\u7f00，\u5982 BRK.B）"""
         row = {
             'ts_code': 'BRK.B',
             'name': '',
@@ -240,69 +240,69 @@ class TestDataCleaning:
         assert result['market'] == 'US'
 
     def test_valid_jp_stock_with_seed_aliases(self):
-        """测试有效的日股种子记录"""
+        """\u6d4b\u8bd5\u6709\u6548\u7684\u65e5\u80a1\u79cd\u5b50\u8bb0\u5f55"""
         row = {
             'ts_code': '7203.T',
-            'name': '丰田汽车',
+            'name': '\u4e30\u7530\u6c7d\u8f66',
             'enname': 'Toyota Motor Corporation',
-            'aliases': 'Toyota|Toyota Motor|丰田'
+            'aliases': 'Toyota|Toyota Motor|\u4e30\u7530'
         }
         result = parse_stock_row(row, 'JP')
         assert result is not None
         assert result['ts_code'] == '7203.T'
         assert result['symbol'] == '7203.T'
-        assert result['name'] == '丰田汽车'
+        assert result['name'] == '\u4e30\u7530\u6c7d\u8f66'
         assert result['market'] == 'JP'
-        assert result['aliases'] == ['Toyota', 'Toyota Motor', '丰田']
+        assert result['aliases'] == ['Toyota', 'Toyota Motor', '\u4e30\u7530']
 
     def test_valid_kr_stock_with_seed_aliases(self):
-        """测试有效的韩股种子记录"""
+        """\u6d4b\u8bd5\u6709\u6548\u7684\u97e9\u80a1\u79cd\u5b50\u8bb0\u5f55"""
         row = {
             'ts_code': '005930.KS',
-            'name': '三星电子',
+            'name': '\u4e09\u661f\u7535\u5b50',
             'enname': 'Samsung Electronics',
-            'aliases': 'Samsung|Samsung Electronics|三星'
+            'aliases': 'Samsung|Samsung Electronics|\u4e09\u661f'
         }
         result = parse_stock_row(row, 'KR')
         assert result is not None
         assert result['ts_code'] == '005930.KS'
         assert result['symbol'] == '005930.KS'
-        assert result['name'] == '三星电子'
+        assert result['name'] == '\u4e09\u661f\u7535\u5b50'
         assert result['market'] == 'KR'
-        assert result['aliases'] == ['Samsung', 'Samsung Electronics', '三星']
+        assert result['aliases'] == ['Samsung', 'Samsung Electronics', '\u4e09\u661f']
 
     def test_us_dummy_filtered(self):
-        """测试美股 DUMMY 记录被过滤"""
+        """\u6d4b\u8bd5\u7f8e\u80a1 DUMMY \u8bb0\u5f55\u88ab\u8fc7\u6ee4"""
         row = {
             'ts_code': 'DUMMY001',
-            'name': '测试',
+            'name': '\u6d4b\u8bd5',
             'enname': 'DUMMY Test Stock'
         }
         result = parse_stock_row(row, 'US')
         assert result is None
 
     def test_us_dummy_case_insensitive(self):
-        """测试 DUMMY 过滤不区分大小写"""
+        """\u6d4b\u8bd5 DUMMY \u8fc7\u6ee4\u4e0d\u533a\u5206\u5927\u5c0f\u5199"""
         row = {
             'ts_code': 'DUMMY002',
-            'name': '测试',
+            'name': '\u6d4b\u8bd5',
             'enname': 'dummy test stock'
         }
         result = parse_stock_row(row, 'US')
         assert result is None
 
     def test_empty_ts_code(self):
-        """测试空 ts_code 被过滤"""
+        """\u6d4b\u8bd5\u7a7a ts_code \u88ab\u8fc7\u6ee4"""
         row = {
             'ts_code': '',
             'symbol': '000001',
-            'name': '平安银行'
+            'name': '\u5e73\u5b89\u94f6\u884c'
         }
         result = parse_stock_row(row, 'CN')
         assert result is None
 
     def test_empty_name(self):
-        """测试空名称被过滤"""
+        """\u6d4b\u8bd5\u7a7a\u540d\u79f0\u88ab\u8fc7\u6ee4"""
         row = {
             'ts_code': '000001.SZ',
             'symbol': '000001',
@@ -312,78 +312,78 @@ class TestDataCleaning:
         assert result is None
 
     def test_us_empty_enname(self):
-        """测试美股空 enname 被过滤"""
+        """\u6d4b\u8bd5\u7f8e\u80a1\u7a7a enname \u88ab\u8fc7\u6ee4"""
         row = {
             'ts_code': 'AAPL',
-            'name': '苹果',
+            'name': '\u82f9\u679c',
             'enname': ''
         }
         result = parse_stock_row(row, 'US')
         assert result is None
 
     def test_us_delist_priority_prefers_blank_over_nat(self):
-        """测试美股去重优先级：空 delist_date 优先于 NaT"""
+        """\u6d4b\u8bd5\u7f8e\u80a1\u53bb\u91cd\u4f18\u5148\u7ea7：\u7a7a delist_date \u4f18\u5148\u4e8e NaT"""
         assert get_us_delist_priority({'delist_date': ''}) == 2
         assert get_us_delist_priority({'delist_date': 'NaT'}) == 1
         assert get_us_delist_priority({'delist_date': '20250131'}) == 0
 
 
 class TestNormalizeStockNameForIndex:
-    """测试索引名称归一化"""
+    """\u6d4b\u8bd5\u7d22\u5f15\u540d\u79f0\u5f52\u4e00\u5316"""
 
     def test_strips_a_share_ex_rights_prefixes(self):
-        assert normalize_stock_name_for_index('XD西藏药', 'CN') == '西藏药'
-        assert normalize_stock_name_for_index('XR示例股', 'CN') == '示例股'
-        assert normalize_stock_name_for_index('DR罗曼股', 'CN') == '罗曼股'
-        assert normalize_stock_name_for_index('XD朱老六', 'BSE') == '朱老六'
+        assert normalize_stock_name_for_index('XD\u897f\u85cf\u836f', 'CN') == '\u897f\u85cf\u836f'
+        assert normalize_stock_name_for_index('XR\u793a\u4f8b\u80a1', 'CN') == '\u793a\u4f8b\u80a1'
+        assert normalize_stock_name_for_index('DR\u7f57\u66fc\u80a1', 'CN') == '\u7f57\u66fc\u80a1'
+        assert normalize_stock_name_for_index('XD\u6731\u8001\u516d', 'BSE') == '\u6731\u8001\u516d'
 
     def test_preserves_a_share_new_stock_and_st_prefixes(self):
-        assert normalize_stock_name_for_index('N惠康', 'CN') == 'N惠康'
-        assert normalize_stock_name_for_index('C天海', 'CN') == 'C天海'
-        assert normalize_stock_name_for_index('ST海王', 'CN') == 'ST海王'
-        assert normalize_stock_name_for_index('*ST美丽', 'CN') == '*ST美丽'
+        assert normalize_stock_name_for_index('N\u60e0\u5eb7', 'CN') == 'N\u60e0\u5eb7'
+        assert normalize_stock_name_for_index('C\u5929\u6d77', 'CN') == 'C\u5929\u6d77'
+        assert normalize_stock_name_for_index('ST\u6d77\u738b', 'CN') == 'ST\u6d77\u738b'
+        assert normalize_stock_name_for_index('*ST\u7f8e\u4e3d', 'CN') == '*ST\u7f8e\u4e3d'
 
     def test_does_not_strip_other_markets(self):
         assert normalize_stock_name_for_index('DRAGONFLY ENERGY', 'US') == 'DRAGONFLY ENERGY'
-        assert normalize_stock_name_for_index('XD港股示例', 'HK') == 'XD港股示例'
+        assert normalize_stock_name_for_index('XD\u6e2f\u80a1\u793a\u4f8b', 'HK') == 'XD\u6e2f\u80a1\u793a\u4f8b'
 
 
 class TestAliases:
-    """测试别名生成函数"""
+    """\u6d4b\u8bd5\u522b\u540d\u751f\u6210\u51fd\u6570"""
 
     def test_cn_aliases(self):
-        """测试 A股别名"""
-        result = generate_aliases('贵州茅台', 'CN')
-        assert '茅台' in result
+        """\u6d4b\u8bd5 A\u80a1\u522b\u540d"""
+        result = generate_aliases('\u8d35\u5dde\u8305\u53f0', 'CN')
+        assert '\u8305\u53f0' in result
 
     def test_hk_aliases(self):
-        """测试港股别名"""
-        result = generate_aliases('腾讯控股', 'HK')
-        assert '腾讯' in result or 'Tencent' in result
+        """\u6d4b\u8bd5\u6e2f\u80a1\u522b\u540d"""
+        result = generate_aliases('\u817e\u8baf\u63a7\u80a1', 'HK')
+        assert '\u817e\u8baf' in result or 'Tencent' in result
 
     def test_us_aliases(self):
-        """测试美股别名"""
+        """\u6d4b\u8bd5\u7f8e\u80a1\u522b\u540d"""
         result = generate_aliases('Apple Inc.', 'US')
         assert 'Apple' in result or 'AAPL' in result
 
     def test_no_aliases(self):
-        """测试无别名的情况"""
-        result = generate_aliases('未知股票', 'CN')
+        """\u6d4b\u8bd5\u65e0\u522b\u540d\u7684\u60c5\u51b5"""
+        result = generate_aliases('\u672a\u77e5\u80a1\u7968', 'CN')
         assert result == []
 
 
 class TestOutputFormat:
-    """测试输出格式"""
+    """\u6d4b\u8bd5\u8f93\u51fa\u683c\u5f0f"""
 
     def test_compress_index_field_order(self):
-        """测试压缩格式的字段顺序"""
+        """\u6d4b\u8bd5\u538b\u7f29\u683c\u5f0f\u7684\u5b57\u6bb5\u987a\u5e8f"""
         index = [{
             "canonicalCode": "000001.SZ",
             "displayCode": "000001",
-            "nameZh": "平安银行",
+            "nameZh": "\u5e73\u5b89\u94f6\u884c",
             "pinyinFull": "pinganyinhang",
             "pinyinAbbr": "pyyh",
-            "aliases": ["平银"],
+            "aliases": ["\u5e73\u94f6"],
             "market": "CN",
             "assetType": "stock",
             "active": True,
@@ -395,20 +395,20 @@ class TestOutputFormat:
         assert len(compressed) == 1
         item = compressed[0]
 
-        # 验证字段顺序
+        # \u9a8c\u8bc1\u5b57\u6bb5\u987a\u5e8f
         assert item[0] == "000001.SZ"      # canonicalCode
         assert item[1] == "000001"         # displayCode
-        assert item[2] == "平安银行"       # nameZh
+        assert item[2] == "\u5e73\u5b89\u94f6\u884c"       # nameZh
         assert item[3] == "pinganyinhang"  # pinyinFull
         assert item[4] == "pyyh"           # pinyinAbbr
-        assert item[5] == ["平银"]         # aliases
+        assert item[5] == ["\u5e73\u94f6"]         # aliases
         assert item[6] == "CN"             # market
         assert item[7] == "stock"          # assetType
         assert item[8] == True             # active
         assert item[9] == 100              # popularity
 
     def test_compress_index_field_count(self):
-        """测试压缩格式的字段数量"""
+        """\u6d4b\u8bd5\u538b\u7f29\u683c\u5f0f\u7684\u5b57\u6bb5\u6570\u91cf"""
         index = [{
             "canonicalCode": "AAPL",
             "displayCode": "AAPL",
@@ -423,17 +423,17 @@ class TestOutputFormat:
         }]
 
         compressed = compress_index(index)
-        assert len(compressed[0]) == 10  # 10个字段
+        assert len(compressed[0]) == 10  # 10\u4e2a\u5b57\u6bb5
 
     def test_json_serialization(self):
-        """测试 JSON 序列化"""
+        """\u6d4b\u8bd5 JSON \u5e8f\u5217\u5316"""
         index = [{
             "canonicalCode": "00700.HK",
             "displayCode": "00700",
-            "nameZh": "腾讯控股",
+            "nameZh": "\u817e\u8baf\u63a7\u80a1",
             "pinyinFull": "xunxiongkonggu",
             "pinyinAbbr": "xxkg",
-            "aliases": ["腾讯"],
+            "aliases": ["\u817e\u8baf"],
             "market": "HK",
             "assetType": "stock",
             "active": True,
@@ -442,21 +442,21 @@ class TestOutputFormat:
 
         compressed = compress_index(index)
 
-        # 应该能成功序列化为 JSON
+        # \u5e94\u8be5\u80fd\u6210\u529f\u5e8f\u5217\u5316\u4e3a JSON
         json_str = json.dumps(compressed, ensure_ascii=False)
         assert json_str is not None
 
-        # 应该能成功反序列化
+        # \u5e94\u8be5\u80fd\u6210\u529f\u53cd\u5e8f\u5217\u5316
         loaded = json.loads(json_str)
         assert len(loaded) == 1
 
 
 class TestIntegration:
-    """集成测试"""
+    """\u96c6\u6210\u6d4b\u8bd5"""
 
     def test_full_workflow_tushare(self, tmp_path):
-        """测试完整的 Tushare 工作流"""
-        # 创建测试 CSV 文件
+        """\u6d4b\u8bd5\u5b8c\u6574\u7684 Tushare \u5de5\u4f5c\u6d41"""
+        # \u521b\u5efa\u6d4b\u8bd5 CSV \u6587\u4ef6
         a_csv = tmp_path / 'stock_list_a.csv'
         with open(a_csv, 'w', encoding='utf-8-sig', newline='') as f:
             writer = csv.DictWriter(f, fieldnames=['ts_code', 'symbol', 'name'])
@@ -464,7 +464,7 @@ class TestIntegration:
             writer.writerow({
                 'ts_code': '000001.SZ',
                 'symbol': '000001',
-                'name': '平安银行'
+                'name': '\u5e73\u5b89\u94f6\u884c'
             })
 
         hk_csv = tmp_path / 'stock_list_hk.csv'
@@ -473,7 +473,7 @@ class TestIntegration:
             writer.writeheader()
             writer.writerow({
                 'ts_code': '00700.HK',
-                'name': '腾讯控股',
+                'name': '\u817e\u8baf\u63a7\u80a1',
                 'enname': 'Tencent'
             })
 
@@ -483,7 +483,7 @@ class TestIntegration:
             writer.writeheader()
             writer.writerow({
                 'ts_code': 'AAPL',
-                'name': '苹果',
+                'name': '\u82f9\u679c',
                 'enname': 'Apple Inc.'
             })
 
@@ -493,9 +493,9 @@ class TestIntegration:
             writer.writeheader()
             writer.writerow({
                 'ts_code': '7203.T',
-                'name': '丰田汽车',
+                'name': '\u4e30\u7530\u6c7d\u8f66',
                 'enname': 'Toyota Motor Corporation',
-                'aliases': 'Toyota|丰田'
+                'aliases': 'Toyota|\u4e30\u7530'
             })
 
         kr_csv = tmp_path / 'stock_list_kr.csv'
@@ -504,61 +504,61 @@ class TestIntegration:
             writer.writeheader()
             writer.writerow({
                 'ts_code': '005930.KS',
-                'name': '三星电子',
+                'name': '\u4e09\u661f\u7535\u5b50',
                 'enname': 'Samsung Electronics',
-                'aliases': 'Samsung|三星'
+                'aliases': 'Samsung|\u4e09\u661f'
             })
 
-        # 加载数据
+        # \u52a0\u8f7d\u6570\u636e
         stocks = load_tushare_data(tmp_path)
 
-        # 验证数据
+        # \u9a8c\u8bc1\u6570\u636e
         assert len(stocks) == 5
 
-        # 构建索引
+        # \u6784\u5efa\u7d22\u5f15
         index = build_stock_index(stocks)
 
-        # 验证索引
+        # \u9a8c\u8bc1\u7d22\u5f15
         assert len(index) == 5
-        assert next(item for item in index if item['canonicalCode'] == '7203.T')['aliases'] == ['Toyota', '丰田']
-        assert next(item for item in index if item['canonicalCode'] == '005930.KS')['aliases'] == ['Samsung', '三星']
+        assert next(item for item in index if item['canonicalCode'] == '7203.T')['aliases'] == ['Toyota', '\u4e30\u7530']
+        assert next(item for item in index if item['canonicalCode'] == '005930.KS')['aliases'] == ['Samsung', '\u4e09\u661f']
 
-        # 压缩索引
+        # \u538b\u7f29\u7d22\u5f15
         compressed = compress_index(index)
 
-        # 验证压缩
+        # \u9a8c\u8bc1\u538b\u7f29
         assert len(compressed) == 5
 
-        # 验证字段数量
+        # \u9a8c\u8bc1\u5b57\u6bb5\u6570\u91cf
         for item in compressed:
             assert len(item) == 10
 
     def test_market_distribution(self, tmp_path):
-        """测试市场分布统计"""
-        # 创建测试数据
+        """\u6d4b\u8bd5\u5e02\u573a\u5206\u5e03\u7edf\u8ba1"""
+        # \u521b\u5efa\u6d4b\u8bd5\u6570\u636e
         csv_file = tmp_path / 'stock_list_a.csv'
         with open(csv_file, 'w', encoding='utf-8-sig', newline='') as f:
             writer = csv.DictWriter(f, fieldnames=['ts_code', 'symbol', 'name'])
             writer.writeheader()
-            writer.writerow({'ts_code': '000001.SZ', 'symbol': '000001', 'name': '平安银行'})
-            writer.writerow({'ts_code': '600519.SH', 'symbol': '600519', 'name': '贵州茅台'})
-            writer.writerow({'ts_code': '832566.BJ', 'symbol': '832566', 'name': '梓撞科技'})
+            writer.writerow({'ts_code': '000001.SZ', 'symbol': '000001', 'name': '\u5e73\u5b89\u94f6\u884c'})
+            writer.writerow({'ts_code': '600519.SH', 'symbol': '600519', 'name': '\u8d35\u5dde\u8305\u53f0'})
+            writer.writerow({'ts_code': '832566.BJ', 'symbol': '832566', 'name': '\u6893\u649e\u79d1\u6280'})
 
         stocks = load_tushare_data(tmp_path)
         index = build_stock_index(stocks)
 
-        # 统计市场分布
+        # \u7edf\u8ba1\u5e02\u573a\u5206\u5e03
         market_stats = {}
         for item in index:
             market = item['market']
             market_stats[market] = market_stats.get(market, 0) + 1
 
-        # 验证统计
+        # \u9a8c\u8bc1\u7edf\u8ba1
         assert market_stats.get('CN', 0) == 2  # SZ, SH
         assert market_stats.get('BSE', 0) == 1  # BJ
 
     def test_us_reused_symbols_are_deduplicated(self, tmp_path):
-        """测试美股复用 ticker 在加载时会先去重"""
+        """\u6d4b\u8bd5\u7f8e\u80a1\u590d\u7528 ticker \u5728\u52a0\u8f7d\u65f6\u4f1a\u5148\u53bb\u91cd"""
         us_csv = tmp_path / 'stock_list_us.csv'
         with open(us_csv, 'w', encoding='utf-8-sig', newline='') as f:
             writer = csv.DictWriter(
@@ -619,35 +619,35 @@ class TestIntegration:
 
 
 class TestPinyin:
-    """测试拼音生成"""
+    """\u6d4b\u8bd5\u62fc\u97f3\u751f\u6210"""
 
     def test_normalize_name(self):
-        """测试名称标准化"""
-        # 测试 ST 前缀去除
-        result = normalize_name_for_pinyin('*ST平安')
+        """\u6d4b\u8bd5\u540d\u79f0\u6807\u51c6\u5316"""
+        # \u6d4b\u8bd5 ST \u524d\u7f00\u53bb\u9664
+        result = normalize_name_for_pinyin('*ST\u5e73\u5b89')
         assert 'ST' not in result
 
-        # 测试 N 前缀去除
-        result = normalize_name_for_pinyin('N平安银行')
+        # \u6d4b\u8bd5 N \u524d\u7f00\u53bb\u9664
+        result = normalize_name_for_pinyin('N\u5e73\u5b89\u94f6\u884c')
         assert 'N' not in result
 
     def test_generate_pinyin(self):
-        """测试拼音生成"""
-        pinyin_full, pinyin_abbr = generate_pinyin('平安银行')
+        """\u6d4b\u8bd5\u62fc\u97f3\u751f\u6210"""
+        pinyin_full, pinyin_abbr = generate_pinyin('\u5e73\u5b89\u94f6\u884c')
         assert pinyin_full == 'pinganyinhang'
         assert pinyin_abbr == 'payh'
 
     def test_generate_pinyin_requires_dependency(self, monkeypatch):
-        """测试缺少 pypinyin 时不会生成降级拼音字段"""
+        """\u6d4b\u8bd5\u7f3a\u5c11 pypinyin \u65f6\u4e0d\u4f1a\u751f\u6210\u964d\u7ea7\u62fc\u97f3\u5b57\u6bb5"""
         import generate_index_from_csv
 
         monkeypatch.setattr(generate_index_from_csv, 'PYPINYIN_AVAILABLE', False)
 
         with pytest.raises(RuntimeError, match='pypinyin is required'):
-            generate_index_from_csv.generate_pinyin('平安银行')
+            generate_index_from_csv.generate_pinyin('\u5e73\u5b89\u94f6\u884c')
 
     def test_main_fails_without_pypinyin(self, monkeypatch):
-        """测试正式生成索引前必须具备 pypinyin"""
+        """\u6d4b\u8bd5\u6b63\u5f0f\u751f\u6210\u7d22\u5f15\u524d\u5fc5\u987b\u5177\u5907 pypinyin"""
         import generate_index_from_csv
 
         monkeypatch.setattr(generate_index_from_csv, 'PYPINYIN_AVAILABLE', False)

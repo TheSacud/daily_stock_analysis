@@ -174,16 +174,16 @@ describe('App routing behavior', () => {
     try {
       render(<App />);
 
-      expect(await screen.findByRole('heading', { name: '页面加载失败' })).toBeInTheDocument();
-      expect(screen.getByRole('navigation', { name: '主导航' })).toBeInTheDocument();
-      expect(screen.getByRole('button', { name: '重新加载页面' })).toBeInTheDocument();
-      expect(screen.getByRole('button', { name: '返回首页' })).toBeInTheDocument();
+      expect(await screen.findByRole('heading', { name: '\u9875\u9762\u52a0\u8f7d\u5931\u8d25' })).toBeInTheDocument();
+      expect(screen.getByRole('navigation', { name: '\u4e3b\u5bfc\u822a' })).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: '\u91cd\u65b0\u52a0\u8f7d\u9875\u9762' })).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: '\u8fd4\u56de\u9996\u9875' })).toBeInTheDocument();
 
       chatPageShouldThrow.value = false;
-      fireEvent.click(screen.getByRole('link', { name: '持仓' }));
+      fireEvent.click(screen.getByRole('link', { name: '\u6301\u4ed3' }));
 
       expect(await screen.findByTestId('portfolio-page')).toBeInTheDocument();
-      expect(screen.queryByRole('heading', { name: '页面加载失败' })).not.toBeInTheDocument();
+      expect(screen.queryByRole('heading', { name: '\u9875\u9762\u52a0\u8f7d\u5931\u8d25' })).not.toBeInTheDocument();
     } finally {
       consoleError.mockRestore();
     }

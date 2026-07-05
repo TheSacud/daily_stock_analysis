@@ -50,7 +50,7 @@ class TestIsCodeLike:
         assert _is_code_like("BRK.B") is True
 
     def test_rejects_non_code(self):
-        assert _is_code_like("贵州茅台") is False
+        assert _is_code_like("\u8d35\u5dde\u8305\u53f0") is False
         assert _is_code_like("1234") is False  # too short
         assert _is_code_like("1234567") is False  # too long
         assert _is_code_like("") is False
@@ -85,7 +85,7 @@ class TestNormalizeCode:
     def test_returns_none_for_invalid(self):
         assert _normalize_code("") is None
         assert _normalize_code("1234") is None
-        assert _normalize_code("贵州茅台") is None
+        assert _normalize_code("\u8d35\u5dde\u8305\u53f0") is None
 
 
 # ---------------------------------------------------------------------------
@@ -94,17 +94,17 @@ class TestNormalizeCode:
 
 class TestBuildReverseMapNoDuplicates:
     def test_excludes_ambiguous_names(self):
-        # "阿里巴巴" maps to both BABA and 09988
-        code_to_name = {"BABA": "阿里巴巴", "09988": "阿里巴巴", "600519": "贵州茅台"}
+        # "\u963f\u91cc\u5df4\u5df4" maps to both BABA and 09988
+        code_to_name = {"BABA": "\u963f\u91cc\u5df4\u5df4", "09988": "\u963f\u91cc\u5df4\u5df4", "600519": "\u8d35\u5dde\u8305\u53f0"}
         result = _build_reverse_map_no_duplicates(code_to_name)
-        assert "阿里巴巴" not in result
-        assert result.get("贵州茅台") == "600519"
+        assert "\u963f\u91cc\u5df4\u5df4" not in result
+        assert result.get("\u8d35\u5dde\u8305\u53f0") == "600519"
 
     def test_includes_unique_names(self):
-        code_to_name = {"600519": "贵州茅台", "00700": "腾讯控股"}
+        code_to_name = {"600519": "\u8d35\u5dde\u8305\u53f0", "00700": "\u817e\u8baf\u63a7\u80a1"}
         result = _build_reverse_map_no_duplicates(code_to_name)
-        assert result["贵州茅台"] == "600519"
-        assert result["腾讯控股"] == "00700"
+        assert result["\u8d35\u5dde\u8305\u53f0"] == "600519"
+        assert result["\u817e\u8baf\u63a7\u80a1"] == "00700"
 
 
 # ---------------------------------------------------------------------------
@@ -119,8 +119,8 @@ class TestResolveNameToCode:
         assert resolve_name_to_code("  AAPL  ") == "AAPL"
 
     def test_local_map_exact_match(self):
-        assert resolve_name_to_code("贵州茅台") == "600519"
-        assert resolve_name_to_code("腾讯控股") == "00700"
+        assert resolve_name_to_code("\u8d35\u5dde\u8305\u53f0") == "600519"
+        assert resolve_name_to_code("\u817e\u8baf\u63a7\u80a1") == "00700"
 
     def test_returns_none_for_empty_or_invalid_input(self):
         assert resolve_name_to_code("") is None
@@ -128,31 +128,31 @@ class TestResolveNameToCode:
         assert resolve_name_to_code(None) is None  # type: ignore
 
     def test_ambiguous_name_returns_none(self):
-        # "阿里巴巴" maps to both BABA and 09988 in STOCK_NAME_MAP
-        assert resolve_name_to_code("阿里巴巴") is None
+        # "\u963f\u91cc\u5df4\u5df4" maps to both BABA and 09988 in STOCK_NAME_MAP
+        assert resolve_name_to_code("\u963f\u91cc\u5df4\u5df4") is None
 
     @patch("src.services.name_to_code_resolver._get_akshare_name_to_code")
     def test_akshare_fallback_when_not_in_local(self, mock_akshare):
-        mock_akshare.return_value = {"平安银行": "000001"}
-        # 000001 is in local map as 平安银行, so we use a name that's only in akshare
-        # Actually local has 000001 -> 平安银行. So "平安银行" would hit local first.
+        mock_akshare.return_value = {"\u5e73\u5b89\u94f6\u884c": "000001"}
+        # 000001 is in local map as \u5e73\u5b89\u94f6\u884c, so we use a name that's only in akshare
+        # Actually local has 000001 -> \u5e73\u5b89\u94f6\u884c. So "\u5e73\u5b89\u94f6\u884c" would hit local first.
         # Use a name not in STOCK_NAME_MAP - e.g. some A-share only in AkShare
-        mock_akshare.return_value = {"浦发银行": "600000"}
-        result = resolve_name_to_code("浦发银行")
+        mock_akshare.return_value = {"\u6d66\u53d1\u94f6\u884c": "600000"}
+        result = resolve_name_to_code("\u6d66\u53d1\u94f6\u884c")
         assert result == "600000"
         mock_akshare.assert_called()
 
     @patch("src.services.name_to_code_resolver._get_akshare_name_to_code")
     def test_fuzzy_match_fallback(self, mock_akshare):
-        mock_akshare.return_value = {"贵州茅台": "600519"}
-        # Typo: 贵州茅苔 -> should fuzzy match 贵州茅台
-        result = resolve_name_to_code("贵州茅苔")
+        mock_akshare.return_value = {"\u8d35\u5dde\u8305\u53f0": "600519"}
+        # Typo: \u8d35\u5dde\u8305\u82d4 -> should fuzzy match \u8d35\u5dde\u8305\u53f0
+        result = resolve_name_to_code("\u8d35\u5dde\u8305\u82d4")
         assert result == "600519"
 
     @patch("src.services.name_to_code_resolver._get_akshare_name_to_code")
     def test_returns_none_when_no_match(self, mock_akshare):
         mock_akshare.return_value = {}
-        result = resolve_name_to_code("不存在的股票名称xyz")
+        result = resolve_name_to_code("\u4e0d\u5b58\u5728\u7684\u80a1\u7968\u540d\u79f0xyz")
         assert result is None
 
     @patch("src.services.name_to_code_resolver._get_akshare_name_to_code")

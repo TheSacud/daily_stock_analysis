@@ -1,4 +1,4 @@
-# 忽略 Python 缓存
+# \u5ffd\u7565 Python \u7f13\u5b58
 __pycache__/
 *.py[cod]
 *$py.class
@@ -9,7 +9,7 @@ __pycache__/
 .coverage
 htmlcov/
 
-# 忽略虚拟环境
+# \u5ffd\u7565\u865a\u62df\u73af\u5883
 venv/
 .venv/
 env/
@@ -18,13 +18,13 @@ env/
 !.env.example
 .env.local
 
-# 忽略 IDE
+# \u5ffd\u7565 IDE
 .idea/
 .vscode/
 *.swp
 *.swo
 
-# 忽略本地仓库、CI 元数据和运行产物
+# \u5ffd\u7565\u672c\u5730\u4ed3\u5e93、CI \u5143\u6570\u636e\u548c\u8fd0\u884c\u4ea7\u7269
 .git/
 .github/
 .claude/reviews/
@@ -33,7 +33,7 @@ logs/
 reports/
 *.log
 
-# 忽略测试和文档
+# \u5ffd\u7565\u6d4b\u8bd5\u548c\u6587\u6863
 tests/
 test_*.py
 *_test.py
@@ -41,7 +41,7 @@ docs/
 *.md
 !README.md
 
-# 忽略不参与 Docker 镜像构建的前端/桌面端产物
+# \u5ffd\u7565\u4e0d\u53c2\u4e0e Docker \u955c\u50cf\u6784\u5efa\u7684\u524d\u7aef/\u684c\u9762\u7aef\u4ea7\u7269
 apps/dsa-desktop/
 node_modules/
 dist/

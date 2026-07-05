@@ -1,31 +1,31 @@
 ts_code,symbol,name,enname,aliases
-7203.T,7203.T,丰田汽车,Toyota Motor Corporation,Toyota|Toyota Motor|丰田|トヨタ
-6758.T,6758.T,索尼集团,Sony Group Corporation,Sony|Sony Group|索尼|ソニー
-9984.T,9984.T,软银集团,SoftBank Group Corp.,SoftBank|SoftBank Group|软银|ソフトバンク
-8306.T,8306.T,三菱日联金融集团,Mitsubishi UFJ Financial Group,MUFG|Mitsubishi UFJ|三菱日联|三菱UFJ
-6861.T,6861.T,基恩士,Keyence Corporation,Keyence|キーエンス
-6501.T,6501.T,日立,Hitachi Ltd.,Hitachi|日立制作所|日立製作所
-7974.T,7974.T,任天堂,Nintendo Co. Ltd.,Nintendo|任天堂
-8035.T,8035.T,东京电子,Tokyo Electron Limited,Tokyo Electron|東京エレクトロン
-9432.T,9432.T,日本电信电话,Nippon Telegraph and Telephone Corporation,NTT|Nippon Telegraph and Telephone|日本电信电话
-9983.T,9983.T,迅销,Fast Retailing Co. Ltd.,Fast Retailing|Uniqlo|优衣库|迅销
-8058.T,8058.T,三菱商事,Mitsubishi Corporation,Mitsubishi Corp|三菱商事
-8001.T,8001.T,伊藤忠商事,ITOCHU Corporation,ITOCHU|伊藤忠
-8031.T,8031.T,三井物产,Mitsui and Co. Ltd.,Mitsui|三井物产|三井物産
-4502.T,4502.T,武田药品,Takeda Pharmaceutical Company,Takeda|武田药品|武田薬品
-4568.T,4568.T,第一三共,Daiichi Sankyo Company,Daiichi Sankyo|第一三共
+7203.T,7203.T,\u4e30\u7530\u6c7d\u8f66,Toyota Motor Corporation,Toyota|Toyota Motor|\u4e30\u7530|トヨタ
+6758.T,6758.T,\u7d22\u5c3c\u96c6\u56e2,Sony Group Corporation,Sony|Sony Group|\u7d22\u5c3c|ソニー
+9984.T,9984.T,\u8f6f\u94f6\u96c6\u56e2,SoftBank Group Corp.,SoftBank|SoftBank Group|\u8f6f\u94f6|ソフトバンク
+8306.T,8306.T,\u4e09\u83f1\u65e5\u8054\u91d1\u878d\u96c6\u56e2,Mitsubishi UFJ Financial Group,MUFG|Mitsubishi UFJ|\u4e09\u83f1\u65e5\u8054|\u4e09\u83f1UFJ
+6861.T,6861.T,\u57fa\u6069\u58eb,Keyence Corporation,Keyence|キーエンス
+6501.T,6501.T,\u65e5\u7acb,Hitachi Ltd.,Hitachi|\u65e5\u7acb\u5236\u4f5c\u6240|\u65e5\u7acb\u88fd\u4f5c\u6240
+7974.T,7974.T,\u4efb\u5929\u5802,Nintendo Co. Ltd.,Nintendo|\u4efb\u5929\u5802
+8035.T,8035.T,\u4e1c\u4eac\u7535\u5b50,Tokyo Electron Limited,Tokyo Electron|\u6771\u4eacエレクトロン
+9432.T,9432.T,\u65e5\u672c\u7535\u4fe1\u7535\u8bdd,Nippon Telegraph and Telephone Corporation,NTT|Nippon Telegraph and Telephone|\u65e5\u672c\u7535\u4fe1\u7535\u8bdd
+9983.T,9983.T,\u8fc5\u9500,Fast Retailing Co. Ltd.,Fast Retailing|Uniqlo|\u4f18\u8863\u5e93|\u8fc5\u9500
+8058.T,8058.T,\u4e09\u83f1\u5546\u4e8b,Mitsubishi Corporation,Mitsubishi Corp|\u4e09\u83f1\u5546\u4e8b
+8001.T,8001.T,\u4f0a\u85e4\u5fe0\u5546\u4e8b,ITOCHU Corporation,ITOCHU|\u4f0a\u85e4\u5fe0
+8031.T,8031.T,\u4e09\u4e95\u7269\u4ea7,Mitsui and Co. Ltd.,Mitsui|\u4e09\u4e95\u7269\u4ea7|\u4e09\u4e95\u7269\u7523
+4502.T,4502.T,\u6b66\u7530\u836f\u54c1,Takeda Pharmaceutical Company,Takeda|\u6b66\u7530\u836f\u54c1|\u6b66\u7530\u85ac\u54c1
+4568.T,4568.T,\u7b2c\u4e00\u4e09\u5171,Daiichi Sankyo Company,Daiichi Sankyo|\u7b2c\u4e00\u4e09\u5171
 6098.T,6098.T,Recruit Holdings,Recruit Holdings Co. Ltd.,Recruit|リクルート
-4063.T,4063.T,信越化学工业,Shin-Etsu Chemical Co. Ltd.,Shin-Etsu|信越化学
-7741.T,7741.T,HOYA,HOYA Corporation,HOYA|豪雅
-6954.T,6954.T,发那科,FANUC Corporation,FANUC|发那科|ファナック
-6367.T,6367.T,大金工业,Daikin Industries Ltd.,Daikin|大金|ダイキン
-6902.T,6902.T,电装,DENSO Corporation,DENSO|电装|デンソー
-7267.T,7267.T,本田汽车,Honda Motor Co. Ltd.,Honda|本田|ホンダ
-8316.T,8316.T,三井住友金融集团,Sumitomo Mitsui Financial Group,SMFG|三井住友
-8411.T,8411.T,瑞穗金融集团,Mizuho Financial Group,Mizuho|瑞穗|みずほ
+4063.T,4063.T,\u4fe1\u8d8a\u5316\u5b66\u5de5\u4e1a,Shin-Etsu Chemical Co. Ltd.,Shin-Etsu|\u4fe1\u8d8a\u5316\u5b66
+7741.T,7741.T,HOYA,HOYA Corporation,HOYA|\u8c6a\u96c5
+6954.T,6954.T,\u53d1\u90a3\u79d1,FANUC Corporation,FANUC|\u53d1\u90a3\u79d1|ファナック
+6367.T,6367.T,\u5927\u91d1\u5de5\u4e1a,Daikin Industries Ltd.,Daikin|\u5927\u91d1|ダイキン
+6902.T,6902.T,\u7535\u88c5,DENSO Corporation,DENSO|\u7535\u88c5|デンソー
+7267.T,7267.T,\u672c\u7530\u6c7d\u8f66,Honda Motor Co. Ltd.,Honda|\u672c\u7530|ホンダ
+8316.T,8316.T,\u4e09\u4e95\u4f4f\u53cb\u91d1\u878d\u96c6\u56e2,Sumitomo Mitsui Financial Group,SMFG|\u4e09\u4e95\u4f4f\u53cb
+8411.T,8411.T,\u745e\u7a57\u91d1\u878d\u96c6\u56e2,Mizuho Financial Group,Mizuho|\u745e\u7a57|みずほ
 9433.T,9433.T,KDDI,KDDI Corporation,KDDI|au
-9434.T,9434.T,软银通信,SoftBank Corp.,SoftBank Corp|软银通信
-8766.T,8766.T,东京海上控股,Tokio Marine Holdings,Tokio Marine|东京海上
-2914.T,2914.T,日本烟草,Japan Tobacco Inc.,JT|Japan Tobacco|日本烟草
-3382.T,3382.T,Seven & i 控股,Seven and i Holdings,Seven Eleven|7-Eleven|7&i
-4452.T,4452.T,花王,Kao Corporation,Kao|花王
+9434.T,9434.T,\u8f6f\u94f6\u901a\u4fe1,SoftBank Corp.,SoftBank Corp|\u8f6f\u94f6\u901a\u4fe1
+8766.T,8766.T,\u4e1c\u4eac\u6d77\u4e0a\u63a7\u80a1,Tokio Marine Holdings,Tokio Marine|\u4e1c\u4eac\u6d77\u4e0a
+2914.T,2914.T,\u65e5\u672c\u70df\u8349,Japan Tobacco Inc.,JT|Japan Tobacco|\u65e5\u672c\u70df\u8349
+3382.T,3382.T,Seven & i \u63a7\u80a1,Seven and i Holdings,Seven Eleven|7-Eleven|7&i
+4452.T,4452.T,\u82b1\u738b,Kao Corporation,Kao|\u82b1\u738b

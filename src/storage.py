@@ -1,14 +1,14 @@
 # -*- coding: utf-8 -*-
 """
 ===================================
-A股自选股智能分析系统 - 存储层
+Daily Stock Analysis system - \u5b58\u50a8\u5c42
 ===================================
 
-职责：
-1. 管理 SQLite 数据库连接（单例模式）
-2. 定义 ORM 数据模型
-3. 提供数据存取接口
-4. 实现智能更新逻辑（断点续传）
+\u804c\u8d23:
+1. \u7ba1\u7406 SQLite \u6570\u636elibrary\u8fde\u63a5 (\u5355\u4f8bmode)
+2. \u5b9a\u4e49 ORM \u6570\u636e\u6a21\u578b
+3. \u63d0\u4f9b\u6570\u636e\u5b58\u53d6\u63a5\u53e3
+4. \u5b9e\u73b0\u667a\u80fd\u66f4\u65b0\u903b\u8f91 (\u65ad\u70b9\u7eed\u4f20)
 """
 
 import atexit
@@ -64,7 +64,7 @@ T = TypeVar("T")
 CURRENT_SCHEMA_VERSION = "2026-06-05-create-all-baseline"
 INTELLIGENCE_ITEM_NULL_SCOPE_VALUE = "__dsa_null_scope__"
 
-# SQLAlchemy ORM 基类
+# SQLAlchemy ORM \u57fa\u7c7b
 Base = declarative_base()
 
 if TYPE_CHECKING:
@@ -83,7 +83,7 @@ def to_utc_naive_datetime(value: datetime) -> datetime:
     return value
 
 
-# === 数据模型定义 ===
+# === \u6570\u636e\u6a21\u578b\u5b9a\u4e49 ===
 
 class DatabaseSchemaMigration(Base):
     """Applied database schema version marker."""
@@ -97,57 +97,57 @@ class DatabaseSchemaMigration(Base):
 
 class StockDaily(Base):
     """
-    股票日线数据模型
-    
-    存储每日行情数据和计算的技术指标
-    支持多股票、多日期的唯一约束
+    \u80a1\u7968daily data\u6570\u636e\u6a21\u578b
+
+    \u5b58\u50a8\u6bcf\u65e5\u884c\u60c5\u6570\u636e\u548c\u8ba1\u7b97\u7684technical indicators
+    \u652f\u6301\u591a\u80a1\u7968、\u591adate\u7684\u552f\u4e00\u7ea6\u675f
     """
     __tablename__ = 'stock_daily'
-    
-    # 主键
+
+    # \u4e3b\u952e
     id = Column(Integer, primary_key=True, autoincrement=True)
-    
-    # 股票代码（如 600519, 000001）
+
+    # stock code (\u5982 600519, 000001)
     code = Column(String(10), nullable=False, index=True)
-    
-    # 交易日期
+
+    # \u4ea4\u6613date
     date = Column(Date, nullable=False, index=True)
-    
-    # OHLC 数据
+
+    # OHLC \u6570\u636e
     open = Column(Float)
     high = Column(Float)
     low = Column(Float)
     close = Column(Float)
-    
-    # 成交数据
-    volume = Column(Float)  # 成交量（股）
-    amount = Column(Float)  # 成交额（元）
-    pct_chg = Column(Float)  # 涨跌幅（%）
-    
-    # 技术指标
+
+    # \u6210\u4ea4\u6570\u636e
+    volume = Column(Float)  # volume (\u80a1)
+    amount = Column(Float)  # amount (\u5143)
+    pct_chg = Column(Float)  # change\u5e45 (%)
+
+    # technical indicators
     ma5 = Column(Float)
     ma10 = Column(Float)
     ma20 = Column(Float)
-    volume_ratio = Column(Float)  # 量比
-    
-    # 数据来源
-    data_source = Column(String(50))  # 记录数据来源（如 AkshareFetcher）
-    
-    # 更新时间
+    volume_ratio = Column(Float)  # \u91cf\u6bd4
+
+    # \u6570\u636esource
+    data_source = Column(String(50))  # \u8bb0\u5f55\u6570\u636esource (\u5982 AkshareFetcher)
+
+    # \u66f4\u65b0\u65f6\u95f4
     created_at = Column(DateTime, default=datetime.now)
     updated_at = Column(DateTime, default=datetime.now, onupdate=datetime.now)
-    
-    # 唯一约束：同一股票同一日期只能有一条数据
+
+    # \u552f\u4e00\u7ea6\u675f: \u540c\u4e00\u80a1\u7968\u540c\u4e00date\u53ea\u80fd\u6709\u4e00\u6761\u6570\u636e
     __table_args__ = (
         UniqueConstraint('code', 'date', name='uix_code_date'),
         Index('ix_code_date', 'code', 'date'),
     )
-    
+
     def __repr__(self):
         return f"<StockDaily(code={self.code}, date={self.date}, close={self.close})>"
-    
+
     def to_dict(self) -> Dict[str, Any]:
-        """转换为字典"""
+        """\u8f6c\u6362\u4e3a\u5b57\u5178"""
         return {
             'code': self.code,
             'date': self.date,
@@ -168,34 +168,34 @@ class StockDaily(Base):
 
 class NewsIntel(Base):
     """
-    新闻情报数据模型
+    news\u60c5\u62a5\u6570\u636e\u6a21\u578b
 
-    存储搜索到的新闻情报条目，用于后续分析与查询
+    \u5b58\u50a8search\u5230\u7684news\u60c5\u62a5\u6761\u76ee; \u7528\u4e8e\u540e\u7eedanalyze\u4e0equery
     """
     __tablename__ = 'news_intel'
 
     id = Column(Integer, primary_key=True, autoincrement=True)
 
-    # 关联用户查询操作
+    # \u5173\u8054userquery\u64cd\u4f5c
     query_id = Column(String(64), index=True)
 
-    # 股票信息
+    # \u80a1\u7968info
     code = Column(String(10), nullable=False, index=True)
     name = Column(String(50))
 
-    # 搜索上下文
+    # search\u4e0a\u4e0b\u6587
     dimension = Column(String(32), index=True)  # latest_news / risk_check / earnings / market_analysis / industry
     query = Column(String(255))
     provider = Column(String(32), index=True)
 
-    # 新闻内容
+    # news\u5185\u5bb9
     title = Column(String(300), nullable=False)
     snippet = Column(Text)
     url = Column(String(1000), nullable=False)
     source = Column(String(100))
     published_date = Column(DateTime, index=True)
 
-    # 入库时间
+    # \u5165library\u65f6\u95f4
     fetched_at = Column(DateTime, default=datetime.now, index=True)
     query_source = Column(String(32), index=True)  # bot/web/cli/system
     requester_platform = Column(String(20))
@@ -215,7 +215,7 @@ class NewsIntel(Base):
 
 
 class IntelligenceSource(Base):
-    """可配置资讯源。"""
+    """\u53efconfig\u8d44\u8baf\u6e90."""
 
     __tablename__ = 'intelligence_sources'
 
@@ -240,7 +240,7 @@ class IntelligenceSource(Base):
 
 
 class IntelligenceItem(Base):
-    """沉淀后的资讯 / 情报条目。"""
+    """\u6c89\u6dc0\u540e\u7684\u8d44\u8baf / \u60c5\u62a5\u6761\u76ee."""
 
     __tablename__ = 'intelligence_items'
 
@@ -275,9 +275,9 @@ class IntelligenceItem(Base):
 
 class FundamentalSnapshot(Base):
     """
-    基本面上下文快照（P0 write-only）。
+    fundamentals\u4e0a\u4e0b\u6587\u5feb\u7167 (P0 write-only).
 
-    仅用于写入，主链路不依赖读取该表，便于后续回测/画像扩展。
+    \u4ec5\u7528\u4e8e\u5199\u5165; \u4e3b\u94fe\u8def\u4e0d\u4f9d\u8d56\u8bfb\u53d6\u8be5\u8868; \u4fbf\u4e8e\u540e\u7eedbacktest/\u753b\u50cf\u6269\u5c55.
     """
     __tablename__ = 'fundamental_snapshot'
 
@@ -300,34 +300,34 @@ class FundamentalSnapshot(Base):
 
 class AnalysisHistory(Base):
     """
-    分析结果历史记录模型
+    analysis resulthistory records\u6a21\u578b
 
-    保存每次分析结果，支持按 query_id/股票代码检索
+    \u4fdd\u5b58\u6bcf\u6b21analysis result; \u652f\u6301\u6309 query_id/stock code\u68c0\u7d22
     """
     __tablename__ = 'analysis_history'
 
     id = Column(Integer, primary_key=True, autoincrement=True)
 
-    # 关联查询链路
+    # \u5173\u8054query\u94fe\u8def
     query_id = Column(String(64), index=True)
 
-    # 股票信息
+    # \u80a1\u7968info
     code = Column(String(10), nullable=False, index=True)
     name = Column(String(50))
     report_type = Column(String(16), index=True)
 
-    # 核心结论
+    # \u6838\u5fc3\u7ed3\u8bba
     sentiment_score = Column(Integer)
     operation_advice = Column(String(20))
     trend_prediction = Column(String(50))
     analysis_summary = Column(Text)
 
-    # 详细数据
+    # \u8be6\u7ec6\u6570\u636e
     raw_result = Column(Text)
     news_content = Column(Text)
     context_snapshot = Column(Text)
 
-    # 狙击点位（用于回测）
+    # \u72d9\u51fb\u70b9characters (\u7528\u4e8ebacktest)
     ideal_buy = Column(Float)
     secondary_buy = Column(Float)
     stop_loss = Column(Float)
@@ -340,7 +340,7 @@ class AnalysisHistory(Base):
     )
 
     def to_dict(self) -> Dict[str, Any]:
-        """转换为字典"""
+        """\u8f6c\u6362\u4e3a\u5b57\u5178"""
         return {
             'id': self.id,
             'query_id': self.query_id,
@@ -363,7 +363,7 @@ class AnalysisHistory(Base):
 
 
 class BacktestResult(Base):
-    """单条分析记录的回测结果。"""
+    """\u5355\u6761analyze\u8bb0\u5f55\u7684backtestresult."""
 
     __tablename__ = 'backtest_results'
 
@@ -376,35 +376,35 @@ class BacktestResult(Base):
         index=True,
     )
 
-    # 冗余字段，便于按股票筛选
+    # \u5197\u4f59\u5b57\u6bb5; \u4fbf\u4e8e\u6309\u80a1\u7968\u7b5b\u9009
     code = Column(String(10), nullable=False, index=True)
     analysis_date = Column(Date, index=True)
 
-    # 回测参数
+    # backtestparameter
     eval_window_days = Column(Integer, nullable=False, default=10)
     engine_version = Column(String(16), nullable=False, default='v1')
 
-    # 状态
+    # status
     eval_status = Column(String(16), nullable=False, default='pending')
     evaluated_at = Column(DateTime, default=datetime.now, index=True)
 
-    # 建议快照（避免未来分析字段变化导致回测不可解释）
+    # \u5efa\u8bae\u5feb\u7167 (\u907f\u514d\u672a\u6765analyze\u5b57\u6bb5\u53d8\u5316\u5bfc\u81f4backtest\u4e0d\u53ef\u89e3\u91ca)
     operation_advice = Column(String(20))
     position_recommendation = Column(String(8))  # long/cash
 
-    # 价格与收益
+    # price\u4e0e\u6536\u76ca
     start_price = Column(Float)
     end_close = Column(Float)
     max_high = Column(Float)
     min_low = Column(Float)
     stock_return_pct = Column(Float)
 
-    # 方向与结果
+    # \u65b9\u5411\u4e0eresult
     direction_expected = Column(String(16))  # up/down/flat/not_down
     direction_correct = Column(Boolean, nullable=True)
     outcome = Column(String(16))  # win/loss/neutral
 
-    # 目标价命中（仅 long 且配置了止盈/止损时有意义）
+    # \u76ee\u6807\u4ef7\u547dMedium (\u4ec5 long \u4e14config\u4e86\u6b62\u76c8/\u6b62\u635f\u65f6\u6709\u610f\u4e49)
     stop_loss = Column(Float)
     take_profit = Column(Float)
     hit_stop_loss = Column(Boolean)
@@ -413,7 +413,7 @@ class BacktestResult(Base):
     first_hit_date = Column(Date)
     first_hit_trading_days = Column(Integer)
 
-    # 模拟执行（long-only）
+    # \u6a21\u62df\u6267\u884c (long-only)
     simulated_entry_price = Column(Float)
     simulated_exit_price = Column(Float)
     simulated_exit_reason = Column(String(24))  # stop_loss/take_profit/window_end/cash/ambiguous_stop_loss
@@ -431,7 +431,7 @@ class BacktestResult(Base):
 
 
 class BacktestSummary(Base):
-    """回测汇总指标（按股票或全局）。"""
+    """backtest\u6c47\u603b\u6307\u6807 (\u6309\u80a1\u7968or\u5168\u5c40)."""
 
     __tablename__ = 'backtest_summaries'
 
@@ -444,7 +444,7 @@ class BacktestSummary(Base):
     engine_version = Column(String(16), nullable=False, default='v1')
     computed_at = Column(DateTime, default=datetime.now, index=True)
 
-    # 计数
+    # \u8ba1\u6570
     total_evaluations = Column(Integer, default=0)
     completed_count = Column(Integer, default=0)
     insufficient_count = Column(Integer, default=0)
@@ -455,22 +455,22 @@ class BacktestSummary(Base):
     loss_count = Column(Integer, default=0)
     neutral_count = Column(Integer, default=0)
 
-    # 准确率/胜率
+    # \u51c6\u786e\u7387/\u80dc\u7387
     direction_accuracy_pct = Column(Float)
     win_rate_pct = Column(Float)
     neutral_rate_pct = Column(Float)
 
-    # 收益
+    # \u6536\u76ca
     avg_stock_return_pct = Column(Float)
     avg_simulated_return_pct = Column(Float)
 
-    # 目标价触发统计（仅 long 且配置止盈/止损时统计）
+    # \u76ee\u6807\u4ef7\u89e6\u53d1\u7edf\u8ba1 (\u4ec5 long \u4e14config\u6b62\u76c8/\u6b62\u635f\u65f6\u7edf\u8ba1)
     stop_loss_trigger_rate = Column(Float)
     take_profit_trigger_rate = Column(Float)
     ambiguous_rate = Column(Float)
     avg_days_to_first_hit = Column(Float)
 
-    # 诊断字段（JSON 字符串）
+    # \u8bca\u65ad\u5b57\u6bb5 (JSON \u5b57\u7b26\u4e32)
     advice_breakdown_json = Column(Text)
     diagnostics_json = Column(Text)
 
@@ -686,7 +686,7 @@ class PortfolioFxRate(Base):
 
 class ConversationMessage(Base):
     """
-    Agent 对话历史记录表
+    Agent \u5bf9\u8bddhistory records\u8868
     """
     __tablename__ = 'conversation_messages'
 
@@ -1110,31 +1110,31 @@ class _DatabaseManagerMeta(type):
 
 class DatabaseManager(metaclass=_DatabaseManagerMeta):
     """
-    数据库管理器 - 单例模式
-    
-    职责：
-    1. 管理数据库连接池
-    2. 提供 Session 上下文管理
-    3. 封装数据存取操作
+    \u6570\u636elibrary\u7ba1\u7406\u5668 - \u5355\u4f8bmode
+
+    \u804c\u8d23:
+    1. \u7ba1\u7406\u6570\u636elibrary\u8fde\u63a5\u6c60
+    2. \u63d0\u4f9b Session \u4e0a\u4e0b\u6587\u7ba1\u7406
+    3. \u5c01\u88c5\u6570\u636e\u5b58\u53d6\u64cd\u4f5c
     """
-    
+
     _instance: Optional['DatabaseManager'] = None
     _init_lock = threading.RLock()
     _initialized: bool = False
-    
+
     def __new__(cls, *args, **kwargs):
-        """单例模式实现"""
+        """\u5355\u4f8bmode\u5b9e\u73b0"""
         if cls._instance is None:
             cls._instance = super().__new__(cls)
             cls._instance._initialized = False
         return cls._instance
-    
+
     def __init__(self, db_url: Optional[str] = None):
         """
-        初始化数据库管理器
-        
+        \u521d\u59cb\u5316\u6570\u636elibrary\u7ba1\u7406\u5668
+
         Args:
-            db_url: 数据库连接 URL（可选，默认从配置读取）
+            db_url: \u6570\u636elibrary\u8fde\u63a5 URL (optional; default\u4ececonfig\u8bfb\u53d6)
         """
         if getattr(self, '_initialized', False):
             return
@@ -1161,7 +1161,7 @@ class DatabaseManager(metaclass=_DatabaseManagerMeta):
                     "timeout": self._sqlite_busy_timeout_ms / 1000,
                 }
 
-            # 创建数据库引擎
+            # \u521b\u5efa\u6570\u636elibrary\u5f15\u64ce
             created_engine = create_engine(
                 db_url,
                 **engine_kwargs,
@@ -1171,14 +1171,14 @@ class DatabaseManager(metaclass=_DatabaseManagerMeta):
             self._sqlite_file_db = self._is_sqlite_engine and self._is_file_sqlite_database()
             self._install_sqlite_pragma_handler()
 
-            # 创建 Session 工厂
+            # \u521b\u5efa Session \u5de5\u5382
             self._SessionLocal = sessionmaker(
                 bind=self._engine,
                 autocommit=False,
                 autoflush=False,
             )
 
-            # 创建所有表
+            # \u521b\u5efa\u6240\u6709\u8868
             Base.metadata.create_all(self._engine)
             self._ensure_llm_usage_telemetry_columns()
             self._ensure_intelligence_item_scope_values()
@@ -1186,9 +1186,9 @@ class DatabaseManager(metaclass=_DatabaseManagerMeta):
             self._ensure_intelligence_items_unique_index()
 
             self._initialized = True
-            logger.info(f"数据库初始化完成: {db_url}")
+            logger.info(f"\u6570\u636elibraryinitialization complete: {db_url}")
 
-            # 注册退出钩子，确保程序退出时关闭数据库连接
+            # \u6ce8\u518c\u9000\u51fa\u94a9\u5b50; \u786e\u4fddprogram exiting\u65f6\u5173\u95ed\u6570\u636elibrary\u8fde\u63a5
             atexit.register(DatabaseManager._cleanup_engine, self._engine)
         except Exception:
             self._initialized = False
@@ -1196,7 +1196,7 @@ class DatabaseManager(metaclass=_DatabaseManagerMeta):
                 if created_engine is not None:
                     created_engine.dispose()
             except Exception as cleanup_exc:
-                logger.warning("数据库初始化失败后的引擎清理也失败: %s", cleanup_exc)
+                logger.warning("\u6570\u636elibraryinitialization failed\u540e\u7684\u5f15\u64ce\u6e05\u7406\u4e5ffailed: %s", cleanup_exc)
             self._engine = None
             self._SessionLocal = None
             self.__class__._instance = None
@@ -1392,7 +1392,7 @@ class DatabaseManager(metaclass=_DatabaseManagerMeta):
                 for column in inspect(self._engine).get_columns(IntelligenceItem.__tablename__)
             }
         except Exception as exc:
-            logger.warning("资讯池 scope_value 回填检查失败，已跳过: %s", exc)
+            logger.warning("\u8d44\u8baf\u6c60 scope_value \u56de\u586b\u68c0checkfailed; \u5df2skipping: %s", exc)
             return
         if "scope_value" not in existing:
             return
@@ -1405,19 +1405,19 @@ class DatabaseManager(metaclass=_DatabaseManagerMeta):
                     (INTELLIGENCE_ITEM_NULL_SCOPE_VALUE,),
                 )
         except Exception as exc:
-            logger.warning("资讯池 scope_value 回填失败，已跳过: %s", exc)
+            logger.warning("\u8d44\u8baf\u6c60 scope_value \u56de\u586bfailed; \u5df2skipping: %s", exc)
 
     @classmethod
     def get_instance(cls) -> 'DatabaseManager':
-        """获取单例实例"""
+        """\u83b7\u53d6\u5355\u4f8b\u5b9e\u4f8b"""
         with cls._init_lock:
             if cls._instance is None:
                 cls()
             return cls._instance
-    
+
     @classmethod
     def reset_instance(cls) -> None:
-        """重置单例（用于测试）"""
+        """\u91cd\u7f6e\u5355\u4f8b (\u7528\u4e8e\u6d4b\u8bd5)"""
         with cls._init_lock:
             if cls._instance is not None:
                 if hasattr(cls._instance, '_engine') and cls._instance._engine is not None:
@@ -1428,22 +1428,22 @@ class DatabaseManager(metaclass=_DatabaseManagerMeta):
     @classmethod
     def _cleanup_engine(cls, engine) -> None:
         """
-        清理数据库引擎（atexit 钩子）
+        \u6e05\u7406\u6570\u636elibrary\u5f15\u64ce (atexit \u94a9\u5b50)
 
-        确保程序退出时关闭所有数据库连接，避免 ResourceWarning
+        \u786e\u4fddprogram exiting\u65f6\u5173\u95ed\u6240\u6709\u6570\u636elibrary\u8fde\u63a5; \u907f\u514d ResourceWarning
 
         Args:
-            engine: SQLAlchemy 引擎对象
+            engine: SQLAlchemy \u5f15\u64ce\u5bf9\u8c61
         """
         try:
             if engine is not None:
                 engine.dispose()
-                logger.debug("数据库引擎已清理")
+                logger.debug("\u6570\u636elibrary\u5f15\u64ce\u5df2\u6e05\u7406")
         except Exception as e:
-            logger.warning(f"清理数据库引擎时出错: {e}")
+            logger.warning(f"\u6e05\u7406\u6570\u636elibrary\u5f15\u64ce\u65f6\u51fa\u9519: {e}")
 
     def _install_sqlite_pragma_handler(self) -> None:
-        """为 SQLite 连接安装竞争保护参数。"""
+        """\u4e3a SQLite \u8fde\u63a5\u5b89\u88c5\u7ade\u4e89\u4fdd\u62a4parameter."""
         if not self._is_sqlite_engine:
             return
 
@@ -1455,7 +1455,7 @@ class DatabaseManager(metaclass=_DatabaseManagerMeta):
                 if self._sqlite_file_db and self._sqlite_wal_enabled:
                     cursor.execute("PRAGMA journal_mode=WAL")
             except Exception as exc:
-                logger.warning("初始化 SQLite PRAGMA 失败: %s", exc)
+                logger.warning("\u521d\u59cb\u5316 SQLite PRAGMA failed: %s", exc)
             finally:
                 cursor.close()
 
@@ -1490,7 +1490,7 @@ class DatabaseManager(metaclass=_DatabaseManagerMeta):
                 ):
                     delay = self._sqlite_write_retry_base_delay * (2 ** attempt)
                     logger.warning(
-                        "SQLite 写入锁冲突，准备重试: %s (%s/%s, %.2fs)",
+                        "SQLite \u5199\u5165\u9501\u51b2\u7a81; \u51c6\u5907\u91cd\u8bd5: %s (%s/%s, %.2fs)",
                         operation_name,
                         attempt + 1,
                         max_retries,
@@ -1536,20 +1536,20 @@ class DatabaseManager(metaclass=_DatabaseManagerMeta):
     @staticmethod
     def _normalize_sql_value(value: Any) -> Any:
         return None if pd.isna(value) else value
-    
+
     def get_session(self) -> Session:
         """
-        获取数据库 Session
-        
-        使用示例:
+        \u83b7\u53d6\u6570\u636elibrary Session
+
+        \u4f7f\u7528\u793a\u4f8b:
             with db.get_session() as session:
-                # 执行查询
-                session.commit()  # 如果需要
+                # \u6267\u884cquery
+                session.commit()  # \u5982\u679c\u9700\u8981
         """
         if not getattr(self, '_initialized', False) or not hasattr(self, '_SessionLocal'):
             raise RuntimeError(
-                "DatabaseManager 未正确初始化。"
-                "请确保通过 DatabaseManager.get_instance() 获取实例。"
+                "DatabaseManager \u672a\u6b63\u786e\u521d\u59cb\u5316."
+                "\u8bf7\u786e\u4fdd\u901a\u8fc7 DatabaseManager.get_instance() \u83b7\u53d6\u5b9e\u4f8b."
             )
         session = self._SessionLocal()
         try:
@@ -1570,26 +1570,26 @@ class DatabaseManager(metaclass=_DatabaseManagerMeta):
             raise
         finally:
             session.close()
-    
+
     def has_today_data(self, code: str, target_date: Optional[date] = None) -> bool:
         """
-        检查是否已有指定日期的数据
-        
-        用于断点续传逻辑：如果已有数据则跳过网络请求
-        
+        \u68c0check\u662f\u5426\u5df2\u6709\u6307\u5b9adatedata
+
+        \u7528\u4e8e\u65ad\u70b9\u7eed\u4f20\u903b\u8f91: \u5982\u679c\u5df2\u6709\u6570\u636e\u5219skipping\u7f51\u7edcrequest
+
         Args:
-            code: 股票代码
-            target_date: 目标日期（默认今天）
-            
+            code: stock code
+            target_date: \u76ee\u6807date (default\u4eca\u5929)
+
         Returns:
-            是否存在数据
+            \u662f\u5426\u5b58\u5728\u6570\u636e
         """
         if target_date is None:
             target_date = date.today()
-        # 注意：这里的 target_date 语义是“自然日”，而不是“最新交易日”。
-        # 在周末/节假日/非交易日运行时，即使数据库已有最新交易日数据，这里也会返回 False。
-        # 该行为目前保留（按需求不改逻辑）。
-        
+        # \u6ce8\u610f: \u8fd9\u91cc\u7684 target_date \u8bed\u4e49\u662f“\u81ea\u7136\u65e5”; \u800c\u4e0d\u662f“\u6700\u65b0\u4ea4\u6613\u65e5”.
+        # \u5728\u5468\u672b/\u8282\u5047\u65e5/\u975e\u4ea4\u6613\u65e5\u8fd0\u884c\u65f6; \u5373\u4f7f\u6570\u636elibrary\u5df2\u6709\u6700\u65b0\u4ea4\u6613\u65e5\u6570\u636e; \u8fd9\u91cc\u4e5f\u4f1a\u8fd4\u56de False.
+        # \u8be5\u884c\u4e3a\u76ee\u524d\u4fdd\u7559 (\u6309\u9700\u6c42\u4e0d\u6539\u903b\u8f91).
+
         with self.get_session() as session:
             result = session.execute(
                 select(StockDaily).where(
@@ -1599,25 +1599,25 @@ class DatabaseManager(metaclass=_DatabaseManagerMeta):
                     )
                 )
             ).scalar_one_or_none()
-            
+
             return result is not None
-    
+
     def get_latest_data(
-        self, 
-        code: str, 
+        self,
+        code: str,
         days: int = 2
     ) -> List[StockDaily]:
         """
-        获取最近 N 天的数据
-        
-        用于计算"相比昨日"的变化
-        
+        \u83b7\u53d6\u6700\u8fd1 N \u5929data
+
+        \u7528\u4e8e\u8ba1\u7b97"\u76f8\u6bd4\u6628\u65e5"\u7684\u53d8\u5316
+
         Args:
-            code: 股票代码
-            days: 获取天数
-            
+            code: stock code
+            days: \u83b7\u53d6\u5929\u6570
+
         Returns:
-            StockDaily 对象列表（按日期降序）
+            StockDaily \u5bf9\u8c61\u5217\u8868 (\u6309date\u964d\u5e8f)
         """
         with self.get_session() as session:
             results = session.execute(
@@ -1626,7 +1626,7 @@ class DatabaseManager(metaclass=_DatabaseManagerMeta):
                 .order_by(desc(StockDaily.date))
                 .limit(days)
             ).scalars().all()
-            
+
             return list(results)
 
     def save_news_intel(
@@ -1639,14 +1639,14 @@ class DatabaseManager(metaclass=_DatabaseManagerMeta):
         query_context: Optional[Dict[str, str]] = None
     ) -> int:
         """
-        保存新闻情报到数据库
+        \u4fdd\u5b58news\u60c5\u62a5\u5230\u6570\u636elibrary
 
-        去重策略：
-        - 优先按 URL 去重（唯一约束）
-        - URL 缺失时按 title + source + published_date 进行软去重
+        \u53bb\u91cdstrategy:
+        - \u4f18\u5148\u6309 URL \u53bb\u91cd (\u552f\u4e00\u7ea6\u675f)
+        - URL \u7f3a\u5931\u65f6\u6309 title + source + published_date \u8fdb\u884c\u8f6f\u53bb\u91cd
 
-        关联策略：
-        - query_context 记录用户查询信息（平台、用户、会话、原始指令等）
+        \u5173\u8054strategy:
+        - query_context \u8bb0\u5f55userqueryinfo (\u5e73\u53f0、user、conversation、\u539f\u59cb\u6307\u4ee4\u7b49)
         """
         if not response or not response.results:
             return 0
@@ -1742,7 +1742,7 @@ class DatabaseManager(metaclass=_DatabaseManagerMeta):
                         session.flush()
                     local_saved_count += 1
                 except IntegrityError:
-                    logger.debug("新闻情报重复（已跳过）: %s %s", code, url_key)
+                    logger.debug("news\u60c5\u62a5\u91cd\u590d (\u5df2skipping): %s %s", code, url_key)
 
             return local_saved_count
 
@@ -1751,9 +1751,9 @@ class DatabaseManager(metaclass=_DatabaseManagerMeta):
                 f"save_news_intel[{code}]",
                 _write,
             )
-            logger.info(f"保存新闻情报成功: {code}, 新增 {saved_count} 条")
+            logger.info(f"\u4fdd\u5b58news\u60c5\u62a5success: {code}, \u65b0\u589e {saved_count} \u6761")
         except Exception as e:
-            logger.error(f"保存新闻情报失败: {e}")
+            logger.error(f"\u4fdd\u5b58news\u60c5\u62a5failed: {e}")
             raise
 
         return saved_count
@@ -1767,7 +1767,7 @@ class DatabaseManager(metaclass=_DatabaseManagerMeta):
         coverage: Optional[Any] = None,
     ) -> int:
         """
-        保存基本面快照（P0 write-only）。失败不抛异常，返回写入条数 0/1。
+        \u4fdd\u5b58fundamentals\u5feb\u7167 (P0 write-only).failed\u4e0d\u629b\u5f02\u5e38; \u8fd4\u56de\u5199\u5165\u6761\u6570 0/1.
         """
         if not query_id or not code or payload is None:
             return 0
@@ -1790,7 +1790,7 @@ class DatabaseManager(metaclass=_DatabaseManagerMeta):
             )
         except Exception as e:
             logger.debug(
-                "基本面快照写入失败（fail-open）: query_id=%s code=%s err=%s",
+                "fundamentals\u5feb\u7167\u5199\u5165failed (fail-open): query_id=%s code=%s err=%s",
                 query_id,
                 code,
                 e,
@@ -1803,9 +1803,9 @@ class DatabaseManager(metaclass=_DatabaseManagerMeta):
         code: str,
     ) -> Optional[Dict[str, Any]]:
         """
-        获取指定 query_id + code 的最新基本面快照 payload。
+        \u83b7\u53d6\u6307\u5b9a query_id + code \u7684\u6700\u65b0fundamentals\u5feb\u7167 payload.
 
-        读取失败或不存在时返回 None（fail-open）。
+        \u8bfb\u53d6failedordoes not exist\u65f6\u8fd4\u56de None (fail-open).
         """
         if not query_id or not code:
             return None
@@ -1825,7 +1825,7 @@ class DatabaseManager(metaclass=_DatabaseManagerMeta):
                 ).scalar_one_or_none()
             except Exception as e:
                 logger.debug(
-                    "基本面快照读取失败（fail-open）: query_id=%s code=%s err=%s",
+                    "fundamentals\u5feb\u7167\u8bfb\u53d6failed (fail-open): query_id=%s code=%s err=%s",
                     query_id,
                     code,
                     e,
@@ -1842,7 +1842,7 @@ class DatabaseManager(metaclass=_DatabaseManagerMeta):
 
     def get_recent_news(self, code: str, days: int = 7, limit: int = 20) -> List[NewsIntel]:
         """
-        获取指定股票最近 N 天的新闻情报
+        \u83b7\u53d6\u6307\u5b9a\u80a1\u7968\u6700\u8fd1 N \u5929\u7684news\u60c5\u62a5
         """
         cutoff_date = datetime.now() - timedelta(days=days)
 
@@ -1863,14 +1863,14 @@ class DatabaseManager(metaclass=_DatabaseManagerMeta):
 
     def get_news_intel_by_query_id(self, query_id: str, limit: int = 20) -> List[NewsIntel]:
         """
-        根据 query_id 获取新闻情报列表
+        \u6839\u636e query_id \u83b7\u53d6news\u60c5\u62a5\u5217\u8868
 
         Args:
-            query_id: 分析记录唯一标识
-            limit: 返回数量限制
+            query_id: analyze\u8bb0\u5f55\u552f\u4e00\u6807\u8bc6
+            limit: \u8fd4\u56decountlimit
 
         Returns:
-            NewsIntel 列表（按发布时间或抓取时间倒序）
+            NewsIntel \u5217\u8868 (\u6309\u53d1\u5e03\u65f6\u95f4or\u6293\u53d6\u65f6\u95f4\u5012\u5e8f)
         """
         from sqlalchemy import func
 
@@ -1897,10 +1897,10 @@ class DatabaseManager(metaclass=_DatabaseManagerMeta):
         save_snapshot: bool = True
     ) -> int:
         """
-        保存分析结果历史记录。
+        \u4fdd\u5b58analysis resulthistory records.
 
         Returns:
-            新保存的 AnalysisHistory.id；保存失败返回 0。
+            \u65b0\u4fdd\u5b58\u7684 AnalysisHistory.id；save failed\u8fd4\u56de 0.
         """
         if result is None:
             return 0
@@ -1939,7 +1939,7 @@ class DatabaseManager(metaclass=_DatabaseManagerMeta):
                 _write,
             )
         except Exception as e:
-            logger.error(f"保存分析历史失败: {e}")
+            logger.error(f"\u4fdd\u5b58analyzehistoryfailed: {e}")
             return 0
 
     def update_analysis_history_diagnostics(
@@ -1951,10 +1951,10 @@ class DatabaseManager(metaclass=_DatabaseManagerMeta):
         notification_runs: Optional[List[Dict[str, Any]]] = None,
     ) -> int:
         """
-        更新已保存分析历史的运行诊断快照。
+        \u66f4\u65b0\u5df2\u4fdd\u5b58analyzehistory\u7684\u8fd0\u884c\u8bca\u65ad\u5feb\u7167.
 
-        通知结果通常在分析历史落库后才产生，因此这里仅补写
-        context_snapshot.diagnostics，不改变报告正文或其它历史字段。
+        \u901a\u77e5result\u901a\u5e38\u5728analyzehistory\u843dlibrary\u540e\u624d\u4ea7\u751f; \u56e0\u6b64\u8fd9\u91cc\u4ec5\u8865\u5199
+        context_snapshot.diagnostics; \u4e0d\u6539\u53d8report\u6b63\u6587or\u5176\u5b83history\u5b57\u6bb5.
         """
         if not query_id or (diagnostics is None and not notification_runs):
             return 0
@@ -2014,7 +2014,7 @@ class DatabaseManager(metaclass=_DatabaseManagerMeta):
             )
         except Exception as e:
             logger.warning(
-                "更新分析历史诊断快照失败（fail-open）: query_id=%s code=%s err=%s",
+                "\u66f4\u65b0analyzehistory\u8bca\u65ad\u5feb\u7167failed (fail-open): query_id=%s code=%s err=%s",
                 query_id,
                 code,
                 e,
@@ -2090,7 +2090,7 @@ class DatabaseManager(metaclass=_DatabaseManagerMeta):
                 .order_by(desc(AnalysisHistory.created_at), desc(AnalysisHistory.id))
                 .limit(1)
             ).scalar_one_or_none()
-    
+
     def get_analysis_history_paginated(
         self,
         code: Optional[Union[str, List[str]]] = None,
@@ -2101,24 +2101,24 @@ class DatabaseManager(metaclass=_DatabaseManagerMeta):
         limit: int = 20
     ) -> Tuple[List[AnalysisHistory], int]:
         """
-        分页查询分析历史记录（带总数）
-        
+        \u5206\u9875queryanalyzehistory records (\u5e26\u603b\u6570)
+
         Args:
-            code: 股票代码筛选
-            report_type: 报告类型筛选
-            start_date: 开始日期（含）
-            end_date: 结束日期（含）
-            offset: 偏移量（跳过前 N 条）
-            limit: 每页数量
-            
+            code: stock code\u7b5b\u9009
+            report_type: report type\u7b5b\u9009
+            start_date: \u5f00\u59cbdate (\u542b)
+            end_date: \u7ed3\u675fdate (\u542b)
+            offset: Slightly \u79fb\u91cf (skipping\u524d N \u6761)
+            limit: \u6bcf\u9875count
+
         Returns:
-            Tuple[List[AnalysisHistory], int]: (记录列表, 总数)
+            Tuple[List[AnalysisHistory], int]: (\u8bb0\u5f55\u5217\u8868, \u603b\u6570)
         """
         from sqlalchemy import func
-        
+
         with self.get_session() as session:
             conditions = []
-            
+
             if code:
                 if isinstance(code, list):
                     codes = [c for c in code if c]
@@ -2132,17 +2132,17 @@ class DatabaseManager(metaclass=_DatabaseManagerMeta):
                 # created_at >= start_date 00:00:00
                 conditions.append(AnalysisHistory.created_at >= datetime.combine(start_date, datetime.min.time()))
             if end_date:
-                # created_at < end_date+1 00:00:00 (即 <= end_date 23:59:59)
+                # created_at < end_date+1 00:00:00 (\u5373 <= end_date 23:59:59)
                 conditions.append(AnalysisHistory.created_at < datetime.combine(end_date + timedelta(days=1), datetime.min.time()))
-            
-            # 构建 where 子句
+
+            # \u6784\u5efa where \u5b50\u53e5
             where_clause = and_(*conditions) if conditions else True
-            
-            # 查询总数
+
+            # query\u603b\u6570
             total_query = select(func.count(AnalysisHistory.id)).where(where_clause)
             total = session.execute(total_query).scalar() or 0
-            
-            # 查询分页数据
+
+            # query\u5206\u9875\u6570\u636e
             data_query = (
                 select(AnalysisHistory)
                 .where(where_clause)
@@ -2151,21 +2151,21 @@ class DatabaseManager(metaclass=_DatabaseManagerMeta):
                 .limit(limit)
             )
             results = session.execute(data_query).scalars().all()
-            
+
             return list(results), total
-    
+
     def get_analysis_history_by_id(self, record_id: int) -> Optional[AnalysisHistory]:
         """
-        根据数据库主键 ID 查询单条分析历史记录
-        
-        由于 query_id 可能重复（批量分析时多条记录共享同一 query_id），
-        使用主键 ID 确保精确查询唯一记录。
-        
+        \u6839\u636e\u6570\u636elibrary\u4e3b\u952e ID query\u5355\u6761analyzehistory records
+
+        \u7531\u4e8e query_id \u53ef\u80fd\u91cd\u590d (batchanalyze\u65f6\u591a\u6761\u8bb0\u5f55\u5171\u4eab\u540c\u4e00 query_id);
+        \u4f7f\u7528\u4e3b\u952e ID \u786e\u4fdd\u7cbe\u786equery\u552f\u4e00\u8bb0\u5f55.
+
         Args:
-            record_id: 分析历史记录的主键 ID
-            
+            record_id: analyzehistory records\u7684\u4e3b\u952e ID
+
         Returns:
-            AnalysisHistory 对象，不存在返回 None
+            AnalysisHistory \u5bf9\u8c61; does not exist\u8fd4\u56de None
         """
         with self.get_session() as session:
             result = session.execute(
@@ -2175,17 +2175,17 @@ class DatabaseManager(metaclass=_DatabaseManagerMeta):
 
     def delete_analysis_history_records(self, record_ids: List[int]) -> int:
         """
-        删除指定的分析历史记录。
+        \u5220\u9664\u6307\u5b9a\u7684analyzehistory records.
 
-        同时清理依赖这些历史记录的回测结果和分析来源决策信号，避免
-        依赖历史记录的派生数据残留。DecisionSignal 的 source_report_id
-        允许弱引用，因此这里只清理 source_type=analysis 的真实历史绑定信号。
+        \u540c\u65f6\u6e05\u7406\u4f9d\u8d56\u8fd9\u4e9bhistory records\u7684backtestresult\u548canalyzesource\u51b3\u7b56\u4fe1\u53f7; \u907f\u514d
+        \u4f9d\u8d56history records\u7684\u6d3e\u751f\u6570\u636e\u6b8b\u7559.DecisionSignal \u7684 source_report_id
+        \u5141\u8bb8\u5f31\u5f15\u7528; \u56e0\u6b64\u8fd9\u91cc\u53ea\u6e05\u7406 source_type=analysis \u7684\u771f\u5b9ehistory\u7ed1\u5b9a\u4fe1\u53f7.
 
         Args:
-            record_ids: 要删除的历史记录主键 ID 列表
+            record_ids: \u8981\u5220\u9664\u7684history records\u4e3b\u952e ID \u5217\u8868
 
         Returns:
-            实际删除的历史记录数量
+            \u5b9e\u9645\u5220\u9664\u7684history recordscount
         """
         ids = sorted({int(record_id) for record_id in record_ids if record_id is not None})
         if not ids:
@@ -2240,19 +2240,19 @@ class DatabaseManager(metaclass=_DatabaseManagerMeta):
         include_market_review: bool = False,
     ) -> List[AnalysisHistory]:
         """
-        获取历史记录中的不重复股票列表，每只股票取最新一条记录。
+        \u83b7\u53d6history recordsMedium\u7684\u4e0d\u91cd\u590d\u80a1\u7968\u5217\u8868; \u6bcfstocks\u53d6\u6700\u65b0\u4e00\u6761\u8bb0\u5f55.
 
-        使用子查询按 code 分组取 MAX(id)，再 JOIN 回查完整记录。
-        默认排除大盘复盘，避免混入普通个股栏。
+        \u4f7f\u7528\u5b50query\u6309 code \u5206\u7ec4\u53d6 MAX(id); \u518d JOIN \u56decheck\u5b8c\u6574\u8bb0\u5f55.
+        default\u6392\u9664market review; \u907f\u514d\u6df7\u5165\u666e\u901aindividual stocks\u680f.
 
         Args:
-            start_date: 开始日期
-            end_date: 结束日期
-            limit: 最大返回数量
-            include_market_review: 是否包含大盘复盘记录
+            start_date: \u5f00\u59cbdate
+            end_date: \u7ed3\u675fdate
+            limit: \u6700\u5927\u8fd4\u56decount
+            include_market_review: \u662f\u5426\u5305\u542bmarket review\u8bb0\u5f55
 
         Returns:
-            每条股票最新一条 AnalysisHistory 记录列表
+            \u6bcf\u6761\u80a1\u7968\u6700\u65b0\u4e00\u6761 AnalysisHistory \u8bb0\u5f55\u5217\u8868
         """
         with self.get_session() as session:
             subq = (
@@ -2303,17 +2303,17 @@ class DatabaseManager(metaclass=_DatabaseManagerMeta):
         report_type: Optional[str] = None,
     ) -> Optional[AnalysisHistory]:
         """
-        根据 query_id 查询最新一条分析历史记录
+        \u6839\u636e query_id query\u6700\u65b0\u4e00\u6761analyzehistory records
 
-        query_id 在批量分析时可能重复，故返回最近创建的一条。
+        query_id \u5728batchanalyze\u65f6\u53ef\u80fd\u91cd\u590d; \u6545\u8fd4\u56de\u6700\u8fd1\u521b\u5efa\u7684\u4e00\u6761.
 
         Args:
-            query_id: 分析记录关联的 query_id
-            code: 可选股票代码过滤，用于区分同一 query_id 下的 MARKET 与个股记录
-            report_type: 可选报告类型过滤
+            query_id: analyze\u8bb0\u5f55\u5173\u8054\u7684 query_id
+            code: optionalstock code\u8fc7\u6ee4; \u7528\u4e8e\u533a\u5206\u540c\u4e00 query_id \u4e0b\u7684 MARKET \u4e0eindividual stocks\u8bb0\u5f55
+            report_type: optionalreport type\u8fc7\u6ee4
 
         Returns:
-            AnalysisHistory 对象，不存在返回 None
+            AnalysisHistory \u5bf9\u8c61; does not exist\u8fd4\u56de None
         """
         with self.get_session() as session:
             conditions = [AnalysisHistory.query_id == query_id]
@@ -2329,23 +2329,23 @@ class DatabaseManager(metaclass=_DatabaseManagerMeta):
                 .limit(1)
             ).scalars().first()
             return result
-    
+
     def get_data_range(
-        self, 
-        code: str, 
-        start_date: date, 
+        self,
+        code: str,
+        start_date: date,
         end_date: date
     ) -> List[StockDaily]:
         """
-        获取指定日期范围的数据
-        
+        \u83b7\u53d6\u6307\u5b9adate\u8303\u56f4data
+
         Args:
-            code: 股票代码
-            start_date: 开始日期
-            end_date: 结束日期
-            
+            code: stock code
+            start_date: \u5f00\u59cbdate
+            end_date: \u7ed3\u675fdate
+
         Returns:
-            StockDaily 对象列表
+            StockDaily \u5bf9\u8c61\u5217\u8868
         """
         with self.get_session() as session:
             results = session.execute(
@@ -2359,33 +2359,33 @@ class DatabaseManager(metaclass=_DatabaseManagerMeta):
                 )
                 .order_by(StockDaily.date)
             ).scalars().all()
-            
+
             return list(results)
-    
+
     def save_daily_data(
-        self, 
-        df: pd.DataFrame, 
+        self,
+        df: pd.DataFrame,
         code: str,
         data_source: str = "Unknown"
     ) -> int:
         """
-        保存日线数据到数据库
-        
-        策略：
-        - 按 `(code, date)` 做批量 UPSERT，已存在记录会覆盖更新
-        - 同一批次内若存在重复日期，以最后一条记录为准
-        - SQLite 分支按 chunk 写入以避免绑定参数上限
-        
+        \u4fdd\u5b58daily data\u6570\u636e\u5230\u6570\u636elibrary
+
+        strategy:
+        - \u6309 `(code, date)` \u505abatch UPSERT; already exists\u8bb0\u5f55\u4f1a\u8986\u76d6\u66f4\u65b0
+        - \u540c\u4e00\u6279\u6b21\u5185\u82e5\u5b58\u5728\u91cd\u590ddate; \u4ee5\u6700\u540e\u4e00\u6761\u8bb0\u5f55\u4e3a\u51c6
+        - SQLite \u5206\u652f\u6309 chunk \u5199\u5165\u4ee5\u907f\u514d\u7ed1\u5b9aparameter\u4e0a\u9650
+
         Args:
-            df: 包含日线数据的 DataFrame
-            code: 股票代码
-            data_source: 数据来源名称
-            
+            df: \u5305\u542bdaily data\u6570\u636e\u7684 DataFrame
+            code: stock code
+            data_source: \u6570\u636esourcename
+
         Returns:
-            本次实际新增的记录数（不含更新）
+            this run\u5b9e\u9645\u65b0\u589e\u7684\u8bb0\u5f55\u6570 (\u4e0d\u542b\u66f4\u65b0)
         """
         if df is None or df.empty:
-            logger.warning(f"保存数据为空，跳过 {code}")
+            logger.warning(f"\u4fdd\u5b58\u6570\u636e\u4e3a\u7a7a; skipping {code}")
             return 0
 
         now = datetime.now()
@@ -2508,103 +2508,103 @@ class DatabaseManager(metaclass=_DatabaseManagerMeta):
                 f"save_daily_data[{code}]",
                 _write,
             )
-            logger.info(f"保存 {code} 数据成功，新增 {saved_count} 条")
+            logger.info(f"\u4fdd\u5b58 {code} \u6570\u636esuccess; \u65b0\u589e {saved_count} \u6761")
             return saved_count
         except Exception as e:
-            logger.error(f"保存 {code} 数据失败: {e}")
+            logger.error(f"\u4fdd\u5b58 {code} \u6570\u636efailed: {e}")
             raise
-    
+
     def get_analysis_context(
-        self, 
+        self,
         code: str,
         target_date: Optional[date] = None
     ) -> Optional[Dict[str, Any]]:
         """
-        获取分析所需的上下文数据
-        
-        返回今日数据 + 昨日数据的对比信息
-        
+        \u83b7\u53d6analyze\u6240\u9700\u7684\u4e0a\u4e0b\u6587\u6570\u636e
+
+        \u8fd4\u56de\u4eca\u65e5\u6570\u636e + \u6628\u65e5\u6570\u636e\u7684\u5bf9\u6bd4info
+
         Args:
-            code: 股票代码
-            target_date: 目标日期（默认今天）
-            
+            code: stock code
+            target_date: \u76ee\u6807date (default\u4eca\u5929)
+
         Returns:
-            包含今日数据、昨日对比等信息的字典
+            \u5305\u542b\u4eca\u65e5\u6570\u636e、\u6628\u65e5\u5bf9\u6bd4\u7b49info\u7684\u5b57\u5178
         """
         if target_date is None:
             target_date = date.today()
-        # 注意：尽管入参提供了 target_date，但当前实现实际使用的是“最新两天数据”（get_latest_data），
-        # 并不会按 target_date 精确取当日/前一交易日的上下文。
-        # 因此若未来需要支持“按历史某天复盘/重算”的可解释性，这里需要调整。
-        # 该行为目前保留（按需求不改逻辑）。
-        
-        # 获取最近2天数据
+        # \u6ce8\u610f: \u5c3d\u7ba1\u5165\u53c2\u63d0\u4f9b\u4e86 target_date; \u4f46\u5f53\u524d\u5b9e\u73b0\u5b9e\u9645\u4f7f\u7528\u7684\u662f“\u6700\u65b0\u4e24\u5929\u6570\u636e” (get_latest_data);
+        # \u5e76\u4e0d\u4f1a\u6309 target_date \u7cbe\u786e\u53d6\u5f53\u65e5/\u524d\u4e00\u4ea4\u6613\u65e5\u7684\u4e0a\u4e0b\u6587.
+        # \u56e0\u6b64\u82e5\u672a\u6765\u9700\u8981\u652f\u6301“\u6309history\u67d0\u5929\u590d\u76d8/\u91cd\u7b97”\u7684\u53ef\u89e3\u91ca; \u8fd9\u91cc\u9700\u8981\u8c03\u6574.
+        # \u8be5\u884c\u4e3a\u76ee\u524d\u4fdd\u7559 (\u6309\u9700\u6c42\u4e0d\u6539\u903b\u8f91).
+
+        # \u83b7\u53d6\u6700\u8fd12\u5929\u6570\u636e
         recent_data = self.get_latest_data(code, days=2)
-        
+
         if not recent_data:
-            logger.warning(f"未找到 {code} 的数据")
+            logger.warning(f"\u672a\u627e\u5230 {code} data")
             return None
-        
+
         today_data = recent_data[0]
         yesterday_data = recent_data[1] if len(recent_data) > 1 else None
-        
+
         context = {
             'code': code,
             'date': today_data.date.isoformat(),
             'today': today_data.to_dict(),
         }
-        
+
         if yesterday_data:
             context['yesterday'] = yesterday_data.to_dict()
-            
-            # 计算相比昨日的变化
+
+            # \u8ba1\u7b97\u76f8\u6bd4\u6628\u65e5\u7684\u53d8\u5316
             if yesterday_data.volume and yesterday_data.volume > 0:
                 context['volume_change_ratio'] = round(
                     today_data.volume / yesterday_data.volume, 2
                 )
-            
+
             if yesterday_data.close and yesterday_data.close > 0:
                 context['price_change_ratio'] = round(
                     (today_data.close - yesterday_data.close) / yesterday_data.close * 100, 2
                 )
-            
-            # 均线形态判断
+
+            # \u5747\u7ebf\u5f62\u6001\u5224\u65ad
             context['ma_status'] = self._analyze_ma_status(today_data)
-        
+
         return context
-    
+
     def _analyze_ma_status(self, data: StockDaily) -> str:
         """
-        分析均线形态
-        
-        判断条件：
-        - 多头排列：close > ma5 > ma10 > ma20
-        - 空头排列：close < ma5 < ma10 < ma20
-        - 震荡整理：其他情况
+        analyze\u5747\u7ebf\u5f62\u6001
+
+        \u5224\u65ad\u6761\u4ef6:
+        - \u591a\u5934\u6392\u5217: close > ma5 > ma10 > ma20
+        - \u7a7a\u5934\u6392\u5217: close < ma5 < ma10 < ma20
+        - \u9707\u8361\u6574\u7406: other\u60c5\u51b5
         """
-        # 注意：这里的均线形态判断基于“close/ma5/ma10/ma20”静态比较，
-        # 未考虑均线拐点、斜率、或不同数据源复权口径差异。
-        # 该行为目前保留（按需求不改逻辑）。
+        # \u6ce8\u610f: \u8fd9\u91cc\u7684\u5747\u7ebf\u5f62\u6001\u5224\u65ad\u57fa\u4e8e“close/ma5/ma10/ma20”\u9759\u6001\u6bd4\u8f83;
+        # \u672a\u8003\u8651\u5747\u7ebf\u62d0\u70b9、\u659c\u7387、or\u4e0d\u540cdata source\u590d\u6743\u53e3\u5f84\u5dee\u5f02.
+        # \u8be5\u884c\u4e3a\u76ee\u524d\u4fdd\u7559 (\u6309\u9700\u6c42\u4e0d\u6539\u903b\u8f91).
         close = data.close or 0
         ma5 = data.ma5 or 0
         ma10 = data.ma10 or 0
         ma20 = data.ma20 or 0
-        
+
         if close > ma5 > ma10 > ma20 > 0:
-            return "多头排列 📈"
+            return "\u591a\u5934\u6392\u5217 📈"
         elif close < ma5 < ma10 < ma20 and ma20 > 0:
-            return "空头排列 📉"
+            return "\u7a7a\u5934\u6392\u5217 📉"
         elif close > ma5 and ma5 > ma10:
-            return "短期向好 🔼"
+            return "\u77ed\u671f\u5411\u597d 🔼"
         elif close < ma5 and ma5 < ma10:
-            return "短期走弱 🔽"
+            return "\u77ed\u671f\u8d70\u5f31 🔽"
         else:
-            return "震荡整理 ↔️"
+            return "\u9707\u8361\u6574\u7406 ↔️"
 
     @staticmethod
     def _parse_published_date(value: Optional[str]) -> Optional[datetime]:
         """
-        解析发布时间字符串（失败返回 None）
+        \u89e3\u6790\u53d1\u5e03\u65f6\u95f4\u5b57\u7b26\u4e32 (failed\u8fd4\u56de None)
         """
         if not value:
             return None
@@ -2616,7 +2616,7 @@ class DatabaseManager(metaclass=_DatabaseManagerMeta):
         if not text:
             return None
 
-        # 优先尝试 ISO 格式
+        # \u4f18\u5148\u5c1d\u8bd5 ISO \u683c\u5f0f
         try:
             return datetime.fromisoformat(text)
         except ValueError:
@@ -2640,7 +2640,7 @@ class DatabaseManager(metaclass=_DatabaseManagerMeta):
     @staticmethod
     def _safe_json_dumps(data: Any) -> str:
         """
-        安全序列化为 JSON 字符串
+        \u5b89\u5168\u5e8f\u5217\u5316\u4e3a JSON \u5b57\u7b26\u4e32
         """
         try:
             return json.dumps(data, ensure_ascii=False, default=str)
@@ -2650,7 +2650,7 @@ class DatabaseManager(metaclass=_DatabaseManagerMeta):
     @staticmethod
     def _build_raw_result(result: Any) -> Dict[str, Any]:
         """
-        生成完整分析结果字典
+        \u751f\u6210\u5b8c\u6574analysis result\u5b57\u5178
         """
         data = result.to_dict() if hasattr(result, "to_dict") else {}
         data.update({
@@ -2676,7 +2676,7 @@ class DatabaseManager(metaclass=_DatabaseManagerMeta):
         published_date: Optional[datetime]
     ) -> str:
         """
-        生成无 URL 时的去重键（确保稳定且较短）
+        \u751f\u6210\u65e0 URL \u65f6\u7684\u53bb\u91cd\u952e (\u786e\u4fdd\u7a33\u5b9a\u4e14\u8f83\u77ed)
         """
         date_str = published_date.isoformat() if published_date else ""
         raw_key = f"{code}|{title}|{source}|{date_str}"
@@ -2685,7 +2685,7 @@ class DatabaseManager(metaclass=_DatabaseManagerMeta):
 
     def save_conversation_message(self, session_id: str, role: str, content: str) -> int:
         """
-        保存 Agent 对话消息
+        \u4fdd\u5b58 Agent \u5bf9\u8bdd\u6d88\u606f
         """
         with self.session_scope() as session:
             msg = ConversationMessage(
@@ -2699,7 +2699,7 @@ class DatabaseManager(metaclass=_DatabaseManagerMeta):
 
     def get_conversation_history(self, session_id: str, limit: int = 20) -> List[Dict[str, Any]]:
         """
-        获取 Agent 对话历史
+        \u83b7\u53d6 Agent \u5bf9\u8bddhistory
         """
         with self.session_scope() as session:
             stmt = select(ConversationMessage).filter(
@@ -2707,7 +2707,7 @@ class DatabaseManager(metaclass=_DatabaseManagerMeta):
             ).order_by(ConversationMessage.created_at.desc()).limit(limit)
             messages = session.execute(stmt).scalars().all()
 
-            # 倒序返回，保证时间顺序
+            # \u5012\u5e8f\u8fd4\u56de; \u4fdd\u8bc1\u65f6\u95f4\u987a\u5e8f
             return [{"role": msg.role, "content": msg.content} for msg in reversed(messages)]
 
     def get_visible_conversation_messages(self, session_id: str, limit: Optional[int] = None) -> List[Dict[str, Any]]:
@@ -2936,7 +2936,7 @@ class DatabaseManager(metaclass=_DatabaseManagerMeta):
         extra_session_ids: Optional[List[str]] = None,
     ) -> List[Dict[str, Any]]:
         """
-        获取聊天会话列表（从 conversation_messages 聚合）
+        \u83b7\u53d6\u804a\u5929conversation\u5217\u8868 (\u4ece conversation_messages \u805a\u5408)
 
         Args:
             limit: Maximum number of sessions to return.
@@ -2947,7 +2947,7 @@ class DatabaseManager(metaclass=_DatabaseManagerMeta):
                 addition to the scoped prefix.
 
         Returns:
-            按最近活跃时间倒序的会话列表，每条包含 session_id, title, message_count, last_active
+            \u6309\u6700\u8fd1\u6d3b\u8dc3\u65f6\u95f4\u5012\u5e8f\u7684conversation\u5217\u8868; \u6bcf\u6761\u5305\u542b session_id, title, message_count, last_active
         """
         from sqlalchemy import func
 
@@ -2957,7 +2957,7 @@ class DatabaseManager(metaclass=_DatabaseManagerMeta):
                 normalized_prefix = session_prefix if session_prefix.endswith(":") else f"{session_prefix}:"
             exact_ids = [sid for sid in (extra_session_ids or []) if sid]
 
-            # 聚合每个 session 的消息数和最后活跃时间
+            # \u805a\u5408\u6bcf\u4e2a session \u7684\u6d88\u606f\u6570\u548c\u6700\u540e\u6d3b\u8dc3\u65f6\u95f4
             base = (
                 select(
                     ConversationMessage.session_id,
@@ -2984,7 +2984,7 @@ class DatabaseManager(metaclass=_DatabaseManagerMeta):
             results = []
             for row in rows:
                 sid = row.session_id
-                # 取该会话第一条 user 消息作为标题
+                # \u53d6\u8be5conversation\u7b2c\u4e00\u6761 user \u6d88\u606f\u4f5c\u4e3a\u6807\u9898
                 first_user_msg = session.execute(
                     select(ConversationMessage.content)
                     .where(
@@ -2996,7 +2996,7 @@ class DatabaseManager(metaclass=_DatabaseManagerMeta):
                     .order_by(ConversationMessage.created_at)
                     .limit(1)
                 ).scalar()
-                title = (first_user_msg or "新对话")[:60]
+                title = (first_user_msg or "\u65b0\u5bf9\u8bdd")[:60]
 
                 results.append({
                     "session_id": sid,
@@ -3009,7 +3009,7 @@ class DatabaseManager(metaclass=_DatabaseManagerMeta):
 
     def get_conversation_messages(self, session_id: str, limit: int = 100) -> List[Dict[str, Any]]:
         """
-        获取单个会话的完整消息列表（用于前端恢复历史）
+        \u83b7\u53d6\u5355\u4e2aconversation\u7684\u5b8c\u6574\u6d88\u606f\u5217\u8868 (\u7528\u4e8e\u524d\u7aef\u6062\u590dhistory)
         """
         with self.session_scope() as session:
             stmt = (
@@ -3031,10 +3031,10 @@ class DatabaseManager(metaclass=_DatabaseManagerMeta):
 
     def delete_conversation_session(self, session_id: str) -> int:
         """
-        删除指定会话的所有消息
+        \u5220\u9664\u6307\u5b9aconversation\u7684\u6240\u6709\u6d88\u606f
 
         Returns:
-            删除的消息数
+            \u5220\u9664\u7684\u6d88\u606f\u6570
         """
         with self.session_scope() as session:
             session.execute(
@@ -3220,9 +3220,9 @@ class DatabaseManager(metaclass=_DatabaseManagerMeta):
         ]
 
 
-# 便捷函数
+# \u4fbf\u6377\u51fd\u6570
 def get_db() -> DatabaseManager:
-    """获取数据库管理器实例的快捷方式"""
+    """\u83b7\u53d6\u6570\u636elibrary\u7ba1\u7406\u5668\u5b9e\u4f8b\u7684\u5feb\u6377\u65b9\u5f0f"""
     return DatabaseManager.get_instance()
 
 
@@ -3317,19 +3317,19 @@ def _coerce_llm_usage_non_negative_int(value: Any) -> Optional[int]:
 
 
 if __name__ == "__main__":
-    # 测试代码
+    # \u6d4b\u8bd5code
     logging.basicConfig(level=logging.DEBUG)
-    
+
     db = get_db()
-    
-    print("=== 数据库测试 ===")
-    print(f"数据库初始化成功")
-    
-    # 测试检查今日数据
+
+    print("=== \u6570\u636elibrary\u6d4b\u8bd5 ===")
+    print(f"\u6570\u636elibraryinitialization succeeded")
+
+    # \u6d4b\u8bd5\u68c0check\u4eca\u65e5\u6570\u636e
     has_data = db.has_today_data('600519')
-    print(f"茅台今日是否有数据: {has_data}")
-    
-    # 测试保存数据
+    print(f"\u8305\u53f0\u4eca\u65e5\u662f\u5426\u6709\u6570\u636e: {has_data}")
+
+    # \u6d4b\u8bd5\u4fdd\u5b58\u6570\u636e
     test_df = pd.DataFrame({
         'date': [date.today()],
         'open': [1800.0],
@@ -3344,10 +3344,10 @@ if __name__ == "__main__":
         'ma20': [1790.0],
         'volume_ratio': [1.2],
     })
-    
+
     saved = db.save_daily_data(test_df, '600519', 'TestSource')
-    print(f"保存测试数据: {saved} 条")
-    
-    # 测试获取上下文
+    print(f"\u4fdd\u5b58\u6d4b\u8bd5\u6570\u636e: {saved} \u6761")
+
+    # \u6d4b\u8bd5\u83b7\u53d6\u4e0a\u4e0b\u6587
     context = db.get_analysis_context('600519')
-    print(f"分析上下文: {context}")
+    print(f"analyze\u4e0a\u4e0b\u6587: {context}")

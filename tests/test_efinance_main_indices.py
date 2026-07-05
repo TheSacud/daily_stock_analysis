@@ -16,17 +16,17 @@ class TestEfinanceMainIndices(unittest.TestCase):
         fetcher = EfinanceFetcher()
         fake_df = pd.DataFrame(
             {
-                "股票代码": ["000001"],
-                "最新价": [3200.0],
-                "涨跌幅": [0.63],
-                "涨跌额": [20.0],
-                "今开": [3188.0],
-                "开盘": [0.0],
-                "最高": [3215.0],
-                "最低": [3170.0],
-                "成交量": [123456789],
-                "成交额": [9876543210.0],
-                "振幅": [1.2],
+                "\u80a1\u7968\u4ee3\u7801": ["000001"],
+                "\u6700\u65b0\u4ef7": [3200.0],
+                "\u6da8\u8dcc\u5e45": [0.63],
+                "\u6da8\u8dcc\u989d": [20.0],
+                "\u4eca\u5f00": [3188.0],
+                "\u5f00\u76d8": [0.0],
+                "\u6700\u9ad8": [3215.0],
+                "\u6700\u4f4e": [3170.0],
+                "\u6210\u4ea4\u91cf": [123456789],
+                "\u6210\u4ea4\u989d": [9876543210.0],
+                "\u632f\u5e45": [1.2],
             }
         )
         fake_efinance = types.SimpleNamespace(
@@ -42,7 +42,7 @@ class TestEfinanceMainIndices(unittest.TestCase):
         self.assertIsNotNone(data)
         self.assertEqual(len(data), 1)
         self.assertEqual(data[0]["code"], "sh000001")
-        self.assertEqual(data[0]["name"], "上证指数")
+        self.assertEqual(data[0]["name"], "\u4e0a\u8bc1\u6307\u6570")
         self.assertAlmostEqual(data[0]["open"], 3188.0)
         self.assertAlmostEqual(data[0]["current"], 3200.0)
 
@@ -50,17 +50,17 @@ class TestEfinanceMainIndices(unittest.TestCase):
         fetcher = EfinanceFetcher()
         fake_df = pd.DataFrame(
             {
-                "股票代码": ["000001"],
-                "最新价": [3200.0],
-                "涨跌幅": [0.63],
-                "涨跌额": [20.0],
-                "今开": [""],
-                "开盘": [3186.0],
-                "最高": [3215.0],
-                "最低": [3170.0],
-                "成交量": [123456789],
-                "成交额": [9876543210.0],
-                "振幅": [1.2],
+                "\u80a1\u7968\u4ee3\u7801": ["000001"],
+                "\u6700\u65b0\u4ef7": [3200.0],
+                "\u6da8\u8dcc\u5e45": [0.63],
+                "\u6da8\u8dcc\u989d": [20.0],
+                "\u4eca\u5f00": [""],
+                "\u5f00\u76d8": [3186.0],
+                "\u6700\u9ad8": [3215.0],
+                "\u6700\u4f4e": [3170.0],
+                "\u6210\u4ea4\u91cf": [123456789],
+                "\u6210\u4ea4\u989d": [9876543210.0],
+                "\u632f\u5e45": [1.2],
             }
         )
         fake_efinance = types.SimpleNamespace(

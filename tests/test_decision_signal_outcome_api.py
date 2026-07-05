@@ -78,7 +78,7 @@ def client_and_db(tmp_path):
 def _payload(**overrides):
     payload = {
         "stock_code": "600519",
-        "stock_name": "贵州茅台",
+        "stock_name": "\u8d35\u5dde\u8305\u53f0",
         "market": "cn",
         "source_type": "analysis",
         "source_agent": "api-test",
@@ -92,7 +92,7 @@ def _payload(**overrides):
         "horizon": "3d",
         "entry_low": 100,
         "stop_loss": 95,
-        "reason": "突破平台",
+        "reason": "\u7a81\u7834\u5e73\u53f0",
         "data_quality_summary": {"level": "good"},
         "metadata": {
             "market_phase_summary": {"session_date": "2024-01-02"},
@@ -165,7 +165,7 @@ def test_outcome_run_list_stats_signal_outcomes_and_feedback(client_and_db) -> N
         json={
             "feedback_value": "useful",
             "reason_code": "matched_plan",
-            "note": "后验表现符合预期",
+            "note": "\u540e\u9a8c\u8868\u73b0\u7b26\u5408\u9884\u671f",
             "source": "web",
         },
     )

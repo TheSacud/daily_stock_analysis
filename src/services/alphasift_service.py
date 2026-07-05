@@ -52,7 +52,7 @@ DSA_ALPHASIFT_HOTSPOT_DETAIL_CACHE_TTL_SECONDS = 30 * 60
 DSA_ALPHASIFT_HOTSPOT_EVENT_SUMMARY_MAX_CHARS = 90
 DSA_ALPHASIFT_HOTSPOT_PREFETCH_DETAIL_COUNT = 8
 DSA_ALPHASIFT_HOTSPOT_UNAVAILABLE_CODE = "eastmoney_hotspot_unavailable"
-DSA_ALPHASIFT_HOTSPOT_UNAVAILABLE_MESSAGE = "热点源连接中断，暂无可用缓存。"
+DSA_ALPHASIFT_HOTSPOT_UNAVAILABLE_MESSAGE = "\u70ed\u70b9\u6e90\u8fde\u63a5Medium\u65ad; \u6682\u65e0\u53ef\u7528cache."
 DSA_ALPHASIFT_HOTSPOT_CONNECTIVITY_ERROR_MARKERS = (
     "remote disconnected",
     "remote end closed connection",
@@ -349,7 +349,7 @@ def _build_hotspot_event_routes_from_search(topic: str, config: Config) -> List[
             topic_text,
             topic_text,
             max_results=3,
-            focus_keywords=[topic_text, "A股", "题材", "催化", "涨价"],
+            focus_keywords=[topic_text, "A-share", "\u9898\u6750", "\u50ac\u5316", "\u6da8\u4ef7"],
         )
     except Exception as exc:
         logger.info("AlphaSift hotspot event search skipped for %s: %s", topic_text, exc)
@@ -391,7 +391,7 @@ def _build_hotspot_event_routes_from_search(topic: str, config: Config) -> List[
     )
     date = first_date or _extract_date_text(description) or today
     return [{
-        "title": "消息催化",
+        "title": "\u6d88\u606f\u50ac\u5316",
         "description": description,
         "source": ",".join(sources) if sources else "news_search",
         "date": date,
@@ -415,49 +415,49 @@ def _summarize_hotspot_news_event_locally(*, topic: str, text: str) -> str:
     catalyst = _extract_hotspot_catalyst_phrase(cleaned)
     impacts = _extract_hotspot_impact_phrases(cleaned)
     if catalyst and impacts:
-        summary = f"{catalyst}，带动{impacts}发酵。"
+        summary = f"{catalyst}; \u5e26\u52a8{impacts}\u53d1\u9175."
     elif catalyst:
-        summary = f"{catalyst}，市场关注{topic}相关产业链机会。"
+        summary = f"{catalyst}; market\u5173\u6ce8{topic}\u76f8\u5173\u4ea7\u4e1a\u94fe\u673a\u4f1a."
     else:
         summary = _first_meaningful_hotspot_sentence(cleaned)
-    summary = _truncate_text(summary, DSA_ALPHASIFT_HOTSPOT_EVENT_SUMMARY_MAX_CHARS).rstrip(".。…")
-    return _truncate_text(f"{summary}。", DSA_ALPHASIFT_HOTSPOT_EVENT_SUMMARY_MAX_CHARS)
+    summary = _truncate_text(summary, DSA_ALPHASIFT_HOTSPOT_EVENT_SUMMARY_MAX_CHARS).rstrip("..…")
+    return _truncate_text(f"{summary}.", DSA_ALPHASIFT_HOTSPOT_EVENT_SUMMARY_MAX_CHARS)
 
 
 def _strip_hotspot_news_noise(text: str) -> str:
     cleaned = _normalize_inline_text(text)
     cleaned = re.sub(r"【[^】]{1,24}】", " ", cleaned)
     cleaned = re.sub(r"\[[^\]]{1,24}\]", " ", cleaned)
-    cleaned = re.sub(r"\b20\d{2}[-/.年]\d{1,2}[-/.月]\d{1,2}[日号]?\b", " ", cleaned)
+    cleaned = re.sub(r"\b20\d{2}[-/.\u5e74]\d{1,2}[-/.\u6708]\d{1,2}[\u65e5\u53f7]?\b", " ", cleaned)
     cleaned = re.sub(r"\b\d{1,2}:\d{2}\b", " ", cleaned)
     cleaned = re.sub(r"\([^)]{0,18}\d+\.\d+[^)]{0,18}\)", " ", cleaned)
-    cleaned = re.sub(r"（[^）]{0,18}\d+\.\d+[^）]{0,18}）", " ", cleaned)
-    cleaned = re.sub(r"截至[^。；;]*", " ", cleaned)
-    cleaned = re.sub(r"(建议关注|后续建议|风险提示|投资建议)[^。；;]*", " ", cleaned)
+    cleaned = re.sub(r" ([^)]{0,18}\d+\.\d+[^)]{0,18})", " ", cleaned)
+    cleaned = re.sub(r"\u622a\u81f3[^.；;]*", " ", cleaned)
+    cleaned = re.sub(r"(\u5efa\u8bae\u5173\u6ce8|\u540e\u7eed\u5efa\u8bae|risk warning|\u6295\u8d44\u5efa\u8bae)[^.；;]*", " ", cleaned)
     cleaned = re.sub(r"\s+", " ", cleaned)
-    return cleaned.strip(" ，,；;。.")
+    return cleaned.strip(" ; ,；;..")
 
 
 def _extract_hotspot_catalyst_phrase(text: str) -> str:
     patterns = (
-        r"以[^，。；;]{1,12}代[^，。；;]{1,12}",
-        r"[^，。；;]{1,18}(涨价|价格上行|供需偏紧|供应紧张|资源增储|订单增长|政策催化|出口管制|减产|并购重组|技术突破)[^，。；;]{0,24}",
-        r"[^，。；;]{1,18}(替代|国产替代|需求增长|景气上行)[^，。；;]{0,24}",
+        r"\u4ee5[^; .；;]{1,12}\u4ee3[^; .；;]{1,12}",
+        r"[^; .；;]{1,18}(\u6da8\u4ef7|price\u4e0a\u884c|\u4f9b\u9700Slightly \u7d27|\u4f9b\u5e94\u7d27\u5f20|\u8d44\u6e90\u589e\u50a8|\u8ba2\u5355\u589e\u957f|\u653f\u7b56\u50ac\u5316|\u51fa\u53e3\u7ba1\u5236|\u51cf\u4ea7|\u5e76\u8d2d\u91cd\u7ec4|\u6280\u672f\u7a81\u7834)[^; .；;]{0,24}",
+        r"[^; .；;]{1,18}(\u66ff\u4ee3|\u56fd\u4ea7\u66ff\u4ee3|\u9700\u6c42\u589e\u957f|\u666f\u6c14\u4e0a\u884c)[^; .；;]{0,24}",
     )
     for pattern in patterns:
         match = re.search(pattern, text)
         if match:
-            return _normalize_inline_text(match.group(0)).strip(" ，,；;。.")
+            return _normalize_inline_text(match.group(0)).strip(" ; ,；;..")
     return ""
 
 
 def _extract_hotspot_impact_phrases(text: str) -> str:
     impacts: List[str] = []
     keyword_groups = (
-        ("小金属", ("小金属", "钼", "钨", "锑", "锗", "铟")),
-        ("有色金属", ("有色", "铜", "铝", "锌", "铅")),
-        ("相关个股", ("涨停", "异动", "走强", "大涨", "拉升")),
-        ("产业链", ("产业链", "上游", "下游", "材料", "资源")),
+        ("\u5c0f\u91d1\u5c5e", ("\u5c0f\u91d1\u5c5e", "\u94bc", "\u94a8", "\u9511", "\u9517", "\u94df")),
+        ("\u6709\u8272\u91d1\u5c5e", ("\u6709\u8272", "\u94dc", "\u94dd", "\u950c", "\u94c5")),
+        ("\u76f8\u5173individual stocks", ("\u6da8\u505c", "\u5f02\u52a8", "\u8d70\u5f3a", "\u5927\u6da8", "\u62c9\u5347")),
+        ("\u4ea7\u4e1a\u94fe", ("\u4ea7\u4e1a\u94fe", "\u4e0a\u6e38", "\u4e0b\u6e38", "\u6750\u6599", "\u8d44\u6e90")),
     )
     for label, keywords in keyword_groups:
         if any(keyword in text for keyword in keywords) and label not in impacts:
@@ -467,12 +467,12 @@ def _extract_hotspot_impact_phrases(text: str) -> str:
 
 def _first_meaningful_hotspot_sentence(text: str) -> str:
     sentences = [
-        _normalize_inline_text(item).strip(" ，,；;。.")
-        for item in re.split(r"[。！？!?；;]", text)
+        _normalize_inline_text(item).strip(" ; ,；;..")
+        for item in re.split(r"[.！？!?；;]", text)
         if _normalize_inline_text(item)
     ]
     for sentence in sentences:
-        if len(sentence) >= 8 and not re.search(r"(现价|成交额|涨跌幅|换手率|建议关注|截至)", sentence):
+        if len(sentence) >= 8 and not re.search(r"(\u73b0\u4ef7|amount|change\u5e45|turnover|\u5efa\u8bae\u5173\u6ce8|\u622a\u81f3)", sentence):
             return sentence
     return sentences[0] if sentences else text
 
@@ -481,11 +481,11 @@ def _compact_hotspot_news_text(*, title: str, snippet: str) -> str:
     title_text = _normalize_inline_text(title)
     snippet_text = _normalize_inline_text(snippet)
     if title_text and snippet_text.startswith(title_text):
-        snippet_text = snippet_text[len(title_text):].lstrip(" ：:，,。;；")
+        snippet_text = snippet_text[len(title_text):].lstrip(" : :; ,.;；")
     if title_text and snippet_text == title_text:
         snippet_text = ""
-    text = "。".join(part for part in (title_text, snippet_text) if part)
-    text = re.sub(r"(\d{4}[-/.年]\d{1,2}[-/.月]\d{1,2}[日号]?)\s+\d{1,2}:\d{2}", r"\1", text)
+    text = ".".join(part for part in (title_text, snippet_text) if part)
+    text = re.sub(r"(\d{4}[-/.\u5e74]\d{1,2}[-/.\u6708]\d{1,2}[\u65e5\u53f7]?)\s+\d{1,2}:\d{2}", r"\1", text)
     text = re.sub(r"\s+", " ", text).strip()
     return text
 
@@ -501,7 +501,7 @@ def _truncate_text(text: str, max_chars: int) -> str:
     text = _normalize_inline_text(text)
     if len(text) <= max_chars:
         return text
-    sentence_parts = re.split(r"(?<=[。！？!?；;])", text)
+    sentence_parts = re.split(r"(?<=[.！？!?；;])", text)
     summary = ""
     for part in sentence_parts:
         if not part:
@@ -510,8 +510,8 @@ def _truncate_text(text: str, max_chars: int) -> str:
             break
         summary += part
     if summary:
-        return summary.rstrip("，,；;：: ")[:max_chars].rstrip("，,；;：: ") + "..."
-    return text[: max(0, max_chars - 3)].rstrip("，,；;：: ") + "..."
+        return summary.rstrip("; ,；;: : ")[:max_chars].rstrip("; ,；;: : ") + "..."
+    return text[: max(0, max_chars - 3)].rstrip("; ,；;: : ") + "..."
 
 
 def _summarize_hotspot_news_event_with_llm(*, topic: str, text: str, config: Config) -> str:
@@ -522,16 +522,16 @@ def _summarize_hotspot_news_event_with_llm(*, topic: str, text: str, config: Con
         import litellm
 
         prompt = (
-            "请把下面新闻压缩成一句 A 股热点题材催化摘要。"
-            "要求：不超过 70 个中文字符，只保留事件、影响方向和相关链条；"
-            "不要输出完整报道、股票价格流水、免责声明或投资建议。\n\n"
-            f"题材：{topic}\n新闻：{text}"
+            "\u8bf7\u628a\u4e0b\u9762news\u538b\u7f29\u6210\u4e00\u53e5 A \u80a1\u70ed\u70b9\u9898\u6750\u50ac\u5316summary."
+            "\u8981\u6c42: \u4e0d\u8d85\u8fc7 70 \u4e2aMedium\u6587\u5b57\u7b26; \u53ea\u4fdd\u7559\u4e8b\u4ef6、\u5f71\u54cd\u65b9\u5411\u548c\u76f8\u5173\u94fe\u6761；"
+            "\u4e0d\u8981\u8f93\u51fa\u5b8c\u6574\u62a5\u9053、\u80a1\u7968price\u6d41\u6c34、\u514d\u8d23\u58f0\u660eor\u6295\u8d44\u5efa\u8bae.\n\n"
+            f"\u9898\u6750: {topic}\nnews: {text}"
         )
         with _alphasift_litellm_headers(config):
             response = litellm.completion(
                 model=model,
                 messages=[
-                    {"role": "system", "content": "你是A股题材事件摘要助手，只输出一句短摘要。"},
+                    {"role": "system", "content": "\u4f60\u662fA-share\u9898\u6750\u4e8b\u4ef6summary\u52a9\u624b; \u53ea\u8f93\u51fa\u4e00\u53e5\u77edsummary."},
                     {"role": "user", "content": prompt},
                 ],
                 temperature=0.2,
@@ -560,12 +560,12 @@ def _extract_litellm_message_content(response: Any) -> str:
 
 def _clean_hotspot_llm_summary(text: str) -> str:
     summary = _normalize_inline_text(text).strip(" 　\"'“”‘’")
-    summary = re.sub(r"^(摘要|总结|消息催化|事件催化)\s*[:：]\s*", "", summary)
+    summary = re.sub(r"^(summary|\u603b\u7ed3|\u6d88\u606f\u50ac\u5316|\u4e8b\u4ef6\u50ac\u5316)\s*[:: ]\s*", "", summary)
     return summary
 
 
 def _extract_date_text(text: str) -> str:
-    match = re.search(r"(20\d{2})[-/.年](\d{1,2})[-/.月](\d{1,2})", text or "")
+    match = re.search(r"(20\d{2})[-/.\u5e74](\d{1,2})[-/.\u6708](\d{1,2})", text or "")
     if not match:
         return ""
     year, month, day = match.groups()
@@ -1006,7 +1006,7 @@ class AlphaSiftService:
         if not topic_text:
             raise HTTPException(
                 status_code=400,
-                detail={"error": "alphasift_hotspot_topic_required", "message": "热点题材名称不能为空。"},
+                detail={"error": "alphasift_hotspot_topic_required", "message": "\u70ed\u70b9\u9898\u6750namecannot be empty."},
             )
         provider_name, provider_arg = _resolve_hotspot_provider(provider)
         if not isinstance(provider_arg, DsaEastMoneyHotspotProvider):
@@ -1094,7 +1094,7 @@ class AlphaSiftService:
         _ensure_supported_strategy(strategy)
 
         adapter = _get_dsa_adapter()
-        screen = _get_adapter_callable(adapter, "screen", "screen() 不可调用。")
+        screen = _get_adapter_callable(adapter, "screen", "screen() \u4e0d\u53ef\u8c03\u7528.")
         try:
             raw = _call_alphasift_screen(screen, strategy, market, max_results, self.config)
         except ValueError as exc:
@@ -1105,14 +1105,14 @@ class AlphaSiftService:
         except (TypeError, KeyError) as exc:
             raise HTTPException(
                 status_code=422,
-                detail={"error": "alphasift_invalid_input", "message": f"AlphaSift 参数非法：{exc}"},
+                detail={"error": "alphasift_invalid_input", "message": f"AlphaSift parameter\u975e\u6cd5: {exc}"},
             ) from exc
         except HTTPException:
             raise
         except Exception as exc:
             raise HTTPException(
                 status_code=424,
-                detail={"error": "alphasift_screen_failed", "message": f"AlphaSift 选股运行失败：{exc}"},
+                detail={"error": "alphasift_screen_failed", "message": f"AlphaSift \u9009\u80a1\u8fd0\u884cfailed: {exc}"},
             ) from exc
 
         raw_data = _to_plain(raw)
@@ -1230,7 +1230,7 @@ def _hotspot_timeline_to_route(timeline: List[Any]) -> List[Dict[str, Any]]:
         source = _env_text(item.get("source")) or "alphasift_timeline"
         route.append({
             "title": title,
-            "description": f"{date}：{title}" if date else title,
+            "description": f"{date}: {title}" if date else title,
             "source": source,
             "url": _env_text(item.get("url")),
             "published_at": date,
@@ -1238,8 +1238,8 @@ def _hotspot_timeline_to_route(timeline: List[Any]) -> List[Dict[str, Any]]:
     if route:
         return route
     return [{
-        "title": "等待发酵",
-        "description": "暂未获取到明确催化事件，可继续观察涨跌幅、成交额和核心个股联动。",
+        "title": "waiting\u53d1\u9175",
+        "description": "\u6682\u672a\u83b7\u53d6\u5230\u660e\u786e\u50ac\u5316\u4e8b\u4ef6; \u53ef\u7ee7\u7eed\u89c2\u5bdfchange\u5e45、amount\u548c\u6838\u5fc3individual stocks\u8054\u52a8.",
         "source": "fallback",
     }]
 
@@ -1292,7 +1292,7 @@ def _has_meaningful_hotspot_route(route: Any) -> bool:
         source = _env_text(item.get("source"))
         if not title and not description:
             continue
-        if source == "fallback" and title == "等待发酵":
+        if source == "fallback" and title == "waiting\u53d1\u9175":
             continue
         return True
     return False
@@ -1304,16 +1304,16 @@ def _build_alphasift_hotspot_summary_text(summary: Dict[str, Any], *, topic: str
     heat = _safe_float(summary.get("heat_score"))
     stage = _env_text(summary.get("stage"))
     leaders = summary.get("leaders") if isinstance(summary.get("leaders"), list) else []
-    parts = [f"{display_topic} 当前热点详情"]
+    parts = [f"{display_topic} \u5f53\u524d\u70ed\u70b9\u8be6\u60c5"]
     if heat is not None:
-        parts.append(f"热度 {heat:.1f}")
+        parts.append(f"\u70ed\u5ea6 {heat:.1f}")
     if stage:
-        parts.append(f"阶段 {stage}")
+        parts.append(f"\u9636\u6bb5 {stage}")
     if leaders:
-        parts.append("核心股 " + "、".join(_env_text(item) for item in leaders[:3] if _env_text(item)))
+        parts.append("\u6838\u5fc3\u80a1 " + "、".join(_env_text(item) for item in leaders[:3] if _env_text(item)))
     if quality:
-        parts.append(f"质量状态 {quality}")
-    return "，".join(part for part in parts if part) + "。"
+        parts.append(f"\u8d28\u91cfstatus {quality}")
+    return "; ".join(part for part in parts if part) + "."
 
 
 def _install_alphasift(config: Config) -> Dict[str, Any]:
@@ -1341,7 +1341,7 @@ def _install_alphasift(config: Config) -> Dict[str, Any]:
         except Exception as exc:
             raise HTTPException(
                 status_code=424,
-                detail={"error": "alphasift_install_failed", "message": f"修复安装 AlphaSift 失败：{exc}"},
+                detail={"error": "alphasift_install_failed", "message": f"\u4fee\u590d\u5b89\u88c5 AlphaSift failed: {exc}"},
             ) from exc
 
         if completed.returncode != 0:
@@ -1352,7 +1352,7 @@ def _install_alphasift(config: Config) -> Dict[str, Any]:
                 status_code=424,
                 detail={
                     "error": "alphasift_install_failed",
-                    "message": f"修复安装 AlphaSift 失败：{detail}",
+                    "message": f"\u4fee\u590d\u5b89\u88c5 AlphaSift failed: {detail}",
                 },
             )
 
@@ -1362,7 +1362,7 @@ def _install_alphasift(config: Config) -> Dict[str, Any]:
         if not _is_adapter_available(adapter_status):
             raise HTTPException(
                 status_code=424,
-                detail={"error": "alphasift_unavailable", "message": "AlphaSift 安装完成，但适配层当前不可用（available=false）。请检查当前 Python 环境和安装状态后重试。"},
+                detail={"error": "alphasift_unavailable", "message": "AlphaSift \u5b89\u88c5\u5b8c\u6210; \u4f46\u9002\u914d\u5c42\u5f53\u524dunavailable (available=false).\u8bf7\u68c0check\u5f53\u524d Python \u73af\u5883\u548c\u5b89\u88c5status\u540e\u91cd\u8bd5."},
             )
         _get_dsa_adapter()
 
@@ -1379,7 +1379,7 @@ def _validate_install_spec(raw_install_spec: str) -> str:
             status_code=424,
             detail={
                 "error": "alphasift_install_spec_missing",
-                "message": f"请先将 ALPHASIFT_INSTALL_SPEC 配置为受信任来源：{DEFAULT_ALPHASIFT_INSTALL_SPEC}。",
+                "message": f"\u8bf7\u5148\u5c06 ALPHASIFT_INSTALL_SPEC config\u4e3a\u53d7\u4fe1\u4efbsource: {DEFAULT_ALPHASIFT_INSTALL_SPEC}.",
             },
         )
 
@@ -1389,8 +1389,8 @@ def _validate_install_spec(raw_install_spec: str) -> str:
             detail={
                 "error": "alphasift_install_spec_not_allowed",
                 "message": (
-                    "出于安全考虑，修复安装 AlphaSift 仅允许使用受信任来源："
-                    f"{DEFAULT_ALPHASIFT_INSTALL_SPEC}。如需使用本地路径或 wheel，请先手动安装到当前 Python 环境。"
+                    "\u51fa\u4e8e\u5b89\u5168\u8003\u8651; \u4fee\u590d\u5b89\u88c5 AlphaSift \u4ec5\u5141\u8bb8\u4f7f\u7528\u53d7\u4fe1\u4efbsource: "
+                    f"{DEFAULT_ALPHASIFT_INSTALL_SPEC}.\u5982\u9700\u4f7f\u7528\u672c\u5730\u8def\u5f84or wheel; \u8bf7\u5148\u624b\u52a8\u5b89\u88c5\u5230\u5f53\u524d Python \u73af\u5883."
                 ),
             },
         )
@@ -1420,11 +1420,11 @@ def _ensure_alphasift_available_for_use() -> None:
     normalized_diagnostics = _include_alphasift_diagnostic_suffix(diagnostics)
     if _is_missing_alphasift_module(diagnostics):
         raise _alphasift_unavailable_exception(
-            "AlphaSift 是 DSA 的项目依赖，但当前运行环境未安装适配层。请先执行 `pip install -r requirements.txt`，或重建 Docker/桌面后端产物。",
+            "AlphaSift \u662f DSA \u7684\u9879\u76ee\u4f9d\u8d56; \u4f46\u5f53\u524d\u8fd0\u884c\u73af\u5883is not installed\u9002\u914d\u5c42.\u8bf7\u5148\u6267\u884c `pip install -r requirements.txt`; or\u91cd\u5efa Docker/\u684c\u9762\u540e\u7aef\u4ea7\u7269.",
             diagnostics=normalized_diagnostics,
         )
     raise _alphasift_unavailable_exception(
-        "AlphaSift 已开启但当前运行时状态异常。已保留异常诊断，避免自动重装掩盖真实问题。",
+        "AlphaSift \u5df2\u5f00\u542f\u4f46\u5f53\u524d\u8fd0\u884c\u65f6status\u5f02\u5e38.\u5df2\u4fdd\u7559\u5f02\u5e38\u8bca\u65ad; \u907f\u514d\u81ea\u52a8\u91cd\u88c5\u63a9\u76d6\u771f\u5b9equestion.",
         diagnostics=normalized_diagnostics,
     )
 
@@ -1444,7 +1444,7 @@ def _include_alphasift_diagnostic_suffix(
     normalized.setdefault("resolution", "no_auto_install")
     normalized.setdefault(
         "message",
-        "请先检查后端日志并修复运行时异常，当前未触发修复安装。",
+        "\u8bf7\u5148\u68c0check\u540e\u7aeflog\u5e76\u4fee\u590d\u8fd0\u884c\u65f6\u5f02\u5e38; \u5f53\u524d\u672a\u89e6\u53d1\u4fee\u590d\u5b89\u88c5.",
     )
     return normalized
 
@@ -1488,7 +1488,7 @@ def _ensure_alphasift_install_access(request: Request) -> None:
             status_code=403,
             detail={
                 "error": "alphasift_install_access_denied",
-                "message": "AlphaSift 修复安装仅允许桌面模式或已启用管理员认证的会话。请先启用管理员认证后重试。",
+                "message": "AlphaSift \u4fee\u590d\u5b89\u88c5\u4ec5\u5141\u8bb8\u684c\u9762modeorenabled\u7ba1\u7406\u5458\u8ba4\u8bc1\u7684conversation.\u8bf7\u5148\u542f\u7528\u7ba1\u7406\u5458\u8ba4\u8bc1\u540e\u91cd\u8bd5.",
             },
         )
 
@@ -1500,7 +1500,7 @@ def _ensure_alphasift_install_access(request: Request) -> None:
         status_code=401,
         detail={
             "error": "alphasift_install_access_denied",
-            "message": "AlphaSift 修复安装需要有效管理员会话。",
+            "message": "AlphaSift \u4fee\u590d\u5b89\u88c5\u9700\u8981\u6709\u6548\u7ba1\u7406\u5458conversation.",
         },
     )
 
@@ -1529,18 +1529,18 @@ def _import_alphasift() -> Any:
                 "module": str(getattr(exc, "name", ALPHASIFT_DSA_ADAPTER_MODULE)),
             }
             raise _alphasift_unavailable_exception(
-                f"AlphaSift 未安装或未挂载到当前 Python 环境，无法导入 {ALPHASIFT_DSA_ADAPTER_MODULE}：{exc}",
+                f"AlphaSift is not installedor\u672a\u6302\u8f7d\u5230\u5f53\u524d Python \u73af\u5883; \u65e0\u6cd5\u5bfc\u5165 {ALPHASIFT_DSA_ADAPTER_MODULE}: {exc}",
                 diagnostics=diagnostics,
             ) from exc
         diagnostics = _log_unexpected_alphasift_exception("import_adapter", exc)
         raise _alphasift_unavailable_exception(
-            f"AlphaSift 适配层导入失败，请检查依赖完整性和当前 Python 环境：{exc}",
+            f"AlphaSift \u9002\u914d\u5c42\u5bfc\u5165failed; \u8bf7\u68c0check\u4f9d\u8d56\u5b8c\u6574\u548c\u5f53\u524d Python \u73af\u5883: {exc}",
             diagnostics=diagnostics,
         ) from exc
     except Exception as exc:
         diagnostics = _log_unexpected_alphasift_exception("import_adapter", exc)
         raise _alphasift_unavailable_exception(
-            f"AlphaSift 适配层导入失败，请检查依赖完整性和当前 Python 环境：{exc}",
+            f"AlphaSift \u9002\u914d\u5c42\u5bfc\u5165failed; \u8bf7\u68c0check\u4f9d\u8d56\u5b8c\u6574\u548c\u5f53\u524d Python \u73af\u5883: {exc}",
             diagnostics=diagnostics,
         ) from exc
 
@@ -1590,7 +1590,7 @@ def _prepare_alphasift_runtime_env() -> None:
 def _get_dsa_adapter() -> Any:
     adapter = _import_alphasift()
     for attr in ("get_status", "list_strategies", "screen"):
-        _get_adapter_callable(adapter, attr, f"{attr}() 不可调用。")
+        _get_adapter_callable(adapter, attr, f"{attr}() \u4e0d\u53ef\u8c03\u7528.")
     return adapter
 
 
@@ -1599,7 +1599,7 @@ def _get_adapter_callable(adapter: Any, name: str, missing_error: str) -> Any:
     if not callable(callable_obj):
         raise HTTPException(
             status_code=424,
-            detail={"error": "alphasift_unavailable", "message": f"已导入 alphasift 适配层，但 {missing_error}"},
+            detail={"error": "alphasift_unavailable", "message": f"\u5df2\u5bfc\u5165 alphasift \u9002\u914d\u5c42; \u4f46 {missing_error}"},
         )
     return callable_obj
 
@@ -1617,21 +1617,21 @@ def _call_alphasift_status() -> Dict[str, Any]:
                 "module": str(getattr(exc, "name", ALPHASIFT_DSA_ADAPTER_MODULE)),
             }
             raise _alphasift_unavailable_exception(
-                f"AlphaSift 未安装或未挂载到当前 Python 环境，无法导入 {ALPHASIFT_DSA_ADAPTER_MODULE}：{exc}",
+                f"AlphaSift is not installedor\u672a\u6302\u8f7d\u5230\u5f53\u524d Python \u73af\u5883; \u65e0\u6cd5\u5bfc\u5165 {ALPHASIFT_DSA_ADAPTER_MODULE}: {exc}",
                 diagnostics=diagnostics,
             ) from exc
 
         diagnostics = _log_unexpected_alphasift_exception("import_adapter", exc)
         raise _alphasift_unavailable_exception(
-            f"AlphaSift 适配层导入失败，请检查依赖完整性和当前 Python 环境：{exc}",
+            f"AlphaSift \u9002\u914d\u5c42\u5bfc\u5165failed; \u8bf7\u68c0check\u4f9d\u8d56\u5b8c\u6574\u548c\u5f53\u524d Python \u73af\u5883: {exc}",
             diagnostics=diagnostics,
         ) from exc
     try:
-        get_status = _get_adapter_callable(adapter, "get_status", "get_status() 不可调用。")
+        get_status = _get_adapter_callable(adapter, "get_status", "get_status() \u4e0d\u53ef\u8c03\u7528.")
     except HTTPException as exc:
         diagnostics = _log_unexpected_alphasift_exception("get_status_callable", exc)
         raise _alphasift_unavailable_exception(
-            "AlphaSift 适配层 get_status 不可调用，请检查适配层版本。",
+            "AlphaSift \u9002\u914d\u5c42 get_status \u4e0d\u53ef\u8c03\u7528; \u8bf7\u68c0check\u9002\u914d\u5c42\u7248\u672c.",
             diagnostics=diagnostics,
         ) from exc
     try:
@@ -1639,14 +1639,14 @@ def _call_alphasift_status() -> Dict[str, Any]:
     except Exception as exc:
         diagnostics = _log_unexpected_alphasift_exception("get_status", exc)
         raise _alphasift_unavailable_exception(
-            f"AlphaSift 适配层 get_status 调用失败：{exc}",
+            f"AlphaSift \u9002\u914d\u5c42 get_status \u8c03\u7528failed: {exc}",
             diagnostics=diagnostics,
         ) from exc
     if not isinstance(result, dict):
         exc = TypeError(f"get_status returned {type(result).__name__}, expected dict")
         diagnostics = _log_unexpected_alphasift_exception("get_status_result", exc)
         raise _alphasift_unavailable_exception(
-            "AlphaSift 适配层 get_status 返回结构非法，请检查适配层版本。",
+            "AlphaSift \u9002\u914d\u5c42 get_status \u8fd4\u56de\u7ed3\u6784\u975e\u6cd5; \u8bf7\u68c0check\u9002\u914d\u5c42\u7248\u672c.",
             diagnostics=diagnostics,
         ) from exc
     return result
@@ -1692,12 +1692,12 @@ def _extract_alphasift_diagnostics(exc: HTTPException) -> Optional[Dict[str, str
 
 def _list_strategies() -> List[Dict[str, Any]]:
     adapter = _get_dsa_adapter()
-    list_strategies = _get_adapter_callable(adapter, "list_strategies", "list_strategies() 不可调用。")
+    list_strategies = _get_adapter_callable(adapter, "list_strategies", "list_strategies() \u4e0d\u53ef\u8c03\u7528.")
     raw = _to_plain(list_strategies())
     if not isinstance(raw, list):
         raise HTTPException(
             status_code=424,
-            detail={"error": "alphasift_invalid_result", "message": "AlphaSift list_strategies 返回非列表。"},
+            detail={"error": "alphasift_invalid_result", "message": "AlphaSift list_strategies \u8fd4\u56de\u975e\u5217\u8868."},
         )
 
     normalized: List[Dict[str, Any]] = []
@@ -1761,8 +1761,8 @@ def _ensure_supported_strategy(strategy: str) -> None:
     if strategy in ids:
         return
 
-    # 兼容“策略列表为空时手动输入”以及“用户手动覆盖策略参数”场景，
-    # 策略由适配层进行最终校验，因此在列表外仍保持透传。
+    # \u517c\u5bb9“strategy\u5217\u8868\u4e3a\u7a7a\u65f6\u624b\u52a8\u8f93\u5165”\u4ee5\u53ca“user\u624b\u52a8\u8986\u76d6strategyparameter”\u573a\u666f;
+    # strategy\u7531\u9002\u914d\u5c42\u8fdb\u884c\u6700\u7ec8\u6821\u9a8c; \u56e0\u6b64\u5728\u5217\u8868\u5916\u4ecd\u4fdd\u6301\u900f\u4f20.
 
 
 def _call_alphasift_screen(screen: Any, strategy: str, market: str, max_results: int, config: Config) -> Any:
@@ -1894,8 +1894,8 @@ def _resolve_alphasift_snapshot_source_priority(config: Config) -> str:
 def _build_alphasift_runtime_env(config: Config, *, max_results: Optional[int] = None) -> Dict[str, str]:
     # Bridge runtime only: only inject resolved DSA values for this request/process scope.
     # User .env/config is never rewritten here; unset channels/models are not silently migrated.
-    # 与 LiteLLM provider/model、openai-compatible `api_base` 与 headers 注入语义保持一致，
-    # 参见 https://docs.litellm.ai/docs/providers 与
+    # \u4e0e LiteLLM provider/model、openai-compatible `api_base` \u4e0e headers \u6ce8\u5165\u8bed\u4e49\u4fdd\u6301\u4e00\u81f4;
+    # \u53c2\u89c1 https://docs.litellm.ai/docs/providers \u4e0e
     # https://docs.litellm.ai/docs/proxy/configs#the-model_list-key
     env: Dict[str, str] = {}
 
@@ -2002,90 +2002,90 @@ class DsaEastMoneyHotspotProvider:
         "fields": "f2,f3,f4,f12,f13,f14,f104,f105,f128,f136,f140,f141,f207",
     }
     _BROAD_BOARD_KEYWORDS = (
-        "融资融券",
-        "深股通",
-        "沪股通",
-        "创业板",
-        "昨日",
-        "机构重仓",
-        "富时罗素",
+        "\u878d\u8d44\u878d\u5238",
+        "\u6df1\u80a1\u901a",
+        "\u6caa\u80a1\u901a",
+        "\u521b\u4e1a\u677f",
+        "\u6628\u65e5",
+        "\u673a\u6784\u91cd\u4ed3",
+        "\u5bcc\u65f6\u7f57\u7d20",
         "MSCI",
-        "标普",
-        "上证",
-        "深证",
-        "中证",
+        "\u6807\u666e",
+        "\u4e0a\u8bc1",
+        "\u6df1\u8bc1",
+        "Medium\u8bc1",
         "HS300",
-        "证金",
+        "\u8bc1\u91d1",
         "QFII",
-        "基金",
-        "转融券",
-        "预增",
-        "预盈",
-        "亏损",
-        "低价",
-        "小盘股",
-        "中盘股",
-        "百元股",
-        "破发",
-        "破增发",
-        "趋势股",
-        "广东板块",
-        "江苏板块",
-        "浙江板块",
-        "上海板块",
-        "深圳特区",
-        "央国企",
-        "国企改革",
-        "专精特新",
-        "其他",
+        "\u57fa\u91d1",
+        "\u8f6c\u878d\u5238",
+        "\u9884\u589e",
+        "\u9884\u76c8",
+        "\u4e8f\u635f",
+        "Low\u4ef7",
+        "\u5c0f\u76d8\u80a1",
+        "Medium\u76d8\u80a1",
+        "\u767e\u5143\u80a1",
+        "\u7834\u53d1",
+        "\u7834\u589e\u53d1",
+        "\u8d8b\u52bf\u80a1",
+        "\u5e7f\u4e1csector",
+        "\u6c5f\u82cfsector",
+        "\u6d59\u6c5fsector",
+        "\u4e0a\u6d77sector",
+        "\u6df1\u5733\u7279\u533a",
+        "\u592e\u56fd\u4f01",
+        "\u56fd\u4f01\u6539\u9769",
+        "\u4e13\u7cbe\u7279\u65b0",
+        "other",
         "Ⅱ",
         "Ⅲ",
     )
     _CHANGE_EVENT_LABELS = {
-        4: "快速拉升",
-        8: "快速回落",
-        16: "大幅上涨",
-        32: "大幅下跌",
-        64: "有大笔买入",
-        128: "有大笔卖出",
-        8193: "火箭发射",
-        8194: "高台跳水",
-        8201: "大笔买入",
-        8202: "大笔卖出",
-        8203: "封涨停板",
-        8204: "打开涨停板",
-        8207: "有打开跌停板",
-        8208: "封跌停板",
-        8209: "向上缺口",
-        8210: "向下缺口",
-        8211: "60日新高",
-        8212: "60日新低",
-        8213: "60日大幅上涨",
-        8214: "60日大幅下跌",
-        8215: "竞价上涨",
-        8216: "竞价下跌",
-        8217: "高开",
-        8218: "低开",
-        8219: "放量",
-        8220: "缩量",
-        8221: "向上突破",
-        8222: "向下破位",
+        4: "\u5feb\u901f\u62c9\u5347",
+        8: "\u5feb\u901f\u56de\u843d",
+        16: "\u5927\u5e45\u4e0a\u6da8",
+        32: "\u5927\u5e45\u4e0b\u8dcc",
+        64: "\u6709\u5927\u7b14\u4e70\u5165",
+        128: "\u6709\u5927\u7b14\u5356\u51fa",
+        8193: "\u706b\u7bad\u53d1\u5c04",
+        8194: "High\u53f0\u8df3\u6c34",
+        8201: "\u5927\u7b14\u4e70\u5165",
+        8202: "\u5927\u7b14\u5356\u51fa",
+        8203: "\u5c01\u6da8\u505c\u677f",
+        8204: "\u6253\u5f00\u6da8\u505c\u677f",
+        8207: "\u6709\u6253\u5f00\u8dcc\u505c\u677f",
+        8208: "\u5c01\u8dcc\u505c\u677f",
+        8209: "\u5411\u4e0a\u7f3a\u53e3",
+        8210: "\u5411\u4e0b\u7f3a\u53e3",
+        8211: "60\u65e5\u65b0High",
+        8212: "60\u65e5\u65b0Low",
+        8213: "60\u65e5\u5927\u5e45\u4e0a\u6da8",
+        8214: "60\u65e5\u5927\u5e45\u4e0b\u8dcc",
+        8215: "\u7ade\u4ef7\u4e0a\u6da8",
+        8216: "\u7ade\u4ef7\u4e0b\u8dcc",
+        8217: "High\u5f00",
+        8218: "Low\u5f00",
+        8219: "\u653e\u91cf",
+        8220: "\u7f29\u91cf",
+        8221: "\u5411\u4e0a\u7a81\u7834",
+        8222: "\u5411\u4e0b\u7834characters",
     }
     _METAL_TOPIC_GROUPS = {
-        "钼": "小金属",
-        "钨": "小金属",
-        "钴": "小金属",
-        "镍": "小金属",
-        "锑": "小金属",
-        "铟": "小金属",
-        "锗": "小金属",
-        "铅锌": "工业金属",
-        "铜": "工业金属",
-        "铝": "工业金属",
-        "锡": "工业金属",
-        "黄金": "贵金属",
-        "白银": "贵金属",
-        "贵金属": "贵金属",
+        "\u94bc": "\u5c0f\u91d1\u5c5e",
+        "\u94a8": "\u5c0f\u91d1\u5c5e",
+        "\u94b4": "\u5c0f\u91d1\u5c5e",
+        "\u954d": "\u5c0f\u91d1\u5c5e",
+        "\u9511": "\u5c0f\u91d1\u5c5e",
+        "\u94df": "\u5c0f\u91d1\u5c5e",
+        "\u9517": "\u5c0f\u91d1\u5c5e",
+        "\u94c5\u950c": "\u5de5\u4e1a\u91d1\u5c5e",
+        "\u94dc": "\u5de5\u4e1a\u91d1\u5c5e",
+        "\u94dd": "\u5de5\u4e1a\u91d1\u5c5e",
+        "\u9521": "\u5de5\u4e1a\u91d1\u5c5e",
+        "\u9ec4\u91d1": "\u8d35\u91d1\u5c5e",
+        "\u767d\u94f6": "\u8d35\u91d1\u5c5e",
+        "\u8d35\u91d1\u5c5e": "\u8d35\u91d1\u5c5e",
     }
     def __init__(self) -> None:
         import requests
@@ -2163,10 +2163,10 @@ class DsaEastMoneyHotspotProvider:
             return []
         rows: List[Dict[str, Any]] = []
         for index, row in df.head(max(1, min(top, 50))).iterrows():
-            name = _env_text(row.get("name") or row.get("板块名称") or row.get("行业名称") or row.get("名称"))
+            name = _env_text(row.get("name") or row.get("sectorname") or row.get("industryname") or row.get("name"))
             if not name:
                 continue
-            change_pct = _safe_float(row.get("change_pct") or row.get("涨跌幅"))
+            change_pct = _safe_float(row.get("change_pct") or row.get("change\u5e45"))
             event_count = int(_safe_float(row.get("event_count") or row.get("observations")) or 0)
             leader = _env_text(row.get("leader"))
             leaders_raw = row.get("leaders")
@@ -2252,18 +2252,18 @@ class DsaEastMoneyHotspotProvider:
         info = self._fetch_ths_info(topic)
         if info:
             route.append({
-                "title": "同花顺板块概况",
+                "title": "\u540c\u82b1\u987asector\u6982\u51b5",
                 "description": "；".join(f"{key} {value}" for key, value in list(info.items())[:4]),
                 "source": "ths_info",
             })
         if not stocks and summary:
-            stock_code = _env_text(summary.get("板块异动最频繁个股及所属类型-股票代码"))
-            stock_name = _env_text(summary.get("板块异动最频繁个股及所属类型-股票名称"))
+            stock_code = _env_text(summary.get("sector\u5f02\u52a8\u6700\u9891\u7e41individual stocks\u53ca\u6240\u5c5e\u7c7b\u578b-stock code"))
+            stock_name = _env_text(summary.get("sector\u5f02\u52a8\u6700\u9891\u7e41individual stocks\u53ca\u6240\u5c5e\u7c7b\u578b-stock name"))
             if stock_code or stock_name:
                 stocks.append({
                     "code": stock_code,
                     "name": stock_name,
-                    "role": "异动核心",
+                    "role": "\u5f02\u52a8\u6838\u5fc3",
                     "change_pct": None,
                     "hot_stock_score": 60.0,
                 })
@@ -2290,12 +2290,12 @@ class DsaEastMoneyHotspotProvider:
             return pd.DataFrame()
         rows = []
         for index, row in df.iterrows():
-            topic = _env_text(row.get("板块名称"))
+            topic = _env_text(row.get("sectorname"))
             if not topic or self._is_broad_board(topic):
                 continue
-            change_pct = _safe_float(row.get("涨跌幅"))
-            event_count = int(_safe_float(row.get("板块异动总次数")) or 0)
-            leader = _env_text(row.get("板块异动最频繁个股及所属类型-股票名称"))
+            change_pct = _safe_float(row.get("change\u5e45"))
+            event_count = int(_safe_float(row.get("sector\u5f02\u52a8\u603b\u6b21\u6570")) or 0)
+            leader = _env_text(row.get("sector\u5f02\u52a8\u6700\u9891\u7e41individual stocks\u53ca\u6240\u5c5e\u7c7b\u578b-stock name"))
             heat_score = min(99.0, max(1.0, event_count / 120.0 + max(change_pct or 0.0, 0.0) * 9.0))
             trend_score = self._derive_trend_score(change_pct=change_pct, event_count=event_count)
             persistence_score = self._derive_persistence_score(event_count=event_count)
@@ -2385,9 +2385,9 @@ class DsaEastMoneyHotspotProvider:
         rows = ((payload.get("data") or {}).get("diff") or []) if isinstance(payload, dict) else []
         normalized = [
             {
-                "板块名称": str(row.get("f14") or "").strip(),
-                "涨跌幅": row.get("f3"),
-                "序号": index + 1,
+                "sectorname": str(row.get("f14") or "").strip(),
+                "change\u5e45": row.get("f3"),
+                "\u5e8f\u53f7": index + 1,
                 "name": str(row.get("f14") or "").strip(),
                 "change_pct": row.get("f3"),
                 "rank": index + 1,
@@ -2405,9 +2405,9 @@ class DsaEastMoneyHotspotProvider:
         df = self._fetch_board_changes_raw()
         if df is None or df.empty:
             return {}
-        rows = df[df["板块名称"].astype(str) == topic]
+        rows = df[df["sectorname"].astype(str) == topic]
         if rows.empty:
-            rows = df[df["板块名称"].astype(str).str.contains(re.escape(topic), case=False, na=False)]
+            rows = df[df["sectorname"].astype(str).str.contains(re.escape(topic), case=False, na=False)]
         if rows.empty:
             return {}
         return rows.iloc[0].to_dict()
@@ -2443,12 +2443,12 @@ class DsaEastMoneyHotspotProvider:
     def _derive_hotspot_stage(self, *, change_pct: Optional[float], event_count: int) -> str:
         positive_change = max(change_pct or 0.0, 0.0)
         if event_count >= 180 and positive_change >= 3.0:
-            return "加速发酵"
+            return "\u52a0\u901f\u53d1\u9175"
         if event_count >= 90:
-            return "持续发酵"
+            return "\u6301\u7eed\u53d1\u9175"
         if positive_change >= 5.0:
-            return "快速拉升"
-        return "初次异动"
+            return "\u5feb\u901f\u62c9\u5347"
+        return "\u521d\u6b21\u5f02\u52a8"
 
     def _hotspot_group(self, topic: str) -> str:
         topic_text = _env_text(topic)
@@ -2473,7 +2473,7 @@ class DsaEastMoneyHotspotProvider:
         df = pd.DataFrame(frame)
         if df.empty:
             return False
-        for column in ("name", "板块名称", "行业名称", "名称"):
+        for column in ("name", "sectorname", "industryname", "name"):
             if column not in df.columns:
                 continue
             values = df[column].map(_env_text)
@@ -2483,17 +2483,17 @@ class DsaEastMoneyHotspotProvider:
 
     def _build_hotspot_summary(self, topic: str, summary: Dict[str, Any]) -> str:
         if not summary:
-            return f"{topic} 当前暂无可用的板块异动摘要。"
-        change_pct = _safe_float(summary.get("涨跌幅"))
-        event_count = int(_safe_float(summary.get("板块异动总次数")) or 0)
-        leader = _env_text(summary.get("板块异动最频繁个股及所属类型-股票名称"))
-        action = _env_text(summary.get("板块异动最频繁个股及所属类型-买卖方向"))
-        parts = [f"{topic} 当前涨跌幅 {change_pct:.2f}%" if change_pct is not None else f"{topic} 当前有异动记录"]
+            return f"{topic} \u5f53\u524d\u6682\u65e0\u53ef\u7528\u7684sector\u5f02\u52a8summary."
+        change_pct = _safe_float(summary.get("change\u5e45"))
+        event_count = int(_safe_float(summary.get("sector\u5f02\u52a8\u603b\u6b21\u6570")) or 0)
+        leader = _env_text(summary.get("sector\u5f02\u52a8\u6700\u9891\u7e41individual stocks\u53ca\u6240\u5c5e\u7c7b\u578b-stock name"))
+        action = _env_text(summary.get("sector\u5f02\u52a8\u6700\u9891\u7e41individual stocks\u53ca\u6240\u5c5e\u7c7b\u578b-\u4e70\u5356\u65b9\u5411"))
+        parts = [f"{topic} \u5f53\u524dchange\u5e45 {change_pct:.2f}%" if change_pct is not None else f"{topic} \u5f53\u524d\u6709\u5f02\u52a8\u8bb0\u5f55"]
         if event_count:
-            parts.append(f"盘中异动 {event_count} 次")
+            parts.append(f"\u76d8Medium\u5f02\u52a8 {event_count} \u6b21")
         if leader:
-            parts.append(f"高频异动个股为 {leader}{f'（{action}）' if action else ''}")
-        return "，".join(parts) + "。"
+            parts.append(f"High\u9891\u5f02\u52a8individual stocks\u4e3a {leader}{f' ({action})' if action else ''}")
+        return "; ".join(parts) + "."
 
     def _build_hotspot_route(self, topic: str, summary: Dict[str, Any]) -> List[Dict[str, Any]]:
         route_by_date: Dict[str, Dict[str, Any]] = {}
@@ -2520,19 +2520,19 @@ class DsaEastMoneyHotspotProvider:
             event_date = self._extract_route_date(ths_event) or today
             put_daily_item(
                 date=event_date,
-                title="题材驱动",
+                title="\u9898\u6750\u9a71\u52a8",
                 description=ths_event,
                 source="ths_summary",
             )
         if summary:
-            change_events = self._parse_change_events(summary.get("板块具体异动类型列表及出现次数"))[:5]
-            event_text = "；".join(f"{item['label']}出现 {item['count']} 次" for item in change_events)
+            change_events = self._parse_change_events(summary.get("sector\u5177\u4f53\u5f02\u52a8\u7c7b\u578b\u5217\u8868\u53ca\u51fa\u73b0\u6b21\u6570"))[:5]
+            event_text = "；".join(f"{item['label']}\u51fa\u73b0 {item['count']} \u6b21" for item in change_events)
             description = self._build_hotspot_summary(topic, summary)
             if event_text:
-                description = f"{description} 当日结构：{event_text}。"
+                description = f"{description} \u5f53\u65e5\u7ed3\u6784: {event_text}."
             put_daily_item(
                 date=today,
-                title="当日发酵",
+                title="\u5f53\u65e5\u53d1\u9175",
                 description=description,
                 source="eastmoney_board_change",
             )
@@ -2542,8 +2542,8 @@ class DsaEastMoneyHotspotProvider:
         ]
         if not route:
             route.append({
-                "title": "等待发酵",
-                "description": "暂未获取到明确催化事件，可继续观察涨跌幅、成交额和核心个股联动。",
+                "title": "waiting\u53d1\u9175",
+                "description": "\u6682\u672a\u83b7\u53d6\u5230\u660e\u786e\u50ac\u5316\u4e8b\u4ef6; \u53ef\u7ee7\u7eed\u89c2\u5bdfchange\u5e45、amount\u548c\u6838\u5fc3individual stocks\u8054\u52a8.",
                 "source": "fallback",
                 "date": today,
                 "published_at": today,
@@ -2551,7 +2551,7 @@ class DsaEastMoneyHotspotProvider:
         return route
 
     def _extract_route_date(self, text: str) -> str:
-        match = re.search(r"(20\d{2})[-/.年](\d{1,2})[-/.月](\d{1,2})", text or "")
+        match = re.search(r"(20\d{2})[-/.\u5e74](\d{1,2})[-/.\u6708](\d{1,2})", text or "")
         if not match:
             return ""
         year, month, day = match.groups()
@@ -2575,7 +2575,7 @@ class DsaEastMoneyHotspotProvider:
                 continue
             events.append({
                 "type": event_type,
-                "label": self._CHANGE_EVENT_LABELS.get(event_type, f"异动类型 {event_type}"),
+                "label": self._CHANGE_EVENT_LABELS.get(event_type, f"\u5f02\u52a8\u7c7b\u578b {event_type}"),
                 "count": count,
             })
         return sorted(events, key=lambda item: item["count"], reverse=True)
@@ -2589,20 +2589,20 @@ class DsaEastMoneyHotspotProvider:
             return ""
         if df is None or df.empty:
             return ""
-        if "概念名称" not in df.columns:
+        if "conceptname" not in df.columns:
             logger.warning(
-                "AlphaSift THS summary missing required column '概念名称'; skip enrichment.",
+                "AlphaSift THS summary missing required column 'conceptname'; skip enrichment.",
             )
             return ""
-        rows = df[df["概念名称"].astype(str) == topic]
+        rows = df[df["conceptname"].astype(str) == topic]
         if rows.empty:
-            rows = df[df["概念名称"].astype(str).str.contains(re.escape(topic), case=False, na=False)]
+            rows = df[df["conceptname"].astype(str).str.contains(re.escape(topic), case=False, na=False)]
         if rows.empty:
             return ""
         row = rows.iloc[0]
-        date = _env_text(row.get("日期"))
-        event = _env_text(row.get("驱动事件"))
-        return f"{date}：{event}" if date and event else event
+        date = _env_text(row.get("date"))
+        event = _env_text(row.get("\u9a71\u52a8\u4e8b\u4ef6"))
+        return f"{date}: {event}" if date and event else event
 
     def _fetch_ths_info(self, topic: str) -> Dict[str, str]:
         import akshare as ak
@@ -2611,12 +2611,12 @@ class DsaEastMoneyHotspotProvider:
             df = ak.stock_board_concept_info_ths(symbol=topic)
         except Exception:
             return {}
-        if df is None or df.empty or "项目" not in df.columns or "值" not in df.columns:
+        if df is None or df.empty or "\u9879\u76ee" not in df.columns or "\u503c" not in df.columns:
             return {}
         return {
-            _env_text(row.get("项目")): _env_text(row.get("值"))
+            _env_text(row.get("\u9879\u76ee")): _env_text(row.get("\u503c"))
             for _, row in df.iterrows()
-            if _env_text(row.get("项目"))
+            if _env_text(row.get("\u9879\u76ee"))
         }
 
     def _fetch_eastmoney_constituents(self, topic: str, *, source: str) -> Any:
@@ -2669,7 +2669,7 @@ class DsaEastMoneyHotspotProvider:
         rows = df[df["name"].astype(str) == topic]
         if rows.empty:
             rows = df[df["name"].astype(str).str.contains(re.escape(topic), case=False, na=False)]
-        if rows.empty and topic.endswith("概念"):
+        if rows.empty and topic.endswith("concept"):
             base = topic[:-2]
             rows = df[df["name"].astype(str).str.contains(re.escape(base), case=False, na=False)]
         if rows.empty:
@@ -2688,8 +2688,8 @@ class DsaEastMoneyHotspotProvider:
                 exc,
             )
             return pd.DataFrame()
-        code = _env_text(summary.get("板块异动最频繁个股及所属类型-股票代码"))
-        name = _env_text(summary.get("板块异动最频繁个股及所属类型-股票名称"))
+        code = _env_text(summary.get("sector\u5f02\u52a8\u6700\u9891\u7e41individual stocks\u53ca\u6240\u5c5e\u7c7b\u578b-stock code"))
+        name = _env_text(summary.get("sector\u5f02\u52a8\u6700\u9891\u7e41individual stocks\u53ca\u6240\u5c5e\u7c7b\u578b-stock name"))
         if not code and not name:
             return pd.DataFrame()
         return pd.DataFrame([{
@@ -2715,11 +2715,11 @@ class DsaEastMoneyHotspotProvider:
         rows: List[Dict[str, Any]] = []
         seen: set[str] = set()
         for _, row in df.iterrows():
-            board_name = _env_text(row.get("板块名称"))
+            board_name = _env_text(row.get("sectorname"))
             if not board_name or self._hotspot_group(board_name) != group:
                 continue
-            code = _env_text(row.get("板块异动最频繁个股及所属类型-股票代码"))
-            name = _env_text(row.get("板块异动最频繁个股及所属类型-股票名称"))
+            code = _env_text(row.get("sector\u5f02\u52a8\u6700\u9891\u7e41individual stocks\u53ca\u6240\u5c5e\u7c7b\u578b-stock code"))
+            name = _env_text(row.get("sector\u5f02\u52a8\u6700\u9891\u7e41individual stocks\u53ca\u6240\u5c5e\u7c7b\u578b-stock name"))
             if not code and not name:
                 continue
             key = code or name
@@ -2729,8 +2729,8 @@ class DsaEastMoneyHotspotProvider:
             rows.append({
                 "code": code,
                 "name": name,
-                "change_pct": _safe_float(row.get("涨跌幅")),
-                "role": f"{group}活跃股",
+                "change_pct": _safe_float(row.get("change\u5e45")),
+                "role": f"{group}\u6d3b\u8dc3\u80a1",
                 "hot_stock_score": 35.0,
                 "source": "eastmoney_board_change.related_group",
             })
@@ -2765,8 +2765,8 @@ class DsaEastMoneyHotspotProvider:
             if df.empty:
                 continue
             for _, row in df.iterrows():
-                code = _env_text(row.get("code") or row.get("代码") or row.get("证券代码"))
-                name = _env_text(row.get("name") or row.get("名称") or row.get("股票名称"))
+                code = _env_text(row.get("code") or row.get("code") or row.get("\u8bc1\u5238code"))
+                name = _env_text(row.get("name") or row.get("name") or row.get("stock name"))
                 if not code and not name:
                     continue
                 key = code or name
@@ -2827,26 +2827,26 @@ class DsaEastMoneyHotspotProvider:
             return []
         records = []
         for _, row in df.iterrows():
-            code = _env_text(row.get("code") or row.get("代码") or row.get("证券代码"))
-            name = _env_text(row.get("name") or row.get("名称") or row.get("股票名称"))
+            code = _env_text(row.get("code") or row.get("code") or row.get("\u8bc1\u5238code"))
+            name = _env_text(row.get("name") or row.get("name") or row.get("stock name"))
             if not code and not name:
                 continue
             records.append({
                 "code": code,
                 "name": name,
-                "change_pct": _safe_float(row.get("change_pct") or row.get("涨跌幅") or row.get("涨幅")),
-                "amount": _safe_float(row.get("amount") or row.get("成交额") or row.get("成交金额")),
-                "turnover_rate": _safe_float(row.get("turnover_rate") or row.get("换手率")),
-                "volume_ratio": _safe_float(row.get("volume_ratio") or row.get("量比")),
-                "role": _env_text(row.get("role")) or "概念股",
+                "change_pct": _safe_float(row.get("change_pct") or row.get("change\u5e45") or row.get("\u6da8\u5e45")),
+                "amount": _safe_float(row.get("amount") or row.get("amount") or row.get("\u6210\u4ea4\u91d1\u989d")),
+                "turnover_rate": _safe_float(row.get("turnover_rate") or row.get("turnover")),
+                "volume_ratio": _safe_float(row.get("volume_ratio") or row.get("\u91cf\u6bd4")),
+                "role": _env_text(row.get("role")) or "concept\u80a1",
                 "hot_stock_score": _safe_float(row.get("hot_stock_score")) or 0.0,
             })
         return records
 
 
 def _build_alphasift_context(config: Config, *, max_results: Optional[int] = None) -> Dict[str, Any]:
-    # context.llm.model/fallback/model_list 与 LiteLLM 路由语义保持一致，
-    # 参见 https://docs.litellm.ai/docs/proxy/configs#the-model_list-key
+    # context.llm.model/fallback/model_list \u4e0e LiteLLM \u8def\u7531\u8bed\u4e49\u4fdd\u6301\u4e00\u81f4;
+    # \u53c2\u89c1 https://docs.litellm.ai/docs/proxy/configs#the-model_list-key
     channels = _normalize_dsa_llm_channels(config)
     litellm_model, fallback_models = _resolve_alphasift_llm_models(config)
     return {
@@ -3193,13 +3193,13 @@ def _normalize_dsa_daily_history(raw_df: Any) -> Any:
         return df
 
     aliases = {
-        "date": ("date", "trade_date", "datetime", "日期"),
-        "open": ("open", "开盘"),
-        "high": ("high", "最高"),
-        "low": ("low", "最低"),
-        "close": ("close", "收盘", "price"),
-        "volume": ("volume", "vol", "成交量"),
-        "amount": ("amount", "成交额"),
+        "date": ("date", "trade_date", "datetime", "date"),
+        "open": ("open", "\u5f00\u76d8"),
+        "high": ("high", "\u6700High"),
+        "low": ("low", "\u6700Low"),
+        "close": ("close", "\u6536\u76d8", "price"),
+        "volume": ("volume", "vol", "volume"),
+        "amount": ("amount", "amount"),
     }
     normalized = pd.DataFrame(index=df.index)
     for target, candidates in aliases.items():
@@ -3509,23 +3509,23 @@ def _build_dsa_analysis_summary(
     price = _first_non_empty(quote.get("price"), candidate.get("price"))
     change_pct = _first_non_empty(quote.get("change_pct"), candidate.get("change_pct"))
     if price is not None:
-        text = f"DSA行情：现价 {price}"
+        text = f"DSA\u884c\u60c5: \u73b0\u4ef7 {price}"
         if change_pct is not None:
-            text += f"，涨跌幅 {change_pct}%"
+            text += f"; change\u5e45 {change_pct}%"
         parts.append(text)
 
     coverage = fundamentals.get("coverage") if isinstance(fundamentals, dict) else {}
     if isinstance(coverage, dict) and coverage:
         available_blocks = [key for key, value in coverage.items() if str(value).lower() in {"available", "partial"}]
         if available_blocks:
-            parts.append(f"DSA基本面覆盖：{', '.join(available_blocks[:4])}")
+            parts.append(f"DSAfundamentals\u8986\u76d6: {', '.join(available_blocks[:4])}")
 
     news_results = news.get("results") if isinstance(news, dict) else []
     if isinstance(news_results, list) and news_results:
         titles = [str(item.get("title") or "").strip() for item in news_results if isinstance(item, dict)]
         titles = [title for title in titles if title]
         if titles:
-            parts.append(f"DSA新闻：{'；'.join(titles[:2])}")
+            parts.append(f"DSAnews: {'；'.join(titles[:2])}")
 
     if not parts:
         return ""
@@ -3552,8 +3552,8 @@ def _ensure_supported_market(market: str) -> None:
             detail={
                 "error": "alphasift_invalid_market",
                 "message": (
-                    f"市场 {market} 不在 AlphaSift 适配层支持范围内"
-                    f"（支持市场：{', '.join(map(str, normalized)) or '未知'}）。"
+                    f"market {market} \u4e0d\u5728 AlphaSift \u9002\u914d\u5c42\u652f\u6301\u8303\u56f4\u5185"
+                    f" (\u652f\u6301market: {', '.join(map(str, normalized)) or 'unknown'})."
                 ),
             },
         )
@@ -3680,11 +3680,11 @@ def _build_candidate_reason(item: Dict[str, Any]) -> str:
         )[:3]
         if top_factors:
             factor_text = "、".join(f"{key} {value:.1f}" for key, value in top_factors)
-            parts.append(f"主要因子：{factor_text}")
+            parts.append(f"\u4e3b\u8981\u56e0\u5b50: {factor_text}")
     if item.get("industry"):
-        parts.append(f"行业：{item['industry']}")
+        parts.append(f"industry: {item['industry']}")
     if item.get("risk_level"):
-        parts.append(f"风险等级：{item['risk_level']}")
+        parts.append(f"\u98ce\u9669\u7b49\u7ea7: {item['risk_level']}")
     return "；".join(parts)
 
 

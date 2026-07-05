@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 """
-Wechat 发送提醒服务
+Wechat \u53d1\u9001\u63d0\u9192\u670d\u52a1
 
-职责：
-1. 通过企业微信 Webhook 发送文本消息
-2. 通过企业微信 Webhook 发送图片消息
+\u804c\u8d23:
+1. \u901a\u8fc7WeCom Webhook \u53d1\u9001\u6587\u672c\u6d88\u606f
+2. \u901a\u8fc7WeCom Webhook \u53d1\u9001\u56fe\u7247\u6d88\u606f
 """
 import logging
 import base64
@@ -24,72 +24,72 @@ logger = logging.getLogger(__name__)
 WECHAT_IMAGE_MAX_BYTES = 2 * 1024 * 1024
 
 class WechatSender:
-    
+
     def __init__(self, config: Config):
         """
-        初始化企业微信配置
+        \u521d\u59cb\u5316WeComconfig
 
         Args:
-            config: 配置对象
+            config: config\u5bf9\u8c61
         """
         self._wechat_url = config.wechat_webhook_url
         self._wechat_max_bytes = getattr(config, 'wechat_max_bytes', 4000)
         self._wechat_msg_type = getattr(config, 'wechat_msg_type', 'markdown')
         self._webhook_verify_ssl = getattr(config, 'webhook_verify_ssl', True)
-        
+
     def send_to_wechat(self, content: str, *, timeout_seconds: Optional[float] = None) -> bool:
         """
-        推送消息到企业微信机器人
-        
-        企业微信 Webhook 消息格式：
-        支持 markdown 类型以及 text 类型, markdown 类型在微信中无法展示，可以使用 text 类型,
-        markdown 类型会解析 markdown 格式,text 类型会直接发送纯文本。
+        \u63a8\u9001\u6d88\u606f\u5230WeCom\u673a\u5668\u4eba
 
-        markdown 类型示例：
+        WeCom Webhook \u6d88\u606f\u683c\u5f0f:
+        \u652f\u6301 markdown \u7c7b\u578b\u4ee5\u53ca text \u7c7b\u578b, markdown \u7c7b\u578b\u5728\u5fae\u4fe1Medium\u65e0\u6cd5\u5c55\u793a; \u53ef\u4ee5\u4f7f\u7528 text \u7c7b\u578b,
+        markdown \u7c7b\u578b\u4f1a\u89e3\u6790 markdown \u683c\u5f0f,text \u7c7b\u578b\u4f1a\u76f4\u63a5\u53d1\u9001\u7eaf\u6587\u672c.
+
+        markdown \u7c7b\u578b\u793a\u4f8b:
         {
             "msgtype": "markdown",
             "markdown": {
-                "content": "## 标题\n\n内容"
-            }
-        }
-        
-        text 类型示例：
-        {
-            "msgtype": "text",
-            "text": {
-                "content": "内容"
+                "content": "## \u6807\u9898\n\n\u5185\u5bb9"
             }
         }
 
-        注意：企业微信 Markdown 限制 4096 字节（非字符）, Text 类型限制 2048 字节，超长内容会自动分批发送
-        可通过环境变量 WECHAT_MAX_BYTES 调整限制值
-        
+        text \u7c7b\u578b\u793a\u4f8b:
+        {
+            "msgtype": "text",
+            "text": {
+                "content": "\u5185\u5bb9"
+            }
+        }
+
+        \u6ce8\u610f: WeCom Markdown limit 4096 \u5b57\u8282 (\u975e\u5b57\u7b26), Text \u7c7b\u578blimit 2048 \u5b57\u8282; \u8d85\u957f\u5185\u5bb9\u4f1a\u81ea\u52a8\u5206\u6279\u53d1\u9001
+        \u53ef\u901a\u8fc7\u73af\u5883\u53d8\u91cf WECHAT_MAX_BYTES \u8c03\u6574limit\u503c
+
         Args:
-            content: Markdown 格式的消息内容
-            
+            content: Markdown \u683c\u5f0f\u7684\u6d88\u606f\u5185\u5bb9
+
         Returns:
-            是否发送成功
+            \u662f\u5426send succeeded
         """
         if not self._wechat_url:
-            logger.warning("企业微信 Webhook 未配置，跳过推送")
+            logger.warning("WeCom Webhook not configured; skipping\u63a8\u9001")
             return False
-        
-        # 根据消息类型动态限制上限，避免 text 类型超过企业微信 2048 字节限制
+
+        # \u6839\u636e\u6d88\u606f\u7c7b\u578b\u52a8\u6001limit\u4e0a\u9650; \u907f\u514d text \u7c7b\u578b\u8d85\u8fc7WeCom 2048 \u5b57\u8282limit
         if self._wechat_msg_type == 'text':
-            max_bytes = min(self._wechat_max_bytes, 2000)  # 预留一定字节给系统/分页标记
+            max_bytes = min(self._wechat_max_bytes, 2000)  # \u9884\u7559\u4e00\u5b9a\u5b57\u8282\u7ed9\u7cfb\u7edf/\u5206\u9875\u6807\u8bb0
         else:
-            max_bytes = self._wechat_max_bytes  # markdown 默认 4000 字节
-        
-        # 检查字节长度，超长则分批发送
+            max_bytes = self._wechat_max_bytes  # markdown default 4000 \u5b57\u8282
+
+        # \u68c0check\u5b57\u8282\u957f\u5ea6; \u8d85\u957f\u5219\u5206\u6279\u53d1\u9001
         content_bytes = len(content.encode('utf-8'))
         if content_bytes > max_bytes:
-            logger.info(f"消息内容超长({content_bytes}字节/{len(content)}字符)，将分批发送")
+            logger.info(f"\u6d88\u606f\u5185\u5bb9\u8d85\u957f({content_bytes}\u5b57\u8282/{len(content)}\u5b57\u7b26); \u5c06\u5206\u6279\u53d1\u9001")
             return self._send_wechat_chunked(content, max_bytes)
-        
+
         try:
             return self._send_wechat_message(content, timeout_seconds=timeout_seconds)
         except Exception as e:
-            logger.error(f"发送企业微信消息失败: {e}")
+            logger.error(f"\u53d1\u9001WeCom\u6d88\u606ffailed: {e}")
             return False
 
     def _send_wechat_image(self, image_bytes: bytes) -> bool:
@@ -98,7 +98,7 @@ class WechatSender:
             return False
         if len(image_bytes) > WECHAT_IMAGE_MAX_BYTES:
             logger.warning(
-                "企业微信图片超限 (%d > %d bytes)，拒绝发送，调用方应 fallback 为文本",
+                "WeCom\u56fe\u7247\u8d85\u9650 (%d > %d bytes); \u62d2\u7edd\u53d1\u9001; \u8c03\u7528\u65b9\u5e94 fallback \u4e3a\u6587\u672c",
                 len(image_bytes), WECHAT_IMAGE_MAX_BYTES,
             )
             return False
@@ -115,51 +115,51 @@ class WechatSender:
             if response.status_code == 200:
                 result = response.json()
                 if result.get("errcode") == 0:
-                    logger.info("企业微信图片发送成功")
+                    logger.info("WeCom\u56fe\u7247send succeeded")
                     return True
-                logger.error("企业微信图片发送失败: %s", result.get("errmsg", ""))
+                logger.error("WeCom\u56fe\u7247send failed: %s", result.get("errmsg", ""))
             else:
-                logger.error("企业微信请求失败: HTTP %s", response.status_code)
+                logger.error("WeComrequestfailed: HTTP %s", response.status_code)
             return False
         except Exception as e:
-            logger.error("企业微信图片发送异常: %s", e)
+            logger.error("WeCom\u56fe\u7247\u53d1\u9001\u5f02\u5e38: %s", e)
             return False
-    
+
     def _send_wechat_message(self, content: str, *, timeout_seconds: Optional[float] = None) -> bool:
-        """发送企业微信消息"""
+        """\u53d1\u9001WeCom\u6d88\u606f"""
         payload = self._gen_wechat_payload(content)
-        
+
         response = requests.post(
             self._wechat_url,
             json=payload,
             timeout=timeout_seconds or 10,
             verify=self._webhook_verify_ssl
         )
-        
+
         if response.status_code == 200:
             result = response.json()
             if result.get('errcode') == 0:
-                logger.info("企业微信消息发送成功")
+                logger.info("WeCommessage sent successfully")
                 return True
             else:
-                logger.error(f"企业微信返回错误: {result}")
+                logger.error(f"WeCom\u8fd4\u56deerror: {result}")
                 return False
         else:
-            logger.error(f"企业微信请求失败: {response.status_code}")
+            logger.error(f"WeComrequestfailed: {response.status_code}")
             return False
-        
+
     def _send_wechat_chunked(self, content: str, max_bytes: int) -> bool:
         """
-        分批发送长消息到企业微信
-        
-        按股票分析块（以 --- 或 ### 分隔）智能分割，确保每批不超过限制
-        
+        \u5206\u6279\u53d1\u9001\u957f\u6d88\u606f\u5230WeCom
+
+        \u6309\u80a1\u7968analyzechunks (\u4ee5 --- or ### \u5206\u9694)\u667a\u80fd\u5206\u5272; \u786e\u4fdd\u6bcf\u6279\u4e0d\u8d85\u8fc7limit
+
         Args:
-            content: 完整消息内容
-            max_bytes: 单条消息最大字节数
-            
+            content: \u5b8c\u6574\u6d88\u606f\u5185\u5bb9
+            max_bytes: \u5355\u6761\u6d88\u606f\u6700\u5927\u5b57\u8282\u6570
+
         Returns:
-            是否全部发送成功
+            \u662f\u5426allsend succeeded
         """
         chunks = chunk_content_by_max_bytes(content, max_bytes, add_page_marker=True)
         total_chunks = len(chunks)
@@ -168,13 +168,13 @@ class WechatSender:
             if self._send_wechat_message(chunk):
                 success_count += 1
             else:
-                logger.error(f"企业微信第 {i+1}/{total_chunks} 批发送失败")
+                logger.error(f"WeCom\u7b2c {i+1}/{total_chunks} \u6279send failed")
             if i < total_chunks - 1:
                 time.sleep(1)
         return success_count == len(chunks)
 
     def _gen_wechat_payload(self, content: str) -> dict:
-        """生成企业微信消息 payload"""
+        """\u751f\u6210WeCom\u6d88\u606f payload"""
         if self._wechat_msg_type == 'text':
             return {
                 "msgtype": "text",

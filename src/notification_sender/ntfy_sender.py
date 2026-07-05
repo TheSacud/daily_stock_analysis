@@ -70,17 +70,17 @@ class NtfySender:
     ) -> bool:
         """Publish a notification to ntfy using a JSON body with UTF-8 text."""
         if not self._is_ntfy_configured():
-            logger.warning("ntfy URL 未配置，跳过推送")
+            logger.warning("ntfy URL not configured; skipping\u63a8\u9001")
             return False
 
         server_url, topic = self._resolve_ntfy_endpoint()
         if not server_url or not topic:
-            logger.error("NTFY_URL 必须是包含 topic path 的完整 endpoint，例如 https://ntfy.sh/my-topic")
+            logger.error("NTFY_URL \u5fc5\u987b\u662f\u5305\u542b topic path \u7684\u5b8c\u6574 endpoint; \u4f8b\u5982 https://ntfy.sh/my-topic")
             return False
 
         if title is None:
             date_str = datetime.now().strftime("%Y-%m-%d")
-            title = f"📈 股票分析报告 - {date_str}"
+            title = f"📈 \u80a1\u7968analyzereport - {date_str}"
 
         headers = {
             "Content-Type": "application/json; charset=utf-8",
@@ -106,20 +106,20 @@ class NtfySender:
                 verify=self._webhook_verify_ssl,
             )
             if 200 <= response.status_code < 300:
-                logger.info("ntfy 消息发送成功")
+                logger.info("ntfy message sent successfully")
                 return True
 
-            logger.error("ntfy 请求失败: HTTP %s", response.status_code)
-            logger.debug("ntfy 响应内容: %s", response.text)
+            logger.error("ntfy requestfailed: HTTP %s", response.status_code)
+            logger.debug("ntfy \u54cd\u5e94\u5185\u5bb9: %s", response.text)
             return False
         except requests.exceptions.Timeout:
-            logger.error("发送 ntfy 消息失败: 请求超时")
+            logger.error("\u53d1\u9001 ntfy \u6d88\u606ffailed: request timed out")
             return False
         except requests.exceptions.RequestException as exc:
-            logger.error("发送 ntfy 消息失败: 网络请求异常")
-            logger.debug("ntfy 请求异常类型: %s", type(exc).__name__)
+            logger.error("\u53d1\u9001 ntfy \u6d88\u606ffailed: \u7f51\u7edcrequest\u5f02\u5e38")
+            logger.debug("ntfy request\u5f02\u5e38\u7c7b\u578b: %s", type(exc).__name__)
             return False
         except Exception as exc:
-            logger.error("发送 ntfy 消息失败: 未知异常")
-            logger.debug("ntfy 未知异常类型: %s", type(exc).__name__)
+            logger.error("\u53d1\u9001 ntfy \u6d88\u606ffailed: unknown\u5f02\u5e38")
+            logger.debug("ntfy unknown\u5f02\u5e38\u7c7b\u578b: %s", type(exc).__name__)
             return False

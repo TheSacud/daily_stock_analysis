@@ -105,8 +105,8 @@ export default defineConfig({
     }),
   ],
   server: {
-    host: '0.0.0.0',  // 允许公网访问
-    port: 5173,       // 默认端口
+    host: '0.0.0.0',  // \u5141\u8bb8\u516c\u7f51\u8bbf\u95ee
+    port: 5173,       // \u9ed8\u8ba4\u7aef\u53e3
     proxy: {
       '/api': {
         target: 'http://127.0.0.1:8000',
@@ -115,7 +115,7 @@ export default defineConfig({
     },
   },
   build: {
-    // 打包输出到项目根目录的 static 文件夹
+    // \u6253\u5305\u8f93\u51fa\u5230\u9879\u76ee\u6839\u76ee\u5f55\u7684 static \u6587\u4ef6\u5939
     outDir: path.resolve(__dirname, '../../static'),
     emptyOutDir: true,
     rollupOptions: {

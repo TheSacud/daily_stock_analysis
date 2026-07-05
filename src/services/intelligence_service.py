@@ -69,38 +69,38 @@ _BUILTIN_SOURCE_TEMPLATES = [
 _NEWSNOW_DEFAULT_SOURCE_DEFS = [
     {
         "template_id": "newsnow-cls-hot",
-        "name": "NewsNow 财联社热门",
+        "name": "NewsNow \u8d22\u8054\u793e\u70ed\u95e8",
         "source_id": "cls-hot",
         "market": "cn",
-        "description": "NewsNow 财联社热门财经资讯，适合 A 股大盘和题材热点。",
+        "description": "NewsNow \u8d22\u8054\u793e\u70ed\u95e8\u8d22\u7ecf\u8d44\u8baf; \u9002\u5408 A \u80a1\u5927\u76d8\u548c\u9898\u6750\u70ed\u70b9.",
     },
     {
         "template_id": "newsnow-xueqiu-hotstock",
-        "name": "NewsNow 雪球热门股票",
+        "name": "NewsNow Xueqiu\u70ed\u95e8\u80a1\u7968",
         "source_id": "xueqiu-hotstock",
         "market": "cn",
-        "description": "NewsNow 雪球热门股票，适合捕捉 A 股和港美股散户关注度。",
+        "description": "NewsNow Xueqiu\u70ed\u95e8\u80a1\u7968; \u9002\u5408\u6355\u6349 A \u80a1\u548c\u6e2fUS stock\u6563\u6237\u5173\u6ce8\u5ea6.",
     },
     {
         "template_id": "newsnow-wallstreetcn-quick",
-        "name": "NewsNow 华尔街见闻快讯",
+        "name": "NewsNow \u534e\u5c14\u8857\u89c1\u95fb\u5feb\u8baf",
         "source_id": "wallstreetcn-quick",
         "market": "cn",
-        "description": "NewsNow 华尔街见闻快讯，适合宏观、商品和市场事件上下文。",
+        "description": "NewsNow \u534e\u5c14\u8857\u89c1\u95fb\u5feb\u8baf; \u9002\u5408\u5b8f\u89c2、\u5546\u54c1\u548cmarket\u4e8b\u4ef6\u4e0a\u4e0b\u6587.",
     },
     {
         "template_id": "newsnow-jin10",
-        "name": "NewsNow 金十数据",
+        "name": "NewsNow \u91d1\u5341\u6570\u636e",
         "source_id": "jin10",
         "market": "global",
-        "description": "NewsNow 金十数据实时财经消息，适合全球宏观和外盘事件。",
+        "description": "NewsNow \u91d1\u5341\u6570\u636e\u5b9e\u65f6\u8d22\u7ecf\u6d88\u606f; \u9002\u5408\u5168\u7403\u5b8f\u89c2\u548c\u5916\u76d8\u4e8b\u4ef6.",
     },
     {
         "template_id": "newsnow-gelonghui",
-        "name": "NewsNow 格隆汇事件",
+        "name": "NewsNow \u683c\u9686\u6c47\u4e8b\u4ef6",
         "source_id": "gelonghui",
         "market": "hk",
-        "description": "NewsNow 格隆汇事件资讯，适合港股和中概股市场上下文。",
+        "description": "NewsNow \u683c\u9686\u6c47\u4e8b\u4ef6\u8d44\u8baf; \u9002\u5408HK stock\u548cMedium\u6982\u80a1market\u4e0a\u4e0b\u6587.",
     },
 ]
 

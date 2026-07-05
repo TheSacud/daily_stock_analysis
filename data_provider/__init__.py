@@ -1,33 +1,33 @@
 # -*- coding: utf-8 -*-
 """
 ===================================
-数据源策略层 - 包初始化
+data sourcestrategy\u5c42 - \u5305\u521d\u59cb\u5316
 ===================================
 
-本包实现策略模式管理多个数据源，实现：
-1. 统一的数据获取接口
-2. 自动故障切换
-3. 防封禁流控策略
+\u672c\u5305\u5b9e\u73b0strategymode\u7ba1\u7406\u591a\u4e2adata source; \u5b9e\u73b0:
+1. \u7edf\u4e00data\u83b7\u53d6\u63a5\u53e3
+2. \u81ea\u52a8\u6545\u969c\u5207\u6362
+3. \u9632\u5c01\u7981\u6d41\u63a7strategy
 
-数据源优先级（动态调整）：
-【配置了 TUSHARE_TOKEN 时】
-1. TushareFetcher (Priority 0) - 🔥 最高优先级（动态提升）
-2. EfinanceFetcher (Priority 0) - 同优先级
-3. AkshareFetcher (Priority 1) - 来自 akshare 库
-4. PytdxFetcher (Priority 2) - 来自 pytdx 库（通达信）
-5. BaostockFetcher (Priority 3) - 来自 baostock 库
-6. YfinanceFetcher (Priority 4) - 来自 yfinance 库
+data source\u4f18\u5148\u7ea7 (\u52a8\u6001\u8c03\u6574):
+【config\u4e86 TUSHARE_TOKEN \u65f6】
+1. TushareFetcher (Priority 0) - 🔥 \u6700High\u4f18\u5148\u7ea7 (\u52a8\u6001\u63d0\u5347)
+2. EfinanceFetcher (Priority 0) - \u540c\u4f18\u5148\u7ea7
+3. AkshareFetcher (Priority 1) - \u6765\u81ea akshare library
+4. PytdxFetcher (Priority 2) - \u6765\u81ea pytdx library (Tongdaxin)
+5. BaostockFetcher (Priority 3) - \u6765\u81ea baostock library
+6. YfinanceFetcher (Priority 4) - \u6765\u81ea yfinance library
 
-【未配置 TUSHARE_TOKEN 时】
-1. EfinanceFetcher (Priority 0) - 最高优先级，来自 efinance 库
-2. AkshareFetcher (Priority 1) - 来自 akshare 库
-3. PytdxFetcher (Priority 2) - 来自 pytdx 库（通达信）
-4. TushareFetcher (Priority 2) - 来自 tushare 库（不可用）
-5. BaostockFetcher (Priority 3) - 来自 baostock 库
-6. YfinanceFetcher (Priority 4) - 来自 yfinance 库
-7. LongbridgeFetcher (Priority 5) - 长桥 OpenAPI（美股/港股兜底）
+【not configured TUSHARE_TOKEN \u65f6】
+1. EfinanceFetcher (Priority 0) - \u6700High\u4f18\u5148\u7ea7; \u6765\u81ea efinance library
+2. AkshareFetcher (Priority 1) - \u6765\u81ea akshare library
+3. PytdxFetcher (Priority 2) - \u6765\u81ea pytdx library (Tongdaxin)
+4. TushareFetcher (Priority 2) - \u6765\u81ea tushare library (unavailable)
+5. BaostockFetcher (Priority 3) - \u6765\u81ea baostock library
+6. YfinanceFetcher (Priority 4) - \u6765\u81ea yfinance library
+7. LongbridgeFetcher (Priority 5) - Longbridge OpenAPI (US stock/HK stock\u515c\u5e95)
 
-提示：优先级数字越小越优先，同优先级按初始化顺序排列
+\u63d0\u793a: \u4f18\u5148\u7ea7\u6570\u5b57\u8d8a\u5c0f\u8d8a\u4f18\u5148; \u540c\u4f18\u5148\u7ea7\u6309\u521d\u59cb\u5316\u987a\u5e8f\u6392\u5217
 """
 
 from .base import BaseFetcher, DataFetcherManager

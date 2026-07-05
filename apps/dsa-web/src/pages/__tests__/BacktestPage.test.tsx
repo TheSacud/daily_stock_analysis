@@ -53,15 +53,15 @@ const basePerformance = {
 const baseResultItem = {
   analysisHistoryId: 101,
   code: '600519',
-  stockName: '贵州茅台',
+  stockName: '\u8d35\u5dde\u8305\u53f0',
   analysisDate: '2026-03-20',
   evalWindowDays: 10,
   engineVersion: 'test-engine',
   evalStatus: 'completed',
-  operationAdvice: '继续持有',
+  operationAdvice: '\u7ee7\u7eed\u6301\u6709',
   action: 'watch',
-  actionLabel: '观望',
-  trendPrediction: '震荡偏多',
+  actionLabel: '\u89c2\u671b',
+  trendPrediction: '\u9707\u8361\u504f\u591a',
   actualMovement: 'up',
   actualReturnPct: 3.8,
   directionExpected: 'long',
@@ -103,7 +103,7 @@ describe('BacktestPage', () => {
   it('renders shared surface inputs and prediction tracking outputs', async () => {
     render(<BacktestPage />);
 
-    const filterInput = await screen.findByPlaceholderText('按股票代码筛选（留空表示全部）');
+    const filterInput = await screen.findByPlaceholderText('\u6309\u80a1\u7968\u4ee3\u7801\u7b5b\u9009（\u7559\u7a7a\u8868\u793a\u5168\u90e8）');
     const windowInput = screen.getByPlaceholderText('10');
 
     expect(filterInput).toHaveClass('input-surface');
@@ -111,23 +111,23 @@ describe('BacktestPage', () => {
     expect(windowInput).toHaveClass('input-surface');
     expect(windowInput).toHaveClass('input-focus-glow');
 
-    expect(await screen.findByText('盈利')).toBeInTheDocument();
-    expect(screen.getByText('已完成')).toBeInTheDocument();
+    expect(await screen.findByText('\u76c8\u5229')).toBeInTheDocument();
+    expect(screen.getByText('\u5df2\u5b8c\u6210')).toBeInTheDocument();
     expect(screen.getByText('600519')).toBeInTheDocument();
-    expect(screen.getByText('贵州茅台')).toBeInTheDocument();
+    expect(screen.getByText('\u8d35\u5dde\u8305\u53f0')).toBeInTheDocument();
     const resultRow = screen.getByText('600519').closest('tr');
     expect(resultRow).not.toBeNull();
     const rowScope = within(resultRow as HTMLElement);
-    expect(rowScope.getByText('观望')).toBeInTheDocument();
-    expect(rowScope.getByText('震荡偏多')).toBeInTheDocument();
-    expect(rowScope.getByText('继续持有')).toBeInTheDocument();
-    expect(screen.getByText('上涨')).toBeInTheDocument();
-    expect(screen.getByText('窗口收益')).toBeInTheDocument();
-    expect(screen.getByText('方向匹配')).toBeInTheDocument();
-    expect(screen.getByText('做多')).toBeInTheDocument();
-    expect(screen.getAllByLabelText('是').length).toBeGreaterThan(0);
-    expect(screen.getByText('方向准确率')).toBeInTheDocument();
-    expect(screen.getByText('平均模拟收益')).toBeInTheDocument();
+    expect(rowScope.getByText('\u89c2\u671b')).toBeInTheDocument();
+    expect(rowScope.getByText('\u9707\u8361\u504f\u591a')).toBeInTheDocument();
+    expect(rowScope.getByText('\u7ee7\u7eed\u6301\u6709')).toBeInTheDocument();
+    expect(screen.getByText('\u4e0a\u6da8')).toBeInTheDocument();
+    expect(screen.getByText('\u7a97\u53e3\u6536\u76ca')).toBeInTheDocument();
+    expect(screen.getByText('\u65b9\u5411\u5339\u914d')).toBeInTheDocument();
+    expect(screen.getByText('\u505a\u591a')).toBeInTheDocument();
+    expect(screen.getAllByLabelText('\u662f').length).toBeGreaterThan(0);
+    expect(screen.getByText('\u65b9\u5411\u51c6\u786e\u7387')).toBeInTheDocument();
+    expect(screen.getByText('\u5e73\u5747\u6a21\u62df\u6536\u76ca')).toBeInTheDocument();
   });
 
   it('falls back to the taxonomy label when backtest actionLabel is missing', async () => {
@@ -150,8 +150,8 @@ describe('BacktestPage', () => {
     const resultRow = codeCell.closest('tr');
     expect(resultRow).not.toBeNull();
     const rowScope = within(resultRow as HTMLElement);
-    expect(rowScope.getByText('观望')).toBeInTheDocument();
-    expect(rowScope.getByText('继续持有')).toBeInTheDocument();
+    expect(rowScope.getByText('\u89c2\u671b')).toBeInTheDocument();
+    expect(rowScope.getByText('\u7ee7\u7eed\u6301\u6709')).toBeInTheDocument();
   });
 
   it('uses localized taxonomy labels before server labels in English UI mode', async () => {
@@ -164,7 +164,7 @@ describe('BacktestPage', () => {
           ...baseResultItem,
           operationAdvice: 'continue holding',
           action: 'watch',
-          actionLabel: '观望',
+          actionLabel: '\u89c2\u671b',
           trendPrediction: 'range-bound',
         },
       ],
@@ -178,7 +178,7 @@ describe('BacktestPage', () => {
     const rowScope = within(resultRow as HTMLElement);
     expect(rowScope.getByText('Watch')).toBeInTheDocument();
     expect(rowScope.getByText('continue holding')).toBeInTheDocument();
-    expect(rowScope.queryByText('观望')).not.toBeInTheDocument();
+    expect(rowScope.queryByText('\u89c2\u671b')).not.toBeInTheDocument();
   });
 
   it('keeps operation advice visible when backtest action fields are absent for multi-guard advice', async () => {
@@ -202,10 +202,10 @@ describe('BacktestPage', () => {
     const resultRow = codeCell.closest('tr');
     expect(resultRow).not.toBeNull();
     const rowScope = within(resultRow as HTMLElement);
-    expect(rowScope.getByText('震荡偏多')).toBeInTheDocument();
+    expect(rowScope.getByText('\u9707\u8361\u504f\u591a')).toBeInTheDocument();
     expect(rowScope.getByText('risk alert, avoid buying')).toBeInTheDocument();
-    expect(rowScope.queryByText('回避')).not.toBeInTheDocument();
-    expect(rowScope.queryByText('预警')).not.toBeInTheDocument();
+    expect(rowScope.queryByText('\u56de\u907f')).not.toBeInTheDocument();
+    expect(rowScope.queryByText('\u9884\u8b66')).not.toBeInTheDocument();
   });
 
   it('renders backtest controls and result headings in English UI mode', async () => {
@@ -218,25 +218,25 @@ describe('BacktestPage', () => {
     expect(screen.getByText('Window return')).toBeInTheDocument();
     expect(screen.getByText('Direction match')).toBeInTheDocument();
     expect(screen.getByText('Direction accuracy')).toBeInTheDocument();
-    expect(screen.queryByText('运行回测')).not.toBeInTheDocument();
-    expect(screen.queryByText('窗口收益')).not.toBeInTheDocument();
+    expect(screen.queryByText('\u8fd0\u884c\u56de\u6d4b')).not.toBeInTheDocument();
+    expect(screen.queryByText('\u7a97\u53e3\u6536\u76ca')).not.toBeInTheDocument();
   });
 
   it('filters results with stock code, window, phase, and analysis date range when clicking Filter', async () => {
     render(<BacktestPage />);
 
-    const filterInput = await screen.findByPlaceholderText('按股票代码筛选（留空表示全部）');
+    const filterInput = await screen.findByPlaceholderText('\u6309\u80a1\u7968\u4ee3\u7801\u7b5b\u9009（\u7559\u7a7a\u8868\u793a\u5168\u90e8）');
     const windowInput = screen.getByPlaceholderText('10');
-    const phaseSelect = screen.getByDisplayValue('全部阶段');
-    const fromInput = screen.getByLabelText('分析开始日期');
-    const toInput = screen.getByLabelText('分析结束日期');
+    const phaseSelect = screen.getByDisplayValue('\u5168\u90e8\u9636\u6bb5');
+    const fromInput = screen.getByLabelText('\u5206\u6790\u5f00\u59cb\u65e5\u671f');
+    const toInput = screen.getByLabelText('\u5206\u6790\u7ed3\u675f\u65e5\u671f');
 
     fireEvent.change(filterInput, { target: { value: 'aapl' } });
     fireEvent.change(windowInput, { target: { value: '20' } });
     fireEvent.change(phaseSelect, { target: { value: 'intraday' } });
     fireEvent.change(fromInput, { target: { value: '2026-03-01' } });
     fireEvent.change(toInput, { target: { value: '2026-03-31' } });
-    fireEvent.click(screen.getByRole('button', { name: '筛选' }));
+    fireEvent.click(screen.getByRole('button', { name: '\u7b5b\u9009' }));
 
     await waitFor(() => {
       expect(mockGetResults).toHaveBeenLastCalledWith({
@@ -264,21 +264,21 @@ describe('BacktestPage', () => {
       completed: 0,
       insufficient: 0,
       errors: 0,
-      message: '未找到符合条件的历史分析记录',
+      message: '\u672a\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u5386\u53f2\u5206\u6790\u8bb0\u5f55',
       diagnostics: { emptyReason: 'no_matching_analysis' },
     });
     render(<BacktestPage />);
 
-    const filterInput = await screen.findByPlaceholderText('按股票代码筛选（留空表示全部）');
+    const filterInput = await screen.findByPlaceholderText('\u6309\u80a1\u7968\u4ee3\u7801\u7b5b\u9009（\u7559\u7a7a\u8868\u793a\u5168\u90e8）');
     const windowInput = screen.getByPlaceholderText('10');
-    const fromInput = screen.getByLabelText('分析开始日期');
-    const toInput = screen.getByLabelText('分析结束日期');
+    const fromInput = screen.getByLabelText('\u5206\u6790\u5f00\u59cb\u65e5\u671f');
+    const toInput = screen.getByLabelText('\u5206\u6790\u7ed3\u675f\u65e5\u671f');
 
     fireEvent.change(filterInput, { target: { value: '600519.SH' } });
     fireEvent.change(windowInput, { target: { value: '15' } });
     fireEvent.change(fromInput, { target: { value: '2026-03-01' } });
     fireEvent.change(toInput, { target: { value: '2026-03-31' } });
-    fireEvent.click(screen.getByRole('button', { name: '运行回测' }));
+    fireEvent.click(screen.getByRole('button', { name: '\u8fd0\u884c\u56de\u6d4b' }));
 
     await waitFor(() => {
       expect(mockRun).toHaveBeenCalledWith({
@@ -309,9 +309,9 @@ describe('BacktestPage', () => {
       });
     });
 
-    expect(await screen.findByText('已处理:')).toBeInTheDocument();
-    expect(screen.getByText('已保存:')).toBeInTheDocument();
-    expect(screen.getByText('未找到符合条件的历史分析记录')).toBeInTheDocument();
+    expect(await screen.findByText('\u5df2\u5904\u7406:')).toBeInTheDocument();
+    expect(screen.getByText('\u5df2\u4fdd\u5b58:')).toBeInTheDocument();
+    expect(screen.getByText('\u672a\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u5386\u53f2\u5206\u6790\u8bb0\u5f55')).toBeInTheDocument();
   });
 
   it('uses backend-applied eval window when run input is empty', async () => {
@@ -322,21 +322,21 @@ describe('BacktestPage', () => {
       insufficient: 0,
       errors: 0,
       appliedEvalWindowDays: 10,
-      message: '未找到符合条件的历史分析记录',
+      message: '\u672a\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u5386\u53f2\u5206\u6790\u8bb0\u5f55',
       diagnostics: { emptyReason: 'no_matching_analysis' },
     });
     render(<BacktestPage />);
 
-    const filterInput = await screen.findByPlaceholderText('按股票代码筛选（留空表示全部）');
+    const filterInput = await screen.findByPlaceholderText('\u6309\u80a1\u7968\u4ee3\u7801\u7b5b\u9009（\u7559\u7a7a\u8868\u793a\u5168\u90e8）');
     const windowInput = screen.getByPlaceholderText('10');
-    const fromInput = screen.getByLabelText('分析开始日期');
-    const toInput = screen.getByLabelText('分析结束日期');
+    const fromInput = screen.getByLabelText('\u5206\u6790\u5f00\u59cb\u65e5\u671f');
+    const toInput = screen.getByLabelText('\u5206\u6790\u7ed3\u675f\u65e5\u671f');
 
     fireEvent.change(filterInput, { target: { value: '600519.SH' } });
     fireEvent.change(windowInput, { target: { value: '' } });
     fireEvent.change(fromInput, { target: { value: '2026-03-01' } });
     fireEvent.change(toInput, { target: { value: '2026-03-31' } });
-    fireEvent.click(screen.getByRole('button', { name: '运行回测' }));
+    fireEvent.click(screen.getByRole('button', { name: '\u8fd0\u884c\u56de\u6d4b' }));
 
     await waitFor(() => {
       expect(mockRun).toHaveBeenCalledWith({
@@ -374,14 +374,14 @@ describe('BacktestPage', () => {
       });
     });
 
-    expect(await screen.findByText('未找到符合条件的历史分析记录')).toBeInTheDocument();
+    expect(await screen.findByText('\u672a\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u5386\u53f2\u5206\u6790\u8bb0\u5f55')).toBeInTheDocument();
   });
 
   it('switches to next-day validation with the 1D shortcut', async () => {
     render(<BacktestPage />);
 
-    await screen.findByPlaceholderText('按股票代码筛选（留空表示全部）');
-    fireEvent.click(screen.getByRole('button', { name: '1 日验证' }));
+    await screen.findByPlaceholderText('\u6309\u80a1\u7968\u4ee3\u7801\u7b5b\u9009（\u7559\u7a7a\u8868\u793a\u5168\u90e8）');
+    fireEvent.click(screen.getByRole('button', { name: '1 \u65e5\u9a8c\u8bc1' }));
 
     await waitFor(() => {
       expect(mockGetResults).toHaveBeenLastCalledWith({
@@ -401,8 +401,8 @@ describe('BacktestPage', () => {
       });
     });
 
-    expect(screen.getByText('实际表现')).toBeInTheDocument();
-    expect(screen.getByText('准确性')).toBeInTheDocument();
-    expect(screen.getByText('1 日验证模式会用下一个交易日收盘表现校验 AI 预测。')).toBeInTheDocument();
+    expect(screen.getByText('\u5b9e\u9645\u8868\u73b0')).toBeInTheDocument();
+    expect(screen.getByText('\u51c6\u786e\u6027')).toBeInTheDocument();
+    expect(screen.getByText('1 \u65e5\u9a8c\u8bc1\u6a21\u5f0f\u4f1a\u7528\u4e0b\u4e00\u4e2a\u4ea4\u6613\u65e5\u6536\u76d8\u8868\u73b0\u6821\u9a8c AI \u9884\u6d4b。')).toBeInTheDocument();
   });
 });

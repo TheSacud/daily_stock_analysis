@@ -5,8 +5,8 @@ The offline unit tests (tests/test_tw_institutional_fetcher.py) pin the parser t
 FROZEN fixtures, so by construction they can never notice an upstream feed change.
 This script hits the REAL TWSE T86 + TPEx OpenAPI endpoints to surface that drift:
 an endpoint move, a core-column rename (which makes the fetcher fail-open SILENTLY,
-returning None for every stock), a 民國->ISO date-format switch, or a schema change.
-Both feeds are public 政府開放資料 — no credentials, no key.
+returning None for every stock), a \u6c11\u570b->ISO date-format switch, or a schema change.
+Both feeds are public \u653f\u5e9c\u958b\u653e\u8cc7\u6599 — no credentials, no key.
 
 Skip vs drift (a drift detector must not report a feed change as "PASS"):
     - A transport error (endpoint unreachable / SSL / timeout) -> SOFT SKIP: you cannot
@@ -37,7 +37,7 @@ import sys
 _PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 sys.path.insert(0, _PROJECT_ROOT)
 
-try:  # Windows cp950 console mangles the Chinese feed messages / 上市·上櫃 labels
+try:  # Windows cp950 console mangles the Chinese feed messages / \u4e0a\u5e02·\u4e0a\u6ac3 labels
     sys.stdout.reconfigure(encoding="utf-8")
 except Exception:  # noqa: BLE001 - cosmetic only; never block the smoke on console encoding
     pass
@@ -65,7 +65,7 @@ from data_provider.tw_institutional_fetcher import (  # noqa: E402
 # Raw foreign-dealer columns — NOT read by the fetcher (foreign deliberately excludes
 # them), but needed here to verify the always-true total reconstruction. A rename of
 # these is drift relative to the reconstruction check, so their presence is asserted.
-_T86_FOREIGN_DEALER = "外資自營商買賣超股數"
+_T86_FOREIGN_DEALER = "\u5916\u8cc7\u81ea\u71df\u5546\u8cb7\u8ce3\u8d85\u80a1\u6578"
 _TPEX_FOREIGN_DEALER = "ForeignDealers-Difference"
 
 _HEADERS = {"User-Agent": _UA, "Accept": "application/json"}
@@ -142,7 +142,7 @@ def _cross_check_record(rec: dict, raw_foreign, raw_trust, raw_dealer, raw_total
 
 
 def level_twse(fetcher: TwInstitutionalFetcher, codes) -> bool:
-    _print_header(f"Level TWSE / T86 (上市): {codes or '(none)'}")
+    _print_header(f"Level TWSE / T86 (\u4e0a\u5e02): {codes or '(none)'}")
     payload, status, msg = _get_feed(_T86_URL, {"response": "json", "selectType": "ALLBUT0999"})
     if status == "skip":
         print(f"  [!] T86 {msg} — soft skip")
@@ -178,7 +178,7 @@ def level_twse(fetcher: TwInstitutionalFetcher, codes) -> bool:
         rec = _fetch_with_retry(fetcher, code)
         if rec is None:
             # raw row present but the fetcher returned None => a parse/date drift the fetcher
-            # fail-opened on (e.g. a 民國->ISO date switch) — fail LOUD, never a soft-skip
+            # fail-opened on (e.g. a \u6c11\u570b->ISO date switch) — fail LOUD, never a soft-skip
             # (that conflation is exactly what would let the drift this script exists to catch slip).
             if raw is not None:
                 ok &= _check(f"{base}: fetcher must parse a row that exists in the raw feed", False,
@@ -199,7 +199,7 @@ def level_twse(fetcher: TwInstitutionalFetcher, codes) -> bool:
 
 
 def level_tpex(fetcher: TwInstitutionalFetcher, codes) -> bool:
-    _print_header(f"Level TPEx (上櫃): {codes or '(none)'}")
+    _print_header(f"Level TPEx (\u4e0a\u6ac3): {codes or '(none)'}")
     arr, status, msg = _get_feed(_TPEX_URL)
     if status == "skip":
         print(f"  [!] TPEx {msg} — soft skip")
@@ -230,7 +230,7 @@ def level_tpex(fetcher: TwInstitutionalFetcher, codes) -> bool:
         raw = by_code.get(base)
         rec = _fetch_with_retry(fetcher, code)
         if rec is None:
-            # raw row present but fetcher None => parse/date drift (e.g. a 民國 date-format change
+            # raw row present but fetcher None => parse/date drift (e.g. a \u6c11\u570b date-format change
             # _parse_tpex_row can't convert) — fail LOUD, not a soft-skip.
             if raw is not None:
                 ok &= _check(f"{base}: fetcher must parse a row that exists in the raw feed", False,

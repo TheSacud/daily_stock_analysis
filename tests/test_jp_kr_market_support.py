@@ -67,12 +67,12 @@ def test_market_guidelines_for_jp_kr_exclude_a_share_specific_context() -> None:
     jp_guidelines = get_market_guidelines("7203.T")
     kr_guidelines = get_market_guidelines("005930.KS")
 
-    assert "日股" in jp_guidelines
-    assert "韩股" in kr_guidelines
+    assert "\u65e5\u80a1" in jp_guidelines
+    assert "\u97e9\u80a1" in kr_guidelines
     for text in (jp_guidelines, kr_guidelines):
-        assert "不要套用 A 股" in text
-        assert "北向资金" in text
-        assert "龙虎榜" in text
+        assert "\u4e0d\u8981\u5957\u7528 A \u80a1" in text
+        assert "\u5317\u5411\u8d44\u91d1" in text
+        assert "\u9f99\u864e\u699c" in text
 
 
 def test_yfinance_keeps_jp_kr_suffix_codes_and_indices() -> None:
@@ -95,8 +95,8 @@ def test_yfinance_keeps_jp_kr_suffix_codes_and_indices() -> None:
 
     assert {item["code"] for item in jp_indices} == {"N225", "TOPX"}
     assert {item["code"] for item in kr_indices} == {"KS11", "KQ11"}
-    assert ("^N225", "日经225", "N225") in captured
-    assert ("^TOPX", "东证指数", "TOPX") in captured
+    assert ("^N225", "\u65e5\u7ecf225", "N225") in captured
+    assert ("^TOPX", "\u4e1c\u8bc1\u6307\u6570", "TOPX") in captured
     assert ("^KS11", "KOSPI", "KS11") in captured
     assert ("^KQ11", "KOSDAQ", "KQ11") in captured
 

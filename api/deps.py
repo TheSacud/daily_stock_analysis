@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 """
 ===================================
-API 依赖注入模块
+API \u4f9d\u8d56\u6ce8\u5165\u6a21chunks
 ===================================
 
-职责：
-1. 提供数据库 Session 依赖
-2. 提供配置依赖
-3. 提供服务层依赖
+\u804c\u8d23:
+1. \u63d0\u4f9b\u6570\u636elibrary Session \u4f9d\u8d56
+2. \u63d0\u4f9bconfig\u4f9d\u8d56
+3. \u63d0\u4f9b\u670d\u52a1\u5c42\u4f9d\u8d56
 """
 
 from typing import Generator
@@ -23,13 +23,13 @@ from src.services.runtime_scheduler import RuntimeSchedulerService
 
 def get_db() -> Generator[Session, None, None]:
     """
-    获取数据库 Session 依赖
-    
-    使用 FastAPI 依赖注入机制，确保请求结束后自动关闭 Session
-    
+    \u83b7\u53d6\u6570\u636elibrary Session \u4f9d\u8d56
+
+    \u4f7f\u7528 FastAPI \u4f9d\u8d56\u6ce8\u5165\u673a\u5236; \u786e\u4fddrequest\u7ed3\u675f\u540e\u81ea\u52a8\u5173\u95ed Session
+
     Yields:
-        Session: SQLAlchemy Session 对象
-        
+        Session: SQLAlchemy Session \u5bf9\u8c61
+
     Example:
         @router.get("/items")
         async def get_items(db: Session = Depends(get_db)):
@@ -45,20 +45,20 @@ def get_db() -> Generator[Session, None, None]:
 
 def get_config_dep() -> Config:
     """
-    获取配置依赖
-    
+    \u83b7\u53d6config\u4f9d\u8d56
+
     Returns:
-        Config: 配置单例对象
+        Config: config\u5355\u4f8b\u5bf9\u8c61
     """
     return get_config()
 
 
 def get_database_manager() -> DatabaseManager:
     """
-    获取数据库管理器依赖
-    
+    \u83b7\u53d6\u6570\u636elibrary\u7ba1\u7406\u5668\u4f9d\u8d56
+
     Returns:
-        DatabaseManager: 数据库管理器单例对象
+        DatabaseManager: \u6570\u636elibrary\u7ba1\u7406\u5668\u5355\u4f8b\u5bf9\u8c61
     """
     return DatabaseManager.get_instance()
 

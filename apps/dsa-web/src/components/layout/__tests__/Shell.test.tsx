@@ -46,10 +46,10 @@ describe('Shell', () => {
       </MemoryRouter>
     );
 
-    expect(screen.getAllByRole('button', { name: '切换主题' }).length).toBeGreaterThan(0);
-    expect(screen.getByRole('link', { name: '问股' })).toBeInTheDocument();
+    expect(screen.getAllByRole('button', { name: '\u5207\u6362\u4e3b\u9898' }).length).toBeGreaterThan(0);
+    expect(screen.getByRole('link', { name: '\u95ee\u80a1' })).toBeInTheDocument();
     expect(screen.getByTestId('chat-completion-badge')).toBeInTheDocument();
-    const logoutButton = screen.getByRole('button', { name: '退出' });
+    const logoutButton = screen.getByRole('button', { name: '\u9000\u51fa' });
     expect(logoutButton).toBeInTheDocument();
     expect(logoutButton).toHaveClass('cursor-pointer');
   });
@@ -65,9 +65,9 @@ describe('Shell', () => {
       </MemoryRouter>
     );
 
-    fireEvent.click(screen.getAllByRole('button', { name: '切换主题' })[0]);
+    fireEvent.click(screen.getAllByRole('button', { name: '\u5207\u6362\u4e3b\u9898' })[0]);
 
-    expect(await screen.findByRole('menu', { name: '主题模式' })).toBeInTheDocument();
+    expect(await screen.findByRole('menu', { name: '\u4e3b\u9898\u6a21\u5f0f' })).toBeInTheDocument();
   });
 
   it('shows a confirmation dialog before logout', async () => {
@@ -81,10 +81,10 @@ describe('Shell', () => {
       </MemoryRouter>
     );
 
-    fireEvent.click(screen.getByRole('button', { name: '退出' }));
+    fireEvent.click(screen.getByRole('button', { name: '\u9000\u51fa' }));
 
-    expect(await screen.findByRole('heading', { name: '退出登录' })).toBeInTheDocument();
-    fireEvent.click(screen.getByRole('button', { name: '确认退出' }));
+    expect(await screen.findByRole('heading', { name: '\u9000\u51fa\u767b\u5f55' })).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: '\u786e\u8ba4\u9000\u51fa' }));
     expect(mockLogout).toHaveBeenCalled();
   });
 });

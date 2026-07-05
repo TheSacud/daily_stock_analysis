@@ -1,49 +1,49 @@
-# Default Bull Trend Strategy / 默认多头趋势
+﻿# Default Bull Trend Strategy
 
 name: bull_trend
-display_name: 默认多头趋势
-description: 默认个股分析优先策略，识别多头排列、趋势延续与回踩低吸机会。
+display_name: Default Bull Trend
+description: Default single-stock analysis strategy for bullish alignment, trend continuation, and disciplined pullback entries.
 category: trend
 core_rules: [1, 2, 3]
 required_tools:
   - get_daily_history
   - analyze_trend
-aliases: [趋势, 趋势分析, 多头趋势]
+aliases: [trend, trend analysis, bull trend]
 default_active: true
 default_router: true
 default_priority: 10
 market_regimes: [trending_up]
 
 instructions: |
-  **默认多头趋势（Default Bull Trend Strategy）**
+  **Default Bull Trend Strategy**
 
-  适用场景：
-  - 常规个股分析的默认策略。
-  - 优先寻找“趋势向上 + 风险可控 + 不追高”的机会。
+  Use cases:
+  - Default strategy for regular single-stock analysis.
+  - Prefer opportunities with upward trend, controlled risk, and no chase entry.
 
-  分析框架：
+  Analysis framework:
 
-  1. **趋势确认（优先级最高）**
-     - 使用 `analyze_trend` 判断 MA5/MA10/MA20 排列。
-     - MA5 >= MA10 >= MA20 且 MA20 斜率向上，视为多头结构。
-     - 若价格显著跌破 MA20，则降低看多权重。
+  1. **Trend confirmation, highest priority**
+     - Use `analyze_trend` to review MA5/MA10/MA20 alignment.
+     - Treat MA5 >= MA10 >= MA20 with an upward MA20 slope as a bullish structure.
+     - If price clearly breaks below MA20, reduce bullish weight.
 
-  2. **位置与节奏**
-     - 优先“回踩不破”而非“高位追涨”。
-     - 当价格距离 MA5/MA10 过远时，提示等待回踩。
-     - 放量突破有效阻力时可提高胜率评级。
+  2. **Position and timing**
+     - Prefer pullbacks that hold support over chasing extended prices.
+     - If price is too far above MA5/MA10, recommend waiting for a pullback.
+     - A high-volume breakout through valid resistance can raise the win-rate assessment.
 
-  3. **量价验证**
-     - 使用 `get_daily_history` 检查突破日/反弹日是否放量。
-     - 缩量上涨需谨慎，放量滞涨需警惕分歧。
+  3. **Volume-price validation**
+     - Use `get_daily_history` to check whether breakout or rebound days have expanding volume.
+     - Be cautious with low-volume advances and watch for divergence when price stalls on heavy volume.
 
-  4. **交易建议输出**
-     - 输出明确的“买入/观望/减仓”倾向及触发条件。
-     - 必须给出止损参考（如 MA20 下方或结构低点）。
-     - 若无清晰优势，明确写“暂不出手”，避免过度交易。
+  4. **Trading recommendation output**
+     - State a clear buy, wait, or reduce-position bias with trigger conditions.
+     - Always provide a stop reference, such as below MA20 or below a structural low.
+     - If there is no clear edge, explicitly recommend no trade to avoid overtrading.
 
-  评分调整建议：
-  - 多头排列 + 趋势强度良好：`sentiment_score +12`
-  - 回踩关键均线后企稳：`sentiment_score +8`
-  - 放量突破关键阻力：`sentiment_score +10`
-  - 跌破 MA20 或趋势转弱：`sentiment_score -12`
+  Suggested score adjustments:
+  - Bullish moving-average alignment with good trend strength: `sentiment_score +12`
+  - Pullback stabilizes at a key moving average: `sentiment_score +8`
+  - High-volume breakout through key resistance: `sentiment_score +10`
+  - Break below MA20 or trend deterioration: `sentiment_score -12`

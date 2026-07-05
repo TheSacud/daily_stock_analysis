@@ -6,10 +6,10 @@ import type { TaskInfo } from '../../../types/analysis';
 const baseTask: TaskInfo = {
   taskId: 'task-1',
   stockCode: '600519',
-  stockName: '贵州茅台',
+  stockName: '\u8d35\u5dde\u8305\u53f0',
   status: 'processing',
   progress: 40,
-  message: '正在抓取最新行情',
+  message: '\u6b63\u5728\u6293\u53d6\u6700\u65b0\u884c\u60c5',
   reportType: 'detailed',
   createdAt: '2026-03-21T08:00:00Z',
 };
@@ -35,8 +35,8 @@ describe('TaskPanel', () => {
       />,
     );
 
-    expect(screen.getByLabelText('请求阶段: 盘中')).toBeInTheDocument();
-    expect(screen.getByLabelText('请求阶段: 自动阶段')).toBeInTheDocument();
+    expect(screen.getByLabelText('\u8bf7\u6c42\u9636\u6bb5: \u76d8\u4e2d')).toBeInTheDocument();
+    expect(screen.getByLabelText('\u8bf7\u6c42\u9636\u6bb5: \u81ea\u52a8\u9636\u6bb5')).toBeInTheDocument();
   });
 
   it('renders active tasks with preserved dashboard panel styling', () => {
@@ -53,21 +53,21 @@ describe('TaskPanel', () => {
             stockCode: 'AAPL',
             stockName: 'Apple',
             status: 'pending',
-            message: '等待分析队列',
+            message: '\u7b49\u5f85\u5206\u6790\u961f\u5217',
           },
         ]}
       />,
     );
 
-    expect(screen.getByText('分析任务')).toBeInTheDocument();
-    expect(screen.getByText('1 进行中')).toBeInTheDocument();
-    expect(screen.getByText('1 等待中')).toBeInTheDocument();
-    expect(screen.getByText('贵州茅台')).toBeInTheDocument();
+    expect(screen.getByText('\u5206\u6790\u4efb\u52a1')).toBeInTheDocument();
+    expect(screen.getByText('1 \u8fdb\u884c\u4e2d')).toBeInTheDocument();
+    expect(screen.getByText('1 \u7b49\u5f85\u4e2d')).toBeInTheDocument();
+    expect(screen.getByText('\u8d35\u5dde\u8305\u53f0')).toBeInTheDocument();
     expect(screen.getByText('AAPL')).toBeInTheDocument();
-    expect(screen.getByLabelText('任务状态：分析中')).toBeInTheDocument();
-    expect(screen.getByText('运行诊断')).toBeInTheDocument();
+    expect(screen.getByLabelText('\u4efb\u52a1\u72b6\u6001：\u5206\u6790\u4e2d')).toBeInTheDocument();
+    expect(screen.getByText('\u8fd0\u884c\u8bca\u65ad')).toBeInTheDocument();
     expect(screen.getAllByText('trace-task-1')).toHaveLength(2);
-    expect(screen.queryByText(/请求阶段:/)).not.toBeInTheDocument();
+    expect(screen.queryByText(/\u8bf7\u6c42\u9636\u6bb5:/)).not.toBeInTheDocument();
     expect(container.querySelector('.home-panel-card')).toBeTruthy();
     expect(container.querySelector('.home-subpanel')).toBeTruthy();
   });
@@ -79,9 +79,9 @@ describe('TaskPanel', () => {
           {
             ...baseTask,
             stockCode: '601869.SH',
-            stockName: '长飞光纤',
+            stockName: '\u957f\u98de\u5149\u7ea4',
             progress: 32,
-            message: '长飞光纤: 请求阶段: 自动阶段',
+            message: '\u957f\u98de\u5149\u7ea4: \u8bf7\u6c42\u9636\u6bb5: \u81ea\u52a8\u9636\u6bb5',
             analysisPhase: 'auto',
             traceId: 'c5b9665a64e3b9f42ad9f',
           },
@@ -93,15 +93,15 @@ describe('TaskPanel', () => {
     const item = screen.getByTestId('task-panel-item');
     expect(item).toHaveClass('grid');
     expect(item).not.toHaveClass('flex');
-    expect(screen.getByText('长飞光纤')).toHaveClass('truncate');
+    expect(screen.getByText('\u957f\u98de\u5149\u7ea4')).toHaveClass('truncate');
     expect(screen.getByText('601869.SH')).toHaveClass('shrink-0');
     expect(screen.getByText('32%')).toBeInTheDocument();
 
     const diagnosticsSummary = screen.getByTestId('task-panel-diagnostics-summary');
     expect(diagnosticsSummary).toHaveClass('grid-cols-[auto_minmax(0,1fr)_auto]');
-    expect(screen.getByText('运行诊断')).toHaveClass('whitespace-nowrap');
+    expect(screen.getByText('\u8fd0\u884c\u8bca\u65ad')).toHaveClass('whitespace-nowrap');
     expect(screen.getByText('c5b9665a64...')).toHaveClass('truncate');
-    expect(screen.getByRole('button', { name: '查看 长飞光纤 运行流' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: '\u67e5\u770b \u957f\u98de\u5149\u7ea4 \u8fd0\u884c\u6d41' })).toBeInTheDocument();
   });
 
   it('opens the run-flow view from an active task icon button', () => {
@@ -113,7 +113,7 @@ describe('TaskPanel', () => {
       />,
     );
 
-    fireEvent.click(screen.getByRole('button', { name: '查看 贵州茅台 运行流' }));
+    fireEvent.click(screen.getByRole('button', { name: '\u67e5\u770b \u8d35\u5dde\u8305\u53f0 \u8fd0\u884c\u6d41' }));
 
     expect(onOpenRunFlow).toHaveBeenCalledWith(baseTask);
   });
@@ -125,15 +125,15 @@ describe('TaskPanel', () => {
           {
             ...baseTask,
             status: 'cancel_requested',
-            message: '正在请求取消',
+            message: '\u6b63\u5728\u8bf7\u6c42\u53d6\u6d88',
           },
         ]}
       />,
     );
 
-    expect(screen.getByText('贵州茅台')).toBeInTheDocument();
-    expect(screen.getByLabelText('任务状态：请求取消')).toBeInTheDocument();
-    expect(screen.queryByText('失败')).not.toBeInTheDocument();
+    expect(screen.getByText('\u8d35\u5dde\u8305\u53f0')).toBeInTheDocument();
+    expect(screen.getByLabelText('\u4efb\u52a1\u72b6\u6001：\u8bf7\u6c42\u53d6\u6d88')).toBeInTheDocument();
+    expect(screen.queryByText('\u5931\u8d25')).not.toBeInTheDocument();
   });
 
   it('does not keep cancelled terminal tasks in the active task panel', () => {

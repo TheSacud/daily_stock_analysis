@@ -31,48 +31,48 @@ const combinedMarketReviewPayload: MarketReviewPayload = {
   kind: 'market_review',
   region: 'cn,hk',
   language: 'zh',
-  rootTitle: '大盘复盘',
+  rootTitle: '\u5927\u76d8\u590d\u76d8',
   markets: {
     cn: {
-      title: 'A股市场',
+      title: 'A\u80a1\u5e02\u573a',
       breadth: {
         upCount: 3120,
         downCount: 1420,
         limitUpCount: 72,
         limitDownCount: 4,
         totalAmount: 9600,
-        turnoverUnit: '亿元',
+        turnoverUnit: '\u4ebf\u5143',
       },
       indices: [{
         code: '000300',
-        name: '沪深300',
+        name: '\u6caa\u6df1300',
         current: 3920.2,
         changePct: 1.2,
         high: 3940.5,
         low: 3860.1,
       }],
       sectors: {
-        top: [{ name: '半导体', changePct: 2.35 }],
-        bottom: [{ name: '煤炭', changePct: -1.1 }],
+        top: [{ name: '\u534a\u5bfc\u4f53', changePct: 2.35 }],
+        bottom: [{ name: '\u7164\u70ad', changePct: -1.1 }],
       },
       concepts: {
-        top: [{ name: '机器人概念', changePct: 4.2 }],
-        bottom: [{ name: '转基因', changePct: -2.05 }],
+        top: [{ name: '\u673a\u5668\u4eba\u6982\u5ff5', changePct: 4.2 }],
+        bottom: [{ name: '\u8f6c\u57fa\u56e0', changePct: -2.05 }],
       },
     },
     hk: {
-      title: '港股市场',
+      title: '\u6e2f\u80a1\u5e02\u573a',
       breadth: {
         upCount: 680,
         downCount: 410,
         limitUpCount: 0,
         limitDownCount: 0,
         totalAmount: 1180,
-        turnoverUnit: '亿港元',
+        turnoverUnit: '\u4ebf\u6e2f\u5143',
       },
       indices: [{
         code: 'HSI',
-        name: '恒生指数',
+        name: '\u6052\u751f\u6307\u6570',
         current: 18920.4,
         changePct: -0.5,
         high: 19050.2,
@@ -123,23 +123,23 @@ describe('MarketReviewReportView', () => {
     expect(screen.getByText('No rotation view yet')).toBeInTheDocument();
     expect(screen.getByText('Risks & Watchlist')).toBeInTheDocument();
     expect(screen.getByText('No key observations yet')).toBeInTheDocument();
-    expect(screen.queryByText('复盘摘要')).not.toBeInTheDocument();
-    expect(screen.queryByText('暂无摘要')).not.toBeInTheDocument();
+    expect(screen.queryByText('\u590d\u76d8\u6458\u8981')).not.toBeInTheDocument();
+    expect(screen.queryByText('\u6682\u65e0\u6458\u8981')).not.toBeInTheDocument();
   });
 
   it('renders structured data for every market in a combined market review payload', () => {
     render(
       <MarketReviewReportView
         payload={combinedMarketReviewPayload}
-        content="# 大盘复盘"
+        content="# \u5927\u76d8\u590d\u76d8"
         reportLanguage="zh"
       />,
     );
 
-    expect(screen.getByText('A股市场')).toBeInTheDocument();
-    expect(screen.getByText('港股市场')).toBeInTheDocument();
-    expect(screen.getByText('沪深300')).toBeInTheDocument();
-    expect(screen.getByText('恒生指数')).toBeInTheDocument();
+    expect(screen.getByText('A\u80a1\u5e02\u573a')).toBeInTheDocument();
+    expect(screen.getByText('\u6e2f\u80a1\u5e02\u573a')).toBeInTheDocument();
+    expect(screen.getByText('\u6caa\u6df1300')).toBeInTheDocument();
+    expect(screen.getByText('\u6052\u751f\u6307\u6570')).toBeInTheDocument();
     expect(screen.getByText('3120')).toBeInTheDocument();
     expect(screen.getByText('680')).toBeInTheDocument();
   });
@@ -148,15 +148,15 @@ describe('MarketReviewReportView', () => {
     render(
       <MarketReviewReportView
         payload={combinedMarketReviewPayload}
-        content="# 大盘复盘"
+        content="# \u5927\u76d8\u590d\u76d8"
         reportLanguage="zh"
       />,
     );
 
-    expect(screen.getAllByText('行业板块')).toHaveLength(2);
-    expect(screen.getAllByText('概念板块')).toHaveLength(2);
-    expect(screen.getByText('半导体')).toBeInTheDocument();
-    expect(screen.getByText('机器人概念')).toBeInTheDocument();
+    expect(screen.getAllByText('\u884c\u4e1a\u677f\u5757')).toHaveLength(2);
+    expect(screen.getAllByText('\u6982\u5ff5\u677f\u5757')).toHaveLength(2);
+    expect(screen.getByText('\u534a\u5bfc\u4f53')).toBeInTheDocument();
+    expect(screen.getByText('\u673a\u5668\u4eba\u6982\u5ff5')).toBeInTheDocument();
     expect(screen.getByText('+4.20%')).toBeInTheDocument();
     expect(screen.getByText('-2.05%')).toBeInTheDocument();
   });
@@ -165,20 +165,20 @@ describe('MarketReviewReportView', () => {
     render(
       <MarketReviewReportView
         payload={combinedMarketReviewPayload}
-        content="# 大盘复盘"
+        content="# \u5927\u76d8\u590d\u76d8"
         reportLanguage="zh"
       />,
     );
 
-    expect(screen.getByText('结构化大盘数据')).toBeInTheDocument();
-    expect(screen.getAllByText('上涨家数')).toHaveLength(2);
-    expect(screen.getAllByText('下跌家数')).toHaveLength(2);
-    expect(screen.getAllByText('涨停/跌停')).toHaveLength(2);
-    expect(screen.getAllByText('成交额')).toHaveLength(2);
-    expect(screen.getAllByText('指数')).toHaveLength(2);
-    expect(screen.getAllByText('最新')).toHaveLength(2);
-    expect(screen.getAllByText('涨跌幅')).toHaveLength(2);
-    expect(screen.getAllByText('高/低')).toHaveLength(2);
+    expect(screen.getByText('\u7ed3\u6784\u5316\u5927\u76d8\u6570\u636e')).toBeInTheDocument();
+    expect(screen.getAllByText('\u4e0a\u6da8\u5bb6\u6570')).toHaveLength(2);
+    expect(screen.getAllByText('\u4e0b\u8dcc\u5bb6\u6570')).toHaveLength(2);
+    expect(screen.getAllByText('\u6da8\u505c/\u8dcc\u505c')).toHaveLength(2);
+    expect(screen.getAllByText('\u6210\u4ea4\u989d')).toHaveLength(2);
+    expect(screen.getAllByText('\u6307\u6570')).toHaveLength(2);
+    expect(screen.getAllByText('\u6700\u65b0')).toHaveLength(2);
+    expect(screen.getAllByText('\u6da8\u8dcc\u5e45')).toHaveLength(2);
+    expect(screen.getAllByText('\u9ad8/\u4f4e')).toHaveLength(2);
     expect(screen.queryByText('Structured Market Data')).not.toBeInTheDocument();
     expect(screen.queryByText('Advancers')).not.toBeInTheDocument();
     expect(screen.queryByText('Index')).not.toBeInTheDocument();
@@ -293,14 +293,14 @@ describe('MarketReviewReportView', () => {
     render(
       <MarketReviewReportView
         payload={combinedMarketReviewPayload}
-        content="# 大盘复盘"
+        content="# \u5927\u76d8\u590d\u76d8"
         recordId={7}
         reportLanguage="zh"
         onOpenRunFlow={onOpenRunFlow}
       />,
     );
 
-    fireEvent.click(screen.getByRole('button', { name: '查看历史记录 7 运行流' }));
+    fireEvent.click(screen.getByRole('button', { name: '\u67e5\u770b\u5386\u53f2\u8bb0\u5f55 7 \u8fd0\u884c\u6d41' }));
 
     expect(onOpenRunFlow).toHaveBeenCalledWith(7);
   });

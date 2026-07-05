@@ -28,7 +28,7 @@ from src.schemas.analysis_context_pack import (
 
 def _pack() -> AnalysisContextPack:
     return AnalysisContextPack(
-        subject=AnalysisSubject(code="600519", stock_name="贵州茅台", market="cn"),
+        subject=AnalysisSubject(code="600519", stock_name="\u8d35\u5dde\u8305\u53f0", market="cn"),
         created_at=datetime(2026, 4, 10, 8, 30, tzinfo=timezone.utc),
         blocks={
             "news": AnalysisContextBlock(
@@ -36,7 +36,7 @@ def _pack() -> AnalysisContextPack:
                 items={
                     "content": AnalysisContextItem(
                         status=ContextFieldStatus.MISSING,
-                        value="这是一段不应出现在公共 overview 的完整新闻正文",
+                        value="\u8fd9\u662f\u4e00\u6bb5\u4e0d\u5e94\u51fa\u73b0\u5728\u516c\u5171 overview \u7684\u5b8c\u6574\u65b0\u95fb\u6b63\u6587",
                         missing_reason="news_context_missing",
                     ),
                     "freshness": AnalysisContextItem(
@@ -79,7 +79,7 @@ def _pack() -> AnalysisContextPack:
                 items={
                     "trend_result": AnalysisContextItem(
                         status=ContextFieldStatus.AVAILABLE,
-                        value={"trend_status": "多头排列", "ma5": 1800.0},
+                        value={"trend_status": "\u591a\u5934\u6392\u5217", "ma5": 1800.0},
                     )
                 },
             ),
@@ -185,8 +185,8 @@ def test_renderer_does_not_dump_items_values_payloads_or_sensitive_markers() -> 
     assert "metadata" in keys
 
     rendered = json.dumps(overview, ensure_ascii=False)
-    assert "完整新闻正文" not in rendered
-    assert "多头排列" not in rendered
+    assert "\u5b8c\u6574\u65b0\u95fb\u6b63\u6587" not in rendered
+    assert "\u591a\u5934\u6392\u5217" not in rendered
     assert "secret-key" not in rendered
     assert "hooks.example.test" not in rendered
     assert "authorization" not in rendered
@@ -227,9 +227,9 @@ def test_labels_follow_report_language_and_prompt_block_order() -> None:
         pack.model_dump(mode="json")["blocks"]
     )
     assert [block["label"] for block in overview_zh["blocks"][:3]] == [
-        "行情",
-        "技术",
-        "基本面",
+        "\u884c\u60c5",
+        "\u6280\u672f",
+        "\u57fa\u672c\u9762",
     ]
     assert [block["label"] for block in overview_en["blocks"][:3]] == [
         "quote",
@@ -237,7 +237,7 @@ def test_labels_follow_report_language_and_prompt_block_order() -> None:
         "fundamentals",
     ]
     prompt = format_analysis_context_pack_prompt_section(pack, report_language="zh")
-    assert prompt.index("行情:") < prompt.index("技术:") < prompt.index("基本面:")
+    assert prompt.index("\u884c\u60c5:") < prompt.index("\u6280\u672f:") < prompt.index("\u57fa\u672c\u9762:")
 
 
 def test_extract_and_sanitize_handle_json_snapshot_strings() -> None:
@@ -246,15 +246,15 @@ def test_extract_and_sanitize_handle_json_snapshot_strings() -> None:
         {
             "enhanced_context": {
                 "code": "600519",
-                "daily_market_context_summary": "仅供Prompt，历史复盘摘要",
+                "daily_market_context_summary": "\u4ec5\u4f9bPrompt，\u5386\u53f2\u590d\u76d8\u6458\u8981",
                 "portfolio_context": {
                     "quantity": 100,
                     "avg_cost": 1800,
                 },
-                "daily_market_context": {"summary": "大盘偏弱，谨慎"},
+                "daily_market_context": {"summary": "\u5927\u76d8\u504f\u5f31，\u8c28\u614e"},
             },
             "portfolio_context": {"total_cost": 180000},
-            "daily_market_context_summary": "根快照大盘摘要（应清理）",
+            "daily_market_context_summary": "\u6839\u5feb\u7167\u5927\u76d8\u6458\u8981（\u5e94\u6e05\u7406）",
             "analysis_context_pack_overview": overview,
             "market_phase_summary": {"phase": "intraday", "market": "cn"},
         },
@@ -269,7 +269,7 @@ def test_extract_and_sanitize_handle_json_snapshot_strings() -> None:
     assert sanitized == {
         "enhanced_context": {
             "code": "600519",
-            "daily_market_context": {"summary": "大盘偏弱，谨慎"},
+            "daily_market_context": {"summary": "\u5927\u76d8\u504f\u5f31，\u8c28\u614e"},
         }
     }
 
@@ -281,14 +281,14 @@ def test_extract_reprojects_persisted_overview_to_public_schema() -> None:
             "created_at": "2026-04-10T08:30:00+00:00",
             "subject": {
                 "code": "600519",
-                "stock_name": "贵州茅台",
+                "stock_name": "\u8d35\u5dde\u8305\u53f0",
                 "market": "cn",
                 "api_key": "secret-key",
             },
             "blocks": [
                 {
                     "key": "quote",
-                    "label": "行情",
+                    "label": "\u884c\u60c5",
                     "status": "available",
                     "source": "mock",
                     "warnings": ["ok", "ok"],
@@ -297,7 +297,7 @@ def test_extract_reprojects_persisted_overview_to_public_schema() -> None:
                 },
                 {
                     "key": "news",
-                    "label": "新闻",
+                    "label": "\u65b0\u95fb",
                     "status": "missing",
                     "source": None,
                     "warnings": [],
@@ -307,7 +307,7 @@ def test_extract_reprojects_persisted_overview_to_public_schema() -> None:
                         "backup_unavailable",
                         "extra_reason_not_exposed",
                     ],
-                    "content": "完整新闻正文不应出现",
+                    "content": "\u5b8c\u6574\u65b0\u95fb\u6b63\u6587\u4e0d\u5e94\u51fa\u73b0",
                 },
             ],
             "counts": {
@@ -378,7 +378,7 @@ def test_extract_reprojects_persisted_overview_to_public_schema() -> None:
     rendered = json.dumps(extracted, ensure_ascii=False)
     assert "items" not in rendered
     assert "value" not in rendered
-    assert "完整新闻正文" not in rendered
+    assert "\u5b8c\u6574\u65b0\u95fb\u6b63\u6587" not in rendered
     assert "webhook_url" not in rendered
     assert "hooks.example.test" not in rendered
     assert "secret-key" not in rendered
@@ -393,7 +393,7 @@ def test_extract_accepts_legacy_overview_without_data_quality() -> None:
                 "blocks": [
                     {
                         "key": "quote",
-                        "label": "行情",
+                        "label": "\u884c\u60c5",
                         "status": "available",
                         "source": "mock",
                         "warnings": [],
@@ -415,7 +415,7 @@ def test_extract_returns_none_for_malformed_persisted_overview() -> None:
         {
             "analysis_context_pack_overview": {
                 "subject": {"code": "600519"},
-                "blocks": [{"key": "quote", "label": "行情", "status": "bad_status"}],
+                "blocks": [{"key": "quote", "label": "\u884c\u60c5", "status": "bad_status"}],
             }
         }
     ) is None

@@ -27,11 +27,11 @@ describe('ThemeToggle', () => {
       </ThemeProvider>
     );
 
-    fireEvent.click(screen.getByRole('button', { name: '切换主题' }));
+    fireEvent.click(screen.getByRole('button', { name: '\u5207\u6362\u4e3b\u9898' }));
 
-    expect(await screen.findByRole('menu', { name: '主题模式' })).toBeInTheDocument();
-    expect(screen.getByRole('menuitemradio', { name: '浅色' })).toBeInTheDocument();
-    expect(screen.getByRole('menuitemradio', { name: '深色' })).toBeInTheDocument();
-    expect(screen.getByRole('menuitemradio', { name: '跟随系统' })).toBeInTheDocument();
+    expect(await screen.findByRole('menu', { name: '\u4e3b\u9898\u6a21\u5f0f' })).toBeInTheDocument();
+    expect(screen.getByRole('menuitemradio', { name: '\u6d45\u8272' })).toBeInTheDocument();
+    expect(screen.getByRole('menuitemradio', { name: '\u6df1\u8272' })).toBeInTheDocument();
+    expect(screen.getByRole('menuitemradio', { name: '\u8ddf\u968f\u7cfb\u7edf' })).toBeInTheDocument();
   });
 });

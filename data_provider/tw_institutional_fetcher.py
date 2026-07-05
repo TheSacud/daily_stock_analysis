@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""TwInstitutionalFetcher — Taiwan 三大法人 (institutional-investor) daily net buy/sell.
+"""TwInstitutionalFetcher — Taiwan \u4e09\u5927\u6cd5\u4eba (institutional-investor) daily net buy/sell.
 
 Data-layer only, ``tw``-only, strictly additive. This module is a self-contained
 data-access building block: it fetches, parses, caches and fail-opens. It is NOT
@@ -7,19 +7,19 @@ wired into the analysis report / Web / scoring path — that is a deliberate
 follow-up (per #1777). It does not touch the existing A-share / HK / US / JP / KR
 flows in ``data_provider/base.py``.
 
-Sources (政府開放資料, 政府資料開放授權條款第 1 版 / OGDL v1, commercial-safe, no key):
-  - 上市 TWSE T86 「三大法人買賣超日報」 (per-stock), legacy RWD JSON endpoint
+Sources (\u653f\u5e9c\u958b\u653e\u8cc7\u6599, \u653f\u5e9c\u8cc7\u6599\u958b\u653e\u6388\u6b0a\u689d\u6b3e\u7b2c 1 \u7248 / OGDL v1, commercial-safe, no key):
+  - \u4e0a\u5e02 TWSE T86 「\u4e09\u5927\u6cd5\u4eba\u8cb7\u8ce3\u8d85\u65e5\u5831」 (per-stock), legacy RWD JSON endpoint
     https://www.twse.com.tw/rwd/zh/fund/T86?response=json&date=YYYYMMDD&selectType=ALLBUT0999
-    (date is 西元 ``YYYYMMDD``; numeric values are comma-formatted strings)
-  - 上櫃 TPEx ``tpex_3insti_daily_trading``, OpenAPI
+    (date is \u897f\u5143 ``YYYYMMDD``; numeric values are comma-formatted strings)
+  - \u4e0a\u6ac3 TPEx ``tpex_3insti_daily_trading``, OpenAPI
     https://www.tpex.org.tw/openapi/v1/tpex_3insti_daily_trading
-    (date is 民國 ``1150626``; numeric values are plain integer strings)
+    (date is \u6c11\u570b ``1150626``; numeric values are plain integer strings)
 
 Fail-open contract: any network error, rate-limit, empty response, unexpected
 shape or missing field returns ``None`` (no data) — it never raises into the
 caller, so the analysis main flow is never interrupted.
 
-Units are **shares (股)**, not lots (張). Buy/sell-net signs are preserved
+Units are **shares (\u80a1)**, not lots (\u5f35). Buy/sell-net signs are preserved
 (negative = net sell).
 """
 
@@ -45,13 +45,13 @@ _UA = (
 
 # TWSE T86 core column NAMES. Read by name (not a fixed index) so a TWSE column
 # rename / reorder fails open instead of silently shipping misaligned numbers.
-# foreign = 外陸資 (NOT incl 外資自營商): foreign-dealer sits outside the 外資
-# category in the official 三大法人 total.
-_T86_CODE = "證券代號"
-_T86_FOREIGN = "外陸資買賣超股數(不含外資自營商)"
-_T86_TRUST = "投信買賣超股數"
-_T86_DEALER = "自營商買賣超股數"
-_T86_TOTAL = "三大法人買賣超股數"
+# foreign = \u5916\u9678\u8cc7 (NOT incl \u5916\u8cc7\u81ea\u71df\u5546): foreign-dealer sits outside the \u5916\u8cc7
+# category in the official \u4e09\u5927\u6cd5\u4eba total.
+_T86_CODE = "\u8b49\u5238\u4ee3\u865f"
+_T86_FOREIGN = "\u5916\u9678\u8cc7\u8cb7\u8ce3\u8d85\u80a1\u6578(\u4e0d\u542b\u5916\u8cc7\u81ea\u71df\u5546)"
+_T86_TRUST = "\u6295\u4fe1\u8cb7\u8ce3\u8d85\u80a1\u6578"
+_T86_DEALER = "\u81ea\u71df\u5546\u8cb7\u8ce3\u8d85\u80a1\u6578"
+_T86_TOTAL = "\u4e09\u5927\u6cd5\u4eba\u8cb7\u8ce3\u8d85\u80a1\u6578"
 _T86_CORE = (_T86_CODE, _T86_FOREIGN, _T86_TRUST, _T86_DEALER, _T86_TOTAL)
 
 # TPEx OpenAPI column keys (verified live 2026-06; note the inconsistent spacing in
@@ -88,10 +88,10 @@ def _to_int(value: Any) -> Optional[int]:
 
 
 def minguo_to_ad(date_str: Any) -> Optional[str]:
-    """Convert a TPEx 民國 date ``YYYMMDD`` (e.g. ``1150626``) to 西元 ``YYYYMMDD``.
+    """Convert a TPEx \u6c11\u570b date ``YYYMMDD`` (e.g. ``1150626``) to \u897f\u5143 ``YYYYMMDD``.
 
-    ``1150626`` -> ``20260626`` (民國 115 + 1911 = 西元 2026). Returns ``None`` for
-    anything that is not a 7-digit 民國 date, so a format change fails open.
+    ``1150626`` -> ``20260626`` (\u6c11\u570b 115 + 1911 = \u897f\u5143 2026). Returns ``None`` for
+    anything that is not a 7-digit \u6c11\u570b date, so a format change fails open.
     """
     text = str(date_str).strip()
     if not (text.isdigit() and len(text) == 7):
@@ -100,7 +100,7 @@ def minguo_to_ad(date_str: Any) -> Optional[str]:
 
 
 class TwInstitutionalFetcher:
-    """Fetch Taiwan per-stock 三大法人 net buy/sell, ``.TW`` (上市) / ``.TWO`` (上櫃) only."""
+    """Fetch Taiwan per-stock \u4e09\u5927\u6cd5\u4eba net buy/sell, ``.TW`` (\u4e0a\u5e02) / ``.TWO`` (\u4e0a\u6ac3) only."""
 
     name = "TwInstitutionalFetcher"
 
@@ -134,11 +134,11 @@ class TwInstitutionalFetcher:
     def get_institutional_net(
         self, stock_code: str, date: Optional[str] = None
     ) -> Optional[dict]:
-        """Return the normalized 三大法人 record for one TW stock, or ``None``.
+        """Return the normalized \u4e09\u5927\u6cd5\u4eba record for one TW stock, or ``None``.
 
         ``stock_code`` must carry an explicit ``.TW`` / ``.TWO`` suffix; a bare or
-        non-TW code returns ``None`` (not applicable). ``date`` (西元 ``YYYYMMDD``)
-        only applies to 上市/T86; 上櫃/TPEx OpenAPI serves the latest trading day.
+        non-TW code returns ``None`` (not applicable). ``date`` (\u897f\u5143 ``YYYYMMDD``)
+        only applies to \u4e0a\u5e02/T86; \u4e0a\u6ac3/TPEx OpenAPI serves the latest trading day.
         Fail-open: any error returns ``None``.
         """
         market = self._market_of(stock_code)
@@ -157,7 +157,7 @@ class TwInstitutionalFetcher:
         record = table.get(base)
         # TPEx OpenAPI serves only the LATEST trading day (no date param). If a caller
         # asked for a specific date, never silently return a different-day record --
-        # fail open (None) so a date-mismatched 上櫃 figure can't reach a report.
+        # fail open (None) so a date-mismatched \u4e0a\u6ac3 figure can't reach a report.
         if record is not None and date and market == "tpex":
             requested = self._norm_ad_date(date)
             if requested and record.get("date") != requested:
@@ -271,7 +271,7 @@ class TwInstitutionalFetcher:
         resp.raise_for_status()
         return resp.json()
 
-    # ------------------------------------------------------------- TWSE T86 (上市)
+    # ------------------------------------------------------------- TWSE T86 (\u4e0a\u5e02)
     def _fetch_twse(self, ad_date: Optional[str]) -> Dict[str, dict]:
         params = {"response": "json", "selectType": "ALLBUT0999"}
         if ad_date:
@@ -323,7 +323,7 @@ class TwInstitutionalFetcher:
         code = str(row[idx[_T86_CODE]]).strip()
         if not code:
             return None
-        foreign = _to_int(row[idx[_T86_FOREIGN]])  # 外陸資 (ex 外資自營商)
+        foreign = _to_int(row[idx[_T86_FOREIGN]])  # \u5916\u9678\u8cc7 (ex \u5916\u8cc7\u81ea\u71df\u5546)
         trust = _to_int(row[idx[_T86_TRUST]])
         dealer = _to_int(row[idx[_T86_DEALER]])
         total = _to_int(row[idx[_T86_TOTAL]])
@@ -332,10 +332,10 @@ class TwInstitutionalFetcher:
         if foreign is None or trust is None or dealer is None:
             return None
         return TwInstitutionalFetcher._build_record(
-            code, ad_date, "上市", "TWSE-T86", foreign, trust, dealer, total
+            code, ad_date, "\u4e0a\u5e02", "TWSE-T86", foreign, trust, dealer, total
         )
 
-    # -------------------------------------------------------------- TPEx (上櫃)
+    # -------------------------------------------------------------- TPEx (\u4e0a\u6ac3)
     def _fetch_tpex(self) -> Dict[str, dict]:
         payload = self._get_json(_TPEX_URL)
         if not isinstance(payload, list) or not payload:
@@ -355,7 +355,7 @@ class TwInstitutionalFetcher:
         if not code:
             return None
         ad_date = minguo_to_ad(raw.get("Date", ""))
-        if ad_date is None:  # 民國 date unconvertible -> no attributable day -> fail-open
+        if ad_date is None:  # \u6c11\u570b date unconvertible -> no attributable day -> fail-open
             return None
         foreign = _to_int(raw.get(_TPEX_FOREIGN_EXCL))  # dealer-excluded foreign
         trust = _to_int(raw.get(_TPEX_TRUST))
@@ -366,7 +366,7 @@ class TwInstitutionalFetcher:
         if foreign is None or trust is None or dealer is None:
             return None
         return TwInstitutionalFetcher._build_record(
-            code, ad_date, "上櫃", "TPEx-OpenAPI", foreign, trust, dealer, total
+            code, ad_date, "\u4e0a\u6ac3", "TPEx-OpenAPI", foreign, trust, dealer, total
         )
 
     # -------------------------------------------------------------- normalize

@@ -29,8 +29,8 @@ def _snapshot(region: str, trade_date: str, score: int = 50) -> dict:
         "trade_date": trade_date,
         "status": "yellow",
         "score": score,
-        "label": "需观察",
-        "temperature_label": "震荡",
+        "label": "\u9700\u89c2\u5bdf",
+        "temperature_label": "\u9707\u8361",
         "reasons": ["test"],
         "guidance": "test",
         "dimensions": {
@@ -69,11 +69,11 @@ class MarketLightServiceTestCase(unittest.TestCase):
                 AnalysisHistory(
                     query_id=f"q-{created_at.timestamp()}",
                     code=MARKET_REVIEW_HISTORY_CODE,
-                    name="大盘复盘",
+                    name="\u5927\u76d8\u590d\u76d8",
                     report_type=MARKET_REVIEW_REPORT_TYPE,
                     sentiment_score=50,
-                    operation_advice="查看复盘",
-                    trend_prediction="大盘复盘",
+                    operation_advice="\u67e5\u770b\u590d\u76d8",
+                    trend_prediction="\u5927\u76d8\u590d\u76d8",
                     analysis_summary="summary",
                     raw_result="{}",
                     news_content="body",
@@ -192,7 +192,7 @@ class MarketLightServiceTestCase(unittest.TestCase):
     def test_build_current_snapshot_uses_market_analyzer_without_review(self) -> None:
         overview = MarketOverview(
             date="2026-03-07",
-            indices=[MarketIndex(code="000001", name="上证指数", current=3200, change_pct=-1.0)],
+            indices=[MarketIndex(code="000001", name="\u4e0a\u8bc1\u6307\u6570", current=3200, change_pct=-1.0)],
             up_count=1000,
             down_count=3000,
             limit_up_count=10,

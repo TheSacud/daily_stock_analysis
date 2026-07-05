@@ -38,14 +38,14 @@ describe('LoginPage', () => {
 
     render(<LoginPage />);
 
-    fireEvent.change(screen.getByLabelText('管理员密码'), { target: { value: 'passwd6' } });
-    fireEvent.change(screen.getByLabelText('确认密码'), { target: { value: 'passwd7' } });
-    fireEvent.click(screen.getByRole('button', { name: '完成设置并登录' }));
+    fireEvent.change(screen.getByLabelText('\u7ba1\u7406\u5458\u5bc6\u7801'), { target: { value: 'passwd6' } });
+    fireEvent.change(screen.getByLabelText('\u786e\u8ba4\u5bc6\u7801'), { target: { value: 'passwd7' } });
+    fireEvent.click(screen.getByRole('button', { name: '\u5b8c\u6210\u8bbe\u7f6e\u5e76\u767b\u5f55' }));
 
-    expect(await screen.findByText('两次输入的密码不一致')).toBeInTheDocument();
+    expect(await screen.findByText('\u4e24\u6b21\u8f93\u5165\u7684\u5bc6\u7801\u4e0d\u4e00\u81f4')).toBeInTheDocument();
     expect(login).not.toHaveBeenCalled();
-    expect(screen.getByLabelText('管理员密码')).toHaveAttribute('data-appearance', 'login');
-    expect(screen.getByLabelText('确认密码')).toHaveAttribute('data-appearance', 'login');
+    expect(screen.getByLabelText('\u7ba1\u7406\u5458\u5bc6\u7801')).toHaveAttribute('data-appearance', 'login');
+    expect(screen.getByLabelText('\u786e\u8ba4\u5bc6\u7801')).toHaveAttribute('data-appearance', 'login');
   });
 
   it('navigates to redirect after a successful login', async () => {
@@ -57,11 +57,11 @@ describe('LoginPage', () => {
 
     render(<LoginPage />);
 
-    fireEvent.change(screen.getByLabelText('登录密码'), { target: { value: 'passwd6' } });
-    fireEvent.click(screen.getByRole('button', { name: '授权进入工作台' }));
+    fireEvent.change(screen.getByLabelText('\u767b\u5f55\u5bc6\u7801'), { target: { value: 'passwd6' } });
+    fireEvent.click(screen.getByRole('button', { name: '\u6388\u6743\u8fdb\u5165\u5de5\u4f5c\u53f0' }));
 
     await waitFor(() => expect(navigate).toHaveBeenCalledWith('/settings', { replace: true }));
-    expect(screen.getByLabelText('登录密码')).toHaveAttribute('data-appearance', 'login');
+    expect(screen.getByLabelText('\u767b\u5f55\u5bc6\u7801')).toHaveAttribute('data-appearance', 'login');
   });
 
   it('does not override login theme tokens inline so light mode can take effect', () => {

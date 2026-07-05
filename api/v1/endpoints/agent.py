@@ -18,22 +18,22 @@ from src.services.agent_model_service import list_agent_model_deployments
 
 # Tool name -> Chinese display name mapping
 TOOL_DISPLAY_NAMES: Dict[str, str] = {
-    "get_realtime_quote":         "获取实时行情",
-    "get_daily_history":          "获取历史K线",
-    "get_chip_distribution":      "分析筹码分布",
-    "get_analysis_context":       "获取分析上下文",
-    "get_stock_info":             "获取股票基本面",
-    "search_stock_news":          "搜索股票新闻",
-    "search_comprehensive_intel": "搜索综合情报",
-    "analyze_trend":              "分析技术趋势",
-    "calculate_ma":               "计算均线系统",
-    "get_volume_analysis":        "分析量能变化",
-    "analyze_pattern":            "识别K线形态",
-    "get_market_indices":         "获取市场指数",
-    "get_sector_rankings":        "分析行业板块",
-    "get_skill_backtest_summary": "获取技能回测概览",
-    "get_strategy_backtest_summary": "获取策略回测概览",
-    "get_stock_backtest_summary": "获取个股回测数据",
+    "get_realtime_quote":         "\u83b7\u53d6realtime quote",
+    "get_daily_history":          "\u83b7\u53d6historyK\u7ebf",
+    "get_chip_distribution":      "analyzechip distribution",
+    "get_analysis_context":       "\u83b7\u53d6analyze\u4e0a\u4e0b\u6587",
+    "get_stock_info":             "\u83b7\u53d6\u80a1\u7968fundamentals",
+    "search_stock_news":          "search\u80a1\u7968news",
+    "search_comprehensive_intel": "search\u7efc\u5408\u60c5\u62a5",
+    "analyze_trend":              "analyze\u6280\u672f\u8d8b\u52bf",
+    "calculate_ma":               "\u8ba1\u7b97\u5747\u7ebf\u7cfb\u7edf",
+    "get_volume_analysis":        "analyze\u91cf\u80fd\u53d8\u5316",
+    "analyze_pattern":            "\u8bc6\u522bK\u7ebf\u5f62\u6001",
+    "get_market_indices":         "\u83b7\u53d6marketindex",
+    "get_sector_rankings":        "analyzeindustrysector",
+    "get_skill_backtest_summary": "\u83b7\u53d6\u6280\u80fdbacktest\u6982\u89c8",
+    "get_strategy_backtest_summary": "\u83b7\u53d6strategybacktest\u6982\u89c8",
+    "get_stock_backtest_summary": "\u83b7\u53d6individual stocksbacktest\u6570\u636e",
 }
 
 logger = logging.getLogger(__name__)
@@ -151,12 +151,12 @@ async def agent_chat(request: ChatRequest):
     Chat with the AI Agent.
     """
     config = get_config()
-    
+
     if not config.is_agent_available():
         raise HTTPException(status_code=400, detail="Agent mode is not enabled")
-        
+
     session_id = request.session_id or str(uuid.uuid4())
-    
+
     try:
         skills = request.effective_skills
         executor = _build_executor(config, skills or None)
@@ -182,7 +182,7 @@ async def agent_chat(request: ChatRequest):
             session_id=session_id,
             error=result.error
         )
-            
+
     except Exception as e:
         logger.error(f"Agent chat API failed: {e}")
         logger.exception("Agent chat error details:")
@@ -206,7 +206,7 @@ class SessionMessagesResponse(BaseModel):
 
 @router.get("/chat/sessions", response_model=SessionsResponse)
 async def list_chat_sessions(limit: int = 50, user_id: Optional[str] = None):
-    """获取聊天会话列表
+    """\u83b7\u53d6\u804a\u5929conversation\u5217\u8868
 
     Args:
         limit: Maximum number of sessions to return.
@@ -227,7 +227,7 @@ async def list_chat_sessions(limit: int = 50, user_id: Optional[str] = None):
 
 @router.get("/chat/sessions/{session_id}", response_model=SessionMessagesResponse)
 async def get_chat_session_messages(session_id: str, limit: int = 100):
-    """获取单个会话的完整消息"""
+    """\u83b7\u53d6\u5355\u4e2aconversation\u7684\u5b8c\u6574\u6d88\u606f"""
     from src.storage import get_db
     messages = get_db().get_conversation_messages(session_id, limit=limit)
     return SessionMessagesResponse(session_id=session_id, messages=messages)
@@ -235,7 +235,7 @@ async def get_chat_session_messages(session_id: str, limit: int = 100):
 
 @router.delete("/chat/sessions/{session_id}")
 async def delete_chat_session(session_id: str):
-    """删除指定会话"""
+    """\u5220\u9664\u6307\u5b9aconversation"""
     from src.storage import get_db
     count = get_db().delete_conversation_session(session_id)
     return {"deleted": count}
@@ -265,7 +265,7 @@ async def send_chat_to_notification(request: SendChatRequest):
         return {
             "success": False,
             "error": "no_channels",
-            "message": "未配置通知渠道，请先在设置中配置",
+            "message": "not configurednotification channel; \u8bf7\u5148\u5728\u8bbe\u7f6eMediumconfig",
         }
     return {"success": True}
 
@@ -444,7 +444,7 @@ async def agent_chat_stream(request: ChatRequest):
                 try:
                     event = await asyncio.wait_for(queue.get(), timeout=300.0)
                 except asyncio.TimeoutError:
-                    yield "data: " + json.dumps({"type": "error", "message": "分析超时"}, ensure_ascii=False) + "\n\n"
+                    yield "data: " + json.dumps({"type": "error", "message": "analyze\u8d85\u65f6"}, ensure_ascii=False) + "\n\n"
                     break
                 yield "data: " + json.dumps(event, ensure_ascii=False) + "\n\n"
                 if event.get("type") in ("done", "error"):

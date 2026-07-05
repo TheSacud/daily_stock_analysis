@@ -54,37 +54,37 @@ class BacktestEngine:
 
     # Operation advice keywords (Chinese + English)
     _BULLISH_KEYWORDS = (
-        "买入",
-        "加仓",
-        "强烈买入",
-        "增持",
-        "建仓",
+        "\u4e70\u5165",
+        "\u52a0\u4ed3",
+        "\u5f3a\u70c8\u4e70\u5165",
+        "\u589e\u6301",
+        "\u5efa\u4ed3",
         "strong buy",
         "buy",
         "add",
     )
     _BEARISH_KEYWORDS = (
-        "卖出",
-        "减仓",
-        "强烈卖出",
-        "清仓",
+        "\u5356\u51fa",
+        "\u51cf\u4ed3",
+        "\u5f3a\u70c8\u5356\u51fa",
+        "\u6e05\u4ed3",
         "strong sell",
         "sell",
         "reduce",
     )
     _HOLD_KEYWORDS = (
-        "持有",
-        "震荡观望",
-        "洗盘观察",
-        "持有观察",
+        "\u6301\u6709",
+        "\u9707\u8361Watch",
+        "\u6d17\u76d8\u89c2\u5bdf",
+        "\u6301\u6709\u89c2\u5bdf",
         "hold",
         "range-bound watch",
         "shakeout watch",
         "hold and watch",
     )
     _WAIT_KEYWORDS = (
-        "观望",
-        "等待",
+        "Watch",
+        "waiting",
         "wait",
     )
 
@@ -93,20 +93,20 @@ class BacktestEngine:
     # applied during matching so "do not" matches prefix "do not " or "do not".
     _NEGATION_PATTERNS = (
         "not", "don't", "do not", "no", "never", "avoid",  # English
-        "不要", "不", "别", "勿", "没有",  # Chinese
+        "\u4e0d\u8981", "\u4e0d", "\u522b", "\u52ff", "\u6ca1\u6709",  # Chinese
     )
 
     _NEGATION_CONNECTOR_WORDS = (
-        "建议",
-        "应",
-        "应当",
-        "宜",
-        "先",
-        "再",
-        "暂",
-        "不必",
-        "必须",
-        "无需",
+        "\u5efa\u8bae",
+        "\u5e94",
+        "\u5e94\u5f53",
+        "\u5b9c",
+        "\u5148",
+        "\u518d",
+        "\u6682",
+        "\u4e0d\u5fc5",
+        "\u5fc5\u987b",
+        "\u65e0\u9700",
     )
 
     @classmethod
@@ -486,7 +486,7 @@ class BacktestEngine:
     def _matches_intent(cls, text: str, keywords: Sequence[str]) -> bool:
         """Check if text expresses the intent of any keyword, accounting for negation.
 
-        Tier 1: exact match (covers clean labels like "买入", "hold").
+        Tier 1: exact match (covers clean labels like "\u4e70\u5165", "hold").
         Tier 2: substring match with negation guard.
         Keywords are assumed to be lowercase (matching _normalize_text output).
         """
@@ -525,7 +525,7 @@ class BacktestEngine:
                     continue
 
             # For non-ASCII terms (Chinese), use substring matching to keep
-            # natural language phrasings like "建议买入" effective.
+            # natural language phrasings like "\u5efa\u8bae\u4e70\u5165" effective.
             if re.search(r"[\u4e00-\u9fff]", keyword):
                 start = 0
                 while True:
@@ -552,7 +552,7 @@ class BacktestEngine:
         if any(stripped.endswith(neg) for neg in cls._NEGATION_PATTERNS):
             return True
 
-        # 限定“否定 + 动作动词”匹配，避免将“条件位否定”误伤核心建议意图。
+        # \u9650\u5b9a“\u5426\u5b9a + \u52a8\u4f5c\u52a8\u8bcd”\u5339\u914d; \u907f\u514d\u5c06“\u6761\u4ef6characters\u5426\u5b9a”\u8bef\u4f24\u6838\u5fc3\u5efa\u8bae\u610f\u56fe.
         lookback = stripped[-12:]
         for neg in cls._NEGATION_PATTERNS:
             if not neg:
@@ -564,7 +564,7 @@ class BacktestEngine:
             suffix_gap = lookback[neg_idx + len(neg):].strip()
             if not suffix_gap:
                 return True
-            if any(ch in suffix_gap for ch in "，,。；;:!?！？"):
+            if any(ch in suffix_gap for ch in "; ,.；;:!?！？"):
                 continue
 
             if cls._contains_keyword(suffix_gap, target):
@@ -594,7 +594,7 @@ class BacktestEngine:
     @classmethod
     def _is_negation_connector_gap(cls, gap: str) -> bool:
         """Whether a short Chinese negation gap is still a valid negation bridge."""
-        compact = re.sub(r"[\s,，。；;:!?！？]", "", gap).strip()
+        compact = re.sub(r"[\s,; .；;:!?！？]", "", gap).strip()
         if not compact:
             return True
         return compact in cls._NEGATION_CONNECTOR_WORDS

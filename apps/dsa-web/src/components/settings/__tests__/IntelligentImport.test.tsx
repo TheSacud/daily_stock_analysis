@@ -57,8 +57,8 @@ describe('IntelligentImport', () => {
       configurable: true,
     });
 
-    fireEvent.click(screen.getByRole('button', { name: '选择图片' }));
-    fireEvent.click(screen.getByRole('button', { name: '选择文件' }));
+    fireEvent.click(screen.getByRole('button', { name: '\u9009\u62e9\u56fe\u7247' }));
+    fireEvent.click(screen.getByRole('button', { name: '\u9009\u62e9\u6587\u4ef6' }));
 
     expect(imageClick).toHaveBeenCalledTimes(1);
     expect(dataClick).toHaveBeenCalledTimes(1);
@@ -90,8 +90,8 @@ describe('IntelligentImport', () => {
       configurable: true,
     });
 
-    fireEvent.click(screen.getByRole('button', { name: '选择图片' }));
-    fireEvent.click(screen.getByRole('button', { name: '选择文件' }));
+    fireEvent.click(screen.getByRole('button', { name: '\u9009\u62e9\u56fe\u7247' }));
+    fireEvent.click(screen.getByRole('button', { name: '\u9009\u62e9\u6587\u4ef6' }));
 
     expect(imageClick).not.toHaveBeenCalled();
     expect(dataClick).not.toHaveBeenCalled();
@@ -103,7 +103,7 @@ describe('IntelligentImport', () => {
       codes: [],
     });
     update.mockRejectedValue(
-      new SystemConfigConflictError('配置版本冲突', 'v2'),
+      new SystemConfigConflictError('\u914d\u7f6e\u7248\u672c\u51b2\u7a81', 'v2'),
     );
 
     render(
@@ -115,14 +115,14 @@ describe('IntelligentImport', () => {
       />,
     );
 
-    fireEvent.change(screen.getByPlaceholderText('或粘贴 CSV/Excel 复制的文本...'), {
+    fireEvent.change(screen.getByPlaceholderText('\u6216\u7c98\u8d34 CSV/Excel \u590d\u5236\u7684\u6587\u672c...'), {
       target: { value: '000001' },
     });
-    fireEvent.click(screen.getByRole('button', { name: '解析' }));
+    fireEvent.click(screen.getByRole('button', { name: '\u89e3\u6790' }));
 
     await screen.findByText('SZ000001');
 
-    fireEvent.click(screen.getByRole('button', { name: '合并到自选股' }));
+    fireEvent.click(screen.getByRole('button', { name: '\u5408\u5e76\u5230\u81ea\u9009\u80a1' }));
 
     await waitFor(() => {
       expect(update).toHaveBeenCalled();
@@ -130,7 +130,7 @@ describe('IntelligentImport', () => {
     await waitFor(() => {
       expect(onMerged).toHaveBeenCalledWith('SH600000,SZ000001');
     });
-    expect(await screen.findByText('配置已更新，请再次点击「合并到自选股」')).toBeInTheDocument();
+    expect(await screen.findByText('\u914d\u7f6e\u5df2\u66f4\u65b0，\u8bf7\u518d\u6b21\u70b9\u51fb「\u5408\u5e76\u5230\u81ea\u9009\u80a1」')).toBeInTheDocument();
   });
 
   it('normalizes existing mixed separators when merging into watchlist', async () => {
@@ -149,14 +149,14 @@ describe('IntelligentImport', () => {
       />,
     );
 
-    fireEvent.change(screen.getByPlaceholderText('或粘贴 CSV/Excel 复制的文本...'), {
+    fireEvent.change(screen.getByPlaceholderText('\u6216\u7c98\u8d34 CSV/Excel \u590d\u5236\u7684\u6587\u672c...'), {
       target: { value: 'HK00700' },
     });
-    fireEvent.click(screen.getByRole('button', { name: '解析' }));
+    fireEvent.click(screen.getByRole('button', { name: '\u89e3\u6790' }));
 
     await screen.findByText('HK00700');
 
-    fireEvent.click(screen.getByRole('button', { name: '合并到自选股' }));
+    fireEvent.click(screen.getByRole('button', { name: '\u5408\u5e76\u5230\u81ea\u9009\u80a1' }));
 
     await waitFor(() => {
       expect(update).toHaveBeenCalledWith({

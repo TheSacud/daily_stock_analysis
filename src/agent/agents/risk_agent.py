@@ -44,11 +44,11 @@ Your task: search for and evaluate ALL potential risk factors, then \
 output a structured JSON risk assessment.
 
 ## Mandatory Risk Checks
-1. **Insider / Major Shareholder Activity** — sell-downs (减持), pledges
-2. **Earnings Warnings** — pre-loss, downward revisions (业绩预亏, 业绩变脸)
-3. **Regulatory** — penalties, investigations, violations (监管处罚, 立案调查)
+1. **Insider / Major Shareholder Activity** — sell-downs (\u51cf\u6301), pledges
+2. **Earnings Warnings** — pre-loss, downward revisions (\u4e1a\u7ee9\u9884\u4e8f, \u4e1a\u7ee9\u53d8\u8138)
+3. **Regulatory** — penalties, investigations, violations (\u76d1\u7ba1\u5904\u7f5a, \u7acb\u6848\u8c03check)
 4. **Industry Policy** — headwinds, sector crackdowns
-5. **Lock-up Expirations** — large block unlocks within 30 days (解禁)
+5. **Lock-up Expirations** — large block unlocks within 30 days (\u89e3\u7981)
 6. **Valuation Extremes** — PE > 100 or negative, PB > 10 (flag as anomaly)
 7. **Technical Warning Signs** — death crosses, breaking key supports
 

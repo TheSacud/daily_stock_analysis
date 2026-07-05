@@ -243,13 +243,13 @@
   --chat-avatar-ai-bg: hsl(var(--primary) / 0.1);
   --chat-avatar-ai-fg: hsl(var(--foreground)/ 0.8 );
   --chat-avatar-ai-border: hsl(var(--primary) / 0.2);
-  
+
   --chat-bubble-user-bg: hsl(var(--primary) / 0.1);
   --chat-bubble-user-border: hsl(var(--primary) / 0.2);
   --chat-bubble-ai-bg: hsl(var(--card) / 0.85);
   --chat-bubble-ai-border: hsl(var(--foreground) / 0.2);
 
-  /* Backtest专用 */
+  /* Backtest-specific */
   --backtest-border-dim: hsl(var(--foreground) / 0.05);
   --backtest-border-subtle: hsl(var(--foreground) / 0.06);
   --backtest-border-light: hsl(var(--foreground) / 0.10);
@@ -506,13 +506,13 @@
   --chat-avatar-ai-bg: hsl(var(--primary) / 0.8);
   --chat-avatar-ai-fg: hsl(var(--foreground) / 0.9);
   --chat-avatar-ai-border: hsl(0 0% 100% / 0.1); /* Low opacity white for dark mode */
-  
+
   --chat-bubble-user-bg: hsl(var(--primary) / 0.1);
   --chat-bubble-user-border: hsl(var(--primary) / 0.2);
   --chat-bubble-ai-bg: hsl(var(--card) / 0.72);
   --chat-bubble-ai-border: hsl(0 0% 100% / 0.12); /* Semi-transparent border for dark mode */
 
-  /* Backtest专用 */
+  /* Backtest-specific */
   --backtest-border-dim: hsl(var(--foreground) / 0.06);
   --backtest-border-subtle: hsl(var(--foreground) / 0.08);
   --backtest-border-light: hsl(var(--foreground) / 0.12);

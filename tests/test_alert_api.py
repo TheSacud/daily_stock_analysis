@@ -559,8 +559,8 @@ class AlertApiTestCase(unittest.TestCase):
             "trade_date": "2026-03-07",
             "status": "red",
             "score": 35,
-            "label": "偏防守",
-            "temperature_label": "偏弱",
+            "label": "\u504f\u9632\u5b88",
+            "temperature_label": "\u504f\u5f31",
             "reasons": ["test"],
             "guidance": "test",
             "dimensions": {
@@ -588,7 +588,7 @@ class AlertApiTestCase(unittest.TestCase):
         self.assertEqual(payload["evaluated_count"], 1)
         self.assertEqual(payload["triggered_count"], 1)
         self.assertEqual(payload["target_results"][0]["target"], "cn")
-        self.assertEqual(payload["target_results"][0]["display_target"], "A股大盘")
+        self.assertEqual(payload["target_results"][0]["display_target"], "A\u80a1\u5927\u76d8")
         self.assertEqual(payload["target_results"][0]["observed_value"], 35.0)
         build_snapshot.assert_called_once_with("cn")
 
@@ -864,8 +864,8 @@ class AlertApiTestCase(unittest.TestCase):
                         "limitations": ["news: missing"],
                     },
                     "blocks": [
-                        {"key": "quote", "label": "行情", "status": "available"},
-                        {"key": "news", "label": "新闻", "status": "missing"},
+                        {"key": "quote", "label": "\u884c\u60c5", "status": "available"},
+                        {"key": "news", "label": "\u65b0\u95fb", "status": "missing"},
                     ],
                 },
             },

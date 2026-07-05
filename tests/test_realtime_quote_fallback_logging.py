@@ -42,7 +42,7 @@ class _DummyFetcher:
 
 def _make_quote(
     code: str = "600519",
-    name: str = "贵州茅台",
+    name: str = "\u8d35\u5dde\u8305\u53f0",
     source: RealtimeSource = RealtimeSource.AKSHARE_EM,
     **overrides,
 ) -> UnifiedRealtimeQuote:
@@ -67,7 +67,7 @@ def _make_pipeline(enable_realtime_quote: bool, realtime_quote=None) -> StockAna
         report_language="zh",
     )
     pipeline.fetcher_manager = MagicMock()
-    pipeline.fetcher_manager.get_stock_name.return_value = "贵州茅台"
+    pipeline.fetcher_manager.get_stock_name.return_value = "\u8d35\u5dde\u8305\u53f0"
     pipeline.fetcher_manager.get_realtime_quote.return_value = realtime_quote
     pipeline.fetcher_manager.get_chip_distribution.return_value = None
     pipeline.fetcher_manager.get_fundamental_context.return_value = {
@@ -111,11 +111,11 @@ def test_manager_does_not_warn_when_fallback_source_succeeds(mock_get_config, ca
         quote = manager.get_realtime_quote("600519")
 
     assert quote is not None
-    assert quote.name == "贵州茅台"
+    assert quote.name == "\u8d35\u5dde\u8305\u53f0"
     assert quote.fetched_at is not None
     assert quote.fallback_from == "efinance"
     assert not [record for record in caplog.records if record.levelno >= logging.WARNING]
-    assert "所有数据源均不可用" not in caplog.text
+    assert "\u6240\u6709\u6570\u636e\u6e90\u5747\u4e0d\u53ef\u7528" not in caplog.text
 
 
 @patch("src.config.get_config")
@@ -202,9 +202,9 @@ def test_pipeline_warns_once_when_all_realtime_sources_fail(caplog):
     downgrade_logs = [
         record.message
         for record in caplog.records
-        if "历史收盘价继续分析" in record.message
+        if "\u5386\u53f2\u6536\u76d8\u4ef7\u7ee7\u7eed\u5206\u6790" in record.message
     ]
-    assert downgrade_logs == ["贵州茅台(600519) 所有实时行情数据源均不可用，已降级为历史收盘价继续分析"]
+    assert downgrade_logs == ["\u8d35\u5dde\u8305\u53f0(600519) \u6240\u6709\u5b9e\u65f6\u884c\u60c5\u6570\u636e\u6e90\u5747\u4e0d\u53ef\u7528，\u5df2\u964d\u7ea7\u4e3a\u5386\u53f2\u6536\u76d8\u4ef7\u7ee7\u7eed\u5206\u6790"]
 
 
 @patch("src.config.get_config")
@@ -232,7 +232,7 @@ def test_event_monitor_keeps_manager_failure_summary_for_direct_quote_call(mock_
         result = asyncio.run(monitor._check_price(rule))
 
     assert result is None
-    assert "[实时行情] 600519 所有数据源均失败: [efinance] 失败: efinance timeout" in caplog.text
+    assert "[\u5b9e\u65f6\u884c\u60c5] 600519 \u6240\u6709\u6570\u636e\u6e90\u5747\u5931\u8d25: [efinance] \u5931\u8d25: efinance timeout" in caplog.text
 
 
 def test_pipeline_logs_disabled_realtime_once_without_fetching_quote(caplog):
@@ -247,6 +247,6 @@ def test_pipeline_logs_disabled_realtime_once_without_fetching_quote(caplog):
     downgrade_logs = [
         record.message
         for record in caplog.records
-        if "历史收盘价继续分析" in record.message
+        if "\u5386\u53f2\u6536\u76d8\u4ef7\u7ee7\u7eed\u5206\u6790" in record.message
     ]
-    assert downgrade_logs == ["贵州茅台(600519) 实时行情已禁用，使用历史收盘价继续分析"]
+    assert downgrade_logs == ["\u8d35\u5dde\u8305\u53f0(600519) \u5b9e\u65f6\u884c\u60c5\u5df2\u7981\u7528，\u4f7f\u7528\u5386\u53f2\u6536\u76d8\u4ef7\u7ee7\u7eed\u5206\u6790"]

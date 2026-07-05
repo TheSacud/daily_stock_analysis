@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""v2 report-wiring tests: tw 三大法人 (institutional flows) into the offshore institution block.
+"""v2 report-wiring tests: tw \u4e09\u5927\u6cd5\u4eba (institutional flows) into the offshore institution block.
 
 Pins the maintainer-confirmed contract for issue #1777 v2:
   - tw with data        -> institution coverage 'ok', raw net figures surfaced.
@@ -31,7 +31,7 @@ _TW_FETCHER_METHOD = (
 _FAKE_REC = {
     "stock_code": "2330",
     "date": "20260629",
-    "market": "上市",
+    "market": "\u4e0a\u5e02",
     "source": "TWSE-T86",
     "unit": "shares",
     "foreign_net": -1912490,
@@ -204,7 +204,7 @@ class TestTwInstitutionReportWiring(unittest.TestCase):
 
     # ---- institution must use the STAGE budget, not the small per-symbol fetch cap -----
     def test_tw_institution_not_starved_by_small_fetch_timeout(self):
-        # The 三大法人 block is a whole-market download (~4-5s). It must run under the
+        # The \u4e09\u5927\u6cd5\u4eba block is a whole-market download (~4-5s). It must run under the
         # remaining STAGE budget, not the (small) per-symbol fetch_timeout — otherwise the
         # first/only stock of a run coin-flips to not_supported. A fetch slower than
         # fetch_timeout but within the stage budget must still land as 'ok'.

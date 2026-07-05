@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 """
 ===================================
-API v1 Endpoints 模块初始化
+API v1 Endpoints \u6a21chunks\u521d\u59cb\u5316
 ===================================
 
-职责：
-1. 声明所有 endpoint 路由模块
+\u804c\u8d23:
+1. \u58f0\u660e\u6240\u6709 endpoint \u8def\u7531\u6a21chunks
 """
 
 from api.v1.endpoints import (

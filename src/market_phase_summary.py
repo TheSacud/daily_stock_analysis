@@ -37,10 +37,10 @@ _INTRADAY_BUCKET_PHASES = {"intraday", "lunch_break", "closing_auction"}
 _SUPPORTED_MANUAL_ANALYSIS_PHASES = {"premarket", "intraday", "postmarket"}
 _SUPPORTED_ANALYSIS_INTENTS = {"auto", *_SUPPORTED_MANUAL_ANALYSIS_PHASES}
 _PUBLIC_SOURCE_LABELS_ZH = {
-    "alert_trigger_market_context": "告警触发上下文",
-    "analysis_history_snapshot": "最近分析快照",
-    "evaluator_snapshot": "评估器快照",
-    "legacy_text": "历史文本",
+    "alert_trigger_market_context": "\u544a\u8b66\u89e6\u53d1\u4e0a\u4e0b\u6587",
+    "analysis_history_snapshot": "\u6700\u8fd1analyze\u5feb\u7167",
+    "evaluator_snapshot": "\u8bc4\u4f30\u5668\u5feb\u7167",
+    "legacy_text": "history\u6587\u672c",
 }
 _PUBLIC_SOURCE_LABELS_EN = {
     "alert_trigger_market_context": "alert trigger context",
@@ -49,14 +49,14 @@ _PUBLIC_SOURCE_LABELS_EN = {
     "legacy_text": "legacy text",
 }
 _MARKET_STATUS_PREFIX = {
-    "zh": "市场状态",
+    "zh": "marketstatus",
     "en": "Market status",
 }
 _MARKET_LABELS_ZH = {
-    "cn": "A股",
-    "hk": "港股",
-    "us": "美股",
-    "tw": "台股",
+    "cn": "A-share",
+    "hk": "HK stock",
+    "us": "US stock",
+    "tw": "TW stock",
 }
 _MARKET_LABELS_EN = {
     "cn": "A-shares",
@@ -65,13 +65,13 @@ _MARKET_LABELS_EN = {
     "tw": "Taiwan",
 }
 _PHASE_LABELS_ZH = {
-    "premarket": "盘前",
-    "intraday": "盘中",
-    "lunch_break": "午间休市",
-    "closing_auction": "临近收盘",
-    "postmarket": "盘后",
-    "non_trading": "非交易日",
-    "unknown": "阶段未知",
+    "premarket": "\u76d8\u524d",
+    "intraday": "\u76d8Medium",
+    "lunch_break": "\u5348\u95f4\u4f11\u5e02",
+    "closing_auction": "\u4e34\u8fd1\u6536\u76d8",
+    "postmarket": "\u76d8\u540e",
+    "non_trading": "\u975e\u4ea4\u6613\u65e5",
+    "unknown": "\u9636\u6bb5unknown",
 }
 _PHASE_LABELS_EN = {
     "premarket": "Pre-market",
@@ -211,25 +211,25 @@ def format_public_phase_pack_excerpt(
             if phase_summary.get("is_partial_bar") is True:
                 lines.append("- partial-bar warning: intraday data may be incomplete")
         else:
-            parts = [f"阶段：{phase}"]
+            parts = [f"\u9636\u6bb5: {phase}"]
             if market:
-                parts.append(f"市场：{market}")
+                parts.append(f"market: {market}")
             if trigger_source:
-                parts.append(f"触发来源：{trigger_source}")
+                parts.append(f"\u89e6\u53d1source: {trigger_source}")
             if source_label:
-                parts.append(f"摘要来源：{source_label}")
+                parts.append(f"summarysource: {source_label}")
             lines.append("- " + " | ".join(parts))
             if phase_summary.get("is_partial_bar") is True:
-                lines.append("- 盘中数据提示：当前 K 线可能未完结")
+                lines.append("- \u76d8Medium\u6570\u636e\u63d0\u793a: \u5f53\u524d K \u7ebf\u53ef\u80fd\u672a\u5b8c\u7ed3")
 
     quality = overview.get("data_quality") if isinstance(overview, Mapping) else None
     if isinstance(quality, Mapping):
         level = _safe_text(quality.get("level"))
         if level:
-            lines.append(f"- {'data quality' if lang == 'en' else '数据质量'}: {level}")
+            lines.append(f"- {'data quality' if lang == 'en' else '\u6570\u636e\u8d28\u91cf'}: {level}")
         limitations = _list_strings(quality.get("limitations"), limit=2)
         for item in limitations:
-            lines.append(f"- {'limitation' if lang == 'en' else '限制'}: {item}")
+            lines.append(f"- {'limitation' if lang == 'en' else 'limit'}: {item}")
 
     return "\n".join(lines)
 
@@ -259,7 +259,7 @@ def format_public_market_status_line(
         value = f"{market_label} · {phase_label}"
     else:
         value = phase_label
-    separator = ": " if lang == "en" else "："
+    separator = ": " if lang == "en" else ": "
     return f"{_MARKET_STATUS_PREFIX[lang]}{separator}{value}"
 
 

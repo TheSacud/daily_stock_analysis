@@ -7,7 +7,7 @@ const renderDrawer = async (onClose = vi.fn()) => {
   render(
     <ReportMarkdownDrawer
       recordId={1}
-      stockName="贵州茅台"
+      stockName="\u8d35\u5dde\u8305\u53f0"
       stockCode="600519"
       onClose={onClose}
     />,
@@ -38,9 +38,9 @@ describe('ReportMarkdownDrawer', () => {
       await renderDrawer(onClose);
 
       expect(screen.getByRole('dialog')).toBeInTheDocument();
-      expect(await screen.findByText('加载报告失败')).toBeInTheDocument();
+      expect(await screen.findByText('\u52a0\u8f7d\u62a5\u544a\u5931\u8d25')).toBeInTheDocument();
 
-      fireEvent.click(screen.getByRole('button', { name: '关闭' }));
+      fireEvent.click(screen.getByRole('button', { name: '\u5173\u95ed' }));
 
       await waitFor(() => {
         expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
@@ -63,7 +63,7 @@ describe('ReportMarkdownDrawer', () => {
       await renderDrawer();
 
       expect(screen.getByRole('dialog')).toBeInTheDocument();
-      expect(await screen.findByText('加载报告失败')).toBeInTheDocument();
+      expect(await screen.findByText('\u52a0\u8f7d\u62a5\u544a\u5931\u8d25')).toBeInTheDocument();
     } finally {
       consoleError.mockRestore();
     }
@@ -88,7 +88,7 @@ describe('ReportMarkdownDrawer', () => {
     try {
       await renderDrawer();
 
-      expect(await screen.findByText('加载报告失败')).toBeInTheDocument();
+      expect(await screen.findByText('\u52a0\u8f7d\u62a5\u544a\u5931\u8d25')).toBeInTheDocument();
 
       cleanup();
       await renderDrawer();

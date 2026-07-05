@@ -19,8 +19,8 @@ class TestStooqFallback(unittest.TestCase):
 
     @patch('data_provider.yfinance_fetcher.urlopen')
     def test_stooq_success_logic(self, mock_urlopen):
-        """测试 Stooq 正常抓取与解析逻辑"""
-        # 模拟 Stooq 返回的 CSV 格式数据（实时 + 日线历史）
+        """\u6d4b\u8bd5 Stooq \u6b63\u5e38\u6293\u53d6\u4e0e\u89e3\u6790\u903b\u8f91"""
+        # \u6a21\u62df Stooq \u8fd4\u56de\u7684 CSV \u683c\u5f0f\u6570\u636e（\u5b9e\u65f6 + \u65e5\u7ebf\u5386\u53f2）
         mock_realtime_payload = (
             "Symbol,Date,Time,Open,High,Low,Close,Volume\n"
             "AAPL.US,2026-03-10,22:00:00,180.50,185.20,179.80,184.45,50000000\n"
@@ -59,16 +59,16 @@ class TestStooqFallback(unittest.TestCase):
     @unittest.skipUnless(HAS_YFINANCE, "yfinance is required for this test")
     @patch('yfinance.Ticker')
     def test_fetcher_integration_with_fallback(self, mock_ticker_class):
-        """测试 yfinance 失败后自动触发 Stooq 逻辑"""
-        # 1. 模拟 yfinance 完全失效
+        """\u6d4b\u8bd5 yfinance \u5931\u8d25\u540e\u81ea\u52a8\u89e6\u53d1 Stooq \u903b\u8f91"""
+        # 1. \u6a21\u62df yfinance \u5b8c\u5168\u5931\u6548
         mock_ticker = MagicMock()
-        # 模拟 fast_info 属性访问抛出异常
+        # \u6a21\u62df fast_info \u5c5e\u6027\u8bbf\u95ee\u629b\u51fa\u5f02\u5e38
         type(mock_ticker).fast_info = PropertyMock(side_effect=Exception("API Error"))
-        # 模拟 history 返回空
+        # \u6a21\u62df history \u8fd4\u56de\u7a7a
         mock_ticker.history.return_value = MagicMock(empty=True)
         mock_ticker_class.return_value = mock_ticker
 
-        # 2. 模拟 Stooq 成功返回
+        # 2. \u6a21\u62df Stooq \u6210\u529f\u8fd4\u56de
         with patch.object(self.fetcher, '_get_us_stock_quote_from_stooq') as mock_stooq:
             mock_stooq.return_value = MagicMock(code="NVDA", price=900.0)
 

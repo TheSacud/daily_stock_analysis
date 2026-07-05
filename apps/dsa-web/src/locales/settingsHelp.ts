@@ -1,4 +1,4 @@
-﻿import type { SystemConfigDocLink } from '../types/systemConfig';
+import type { SystemConfigDocLink } from '../types/systemConfig';
 
 export interface SettingsHelpContent {
   title: string;
@@ -1147,7 +1147,8 @@ const settingsHelpZhCN: SettingsHelpMap = {
     ],
     impact: ['Affects the market overview section in analysis reports.'],
     notes: ['Market review depends on the availability of index data sources for the selected markets.'],
-  },;
+  },
+};
 
 const settingsHelpEnUS: SettingsHelpMap = {
   'settings.base.STOCK_LIST': {

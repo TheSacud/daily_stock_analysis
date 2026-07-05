@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 """
-Signal Attribution 补充测试
+Signal Attribution \u8865\u5145\u6d4b\u8bd5
 
-覆盖：
-1. generate_single_stock_report() 渲染
-2. _parse_response() 真实调用
-3. parse_dashboard_json() 真实调用
-4. 归一化边界场景（all-zero, >100, partial invalid）
+\u8986\u76d6：
+1. generate_single_stock_report() \u6e32\u67d3
+2. _parse_response() \u771f\u5b9e\u8c03\u7528
+3. parse_dashboard_json() \u771f\u5b9e\u8c03\u7528
+4. \u5f52\u4e00\u5316\u8fb9\u754c\u573a\u666f（all-zero, >100, partial invalid）
 """
 import os
 import sys
@@ -14,7 +14,7 @@ import json
 import logging
 from typing import Dict, Any, Optional
 
-# 添加项目路径
+# \u6dfb\u52a0\u9879\u76ee\u8def\u5f84
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
@@ -24,10 +24,10 @@ logger = logging.getLogger(__name__)
 
 
 class TestGenerateSingleStockReport:
-    """测试 generate_single_stock_report() 渲染 signal_attribution"""
+    """\u6d4b\u8bd5 generate_single_stock_report() \u6e32\u67d3 signal_attribution"""
 
     def test_single_stock_report_renders_signal_attribution(self):
-        """测试 generate_single_stock_report() 正确渲染 signal_attribution"""
+        """\u6d4b\u8bd5 generate_single_stock_report() \u6b63\u786e\u6e32\u67d3 signal_attribution"""
         from src.analyzer import AnalysisResult
         from src.notification import NotificationService
 
@@ -36,8 +36,8 @@ class TestGenerateSingleStockReport:
             "news_sentiment": 25,
             "fundamentals": 20,
             "market_conditions": 20,
-            "strongest_bullish_signal": "MACD金叉",
-            "strongest_bearish_signal": "成交量萎缩",
+            "strongest_bullish_signal": "MACD\u91d1\u53c9",
+            "strongest_bearish_signal": "\u6210\u4ea4\u91cf\u840e\u7f29",
         }
         dashboard = {"signal_attribution": signal_attr}
         result = self._make_result(dashboard)
@@ -45,14 +45,14 @@ class TestGenerateSingleStockReport:
         notification = NotificationService()
         report = notification.generate_single_stock_report(result)
 
-        # 验证包含信号归因段落
-        assert "信号归因" in report or "Signal Attribution" in report, "单股报告应包含信号归因段落"
-        assert "35%" in report, "单股报告应显示 technical_indicators=35%"
-        assert "MACD金叉" in report, "单股报告应显示 strongest_bullish_signal"
-        print("  ✅ generate_single_stock_report() 正确渲染 signal_attribution")
+        # \u9a8c\u8bc1\u5305\u542b\u4fe1\u53f7\u5f52\u56e0\u6bb5\u843d
+        assert "\u4fe1\u53f7\u5f52\u56e0" in report or "Signal Attribution" in report, "\u5355\u80a1\u62a5\u544a\u5e94\u5305\u542b\u4fe1\u53f7\u5f52\u56e0\u6bb5\u843d"
+        assert "35%" in report, "\u5355\u80a1\u62a5\u544a\u5e94\u663e\u793a technical_indicators=35%"
+        assert "MACD\u91d1\u53c9" in report, "\u5355\u80a1\u62a5\u544a\u5e94\u663e\u793a strongest_bullish_signal"
+        print("  ✅ generate_single_stock_report() \u6b63\u786e\u6e32\u67d3 signal_attribution")
 
     def test_single_stock_report_without_signal_attribution(self):
-        """测试没有 signal_attribution 时不会崩溃"""
+        """\u6d4b\u8bd5\u6ca1\u6709 signal_attribution \u65f6\u4e0d\u4f1a\u5d29\u6e83"""
         from src.analyzer import AnalysisResult
         from src.notification import NotificationService
 
@@ -61,29 +61,29 @@ class TestGenerateSingleStockReport:
         notification = NotificationService()
         report = notification.generate_single_stock_report(result)
 
-        # 验证报告生成成功（可能不包含信号归因段落）
-        assert len(report) > 0, "没有 signal_attribution 时也应生成报告"
-        print("  ✅ 没有 signal_attribution 时不会崩溃")
+        # \u9a8c\u8bc1\u62a5\u544a\u751f\u6210\u6210\u529f（\u53ef\u80fd\u4e0d\u5305\u542b\u4fe1\u53f7\u5f52\u56e0\u6bb5\u843d）
+        assert len(report) > 0, "\u6ca1\u6709 signal_attribution \u65f6\u4e5f\u5e94\u751f\u6210\u62a5\u544a"
+        print("  ✅ \u6ca1\u6709 signal_attribution \u65f6\u4e0d\u4f1a\u5d29\u6e83")
 
 
     def _make_result(self, dashboard: Dict[str, Any]) -> "AnalysisResult":
         return AnalysisResult(
             code="600519",
-            name="贵州茅台",
-            trend_prediction="看多",
+            name="\u8d35\u5dde\u8305\u53f0",
+            trend_prediction="\u770b\u591a",
             sentiment_score=75,
-            operation_advice="持有",
-            analysis_summary="测试分析",
+            operation_advice="\u6301\u6709",
+            analysis_summary="\u6d4b\u8bd5\u5206\u6790",
             decision_type="hold",
             dashboard=dashboard,
         )
 
 
 class TestNormalizationEdgeCases:
-    """测试归一化边界场景"""
+    """\u6d4b\u8bd5\u5f52\u4e00\u5316\u8fb9\u754c\u573a\u666f"""
 
     def test_all_zero_contributions(self):
-        """测试所有贡献度都是 0 时，保留 0 而不是改成 25"""
+        """\u6d4b\u8bd5\u6240\u6709\u8d21\u732e\u5ea6\u90fd\u662f 0 \u65f6，\u4fdd\u7559 0 \u800c\u4e0d\u662f\u6539\u6210 25"""
         from src.utils.data_processing import normalize_dashboard_signal_attribution
 
         dashboard = {
@@ -97,15 +97,15 @@ class TestNormalizationEdgeCases:
         normalize_dashboard_signal_attribution(dashboard)
         attr = dashboard["signal_attribution"]
 
-        # 应该保留 0，而不是改成 25
-        assert attr["technical_indicators"] == 0, f"应为 0，实际为 {attr['technical_indicators']}"
-        assert attr["news_sentiment"] == 0, f"应为 0，实际为 {attr['news_sentiment']}"
-        assert attr["fundamentals"] == 0, f"应为 0，实际为 {attr['fundamentals']}"
-        assert attr["market_conditions"] == 0, f"应为 0，实际为 {attr['market_conditions']}"
-        print("  ✅ 所有贡献度都是 0 时，保留 0")
+        # \u5e94\u8be5\u4fdd\u7559 0，\u800c\u4e0d\u662f\u6539\u6210 25
+        assert attr["technical_indicators"] == 0, f"\u5e94\u4e3a 0，\u5b9e\u9645\u4e3a {attr['technical_indicators']}"
+        assert attr["news_sentiment"] == 0, f"\u5e94\u4e3a 0，\u5b9e\u9645\u4e3a {attr['news_sentiment']}"
+        assert attr["fundamentals"] == 0, f"\u5e94\u4e3a 0，\u5b9e\u9645\u4e3a {attr['fundamentals']}"
+        assert attr["market_conditions"] == 0, f"\u5e94\u4e3a 0，\u5b9e\u9645\u4e3a {attr['market_conditions']}"
+        print("  ✅ \u6240\u6709\u8d21\u732e\u5ea6\u90fd\u662f 0 \u65f6，\u4fdd\u7559 0")
 
     def test_all_none_contributions(self):
-        """测试所有贡献度都是 None 时，保留 None"""
+        """\u6d4b\u8bd5\u6240\u6709\u8d21\u732e\u5ea6\u90fd\u662f None \u65f6，\u4fdd\u7559 None"""
         from src.utils.data_processing import normalize_dashboard_signal_attribution
 
         dashboard = {
@@ -119,13 +119,13 @@ class TestNormalizationEdgeCases:
         normalize_dashboard_signal_attribution(dashboard)
         attr = dashboard["signal_attribution"]
 
-        # 应该保留 None
-        assert attr["technical_indicators"] is None, "应为 None"
-        assert attr["news_sentiment"] is None, "应为 None"
-        print("  ✅ 所有贡献度都是 None 时，保留 None")
+        # \u5e94\u8be5\u4fdd\u7559 None
+        assert attr["technical_indicators"] is None, "\u5e94\u4e3a None"
+        assert attr["news_sentiment"] is None, "\u5e94\u4e3a None"
+        print("  ✅ \u6240\u6709\u8d21\u732e\u5ea6\u90fd\u662f None \u65f6，\u4fdd\u7559 None")
 
     def test_values_greater_than_100(self):
-        """测试贡献度 >100 时，上限裁剪到 100"""
+        """\u6d4b\u8bd5\u8d21\u732e\u5ea6 >100 \u65f6，\u4e0a\u9650\u88c1\u526a\u5230 100"""
         from src.utils.data_processing import normalize_dashboard_signal_attribution
 
         dashboard = {
@@ -139,64 +139,64 @@ class TestNormalizationEdgeCases:
         normalize_dashboard_signal_attribution(dashboard)
         attr = dashboard["signal_attribution"]
 
-        # 应该裁剪到 100
-        assert attr["technical_indicators"] <= 100, f"应 ≤100，实际为 {attr['technical_indicators']}"
-        print(f"  ✅ 贡献度 >100 时，裁剪到 100 (实际: {attr['technical_indicators']})")
+        # \u5e94\u8be5\u88c1\u526a\u5230 100
+        assert attr["technical_indicators"] <= 100, f"\u5e94 ≤100，\u5b9e\u9645\u4e3a {attr['technical_indicators']}"
+        print(f"  ✅ \u8d21\u732e\u5ea6 >100 \u65f6，\u88c1\u526a\u5230 100 (\u5b9e\u9645: {attr['technical_indicators']})")
 
     def test_partial_invalid_values(self):
-        """测试部分有效、部分无效的输入"""
+        """\u6d4b\u8bd5\u90e8\u5206\u6709\u6548、\u90e8\u5206\u65e0\u6548\u7684\u8f93\u5165"""
         from src.utils.data_processing import normalize_dashboard_signal_attribution
 
         dashboard = {
             "signal_attribution": {
                 "technical_indicators": 35,
-                "news_sentiment": "25%",  # 字符串百分比
-                "fundamentals": None,  # 无效
-                "market_conditions": -10,  # 负数，应转为 0
+                "news_sentiment": "25%",  # \u5b57\u7b26\u4e32\u767e\u5206\u6bd4
+                "fundamentals": None,  # \u65e0\u6548
+                "market_conditions": -10,  # \u8d1f\u6570，\u5e94\u8f6c\u4e3a 0
             }
         }
         normalize_dashboard_signal_attribution(dashboard)
         attr = dashboard["signal_attribution"]
 
-        assert attr["technical_indicators"] == 35, f"应为 35，实际为 {attr['technical_indicators']}"
-        assert attr["news_sentiment"] == 25, f"应为 25，实际为 {attr['news_sentiment']}"
-        assert attr["fundamentals"] is None, f"应为 None，实际为 {attr['fundamentals']}"
-        assert attr["market_conditions"] == 0, f"应为 0，实际为 {attr['market_conditions']}"
+        assert attr["technical_indicators"] == 35, f"\u5e94\u4e3a 35，\u5b9e\u9645\u4e3a {attr['technical_indicators']}"
+        assert attr["news_sentiment"] == 25, f"\u5e94\u4e3a 25，\u5b9e\u9645\u4e3a {attr['news_sentiment']}"
+        assert attr["fundamentals"] is None, f"\u5e94\u4e3a None，\u5b9e\u9645\u4e3a {attr['fundamentals']}"
+        assert attr["market_conditions"] == 0, f"\u5e94\u4e3a 0，\u5b9e\u9645\u4e3a {attr['market_conditions']}"
 
-        # 验证总和 = 100
+        # \u9a8c\u8bc1\u603b\u548c = 100
         valid_values = [v for v in attr.values() if isinstance(v, int) and v is not None]
         if len(valid_values) > 0:
             total = sum(valid_values)
-            print(f"  ✅ 部分无效输入正确处理，总和 = {total}")
+            print(f"  ✅ \u90e8\u5206\u65e0\u6548\u8f93\u5165\u6b63\u786e\u5904\u7406，\u603b\u548c = {total}")
         else:
-            print("  ✅ 部分无效输入正确处理")
+            print("  ✅ \u90e8\u5206\u65e0\u6548\u8f93\u5165\u6b63\u786e\u5904\u7406")
 
 
 class TestParseResponseIntegration:
-    """测试 _parse_response() 真实调用"""
+    """\u6d4b\u8bd5 _parse_response() \u771f\u5b9e\u8c03\u7528"""
 
     def test_parse_response_calls_normalization(self):
-        """测试 _parse_response() 正确调用归一化函数"""
+        """\u6d4b\u8bd5 _parse_response() \u6b63\u786e\u8c03\u7528\u5f52\u4e00\u5316\u51fd\u6570"""
         from src.analyzer import GeminiAnalyzer
         from unittest.mock import MagicMock
 
-        # 构造模拟的 LLM 返回（JSON 字符串，包含 signal_attribution）
+        # \u6784\u9020\u6a21\u62df\u7684 LLM \u8fd4\u56de（JSON \u5b57\u7b26\u4e32，\u5305\u542b signal_attribution）
         llm_response_text = json.dumps({
             "dashboard": {
                 "signal_attribution": {
-                    "technical_indicators": "35%",  # 字符串百分比
+                    "technical_indicators": "35%",  # \u5b57\u7b26\u4e32\u767e\u5206\u6bd4
                     "news_sentiment": 25,
                     "fundamentals": 20,
                     "market_conditions": 20,
-                    "strongest_bullish_signal": "MACD金叉",
+                    "strongest_bullish_signal": "MACD\u91d1\u53c9",
                 },
-                "core_conclusion": {"one_sentence": "测试"},
+                "core_conclusion": {"one_sentence": "\u6d4b\u8bd5"},
                 "intelligence": {"risk_alerts": []},
                 "battle_plan": {"sniper_points": {"stop_loss": "100"}},
             }
         })
 
-        # 创建 analyzer 实例（mock necessary attributes）
+        # \u521b\u5efa analyzer \u5b9e\u4f8b（mock necessary attributes）
         config = MagicMock()
         config.llm_provider = "deepseek"
         config.llm_model = "deepseek-chat"
@@ -221,39 +221,39 @@ class TestParseResponseIntegration:
         analyzer.phase_classifier = None
         analyzer.pre_judge = None
 
-        # 调用 _parse_response()
-        result = analyzer._parse_response(llm_response_text, "600519", "贵州茅台")
+        # \u8c03\u7528 _parse_response()
+        result = analyzer._parse_response(llm_response_text, "600519", "\u8d35\u5dde\u8305\u53f0")
 
-        # 验证 result.dashboard 中的 signal_attribution 已归一化
+        # \u9a8c\u8bc1 result.dashboard \u4e2d\u7684 signal_attribution \u5df2\u5f52\u4e00\u5316
         dashboard = result.dashboard
-        assert dashboard is not None, "dashboard 不应为 None"
+        assert dashboard is not None, "dashboard \u4e0d\u5e94\u4e3a None"
         signal_attr = dashboard.get("signal_attribution")
-        assert signal_attr is not None, "signal_attribution 不应为 None"
+        assert signal_attr is not None, "signal_attribution \u4e0d\u5e94\u4e3a None"
 
-        # 验证字符串百分比已转为 int
-        assert isinstance(signal_attr.get("technical_indicators"), int), "字符串百分比应转为 int"
-        assert signal_attr.get("technical_indicators") == 35, f"应为 35，实际为 {signal_attr.get('technical_indicators')}"
+        # \u9a8c\u8bc1\u5b57\u7b26\u4e32\u767e\u5206\u6bd4\u5df2\u8f6c\u4e3a int
+        assert isinstance(signal_attr.get("technical_indicators"), int), "\u5b57\u7b26\u4e32\u767e\u5206\u6bd4\u5e94\u8f6c\u4e3a int"
+        assert signal_attr.get("technical_indicators") == 35, f"\u5e94\u4e3a 35，\u5b9e\u9645\u4e3a {signal_attr.get('technical_indicators')}"
 
-        print("  ✅ _parse_response() 正确调用归一化函数")
+        print("  ✅ _parse_response() \u6b63\u786e\u8c03\u7528\u5f52\u4e00\u5316\u51fd\u6570")
 
 
 def run_tests():
-    """运行所有测试"""
+    """\u8fd0\u884c\u6240\u6709\u6d4b\u8bd5"""
     print("\n" + "="*80)
-    print("Signal Attribution 补充测试")
+    print("Signal Attribution \u8865\u5145\u6d4b\u8bd5")
     print("="*80 + "\n")
 
-    # 测试 1: generate_single_stock_report() 渲染
+    # \u6d4b\u8bd5 1: generate_single_stock_report() \u6e32\u67d3
     print("=" * 80)
-    print("测试 1: generate_single_stock_report() 渲染")
+    print("\u6d4b\u8bd5 1: generate_single_stock_report() \u6e32\u67d3")
     print("=" * 80 + "\n")
     test1 = TestGenerateSingleStockReport()
     test1.test_single_stock_report_renders_signal_attribution()
     test1.test_single_stock_report_without_signal_attribution()
 
-    # 测试 2: 归一化边界场景
+    # \u6d4b\u8bd5 2: \u5f52\u4e00\u5316\u8fb9\u754c\u573a\u666f
     print("\n" + "="*80)
-    print("测试 2: 归一化边界场景")
+    print("\u6d4b\u8bd5 2: \u5f52\u4e00\u5316\u8fb9\u754c\u573a\u666f")
     print("="*80 + "\n")
     test2 = TestNormalizationEdgeCases()
     test2.test_all_zero_contributions()
@@ -261,15 +261,15 @@ def run_tests():
     test2.test_values_greater_than_100()
     test2.test_partial_invalid_values()
 
-    # 测试 3: _parse_response() 真实调用
+    # \u6d4b\u8bd5 3: _parse_response() \u771f\u5b9e\u8c03\u7528
     print("\n" + "="*80)
-    print("测试 3: _parse_response() 真实调用")
+    print("\u6d4b\u8bd5 3: _parse_response() \u771f\u5b9e\u8c03\u7528")
     print("="*80 + "\n")
     test3 = TestParseResponseIntegration()
     test3.test_parse_response_calls_normalization()
 
     print("\n" + "="*80)
-    print("所有测试通过！")
+    print("\u6240\u6709\u6d4b\u8bd5\u901a\u8fc7！")
     print("="*80 + "\n")
 
 

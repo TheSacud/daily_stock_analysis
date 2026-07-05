@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 """
 ===================================
-A股自选股智能分析系统 - 分析历史存储单元测试
+A\u80a1\u81ea\u9009\u80a1\u667a\u80fd\u5206\u6790\u7cfb\u7edf - \u5206\u6790\u5386\u53f2\u5b58\u50a8\u5355\u5143\u6d4b\u8bd5
 ===================================
 
-职责：
-1. 验证分析历史保存逻辑
-2. 验证上下文快照保存开关
+\u804c\u8d23：
+1. \u9a8c\u8bc1\u5206\u6790\u5386\u53f2\u4fdd\u5b58\u903b\u8f91
+2. \u9a8c\u8bc1\u4e0a\u4e0b\u6587\u5feb\u7167\u4fdd\u5b58\u5f00\u5173
 """
 
 import json
@@ -54,13 +54,13 @@ def _analysis_context_pack_overview() -> dict:
         "created_at": "2026-04-10T08:30:00+00:00",
         "subject": {
             "code": "600519",
-            "stock_name": "贵州茅台",
+            "stock_name": "\u8d35\u5dde\u8305\u53f0",
             "market": "cn",
         },
         "blocks": [
             {
                 "key": "quote",
-                "label": "行情",
+                "label": "\u884c\u60c5",
                 "status": "available",
                 "source": "mock",
                 "warnings": [],
@@ -117,10 +117,10 @@ def _market_phase_summary() -> dict:
 
 
 class AnalysisHistoryTestCase(unittest.TestCase):
-    """分析历史存储测试"""
+    """\u5206\u6790\u5386\u53f2\u5b58\u50a8\u6d4b\u8bd5"""
 
     def setUp(self) -> None:
-        """为每个用例初始化独立数据库"""
+        """\u4e3a\u6bcf\u4e2a\u7528\u4f8b\u521d\u59cb\u5316\u72ec\u7acb\u6570\u636e\u5e93"""
         auth._auth_enabled = False
         self._temp_dir = tempfile.TemporaryDirectory()
         self._db_path = os.path.join(self._temp_dir.name, "test_analysis_history.db")
@@ -143,7 +143,7 @@ class AnalysisHistoryTestCase(unittest.TestCase):
         self.db = DatabaseManager.get_instance()
 
     def tearDown(self) -> None:
-        """清理资源"""
+        """\u6e05\u7406\u8d44\u6e90"""
         Config._instance = None
         DatabaseManager.reset_instance()
         for key, value in self._original_env.items():
@@ -154,24 +154,24 @@ class AnalysisHistoryTestCase(unittest.TestCase):
         self._temp_dir.cleanup()
 
     def _build_result(self) -> AnalysisResult:
-        """构造分析结果"""
+        """\u6784\u9020\u5206\u6790\u7ed3\u679c"""
         return AnalysisResult(
             code="600519",
-            name="贵州茅台",
+            name="\u8d35\u5dde\u8305\u53f0",
             sentiment_score=78,
-            trend_prediction="看多",
-            operation_advice="持有",
-            analysis_summary="基本面稳健，短期震荡",
+            trend_prediction="\u770b\u591a",
+            operation_advice="\u6301\u6709",
+            analysis_summary="\u57fa\u672c\u9762\u7a33\u5065，\u77ed\u671f\u9707\u8361",
         )
 
     def _save_history(self, query_id: str) -> int:
-        """保存一条测试历史记录并返回主键 ID。"""
+        """\u4fdd\u5b58\u4e00\u6761\u6d4b\u8bd5\u5386\u53f2\u8bb0\u5f55\u5e76\u8fd4\u56de\u4e3b\u952e ID。"""
         result = self._build_result()
         saved = self.db.save_analysis_history(
             result=result,
             query_id=query_id,
             report_type="simple",
-            news_content="新闻摘要",
+            news_content="\u65b0\u95fb\u6458\u8981",
             context_snapshot=None,
             save_snapshot=False,
         )
@@ -180,20 +180,20 @@ class AnalysisHistoryTestCase(unittest.TestCase):
         with self.db.get_session() as session:
             row = session.query(AnalysisHistory).filter(AnalysisHistory.query_id == query_id).first()
             if row is None:
-                self.fail("未找到保存的历史记录")
+                self.fail("\u672a\u627e\u5230\u4fdd\u5b58\u7684\u5386\u53f2\u8bb0\u5f55")
             self.assertEqual(row.id, saved)
             return row.id
 
     def test_save_analysis_history_with_snapshot(self) -> None:
-        """保存历史记录并写入上下文快照"""
+        """\u4fdd\u5b58\u5386\u53f2\u8bb0\u5f55\u5e76\u5199\u5165\u4e0a\u4e0b\u6587\u5feb\u7167"""
         result = self._build_result()
         result.dashboard = {
             "battle_plan": {
                 "sniper_points": {
-                    "ideal_buy": "理想买入点：125.5元",
+                    "ideal_buy": "\u7406\u60f3\u4e70\u5165\u70b9：125.5\u5143",
                     "secondary_buy": "120",
-                    "stop_loss": "止损位：110元",
-                    "take_profit": "目标位：150.0元",
+                    "stop_loss": "\u6b62\u635f\u4f4d：110\u5143",
+                    "take_profit": "\u76ee\u6807\u4f4d：150.0\u5143",
                 }
             }
         }
@@ -203,7 +203,7 @@ class AnalysisHistoryTestCase(unittest.TestCase):
             result=result,
             query_id="query_001",
             report_type="simple",
-            news_content="新闻摘要",
+            news_content="\u65b0\u95fb\u6458\u8981",
             context_snapshot=context_snapshot,
             save_snapshot=True
         )
@@ -216,7 +216,7 @@ class AnalysisHistoryTestCase(unittest.TestCase):
         with self.db.get_session() as session:
             row = session.query(AnalysisHistory).first()
             if row is None:
-                self.fail("未找到保存的历史记录")
+                self.fail("\u672a\u627e\u5230\u4fdd\u5b58\u7684\u5386\u53f2\u8bb0\u5f55")
             self.assertEqual(row.id, saved)
             self.assertEqual(row.query_id, "query_001")
             self.assertIsNotNone(row.context_snapshot)
@@ -358,15 +358,15 @@ class AnalysisHistoryTestCase(unittest.TestCase):
         self.assertEqual(stock_bar.items[0].analysis_count, 2)
 
     def test_save_analysis_history_persists_sniper_columns_via_shared_parser(self) -> None:
-        """迁出 sniper parser 后历史狙击点位列仍按原规则保存。"""
+        """\u8fc1\u51fa sniper parser \u540e\u5386\u53f2\u72d9\u51fb\u70b9\u4f4d\u5217\u4ecd\u6309\u539f\u89c4\u5219\u4fdd\u5b58。"""
         result = self._build_result()
         result.dashboard = {
             "battle_plan": {
                 "sniper_points": {
-                    "ideal_buy": "理想买入点：125.5元",
-                    "secondary_buy": "1.52-1.53 (回踩MA5/10附近)",
+                    "ideal_buy": "\u7406\u60f3\u4e70\u5165\u70b9：125.5\u5143",
+                    "secondary_buy": "1.52-1.53 (\u56de\u8e29MA5/10\u9644\u8fd1)",
                     "stop_loss": "—",
-                    "take_profit": "目标位：150.0元",
+                    "take_profit": "\u76ee\u6807\u4f4d：150.0\u5143",
                 }
             }
         }
@@ -375,7 +375,7 @@ class AnalysisHistoryTestCase(unittest.TestCase):
             result=result,
             query_id="query_shared_sniper_parser",
             report_type="simple",
-            news_content="新闻摘要",
+            news_content="\u65b0\u95fb\u6458\u8981",
             context_snapshot=None,
             save_snapshot=False,
         )
@@ -386,7 +386,7 @@ class AnalysisHistoryTestCase(unittest.TestCase):
                 AnalysisHistory.query_id == "query_shared_sniper_parser"
             ).first()
             if row is None:
-                self.fail("未找到保存的历史记录")
+                self.fail("\u672a\u627e\u5230\u4fdd\u5b58\u7684\u5386\u53f2\u8bb0\u5f55")
             self.assertEqual(row.id, saved)
             self.assertEqual(row.ideal_buy, 125.5)
             self.assertEqual(row.secondary_buy, 1.53)
@@ -394,13 +394,13 @@ class AnalysisHistoryTestCase(unittest.TestCase):
             self.assertEqual(row.take_profit, 150.0)
 
     def test_get_latest_analysis_history_id_filters_by_report_type_and_latest_record(self) -> None:
-        """按 query/code/report_type 返回最新真实历史主键。"""
+        """\u6309 query/code/report_type \u8fd4\u56de\u6700\u65b0\u771f\u5b9e\u5386\u53f2\u4e3b\u952e。"""
         for report_type in ("simple", "full", "simple"):
             saved = self.db.save_analysis_history(
                 result=self._build_result(),
                 query_id="query_latest_id",
                 report_type=report_type,
-                news_content="新闻摘要",
+                news_content="\u65b0\u95fb\u6458\u8981",
                 context_snapshot=None,
                 save_snapshot=False,
             )
@@ -422,19 +422,19 @@ class AnalysisHistoryTestCase(unittest.TestCase):
         self.assertGreater(simple_id, full_id)
 
     def test_get_latest_analysis_history_id_requires_report_type(self) -> None:
-        """report_type 是必传参数，避免误取同 query/code 的其他报告。"""
+        """report_type \u662f\u5fc5\u4f20\u53c2\u6570，\u907f\u514d\u8bef\u53d6\u540c query/code \u7684\u5176\u4ed6\u62a5\u544a。"""
         with self.assertRaises(TypeError):
             self.db.get_latest_analysis_history_id(query_id="query", code="600519")
 
     def test_save_analysis_history_without_snapshot(self) -> None:
-        """关闭快照保存时不写入 context_snapshot"""
+        """\u5173\u95ed\u5feb\u7167\u4fdd\u5b58\u65f6\u4e0d\u5199\u5165 context_snapshot"""
         result = self._build_result()
 
         saved = self.db.save_analysis_history(
             result=result,
             query_id="query_002",
             report_type="simple",
-            news_content="新闻摘要",
+            news_content="\u65b0\u95fb\u6458\u8981",
             context_snapshot={"foo": "bar"},
             save_snapshot=False
         )
@@ -444,7 +444,7 @@ class AnalysisHistoryTestCase(unittest.TestCase):
         with self.db.get_session() as session:
             row = session.query(AnalysisHistory).first()
             if row is None:
-                self.fail("未找到保存的历史记录")
+                self.fail("\u672a\u627e\u5230\u4fdd\u5b58\u7684\u5386\u53f2\u8bb0\u5f55")
             self.assertEqual(row.id, saved)
             self.assertIsNone(row.context_snapshot)
 
@@ -457,7 +457,7 @@ class AnalysisHistoryTestCase(unittest.TestCase):
             result=result,
             query_id="query_003",
             report_type="simple",
-            news_content="新闻摘要",
+            news_content="\u65b0\u95fb\u6458\u8981",
             context_snapshot=None,
             save_snapshot=False
         )
@@ -466,18 +466,18 @@ class AnalysisHistoryTestCase(unittest.TestCase):
         with self.db.get_session() as session:
             row = session.query(AnalysisHistory).filter(AnalysisHistory.query_id == "query_003").first()
             if row is None:
-                self.fail("未找到保存的历史记录")
+                self.fail("\u672a\u627e\u5230\u4fdd\u5b58\u7684\u5386\u53f2\u8bb0\u5f55")
             self.assertEqual(row.id, saved)
             payload = json.loads(row.raw_result or "{}")
             self.assertEqual(payload.get("model_used"), "gemini/gemini-2.0-flash")
 
     def test_update_analysis_history_diagnostics_preserves_snapshot_fields(self) -> None:
-        """通知发送后补写 diagnostics 时，不应覆盖已有上下文字段。"""
+        """\u901a\u77e5\u53d1\u9001\u540e\u8865\u5199 diagnostics \u65f6，\u4e0d\u5e94\u8986\u76d6\u5df2\u6709\u4e0a\u4e0b\u6587\u5b57\u6bb5。"""
         saved = self.db.save_analysis_history(
             result=self._build_result(),
             query_id="query_diag_patch",
             report_type="simple",
-            news_content="新闻摘要",
+            news_content="\u65b0\u95fb\u6458\u8981",
             context_snapshot={
                 "enhanced_context": {"code": "600519"},
                 "diagnostics": {
@@ -509,7 +509,7 @@ class AnalysisHistoryTestCase(unittest.TestCase):
                 AnalysisHistory.query_id == "query_diag_patch"
             ).first()
             if row is None:
-                self.fail("未找到保存的历史记录")
+                self.fail("\u672a\u627e\u5230\u4fdd\u5b58\u7684\u5386\u53f2\u8bb0\u5f55")
             self.assertEqual(row.id, saved)
             snapshot = json.loads(row.context_snapshot or "{}")
             self.assertEqual(snapshot["enhanced_context"]["code"], "600519")
@@ -526,7 +526,7 @@ class AnalysisHistoryTestCase(unittest.TestCase):
             result=result,
             query_id="query_004",
             report_type="simple",
-            news_content="新闻摘要",
+            news_content="\u65b0\u95fb\u6458\u8981",
             context_snapshot=None,
             save_snapshot=False
         )
@@ -535,7 +535,7 @@ class AnalysisHistoryTestCase(unittest.TestCase):
         with self.db.get_session() as session:
             row = session.query(AnalysisHistory).filter(AnalysisHistory.query_id == "query_004").first()
             if row is None:
-                self.fail("未找到保存的历史记录")
+                self.fail("\u672a\u627e\u5230\u4fdd\u5b58\u7684\u5386\u53f2\u8bb0\u5f55")
             self.assertEqual(row.id, saved)
             record_id = row.id
 
@@ -564,7 +564,7 @@ class AnalysisHistoryTestCase(unittest.TestCase):
             result=result,
             query_id="query_timeline_summary",
             report_type="detailed",
-            news_content="新闻摘要",
+            news_content="\u65b0\u95fb\u6458\u8981",
             context_snapshot=context_snapshot,
             save_snapshot=True,
         )
@@ -576,11 +576,11 @@ class AnalysisHistoryTestCase(unittest.TestCase):
         self.assertEqual(payload["total"], 1)
         item = payload["items"][0]
         self.assertEqual(item["stock_code"], "600519")
-        self.assertEqual(item["trend_prediction"], "看多")
-        self.assertEqual(item["analysis_summary"], "基本面稳健，短期震荡")
-        self.assertEqual(item["operation_advice"], "持有")
+        self.assertEqual(item["trend_prediction"], "\u770b\u591a")
+        self.assertEqual(item["analysis_summary"], "\u57fa\u672c\u9762\u7a33\u5065，\u77ed\u671f\u9707\u8361")
+        self.assertEqual(item["operation_advice"], "\u6301\u6709")
         self.assertEqual(item["action"], "buy")
-        self.assertEqual(item["action_label"], "买入")
+        self.assertEqual(item["action_label"], "\u4e70\u5165")
         self.assertEqual(item["model_used"], "gemini/gemini-2.5-pro")
         self.assertEqual(item["current_price"], 51.5)
         self.assertEqual(item["change_pct"], -4.61)
@@ -593,14 +593,14 @@ class AnalysisHistoryTestCase(unittest.TestCase):
         """Conservative-market guardrail short operation_advice is persisted and exposed to history list."""
         result = self._build_result()
         result.decision_type = "buy"
-        result.operation_advice = "立即买入并积极加仓"
+        result.operation_advice = "\u7acb\u5373\u4e70\u5165\u5e76\u79ef\u6781\u52a0\u4ed3"
 
         apply_daily_market_context_guardrail(
             result,
             daily_market_context={
                 "region": "cn",
                 "trade_date": "2026-06-06",
-                "summary": "大盘退潮，高风险，建议观望，仓位上限30%。",
+                "summary": "\u5927\u76d8\u9000\u6f6e，\u9ad8\u98ce\u9669，\u5efa\u8bae\u89c2\u671b，\u4ed3\u4f4d\u4e0a\u965030%。",
                 "risk_tags": ["high_risk", "low_position_cap"],
             },
             report_language="zh",
@@ -610,7 +610,7 @@ class AnalysisHistoryTestCase(unittest.TestCase):
             result=result,
             query_id="query_softened_operation_advice",
             report_type="simple",
-            news_content="新闻摘要",
+            news_content="\u65b0\u95fb\u6458\u8981",
             context_snapshot=None,
             save_snapshot=False,
         )
@@ -620,7 +620,7 @@ class AnalysisHistoryTestCase(unittest.TestCase):
         payload = service.get_history_list(stock_code="600519", page=1, limit=10)
 
         self.assertEqual(payload["total"], 1)
-        self.assertEqual(payload["items"][0]["operation_advice"], "观望")
+        self.assertEqual(payload["items"][0]["operation_advice"], "\u89c2\u671b")
         self.assertLessEqual(len(payload["items"][0]["operation_advice"]), 20)
 
         with self.db.get_session() as session:
@@ -628,20 +628,20 @@ class AnalysisHistoryTestCase(unittest.TestCase):
                 AnalysisHistory.query_id == "query_softened_operation_advice"
             ).first()
             if row is None:
-                self.fail("未找到保存的历史记录")
+                self.fail("\u672a\u627e\u5230\u4fdd\u5b58\u7684\u5386\u53f2\u8bb0\u5f55")
             self.assertEqual(row.id, saved)
-            self.assertEqual(row.operation_advice, "观望")
+            self.assertEqual(row.operation_advice, "\u89c2\u671b")
 
     def test_market_review_history_can_be_filtered_without_stock_records(self) -> None:
         """Market review records should be queryable as a dedicated history collection."""
         stock_result = self._build_result()
         market_result = AnalysisResult(
             code="MARKET",
-            name="大盘复盘",
+            name="\u5927\u76d8\u590d\u76d8",
             sentiment_score=50,
-            trend_prediction="大盘复盘",
-            operation_advice="查看复盘",
-            analysis_summary="大盘复盘摘要",
+            trend_prediction="\u5927\u76d8\u590d\u76d8",
+            operation_advice="\u67e5\u770b\u590d\u76d8",
+            analysis_summary="\u5927\u76d8\u590d\u76d8\u6458\u8981",
         )
 
         self.assertGreater(
@@ -649,7 +649,7 @@ class AnalysisHistoryTestCase(unittest.TestCase):
                 result=stock_result,
                 query_id="query_stock_history",
                 report_type="detailed",
-                news_content="个股正文",
+                news_content="\u4e2a\u80a1\u6b63\u6587",
                 context_snapshot=None,
                 save_snapshot=False,
             ),
@@ -660,12 +660,12 @@ class AnalysisHistoryTestCase(unittest.TestCase):
                 result=market_result,
                 query_id="query_market_review_history",
                 report_type="market_review",
-                news_content="大盘复盘正文",
+                news_content="\u5927\u76d8\u590d\u76d8\u6b63\u6587",
                 context_snapshot={
                     "report_kind": "market_review",
                     "market_review_payload": {
                         "kind": "market_review",
-                        "sections": [{"title": "复盘", "markdown": "结构化正文"}],
+                        "sections": [{"title": "\u590d\u76d8", "markdown": "\u7ed3\u6784\u5316\u6b63\u6587"}],
                     },
                 },
                 save_snapshot=True,
@@ -692,11 +692,11 @@ class AnalysisHistoryTestCase(unittest.TestCase):
         stock_result = self._build_result()
         market_result = AnalysisResult(
             code="MARKET",
-            name="大盘复盘",
+            name="\u5927\u76d8\u590d\u76d8",
             sentiment_score=50,
-            trend_prediction="大盘复盘",
-            operation_advice="查看复盘",
-            analysis_summary="大盘复盘摘要",
+            trend_prediction="\u5927\u76d8\u590d\u76d8",
+            operation_advice="\u67e5\u770b\u590d\u76d8",
+            analysis_summary="\u5927\u76d8\u590d\u76d8\u6458\u8981",
         )
 
         self.assertGreater(
@@ -704,7 +704,7 @@ class AnalysisHistoryTestCase(unittest.TestCase):
                 result=stock_result,
                 query_id="query_stock_bar_stock",
                 report_type="detailed",
-                news_content="个股正文",
+                news_content="\u4e2a\u80a1\u6b63\u6587",
                 context_snapshot=None,
                 save_snapshot=False,
             ),
@@ -715,7 +715,7 @@ class AnalysisHistoryTestCase(unittest.TestCase):
                 result=market_result,
                 query_id="query_stock_bar_market",
                 report_type="market_review",
-                news_content="大盘复盘正文",
+                news_content="\u5927\u76d8\u590d\u76d8\u6b63\u6587",
                 context_snapshot=None,
                 save_snapshot=False,
             ),
@@ -731,13 +731,13 @@ class AnalysisHistoryTestCase(unittest.TestCase):
             self.skipTest("fastapi is not installed in this test environment")
 
         result = self._build_result()
-        result.operation_advice = "不建议买入"
+        result.operation_advice = "\u4e0d\u5efa\u8bae\u4e70\u5165"
 
         saved = self.db.save_analysis_history(
             result=result,
             query_id="query_stock_bar_action",
             report_type="detailed",
-            news_content="个股正文",
+            news_content="\u4e2a\u80a1\u6b63\u6587",
             context_snapshot=None,
             save_snapshot=False,
         )
@@ -751,23 +751,23 @@ class AnalysisHistoryTestCase(unittest.TestCase):
         )
 
         self.assertEqual(len(response.items), 1)
-        self.assertEqual(response.items[0].operation_advice, "不建议买入")
+        self.assertEqual(response.items[0].operation_advice, "\u4e0d\u5efa\u8bae\u4e70\u5165")
         self.assertEqual(response.items[0].action, "avoid")
-        self.assertEqual(response.items[0].action_label, "回避")
+        self.assertEqual(response.items[0].action_label, "\u56de\u907f")
 
     def test_stock_bar_item_aligns_score_and_legacy_advice(self) -> None:
         if get_stock_bar is None:
             self.skipTest("fastapi is not installed in this test environment")
 
         result = self._build_result()
-        result.operation_advice = "持有"
+        result.operation_advice = "\u6301\u6709"
         result.sentiment_score = 78
 
         saved = self.db.save_analysis_history(
             result=result,
             query_id="query_stock_bar_score_align",
             report_type="detailed",
-            news_content="个股正文",
+            news_content="\u4e2a\u80a1\u6b63\u6587",
             context_snapshot=None,
             save_snapshot=False,
         )
@@ -781,10 +781,10 @@ class AnalysisHistoryTestCase(unittest.TestCase):
         )
 
         self.assertEqual(len(response.items), 1)
-        self.assertEqual(response.items[0].operation_advice, "持有")
+        self.assertEqual(response.items[0].operation_advice, "\u6301\u6709")
         self.assertEqual(response.items[0].sentiment_score, 78)
         self.assertEqual(response.items[0].action, "buy")
-        self.assertEqual(response.items[0].action_label, "买入")
+        self.assertEqual(response.items[0].action_label, "\u4e70\u5165")
 
     def test_stock_bar_item_falls_back_to_raw_result_summary_fields(self) -> None:
         if get_stock_bar is None:
@@ -834,18 +834,18 @@ class AnalysisHistoryTestCase(unittest.TestCase):
             "id": 1,
             "query_id": "query_action_conflict",
             "stock_code": "600519",
-            "stock_name": "贵州茅台",
+            "stock_name": "\u8d35\u5dde\u8305\u53f0",
             "report_type": "detailed",
             "report_language": "zh",
             "created_at": "2026-05-21T17:40:00",
             "sentiment_score": 45,
-            "operation_advice": "持有观察",
+            "operation_advice": "\u6301\u6709\u89c2\u5bdf",
             "action": "watch",
-            "action_label": "观望",
-            "trend_prediction": "震荡",
-            "analysis_summary": "等待确认",
+            "action_label": "\u89c2\u671b",
+            "trend_prediction": "\u9707\u8361",
+            "analysis_summary": "\u7b49\u5f85\u786e\u8ba4",
             "raw_result": {
-                "operation_advice": "持有观察",
+                "operation_advice": "\u6301\u6709\u89c2\u5bdf",
                 "action": "watch",
                 "report_language": "zh",
             },
@@ -854,9 +854,9 @@ class AnalysisHistoryTestCase(unittest.TestCase):
         with patch("api.v1.endpoints.history.HistoryService", return_value=service):
             response = get_history_detail("query_action_conflict", db_manager=self.db)
 
-        self.assertEqual(response.summary.operation_advice, "持有观察")
+        self.assertEqual(response.summary.operation_advice, "\u6301\u6709\u89c2\u5bdf")
         self.assertEqual(response.summary.action, "watch")
-        self.assertEqual(response.summary.action_label, "观望")
+        self.assertEqual(response.summary.action_label, "\u89c2\u671b")
 
     def test_history_list_matches_equivalent_suffixed_stock_codes(self) -> None:
         """Same-stock history should include rows saved with supported suffixed codes."""
@@ -865,12 +865,12 @@ class AnalysisHistoryTestCase(unittest.TestCase):
             result = self._build_result()
             result.code = code
             if "HK" in code:
-                result.name = "腾讯控股"
+                result.name = "\u817e\u8baf\u63a7\u80a1"
             saved = self.db.save_analysis_history(
                 result=result,
                 query_id=query_id,
                 report_type="simple",
-                news_content="新闻摘要",
+                news_content="\u65b0\u95fb\u6458\u8981",
                 context_snapshot=None,
                 save_snapshot=False,
             )
@@ -918,12 +918,12 @@ class AnalysisHistoryTestCase(unittest.TestCase):
             result = self._build_result()
             result.code = code
             if "HK" in code:
-                result.name = "腾讯控股"
+                result.name = "\u817e\u8baf\u63a7\u80a1"
             saved = self.db.save_analysis_history(
                 result=result,
                 query_id=query_id,
                 report_type="simple",
-                news_content="新闻摘要",
+                news_content="\u65b0\u95fb\u6458\u8981",
                 context_snapshot=None,
                 save_snapshot=False,
             )
@@ -959,7 +959,7 @@ class AnalysisHistoryTestCase(unittest.TestCase):
                 result=result,
                 query_id=query_id,
                 report_type="simple",
-                news_content="新闻摘要",
+                news_content="\u65b0\u95fb\u6458\u8981",
                 context_snapshot=None,
                 save_snapshot=False,
             )
@@ -985,7 +985,7 @@ class AnalysisHistoryTestCase(unittest.TestCase):
         self.assertEqual({item["stock_code"] for item in from_plain["items"]}, expected)
 
     def test_history_detail_preserves_zero_change_pct(self) -> None:
-        """change_pct=0.0（平盘）应原样返回，而不是被当成缺失值丢失。
+        """change_pct=0.0（\u5e73\u76d8）\u5e94\u539f\u6837\u8fd4\u56de，\u800c\u4e0d\u662f\u88ab\u5f53\u6210\u7f3a\u5931\u503c\u4e22\u5931。
 
         Regression for issue #1084: history endpoint used `or` chains that
         treated 0.0 as falsy and silently dropped the daily change.
@@ -1003,7 +1003,7 @@ class AnalysisHistoryTestCase(unittest.TestCase):
             result=self._build_result(),
             query_id=query_id,
             report_type="simple",
-            news_content="新闻摘要",
+            news_content="\u65b0\u95fb\u6458\u8981",
             context_snapshot=context_snapshot,
             save_snapshot=True,
         )
@@ -1012,7 +1012,7 @@ class AnalysisHistoryTestCase(unittest.TestCase):
         with self.db.get_session() as session:
             row = session.query(AnalysisHistory).filter(AnalysisHistory.query_id == query_id).first()
             if row is None:
-                self.fail("未找到保存的历史记录")
+                self.fail("\u672a\u627e\u5230\u4fdd\u5b58\u7684\u5386\u53f2\u8bb0\u5f55")
             self.assertEqual(row.id, saved)
             record_id = row.id
 
@@ -1021,7 +1021,7 @@ class AnalysisHistoryTestCase(unittest.TestCase):
         self.assertEqual(report.meta.change_pct, 0.0)
 
     def test_history_detail_falls_back_to_realtime_quote_raw_change_pct(self) -> None:
-        """缺少 enhanced_context.realtime.change_pct 时，应回退到 realtime_quote_raw。
+        """\u7f3a\u5c11 enhanced_context.realtime.change_pct \u65f6，\u5e94\u56de\u9000\u5230 realtime_quote_raw。
 
         Regression for issue #1084: previously the realtime_quote_raw fallback
         was only consulted when current_price was missing, so reports with
@@ -1041,7 +1041,7 @@ class AnalysisHistoryTestCase(unittest.TestCase):
             result=self._build_result(),
             query_id=query_id,
             report_type="simple",
-            news_content="新闻摘要",
+            news_content="\u65b0\u95fb\u6458\u8981",
             context_snapshot=context_snapshot,
             save_snapshot=True,
         )
@@ -1050,7 +1050,7 @@ class AnalysisHistoryTestCase(unittest.TestCase):
         with self.db.get_session() as session:
             row = session.query(AnalysisHistory).filter(AnalysisHistory.query_id == query_id).first()
             if row is None:
-                self.fail("未找到保存的历史记录")
+                self.fail("\u672a\u627e\u5230\u4fdd\u5b58\u7684\u5386\u53f2\u8bb0\u5f55")
             self.assertEqual(row.id, saved)
             record_id = row.id
 
@@ -1075,7 +1075,7 @@ class AnalysisHistoryTestCase(unittest.TestCase):
             result=self._build_result(),
             query_id=query_id,
             report_type="simple",
-            news_content="新闻摘要",
+            news_content="\u65b0\u95fb\u6458\u8981",
             context_snapshot=context_snapshot,
             save_snapshot=True,
         )
@@ -1084,7 +1084,7 @@ class AnalysisHistoryTestCase(unittest.TestCase):
         with self.db.get_session() as session:
             row = session.query(AnalysisHistory).filter(AnalysisHistory.query_id == query_id).first()
             if row is None:
-                self.fail("未找到保存的历史记录")
+                self.fail("\u672a\u627e\u5230\u4fdd\u5b58\u7684\u5386\u53f2\u8bb0\u5f55")
             self.assertEqual(row.id, saved)
             record_id = row.id
 
@@ -1107,7 +1107,7 @@ class AnalysisHistoryTestCase(unittest.TestCase):
             result=result,
             query_id="query_005",
             report_type="simple",
-            news_content="新闻摘要",
+            news_content="\u65b0\u95fb\u6458\u8981",
             context_snapshot=None,
             save_snapshot=False
         )
@@ -1116,7 +1116,7 @@ class AnalysisHistoryTestCase(unittest.TestCase):
         with self.db.get_session() as session:
             row = session.query(AnalysisHistory).filter(AnalysisHistory.query_id == "query_005").first()
             if row is None:
-                self.fail("未找到保存的历史记录")
+                self.fail("\u672a\u627e\u5230\u4fdd\u5b58\u7684\u5386\u53f2\u8bb0\u5f55")
             self.assertEqual(row.id, saved)
             row.raw_result = {"model_used": "unknown", "extra": "v"}
 
@@ -1133,10 +1133,10 @@ class AnalysisHistoryTestCase(unittest.TestCase):
         result.dashboard = {
             "battle_plan": {
                 "sniper_points": {
-                    "ideal_buy": "理想买入点：125.5元",
-                    "secondary_buy": "120-121 元分批",
-                    "stop_loss": "跌破 110 元止损",
-                    "take_profit": "目标位：150.0元",
+                    "ideal_buy": "\u7406\u60f3\u4e70\u5165\u70b9：125.5\u5143",
+                    "secondary_buy": "120-121 \u5143\u5206\u6279",
+                    "stop_loss": "\u8dcc\u7834 110 \u5143\u6b62\u635f",
+                    "take_profit": "\u76ee\u6807\u4f4d：150.0\u5143",
                 }
             }
         }
@@ -1145,7 +1145,7 @@ class AnalysisHistoryTestCase(unittest.TestCase):
             result=result,
             query_id="query_006",
             report_type="simple",
-            news_content="新闻摘要",
+            news_content="\u65b0\u95fb\u6458\u8981",
             context_snapshot=None,
             save_snapshot=False
         )
@@ -1154,17 +1154,17 @@ class AnalysisHistoryTestCase(unittest.TestCase):
         with self.db.get_session() as session:
             row = session.query(AnalysisHistory).filter(AnalysisHistory.query_id == "query_006").first()
             if row is None:
-                self.fail("未找到保存的历史记录")
+                self.fail("\u672a\u627e\u5230\u4fdd\u5b58\u7684\u5386\u53f2\u8bb0\u5f55")
             self.assertEqual(row.id, saved)
             record_id = row.id
 
         service = HistoryService(self.db)
         detail = service.get_history_detail_by_id(record_id)
         self.assertIsNotNone(detail)
-        self.assertEqual(detail.get("ideal_buy"), "理想买入点：125.5元")
-        self.assertEqual(detail.get("secondary_buy"), "120-121 元分批")
-        self.assertEqual(detail.get("stop_loss"), "跌破 110 元止损")
-        self.assertEqual(detail.get("take_profit"), "目标位：150.0元")
+        self.assertEqual(detail.get("ideal_buy"), "\u7406\u60f3\u4e70\u5165\u70b9：125.5\u5143")
+        self.assertEqual(detail.get("secondary_buy"), "120-121 \u5143\u5206\u6279")
+        self.assertEqual(detail.get("stop_loss"), "\u8dcc\u7834 110 \u5143\u6b62\u635f")
+        self.assertEqual(detail.get("take_profit"), "\u76ee\u6807\u4f4d：150.0\u5143")
 
     def test_history_detail_falls_back_to_numeric_sniper_columns(self) -> None:
         """History detail should still fall back to stored numeric sniper columns when raw strings are unavailable."""
@@ -1173,7 +1173,7 @@ class AnalysisHistoryTestCase(unittest.TestCase):
             result=result,
             query_id="query_007",
             report_type="simple",
-            news_content="新闻摘要",
+            news_content="\u65b0\u95fb\u6458\u8981",
             context_snapshot=None,
             save_snapshot=False
         )
@@ -1182,7 +1182,7 @@ class AnalysisHistoryTestCase(unittest.TestCase):
         with self.db.get_session() as session:
             row = session.query(AnalysisHistory).filter(AnalysisHistory.query_id == "query_007").first()
             if row is None:
-                self.fail("未找到保存的历史记录")
+                self.fail("\u672a\u627e\u5230\u4fdd\u5b58\u7684\u5386\u53f2\u8bb0\u5f55")
             row.ideal_buy = 125.5
             row.secondary_buy = 120.0
             row.stop_loss = 110.0
@@ -1211,7 +1211,7 @@ class AnalysisHistoryTestCase(unittest.TestCase):
             result=result,
             query_id=query_id,
             report_type="simple",
-            news_content="新闻摘要",
+            news_content="\u65b0\u95fb\u6458\u8981",
             context_snapshot=None,
             save_snapshot=False,
         )
@@ -1221,16 +1221,16 @@ class AnalysisHistoryTestCase(unittest.TestCase):
             query_id=query_id,
             code="600519",
             payload={
-                "belong_boards": [{"name": "白酒", "type": "行业"}],
+                "belong_boards": [{"name": "\u767d\u9152", "type": "\u884c\u4e1a"}],
                 "boards": {
                     "data": {
-                        "top": [{"name": "白酒", "change_pct": 2.6}],
+                        "top": [{"name": "\u767d\u9152", "change_pct": 2.6}],
                         "bottom": [],
                     }
                 },
                 "concept_boards": {
                     "data": {
-                        "top": [{"name": "机器人概念", "change_pct": 4.2}],
+                        "top": [{"name": "\u673a\u5668\u4eba\u6982\u5ff5", "change_pct": 4.2}],
                         "bottom": [],
                     }
                 },
@@ -1246,16 +1246,16 @@ class AnalysisHistoryTestCase(unittest.TestCase):
         with self.db.get_session() as session:
             row = session.query(AnalysisHistory).filter(AnalysisHistory.query_id == query_id).first()
             if row is None:
-                self.fail("未找到保存的历史记录")
+                self.fail("\u672a\u627e\u5230\u4fdd\u5b58\u7684\u5386\u53f2\u8bb0\u5f55")
             self.assertEqual(row.id, saved)
             record_id = row.id
 
         report = get_history_detail(str(record_id), db_manager=self.db)
         self.assertEqual(report.details.financial_report["report_date"], "2025-12-31")
         self.assertEqual(report.details.dividend_metrics["ttm_dividend_yield_pct"], 2.6)
-        self.assertEqual(report.details.belong_boards, [{"name": "白酒", "type": "行业"}])
-        self.assertEqual(report.details.sector_rankings["top"][0]["name"], "白酒")
-        self.assertEqual(report.details.concept_rankings["top"][0]["name"], "机器人概念")
+        self.assertEqual(report.details.belong_boards, [{"name": "\u767d\u9152", "type": "\u884c\u4e1a"}])
+        self.assertEqual(report.details.sector_rankings["top"][0]["name"], "\u767d\u9152")
+        self.assertEqual(report.details.concept_rankings["top"][0]["name"], "\u673a\u5668\u4eba\u6982\u5ff5")
 
     def test_history_detail_uses_raw_code_for_legacy_jp_kr_fundamental_snapshot(self) -> None:
         """Legacy bare JP/KR history rows should display suffixes but read snapshots by stored code."""
@@ -1292,7 +1292,7 @@ class AnalysisHistoryTestCase(unittest.TestCase):
         with self.db.get_session() as session:
             row = session.query(AnalysisHistory).filter(AnalysisHistory.query_id == query_id).first()
             if row is None:
-                self.fail("未找到保存的历史记录")
+                self.fail("\u672a\u627e\u5230\u4fdd\u5b58\u7684\u5386\u53f2\u8bb0\u5f55")
             self.assertEqual(row.id, saved)
             record_id = row.id
 
@@ -1313,14 +1313,14 @@ class AnalysisHistoryTestCase(unittest.TestCase):
             result=self._build_result(),
             query_id=query_id,
             report_type="simple",
-            news_content="新闻摘要",
+            news_content="\u65b0\u95fb\u6458\u8981",
             context_snapshot=None,
             save_snapshot=False,
         )
         self.assertGreater(saved, 0)
 
         fallback_fundamental = {
-            "belong_boards": [{"name": "白酒", "type": "行业"}],
+            "belong_boards": [{"name": "\u767d\u9152", "type": "\u884c\u4e1a"}],
             "boards": {
                 "status": "failed",
                 "data": {},
@@ -1336,12 +1336,12 @@ class AnalysisHistoryTestCase(unittest.TestCase):
         with self.db.get_session() as session:
             row = session.query(AnalysisHistory).filter(AnalysisHistory.query_id == query_id).first()
             if row is None:
-                self.fail("未找到保存的历史记录")
+                self.fail("\u672a\u627e\u5230\u4fdd\u5b58\u7684\u5386\u53f2\u8bb0\u5f55")
             self.assertEqual(row.id, saved)
             record_id = row.id
 
         report = get_history_detail(str(record_id), db_manager=self.db)
-        self.assertEqual(report.details.belong_boards, [{"name": "白酒", "type": "行业"}])
+        self.assertEqual(report.details.belong_boards, [{"name": "\u767d\u9152", "type": "\u884c\u4e1a"}])
         self.assertIsNone(report.details.sector_rankings)
 
     def test_history_detail_returns_null_fundamental_fields_when_snapshot_absent(self) -> None:
@@ -1354,7 +1354,7 @@ class AnalysisHistoryTestCase(unittest.TestCase):
             result=self._build_result(),
             query_id=query_id,
             report_type="simple",
-            news_content="新闻摘要",
+            news_content="\u65b0\u95fb\u6458\u8981",
             context_snapshot=None,
             save_snapshot=False,
         )
@@ -1363,7 +1363,7 @@ class AnalysisHistoryTestCase(unittest.TestCase):
         with self.db.get_session() as session:
             row = session.query(AnalysisHistory).filter(AnalysisHistory.query_id == query_id).first()
             if row is None:
-                self.fail("未找到保存的历史记录")
+                self.fail("\u672a\u627e\u5230\u4fdd\u5b58\u7684\u5386\u53f2\u8bb0\u5f55")
             self.assertEqual(row.id, saved)
             record_id = row.id
 
@@ -1399,7 +1399,7 @@ class AnalysisHistoryTestCase(unittest.TestCase):
         with self.db.get_session() as session:
             row = session.query(AnalysisHistory).filter(AnalysisHistory.query_id == query_id).first()
             if row is None:
-                self.fail("未找到保存的历史记录")
+                self.fail("\u672a\u627e\u5230\u4fdd\u5b58\u7684\u5386\u53f2\u8bb0\u5f55")
             self.assertEqual(row.id, saved)
             record_id = row.id
 
@@ -1414,10 +1414,10 @@ class AnalysisHistoryTestCase(unittest.TestCase):
 
         context_snapshot = {
             "fundamental_context": {
-                "belong_boards": [{"name": "白酒", "type": "行业"}],
+                "belong_boards": [{"name": "\u767d\u9152", "type": "\u884c\u4e1a"}],
                 "boards": {
                     "data": {
-                        "top": [{"name": "白酒", "change_pct": 2.8}],
+                        "top": [{"name": "\u767d\u9152", "change_pct": 2.8}],
                         "bottom": [],
                     }
                 },
@@ -1432,7 +1432,7 @@ class AnalysisHistoryTestCase(unittest.TestCase):
             result=self._build_result(),
             query_id=query_id,
             report_type="simple",
-            news_content="新闻摘要",
+            news_content="\u65b0\u95fb\u6458\u8981",
             context_snapshot=context_snapshot,
             save_snapshot=True,
         )
@@ -1441,15 +1441,15 @@ class AnalysisHistoryTestCase(unittest.TestCase):
         with self.db.get_session() as session:
             row = session.query(AnalysisHistory).filter(AnalysisHistory.query_id == query_id).first()
             if row is None:
-                self.fail("未找到保存的历史记录")
+                self.fail("\u672a\u627e\u5230\u4fdd\u5b58\u7684\u5386\u53f2\u8bb0\u5f55")
             self.assertEqual(row.id, saved)
             record_id = row.id
 
         report = get_history_detail(str(record_id), db_manager=self.db)
         self.assertEqual(report.meta.current_price, 1888.0)
         self.assertEqual(report.meta.change_pct, 1.56)
-        self.assertEqual(report.details.belong_boards, [{"name": "白酒", "type": "行业"}])
-        self.assertEqual(report.details.sector_rankings["top"][0]["name"], "白酒")
+        self.assertEqual(report.details.belong_boards, [{"name": "\u767d\u9152", "type": "\u884c\u4e1a"}])
+        self.assertEqual(report.details.sector_rankings["top"][0]["name"], "\u767d\u9152")
 
     def test_history_detail_returns_overview_and_sanitizes_snapshot(self) -> None:
         """History detail exposes the public overview separately from raw snapshot JSON."""
@@ -1463,7 +1463,7 @@ class AnalysisHistoryTestCase(unittest.TestCase):
             result=self._build_result(),
             query_id=query_id,
             report_type="simple",
-            news_content="新闻摘要",
+            news_content="\u65b0\u95fb\u6458\u8981",
             context_snapshot={
                 "enhanced_context": {"code": "600519"},
                 "analysis_context_pack_overview": overview,
@@ -1479,7 +1479,7 @@ class AnalysisHistoryTestCase(unittest.TestCase):
         with self.db.get_session() as session:
             row = session.query(AnalysisHistory).filter(AnalysisHistory.query_id == query_id).first()
             if row is None:
-                self.fail("未找到保存的历史记录")
+                self.fail("\u672a\u627e\u5230\u4fdd\u5b58\u7684\u5386\u53f2\u8bb0\u5f55")
             self.assertEqual(row.id, saved)
             record_id = row.id
 
@@ -1515,7 +1515,7 @@ class AnalysisHistoryTestCase(unittest.TestCase):
             result=self._build_result(),
             query_id=query_id,
             report_type="simple",
-            news_content="新闻摘要",
+            news_content="\u65b0\u95fb\u6458\u8981",
             context_snapshot={
                 "enhanced_context": {"code": "600519"},
                 "analysis_context_pack_overview": _analysis_context_pack_overview(),
@@ -1527,7 +1527,7 @@ class AnalysisHistoryTestCase(unittest.TestCase):
         with self.db.get_session() as session:
             row = session.query(AnalysisHistory).filter(AnalysisHistory.query_id == query_id).first()
             if row is None:
-                self.fail("未找到保存的历史记录")
+                self.fail("\u672a\u627e\u5230\u4fdd\u5b58\u7684\u5386\u53f2\u8bb0\u5f55")
             self.assertEqual(row.id, saved)
             record_id = row.id
             self.assertIsNone(row.context_snapshot)
@@ -1541,7 +1541,7 @@ class AnalysisHistoryTestCase(unittest.TestCase):
         """History markdown should preserve report_language for English reports."""
         result = AnalysisResult(
             code="AAPL",
-            name="股票AAPL",
+            name="\u80a1\u7968AAPL",
             sentiment_score=78,
             trend_prediction="Bullish",
             operation_advice="Buy",
@@ -1583,7 +1583,7 @@ class AnalysisHistoryTestCase(unittest.TestCase):
                 AnalysisHistory.query_id == "query_english_markdown_001"
             ).first()
             if row is None:
-                self.fail("未找到保存的历史记录")
+                self.fail("\u672a\u627e\u5230\u4fdd\u5b58\u7684\u5386\u53f2\u8bb0\u5f55")
             self.assertEqual(row.id, saved)
             record_id = row.id
 
@@ -1593,25 +1593,25 @@ class AnalysisHistoryTestCase(unittest.TestCase):
         self.assertIn("Stock Analysis Report", markdown)
         self.assertIn("Core Conclusion", markdown)
         self.assertIn("Unnamed Stock (AAPL)", markdown)
-        self.assertNotIn("核心结论", markdown)
+        self.assertNotIn("\u6838\u5fc3\u7ed3\u8bba", markdown)
 
     def test_history_markdown_returns_persisted_market_review_report(self) -> None:
         """Market review history should return the saved Markdown without rebuilding a stock report."""
         result = AnalysisResult(
             code="MARKET",
-            name="大盘复盘",
+            name="\u5927\u76d8\u590d\u76d8",
             sentiment_score=50,
-            trend_prediction="大盘复盘",
-            operation_advice="查看复盘",
-            analysis_summary="今日大盘复盘",
-            raw_response="# 🎯 大盘复盘\n\n## 今日大盘\n\n复盘正文",
+            trend_prediction="\u5927\u76d8\u590d\u76d8",
+            operation_advice="\u67e5\u770b\u590d\u76d8",
+            analysis_summary="\u4eca\u65e5\u5927\u76d8\u590d\u76d8",
+            raw_response="# 🎯 \u5927\u76d8\u590d\u76d8\n\n## \u4eca\u65e5\u5927\u76d8\n\n\u590d\u76d8\u6b63\u6587",
         )
 
         saved = self.db.save_analysis_history(
             result=result,
             query_id="market_review_query_001",
             report_type="market_review",
-            news_content="## 今日大盘\n\n复盘正文",
+            news_content="## \u4eca\u65e5\u5927\u76d8\n\n\u590d\u76d8\u6b63\u6587",
             context_snapshot=None,
             save_snapshot=False,
         )
@@ -1622,29 +1622,29 @@ class AnalysisHistoryTestCase(unittest.TestCase):
                 AnalysisHistory.query_id == "market_review_query_001"
             ).first()
             if row is None:
-                self.fail("未找到保存的历史记录")
+                self.fail("\u672a\u627e\u5230\u4fdd\u5b58\u7684\u5386\u53f2\u8bb0\u5f55")
             self.assertEqual(row.id, saved)
             record_id = row.id
 
         markdown = HistoryService(self.db).get_markdown_report(str(record_id))
 
-        self.assertEqual(markdown, "# 🎯 大盘复盘\n\n## 今日大盘\n\n复盘正文")
+        self.assertEqual(markdown, "# 🎯 \u5927\u76d8\u590d\u76d8\n\n## \u4eca\u65e5\u5927\u76d8\n\n\u590d\u76d8\u6b63\u6587")
 
     def test_history_markdown_collapses_unavailable_chip_structure(self) -> None:
         result = AnalysisResult(
             code="600519",
-            name="贵州茅台",
+            name="\u8d35\u5dde\u8305\u53f0",
             sentiment_score=72,
-            trend_prediction="看多",
-            operation_advice="持有",
-            analysis_summary="稳健",
+            trend_prediction="\u770b\u591a",
+            operation_advice="\u6301\u6709",
+            analysis_summary="\u7a33\u5065",
             dashboard={
                 "data_perspective": {
                     "chip_structure": {
-                        "profit_ratio": "数据缺失，无法判断",
-                        "avg_cost": "数据缺失，无法判断",
-                        "concentration": "数据缺失，无法判断",
-                        "chip_health": "数据缺失，无法判断",
+                        "profit_ratio": "\u6570\u636e\u7f3a\u5931，\u65e0\u6cd5\u5224\u65ad",
+                        "avg_cost": "\u6570\u636e\u7f3a\u5931，\u65e0\u6cd5\u5224\u65ad",
+                        "concentration": "\u6570\u636e\u7f3a\u5931，\u65e0\u6cd5\u5224\u65ad",
+                        "chip_health": "\u6570\u636e\u7f3a\u5931，\u65e0\u6cd5\u5224\u65ad",
                     }
                 }
             },
@@ -1665,29 +1665,29 @@ class AnalysisHistoryTestCase(unittest.TestCase):
                 AnalysisHistory.query_id == "query_chip_unavailable_001"
             ).first()
             if row is None:
-                self.fail("未找到保存的历史记录")
+                self.fail("\u672a\u627e\u5230\u4fdd\u5b58\u7684\u5386\u53f2\u8bb0\u5f55")
             self.assertEqual(row.id, saved)
             record_id = row.id
 
         markdown = HistoryService(self.db).get_markdown_report(str(record_id))
 
         self.assertIsNotNone(markdown)
-        self.assertIn("**筹码**: 筹码分布未启用或数据源暂不可用，未纳入筹码判断。", markdown)
-        self.assertEqual(markdown.count("数据缺失，无法判断"), 0)
+        self.assertIn("**\u7b79\u7801**: \u7b79\u7801\u5206\u5e03\u672a\u542f\u7528\u6216\u6570\u636e\u6e90\u6682\u4e0d\u53ef\u7528，\u672a\u7eb3\u5165\u7b79\u7801\u5224\u65ad。", markdown)
+        self.assertEqual(markdown.count("\u6570\u636e\u7f3a\u5931，\u65e0\u6cd5\u5224\u65ad"), 0)
 
     def test_history_detail_returns_persisted_market_review_report(self) -> None:
         """Market review detail should surface the saved recap content for Web history clicks."""
         if get_history_detail is None:
             self.skipTest("fastapi is not installed in this test environment")
 
-        report_content = "# 🎯 大盘复盘\n\n## 今日大盘\n\n复盘正文"
+        report_content = "# 🎯 \u5927\u76d8\u590d\u76d8\n\n## \u4eca\u65e5\u5927\u76d8\n\n\u590d\u76d8\u6b63\u6587"
         result = AnalysisResult(
             code="MARKET",
-            name="大盘复盘",
+            name="\u5927\u76d8\u590d\u76d8",
             sentiment_score=50,
-            trend_prediction="大盘复盘",
-            operation_advice="查看复盘",
-            analysis_summary="今日大盘复盘",
+            trend_prediction="\u5927\u76d8\u590d\u76d8",
+            operation_advice="\u67e5\u770b\u590d\u76d8",
+            analysis_summary="\u4eca\u65e5\u5927\u76d8\u590d\u76d8",
             raw_response=report_content,
         )
 
@@ -1695,7 +1695,7 @@ class AnalysisHistoryTestCase(unittest.TestCase):
             result=result,
             query_id="market_review_query_detail_001",
             report_type="market_review",
-            news_content="## 今日大盘\n\n复盘正文",
+            news_content="## \u4eca\u65e5\u5927\u76d8\n\n\u590d\u76d8\u6b63\u6587",
             context_snapshot=None,
             save_snapshot=False,
         )
@@ -1706,7 +1706,7 @@ class AnalysisHistoryTestCase(unittest.TestCase):
                 AnalysisHistory.query_id == "market_review_query_detail_001"
             ).first()
             if row is None:
-                self.fail("未找到保存的历史记录")
+                self.fail("\u672a\u627e\u5230\u4fdd\u5b58\u7684\u5386\u53f2\u8bb0\u5f55")
             self.assertEqual(row.id, saved)
             record_id = row.id
 
@@ -1725,10 +1725,10 @@ class AnalysisHistoryTestCase(unittest.TestCase):
 
         result = AnalysisResult(
             code="AAPL",
-            name="股票AAPL",
+            name="\u80a1\u7968AAPL",
             sentiment_score=78,
-            trend_prediction="看多",
-            operation_advice="买入",
+            trend_prediction="\u770b\u591a",
+            operation_advice="\u4e70\u5165",
             analysis_summary="Momentum remains constructive.",
             report_language="en",
         )
@@ -1748,7 +1748,7 @@ class AnalysisHistoryTestCase(unittest.TestCase):
                 AnalysisHistory.query_id == "query_english_detail_001"
             ).first()
             if row is None:
-                self.fail("未找到保存的历史记录")
+                self.fail("\u672a\u627e\u5230\u4fdd\u5b58\u7684\u5386\u53f2\u8bb0\u5f55")
             self.assertEqual(row.id, saved)
             record_id = row.id
 
@@ -1766,7 +1766,7 @@ class AnalysisHistoryTestCase(unittest.TestCase):
         """English bias status should keep the correct non-risk emoji in markdown."""
         result = AnalysisResult(
             code="AAPL",
-            name="股票AAPL",
+            name="\u80a1\u7968AAPL",
             sentiment_score=80,
             trend_prediction="Bullish",
             operation_advice="Buy",
@@ -1803,7 +1803,7 @@ class AnalysisHistoryTestCase(unittest.TestCase):
                 AnalysisHistory.query_id == "query_english_markdown_bias_001"
             ).first()
             if row is None:
-                self.fail("未找到保存的历史记录")
+                self.fail("\u672a\u627e\u5230\u4fdd\u5b58\u7684\u5386\u53f2\u8bb0\u5f55")
             self.assertEqual(row.id, saved)
             record_id = row.id
 
@@ -1814,7 +1814,7 @@ class AnalysisHistoryTestCase(unittest.TestCase):
         self.assertNotIn("🚨Safe", markdown)
 
     def test_delete_analysis_history_records_also_cleans_backtests_and_decision_signals(self) -> None:
-        """删除历史记录时应一并清理关联回测结果和决策信号。"""
+        """\u5220\u9664\u5386\u53f2\u8bb0\u5f55\u65f6\u5e94\u4e00\u5e76\u6e05\u7406\u5173\u8054\u56de\u6d4b\u7ed3\u679c\u548c\u51b3\u7b56\u4fe1\u53f7。"""
         record_id = self._save_history("query_delete_001")
         linked_signal_id = None
 
@@ -1829,7 +1829,7 @@ class AnalysisHistoryTestCase(unittest.TestCase):
             ))
             linked_signal = DecisionSignalRecord(
                 stock_code="600519",
-                stock_name="贵州茅台",
+                stock_name="\u8d35\u5dde\u8305\u53f0",
                 market="cn",
                 source_type="analysis",
                 source_report_id=record_id,
@@ -1837,7 +1837,7 @@ class AnalysisHistoryTestCase(unittest.TestCase):
                 market_phase="intraday",
                 trigger_source="api",
                 action="buy",
-                action_label="买入",
+                action_label="\u4e70\u5165",
                 reason="linked",
                 plan_quality="minimal",
                 status="active",
@@ -1864,7 +1864,7 @@ class AnalysisHistoryTestCase(unittest.TestCase):
             ))
             session.add(DecisionSignalRecord(
                 stock_code="000001",
-                stock_name="平安银行",
+                stock_name="\u5e73\u5b89\u94f6\u884c",
                 market="cn",
                 source_type="analysis",
                 source_report_id=record_id + 999,
@@ -1872,7 +1872,7 @@ class AnalysisHistoryTestCase(unittest.TestCase):
                 market_phase="intraday",
                 trigger_source="api",
                 action="watch",
-                action_label="观望",
+                action_label="\u89c2\u671b",
                 reason="unrelated",
                 plan_quality="minimal",
                 status="active",
@@ -1909,13 +1909,13 @@ class AnalysisHistoryTestCase(unittest.TestCase):
             )
 
     def test_delete_analysis_history_records_keeps_signals_for_nonexistent_history_id(self) -> None:
-        """不存在的历史 ID 不应触发弱关联 DecisionSignal 清理。"""
+        """\u4e0d\u5b58\u5728\u7684\u5386\u53f2 ID \u4e0d\u5e94\u89e6\u53d1\u5f31\u5173\u8054 DecisionSignal \u6e05\u7406。"""
         missing_id = 987654321
 
         with self.db.session_scope() as session:
             session.add(DecisionSignalRecord(
                 stock_code="600519",
-                stock_name="贵州茅台",
+                stock_name="\u8d35\u5dde\u8305\u53f0",
                 market="cn",
                 source_type="manual",
                 source_report_id=missing_id,
@@ -1923,7 +1923,7 @@ class AnalysisHistoryTestCase(unittest.TestCase):
                 market_phase="intraday",
                 trigger_source="api",
                 action="watch",
-                action_label="观望",
+                action_label="\u89c2\u671b",
                 reason="manual signal with unverified report id",
                 plan_quality="minimal",
                 status="active",
@@ -1941,13 +1941,13 @@ class AnalysisHistoryTestCase(unittest.TestCase):
             )
 
     def test_delete_analysis_history_records_keeps_manual_signal_with_same_report_id(self) -> None:
-        """source_report_id 是弱引用，真实 history 删除不应误删 manual/pre-report 信号。"""
+        """source_report_id \u662f\u5f31\u5f15\u7528，\u771f\u5b9e history \u5220\u9664\u4e0d\u5e94\u8bef\u5220 manual/pre-report \u4fe1\u53f7。"""
         record_id = self._save_history("query_delete_manual_collision")
 
         with self.db.session_scope() as session:
             session.add(DecisionSignalRecord(
                 stock_code="600519",
-                stock_name="贵州茅台",
+                stock_name="\u8d35\u5dde\u8305\u53f0",
                 market="cn",
                 source_type="analysis",
                 source_report_id=record_id,
@@ -1955,14 +1955,14 @@ class AnalysisHistoryTestCase(unittest.TestCase):
                 market_phase="intraday",
                 trigger_source="api",
                 action="buy",
-                action_label="买入",
+                action_label="\u4e70\u5165",
                 reason="history-bound signal",
                 plan_quality="minimal",
                 status="active",
             ))
             session.add(DecisionSignalRecord(
                 stock_code="600519",
-                stock_name="贵州茅台",
+                stock_name="\u8d35\u5dde\u8305\u53f0",
                 market="cn",
                 source_type="manual",
                 source_report_id=record_id,
@@ -1970,7 +1970,7 @@ class AnalysisHistoryTestCase(unittest.TestCase):
                 market_phase="intraday",
                 trigger_source="api",
                 action="watch",
-                action_label="观望",
+                action_label="\u89c2\u671b",
                 reason="manual signal with caller-supplied report id",
                 plan_quality="minimal",
                 status="active",
@@ -1994,7 +1994,7 @@ class AnalysisHistoryTestCase(unittest.TestCase):
             )
 
     def test_delete_analysis_history_records_cleans_only_existing_ids_in_mixed_batch(self) -> None:
-        """混合存在/不存在 ID 时，只清理实际存在历史记录的关联数据。"""
+        """\u6df7\u5408\u5b58\u5728/\u4e0d\u5b58\u5728 ID \u65f6，\u53ea\u6e05\u7406\u5b9e\u9645\u5b58\u5728\u5386\u53f2\u8bb0\u5f55\u7684\u5173\u8054\u6570\u636e。"""
         record_id = self._save_history("query_delete_mixed")
         missing_id = record_id + 987654
 
@@ -2009,7 +2009,7 @@ class AnalysisHistoryTestCase(unittest.TestCase):
             ))
             session.add(DecisionSignalRecord(
                 stock_code="600519",
-                stock_name="贵州茅台",
+                stock_name="\u8d35\u5dde\u8305\u53f0",
                 market="cn",
                 source_type="analysis",
                 source_report_id=record_id,
@@ -2017,14 +2017,14 @@ class AnalysisHistoryTestCase(unittest.TestCase):
                 market_phase="intraday",
                 trigger_source="api",
                 action="buy",
-                action_label="买入",
+                action_label="\u4e70\u5165",
                 reason="linked",
                 plan_quality="minimal",
                 status="active",
             ))
             session.add(DecisionSignalRecord(
                 stock_code="000001",
-                stock_name="平安银行",
+                stock_name="\u5e73\u5b89\u94f6\u884c",
                 market="cn",
                 source_type="manual",
                 source_report_id=missing_id,
@@ -2032,7 +2032,7 @@ class AnalysisHistoryTestCase(unittest.TestCase):
                 market_phase="intraday",
                 trigger_source="api",
                 action="watch",
-                action_label="观望",
+                action_label="\u89c2\u671b",
                 reason="weak report id collision",
                 plan_quality="minimal",
                 status="active",

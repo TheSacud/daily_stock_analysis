@@ -37,7 +37,7 @@ class _DummyResponse:
 
 def _make_sina_payload() -> str:
     fields = [
-        "大秦铁路", "5.100", "5.000", "5.190", "5.200", "5.050", "5.180", "5.190",
+        "\u5927\u79e6\u94c1\u8def", "5.100", "5.000", "5.190", "5.200", "5.050", "5.180", "5.190",
         "123456", "789012"
     ]
     fields.extend(["0"] * 20)
@@ -56,7 +56,7 @@ def _make_tencent_payload(
     total_mv_yi: str = "1.20",
 ) -> str:
     fields = ["0"] * 50
-    fields[1] = "大秦铁路"
+    fields[1] = "\u5927\u79e6\u94c1\u8def"
     fields[2] = "601006"
     fields[3] = price
     fields[4] = "5.00"
@@ -98,11 +98,11 @@ def test_sina_realtime_success_logs_endpoint(caplog, monkeypatch, akshare_fetche
         quote = akshare_fetcher._get_stock_realtime_quote_sina("601006")
 
     assert quote is not None
-    assert quote.name == "大秦铁路"
+    assert quote.name == "\u5927\u79e6\u94c1\u8def"
     assert quote.price == 5.19
     assert breaker.successes == ["akshare_sina"]
     assert f"endpoint={SINA_REALTIME_ENDPOINT}" in caplog.text
-    assert "[实时行情-新浪] 601006 大秦铁路:" in caplog.text
+    assert "[\u5b9e\u65f6\u884c\u60c5-\u65b0\u6d6a] 601006 \u5927\u79e6\u94c1\u8def:" in caplog.text
 
 
 def test_sina_realtime_remote_disconnect_logs_category(caplog, monkeypatch, akshare_fetcher):
@@ -123,7 +123,7 @@ def test_sina_realtime_remote_disconnect_logs_category(caplog, monkeypatch, aksh
     assert source_key == "akshare_sina"
     assert "category=remote_disconnect" in message
     assert f"endpoint={SINA_REALTIME_ENDPOINT}" in caplog.text
-    assert "新浪 实时行情接口失败:" in caplog.text
+    assert "\u65b0\u6d6a \u5b9e\u65f6\u884c\u60c5\u63a5\u53e3\u5931\u8d25:" in caplog.text
 
 
 def test_tencent_realtime_http_status_logs_endpoint(caplog, monkeypatch, akshare_fetcher):
@@ -158,13 +158,13 @@ def test_tencent_realtime_success_logs_endpoint(caplog, monkeypatch, akshare_fet
         quote = akshare_fetcher._get_stock_realtime_quote_tencent("601006")
 
     assert quote is not None
-    assert quote.name == "大秦铁路"
+    assert quote.name == "\u5927\u79e6\u94c1\u8def"
     assert quote.price == 5.19
     assert quote.volume == 123400
     assert quote.amount == 6404500
     assert breaker.successes == ["akshare_tencent"]
     assert f"endpoint={TENCENT_REALTIME_ENDPOINT}" in caplog.text
-    assert "[实时行情-腾讯] 601006 大秦铁路:" in caplog.text
+    assert "[\u5b9e\u65f6\u884c\u60c5-\u817e\u8baf] 601006 \u5927\u79e6\u94c1\u8def:" in caplog.text
 
 
 def test_tencent_realtime_volume_keeps_share_unit_when_turnover_matches(monkeypatch, akshare_fetcher):
@@ -226,18 +226,18 @@ def test_hot_stocks_uses_eastmoney_hot_ranking_when_available(monkeypatch, aksha
             {
                 "rank": 1,
                 "code": "SZ000066",
-                "name": "中国长城",
+                "name": "\u4e2d\u56fd\u957f\u57ce",
                 "price": 21.8,
                 "change_pct": 9.99,
-                "source": "东方财富人气榜",
+                "source": "\u4e1c\u65b9\u8d22\u5bcc\u4eba\u6c14\u699c",
             }
         ],
     )
 
     result = akshare_fetcher.get_hot_stocks(5)
 
-    assert result[0]["source"] == "东方财富人气榜"
-    assert result[0]["name"] == "中国长城"
+    assert result[0]["source"] == "\u4e1c\u65b9\u8d22\u5bcc\u4eba\u6c14\u699c"
+    assert result[0]["name"] == "\u4e2d\u56fd\u957f\u57ce"
 
 
 def test_hot_stocks_falls_back_to_xueqiu_when_primary_sources_empty(monkeypatch, akshare_fetcher):
@@ -257,10 +257,10 @@ def test_hot_stocks_falls_back_to_xueqiu_when_primary_sources_empty(monkeypatch,
             {
                 "rank": 1,
                 "code": "SH600004",
-                "name": "华夏银行",
+                "name": "\u534e\u590f\u94f6\u884c",
                 "price": 7.21,
                 "change_pct": None,
-                "source": "雪球关注榜",
+                "source": "\u96ea\u7403\u5173\u6ce8\u699c",
             }
         ]
 
@@ -275,10 +275,10 @@ def test_hot_stocks_falls_back_to_xueqiu_when_primary_sources_empty(monkeypatch,
         {
             "rank": 1,
             "code": "SH600004",
-            "name": "华夏银行",
+            "name": "\u534e\u590f\u94f6\u884c",
             "price": 7.21,
             "change_pct": None,
-            "source": "雪球关注榜",
+            "source": "\u96ea\u7403\u5173\u6ce8\u699c",
         }
     ]
 
@@ -287,49 +287,49 @@ def test_limit_up_pool_zero_pads_first_seal_times_before_sorting(monkeypatch, ak
     df = pd.DataFrame(
         [
             {
-                "代码": "000002",
-                "名称": "午后股",
-                "涨跌幅": 10.0,
-                "最新价": 12.3,
-                "成交额": 1,
-                "换手率": 2,
-                "封板资金": 3,
-                "首次封板时间": 141354,
-                "最后封板时间": 141500,
-                "炸板次数": 0,
-                "涨停统计": "1/1",
-                "连板数": 1,
-                "所属行业": "地产",
+                "\u4ee3\u7801": "000002",
+                "\u540d\u79f0": "\u5348\u540e\u80a1",
+                "\u6da8\u8dcc\u5e45": 10.0,
+                "\u6700\u65b0\u4ef7": 12.3,
+                "\u6210\u4ea4\u989d": 1,
+                "\u6362\u624b\u7387": 2,
+                "\u5c01\u677f\u8d44\u91d1": 3,
+                "\u9996\u6b21\u5c01\u677f\u65f6\u95f4": 141354,
+                "\u6700\u540e\u5c01\u677f\u65f6\u95f4": 141500,
+                "\u70b8\u677f\u6b21\u6570": 0,
+                "\u6da8\u505c\u7edf\u8ba1": "1/1",
+                "\u8fde\u677f\u6570": 1,
+                "\u6240\u5c5e\u884c\u4e1a": "\u5730\u4ea7",
             },
             {
-                "代码": "000001",
-                "名称": "竞价股",
-                "涨跌幅": 10.0,
-                "最新价": 10.0,
-                "成交额": 1,
-                "换手率": 2,
-                "封板资金": 3,
-                "首次封板时间": 92500,
-                "最后封板时间": 93000,
-                "炸板次数": 0,
-                "涨停统计": "1/1",
-                "连板数": 1,
-                "所属行业": "计算机",
+                "\u4ee3\u7801": "000001",
+                "\u540d\u79f0": "\u7ade\u4ef7\u80a1",
+                "\u6da8\u8dcc\u5e45": 10.0,
+                "\u6700\u65b0\u4ef7": 10.0,
+                "\u6210\u4ea4\u989d": 1,
+                "\u6362\u624b\u7387": 2,
+                "\u5c01\u677f\u8d44\u91d1": 3,
+                "\u9996\u6b21\u5c01\u677f\u65f6\u95f4": 92500,
+                "\u6700\u540e\u5c01\u677f\u65f6\u95f4": 93000,
+                "\u70b8\u677f\u6b21\u6570": 0,
+                "\u6da8\u505c\u7edf\u8ba1": "1/1",
+                "\u8fde\u677f\u6570": 1,
+                "\u6240\u5c5e\u884c\u4e1a": "\u8ba1\u7b97\u673a",
             },
             {
-                "代码": "000003",
-                "名称": "早盘股",
-                "涨跌幅": 10.0,
-                "最新价": 11.0,
-                "成交额": 1,
-                "换手率": 2,
-                "封板资金": 3,
-                "首次封板时间": 101500,
-                "最后封板时间": 102000,
-                "炸板次数": 0,
-                "涨停统计": "1/1",
-                "连板数": 1,
-                "所属行业": "电子",
+                "\u4ee3\u7801": "000003",
+                "\u540d\u79f0": "\u65e9\u76d8\u80a1",
+                "\u6da8\u8dcc\u5e45": 10.0,
+                "\u6700\u65b0\u4ef7": 11.0,
+                "\u6210\u4ea4\u989d": 1,
+                "\u6362\u624b\u7387": 2,
+                "\u5c01\u677f\u8d44\u91d1": 3,
+                "\u9996\u6b21\u5c01\u677f\u65f6\u95f4": 101500,
+                "\u6700\u540e\u5c01\u677f\u65f6\u95f4": 102000,
+                "\u70b8\u677f\u6b21\u6570": 0,
+                "\u6da8\u505c\u7edf\u8ba1": "1/1",
+                "\u8fde\u677f\u6570": 1,
+                "\u6240\u5c5e\u884c\u4e1a": "\u7535\u5b50",
             },
         ]
     )

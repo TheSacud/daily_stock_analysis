@@ -2,9 +2,9 @@ import { validateStockCode } from './validation';
 import { normalizeStockCode } from './stockCode';
 
 const EXCHANGE_PREFIXES = new Set(['SH', 'SZ', 'BJ', 'HK', 'US', 'SS']);
-const LOWERCASE_TICKER_CONTEXT_RE = /换成|改看|分析|看看|研究|诊断|比较|对比|\bvs\b|和[^，。,.!?！？]{0,40}比|差异(?!化)|区别|不同|相比|对照|比一比|哪个|哪只|哪一个|谁更|更值得|更适合|怎么选|选哪|二选一/i;
+const LOWERCASE_TICKER_CONTEXT_RE = /\u6362\u6210|\u6539\u770b|\u5206\u6790|\u770b\u770b|\u7814\u7a76|\u8bca\u65ad|\u6bd4\u8f83|\u5bf9\u6bd4|\bvs\b|\u548c[^\uFF0C\u3002,.!?\uFF01\uFF1F]{0,40}\u6bd4|\u5dee\u5f02(?!\u5316)|\u533a\u522b|\u4e0d\u540c|\u76f8\u6bd4|\u5bf9\u7167|\u6bd4\u4e00\u6bd4|\u54ea\u4e2a|\u54ea\u53ea|\u54ea\u4e00\u4e2a|\u8c01\u66f4|\u66f4\u503c\u5f97|\u66f4\u9002\u5408|\u600e\u4e48\u9009|\u9009\u54ea|\u4e8c\u9009\u4e00/i;
 const CONTEXTUAL_INDICATOR_TOKENS = new Set(['MA']);
-const INDICATOR_CONTEXT_RE = /指标|均线|移动平均|排列|多头|空头|金叉|死叉|支撑|压力|MA\d|SMA|EMA/i;
+const INDICATOR_CONTEXT_RE = /\u6307\u6807|\u5747\u7ebf|\u79fb\u52a8\u5e73\u5747|\u6392\u5217|\u591a\u5934|\u7a7a\u5934|\u91d1\u53c9|\u6b7b\u53c9|\u652f\u6491|\u538b\u529b|MA\d|SMA|EMA/i;
 
 // Mirrors backend _COMMON_WORDS for #1596 free-text extraction only.
 // Explicit validation via validateStockCode() intentionally keeps its original contract.

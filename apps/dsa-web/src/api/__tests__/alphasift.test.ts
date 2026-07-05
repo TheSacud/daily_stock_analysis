@@ -137,20 +137,20 @@ describe('alphasiftApi', () => {
         provider_used: 'akshare',
         hotspots: [
           {
-            topic: 'AI算力',
+            topic: 'AI\u7b97\u529b',
             heat_score: 88,
             trend_score: 12,
             sample_stock_count: 8,
-            leaders: ['中际旭创'],
+            leaders: ['\u4e2d\u9645\u65ed\u521b'],
           },
         ],
         hotspot_count: 1,
         details: {
-          AI绠楀姏: {
+          AI\u7ee0\u6940\u59cf: {
             enabled: true,
             provider: 'akshare',
-            topic: 'AI绠楀姏',
-            route: [{ title: '盘中发酵', description: '事件摘要' }],
+            topic: 'AI\u7ee0\u6940\u59cf',
+            route: [{ title: '\u76d8\u4e2d\u53d1\u9175', description: '\u4e8b\u4ef6\u6458\u8981' }],
             stocks: [],
             stock_count: 0,
           },
@@ -201,25 +201,25 @@ describe('alphasiftApi', () => {
       data: {
         enabled: true,
         provider: 'akshare',
-        topic: '玻璃基板',
-        summary: '玻璃基板盘中发酵',
-        route: [{ title: '盘中发酵', description: '出现大笔买入' }],
-        stocks: [{ code: '920438', name: '戈碧迦', role: '异动核心' }],
-        leader_stocks: [{ code: '920438', name: '戈碧迦', role: '异动核心' }],
+        topic: '\u73bb\u7483\u57fa\u677f',
+        summary: '\u73bb\u7483\u57fa\u677f\u76d8\u4e2d\u53d1\u9175',
+        route: [{ title: '\u76d8\u4e2d\u53d1\u9175', description: '\u51fa\u73b0\u5927\u7b14\u4e70\u5165' }],
+        stocks: [{ code: '920438', name: '\u6208\u78a7\u8fe6', role: '\u5f02\u52a8\u6838\u5fc3' }],
+        leader_stocks: [{ code: '920438', name: '\u6208\u78a7\u8fe6', role: '\u5f02\u52a8\u6838\u5fc3' }],
         stock_count: 1,
       },
     });
 
-    const result = await alphasiftApi.getHotspotDetail({ topic: '玻璃基板', provider: 'akshare' });
+    const result = await alphasiftApi.getHotspotDetail({ topic: '\u73bb\u7483\u57fa\u677f', provider: 'akshare' });
 
     expect(get).toHaveBeenCalledWith('/api/v1/alphasift/hotspots/%E7%8E%BB%E7%92%83%E5%9F%BA%E6%9D%BF', {
       params: { provider: 'akshare', refresh: false },
       timeout: 300000,
     });
-    expect(result.topic).toBe('玻璃基板');
+    expect(result.topic).toBe('\u73bb\u7483\u57fa\u677f');
     expect(result.stockCount).toBe(1);
-    expect(result.stocks[0].name).toBe('戈碧迦');
-    expect(result.leaderStocks?.[0].name).toBe('戈碧迦');
+    expect(result.stocks[0].name).toBe('\u6208\u78a7\u8fe6');
+    expect(result.leaderStocks?.[0].name).toBe('\u6208\u78a7\u8fe6');
   });
 
   it('uses a long timeout for LLM-backed screening', async () => {
@@ -247,7 +247,7 @@ describe('alphasiftApi', () => {
         task_id: 'screen-task-1',
         trace_id: 'screen-task-1',
         status: 'pending',
-        message: 'AlphaSift 选股任务已提交',
+        message: 'AlphaSift \u9009\u80a1\u4efb\u52a1\u5df2\u63d0\u4ea4',
         strategy: 'dual_low',
         market: 'cn',
         max_results: 3,
@@ -271,7 +271,7 @@ describe('alphasiftApi', () => {
         trace_id: 'screen-task-1',
         status: 'completed',
         progress: 100,
-        message: '任务执行完成',
+        message: '\u4efb\u52a1\u6267\u884c\u5b8c\u6210',
         result: {
           enabled: true,
           candidates: [],

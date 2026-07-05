@@ -169,7 +169,7 @@ class MarketCommandRegionFilterTestCase(unittest.TestCase):
         runtime_module.build_market_review_runtime.assert_not_called()
         notify_notifier.send.assert_called_once()
         sent = notify_notifier.send.call_args.args[0]
-        self.assertIn("休市", sent)
+        self.assertIn("\u4f11\u5e02", sent)
         self.assertEqual(notify_notifier.send.call_args.kwargs["route_type"], "report")
 
     def test_trading_day_check_disabled_does_not_pass_override(self) -> None:
@@ -237,7 +237,7 @@ class MarketCommandRegionFilterTestCase(unittest.TestCase):
             response = cmd.execute(message, [])
 
         release_market_review_lock.assert_called_once_with(lock_token)
-        self.assertEqual(response.text, "❌ 错误：大盘复盘启动失败，已释放运行锁；请稍后重试")
+        self.assertEqual(response.text, "❌ \u9519\u8bef：\u5927\u76d8\u590d\u76d8\u542f\u52a8\u5931\u8d25，\u5df2\u91ca\u653e\u8fd0\u884c\u9501；\u8bf7\u7a0d\u540e\u91cd\u8bd5")
 
 
 

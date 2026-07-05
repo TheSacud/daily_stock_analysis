@@ -19,7 +19,7 @@ describe('reportLanguage ko support', () => {
   });
 
   it('keeps zh/en report copy unchanged', () => {
-    expect(getReportText('zh').keyInsights).toBe('核心洞察');
+    expect(getReportText('zh').keyInsights).toBe('\u6838\u5fc3\u6d1e\u5bdf');
     expect(getReportText('en').keyInsights).toBe('KEY INSIGHTS');
   });
 

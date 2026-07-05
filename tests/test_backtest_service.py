@@ -55,11 +55,11 @@ class BacktestServiceTestCase(unittest.TestCase):
                 AnalysisHistory(
                     query_id="q1",
                     code="600519",
-                    name="贵州茅台",
+                    name="\u8d35\u5dde\u8305\u53f0",
                     report_type="simple",
                     sentiment_score=80,
-                    operation_advice="买入",
-                    trend_prediction="看多",
+                    operation_advice="\u4e70\u5165",
+                    trend_prediction="\u770b\u591a",
                     analysis_summary="test",
                     stop_loss=95.0,
                     take_profit=110.0,
@@ -117,7 +117,7 @@ class BacktestServiceTestCase(unittest.TestCase):
                 AnalysisHistory(
                     query_id=query_id,
                     code=code,
-                    name="贵州茅台",
+                    name="\u8d35\u5dde\u8305\u53f0",
                     report_type="simple",
                     sentiment_score=60,
                     operation_advice=operation_advice,
@@ -190,7 +190,7 @@ class BacktestServiceTestCase(unittest.TestCase):
             engine_version=engine_version,
             eval_status="completed",
             evaluated_at=datetime(2024, 1, 20, 0, 0, 0),
-            operation_advice="买入",
+            operation_advice="\u4e70\u5165",
             position_recommendation="long",
             start_price=100.0,
             end_close=101.0,
@@ -213,7 +213,7 @@ class BacktestServiceTestCase(unittest.TestCase):
         self.assertEqual(stats2["saved"], 0)
         self.assertEqual(self._count_results(), 1)
         self.assertEqual(stats2["diagnostics"]["empty_reason"], "no_new_results")
-        self.assertIn("历史分析记录已存在", stats2["message"] or "")
+        self.assertIn("\u5386\u53f2\u5206\u6790\u8bb0\u5f55\u5df2\u5b58\u5728", stats2["message"] or "")
 
         # Force should replace existing result without unique constraint errors
         stats3 = service.run_backtest(code="600519", force=True, eval_window_days=3, min_age_days=0, limit=10)
@@ -256,8 +256,8 @@ class BacktestServiceTestCase(unittest.TestCase):
             code="600519.SH",
             analysis_date=date(2024, 1, 2),
             created_at=datetime(2024, 1, 2, 0, 0, 0),
-            operation_advice="买入",
-            trend_prediction="看多",
+            operation_advice="\u4e70\u5165",
+            trend_prediction="\u770b\u591a",
             start_close=100.0,
             forward_bars=[
                 StockDaily(code="600519.SH", date=date(2024, 1, 3), high=111.0, low=100.0, close=105.0),
@@ -294,11 +294,11 @@ class BacktestServiceTestCase(unittest.TestCase):
                 AnalysisHistory(
                     query_id="q_compact_history_sh",
                     code="SH600519",
-                    name="贵州茅台",
+                    name="\u8d35\u5dde\u8305\u53f0",
                     report_type="simple",
                     sentiment_score=60,
-                    operation_advice="买入",
-                    trend_prediction="看多",
+                    operation_advice="\u4e70\u5165",
+                    trend_prediction="\u770b\u591a",
                     analysis_summary="compact history code with canonical query",
                     stop_loss=None,
                     take_profit=None,
@@ -348,8 +348,8 @@ class BacktestServiceTestCase(unittest.TestCase):
             code="SS600519",
             analysis_date=date(2024, 2, 20),
             created_at=datetime(2024, 2, 20, 0, 0, 0),
-            operation_advice="买入",
-            trend_prediction="看多",
+            operation_advice="\u4e70\u5165",
+            trend_prediction="\u770b\u591a",
             start_close=100.0,
             forward_bars=[
                 StockDaily(code="SS600519", date=date(2024, 2, 21), high=102.0, low=99.0, close=101.0),
@@ -382,11 +382,11 @@ class BacktestServiceTestCase(unittest.TestCase):
                 AnalysisHistory(
                     query_id="q_compact_ss_history_bare_daily",
                     code="SS600519",
-                    name="贵州茅台",
+                    name="\u8d35\u5dde\u8305\u53f0",
                     report_type="simple",
                     sentiment_score=60,
-                    operation_advice="买入",
-                    trend_prediction="看多",
+                    operation_advice="\u4e70\u5165",
+                    trend_prediction="\u770b\u591a",
                     analysis_summary="compact ss history with bare daily data",
                     stop_loss=None,
                     take_profit=None,
@@ -446,11 +446,11 @@ class BacktestServiceTestCase(unittest.TestCase):
                 AnalysisHistory(
                     query_id="q_compact_forward_sh",
                     code="600519",
-                    name="贵州茅台",
+                    name="\u8d35\u5dde\u8305\u53f0",
                     report_type="simple",
                     sentiment_score=60,
-                    operation_advice="买入",
-                    trend_prediction="看多",
+                    operation_advice="\u4e70\u5165",
+                    trend_prediction="\u770b\u591a",
                     analysis_summary="bare history with compact forward bars",
                     stop_loss=None,
                     take_profit=None,
@@ -498,11 +498,11 @@ class BacktestServiceTestCase(unittest.TestCase):
                 AnalysisHistory(
                     query_id="q_compact_history_bj",
                     code="BJ920748",
-                    name="可转债",
+                    name="\u53ef\u8f6c\u503a",
                     report_type="simple",
                     sentiment_score=60,
-                    operation_advice="买入",
-                    trend_prediction="看多",
+                    operation_advice="\u4e70\u5165",
+                    trend_prediction="\u770b\u591a",
                     analysis_summary="BJ compact history code without query prefix",
                     stop_loss=None,
                     take_profit=None,
@@ -663,7 +663,7 @@ class BacktestServiceTestCase(unittest.TestCase):
 
     def test_run_backtest_rejects_invalid_market_suffix_length_input(self) -> None:
         service = BacktestService(self.db)
-        with self.assertRaisesRegex(ValueError, "非法股票代码格式"):
+        with self.assertRaisesRegex(ValueError, "\u975e\u6cd5\u80a1\u7968\u4ee3\u7801\u683c\u5f0f"):
             service.run_backtest(
                 code="600519.HK",
                 force=False,
@@ -678,7 +678,7 @@ class BacktestServiceTestCase(unittest.TestCase):
         service = BacktestService(self.db)
         for invalid_code in ("600519.SZ", "SH000001", "000001.SH", "920748.SH", "SH920748"):
             with self.subTest(invalid_code=invalid_code):
-                with self.assertRaisesRegex(ValueError, "非法股票代码格式"):
+                with self.assertRaisesRegex(ValueError, "\u975e\u6cd5\u80a1\u7968\u4ee3\u7801\u683c\u5f0f"):
                     service.run_backtest(
                         code=invalid_code,
                         force=False,
@@ -693,7 +693,7 @@ class BacktestServiceTestCase(unittest.TestCase):
         service = BacktestService(self.db)
         for invalid_code in ("600519.SZ", "SH000001", "000001.SH", "920748.SH", "SH920748"):
             with self.subTest(invalid_code=invalid_code):
-                with self.assertRaisesRegex(ValueError, "非法股票代码格式"):
+                with self.assertRaisesRegex(ValueError, "\u975e\u6cd5\u80a1\u7968\u4ee3\u7801\u683c\u5f0f"):
                     service.get_recent_evaluations(
                         code=invalid_code,
                         eval_window_days=3,
@@ -707,7 +707,7 @@ class BacktestServiceTestCase(unittest.TestCase):
         service = BacktestService(self.db)
         for invalid_code in ("600519.SZ", "SH000001", "000001.SH", "920748.SH", "SH920748"):
             with self.subTest(invalid_code=invalid_code):
-                with self.assertRaisesRegex(ValueError, "非法股票代码格式"):
+                with self.assertRaisesRegex(ValueError, "\u975e\u6cd5\u80a1\u7968\u4ee3\u7801\u683c\u5f0f"):
                     service.get_summary(
                         scope="stock",
                         code=invalid_code,
@@ -722,8 +722,8 @@ class BacktestServiceTestCase(unittest.TestCase):
             code="600519.SH",
             analysis_date=date(2024, 2, 1),
             created_at=datetime(2024, 2, 1, 0, 0, 0),
-            operation_advice="买入",
-            trend_prediction="看多",
+            operation_advice="\u4e70\u5165",
+            trend_prediction="\u770b\u591a",
             start_close=100.0,
             forward_bars=[
                 StockDaily(code="600519.SH", date=date(2024, 2, 2), high=101.0, low=95.0, close=96.0),
@@ -766,11 +766,11 @@ class BacktestServiceTestCase(unittest.TestCase):
                 AnalysisHistory(
                     query_id="q_dot_history_bare_daily",
                     code="600519.SH",
-                    name="贵州茅台",
+                    name="\u8d35\u5dde\u8305\u53f0",
                     report_type="simple",
                     sentiment_score=60,
-                    operation_advice="买入",
-                    trend_prediction="看多",
+                    operation_advice="\u4e70\u5165",
+                    trend_prediction="\u770b\u591a",
                     analysis_summary="dotted history with bare daily data",
                     stop_loss=None,
                     take_profit=None,
@@ -821,11 +821,11 @@ class BacktestServiceTestCase(unittest.TestCase):
                 AnalysisHistory(
                     query_id="q_shape_split",
                     code="600519",
-                    name="贵州茅台",
+                    name="\u8d35\u5dde\u8305\u53f0",
                     report_type="simple",
                     sentiment_score=60,
-                    operation_advice="买入",
-                    trend_prediction="看多",
+                    operation_advice="\u4e70\u5165",
+                    trend_prediction="\u770b\u591a",
                     analysis_summary="split code shape with start on dotted daily",
                     stop_loss=None,
                     take_profit=None,
@@ -879,8 +879,8 @@ class BacktestServiceTestCase(unittest.TestCase):
             code="AAPL.US",
             analysis_date=date(2024, 1, 3),
             created_at=datetime(2024, 1, 3, 0, 0, 0),
-            operation_advice="买入",
-            trend_prediction="看多",
+            operation_advice="\u4e70\u5165",
+            trend_prediction="\u770b\u591a",
             start_close=100.0,
             forward_bars=[
                 StockDaily(code="AAPL.US", date=date(2024, 1, 4), high=101.0, low=95.0, close=96.0),
@@ -911,8 +911,8 @@ class BacktestServiceTestCase(unittest.TestCase):
             code="AAPL",
             analysis_date=date(2024, 1, 6),
             created_at=datetime(2024, 1, 6, 0, 0, 0),
-            operation_advice="买入",
-            trend_prediction="看多",
+            operation_advice="\u4e70\u5165",
+            trend_prediction="\u770b\u591a",
             start_close=100.0,
             forward_bars=[
                 StockDaily(code="AAPL", date=date(2024, 1, 7), high=104.0, low=99.0, close=103.0),
@@ -957,8 +957,8 @@ class BacktestServiceTestCase(unittest.TestCase):
             code="AAPL.US",
             analysis_date=date(2024, 1, 8),
             created_at=datetime(2024, 1, 8, 0, 0, 0),
-            operation_advice="买入",
-            trend_prediction="看多",
+            operation_advice="\u4e70\u5165",
+            trend_prediction="\u770b\u591a",
             start_close=100.0,
             forward_bars=[
                 StockDaily(code="AAPL.US", date=date(2024, 1, 9), high=104.0, low=99.0, close=103.0),
@@ -1005,8 +1005,8 @@ class BacktestServiceTestCase(unittest.TestCase):
                 name="Apple",
                 report_type="simple",
                 sentiment_score=60,
-                operation_advice="买入",
-                trend_prediction="看多",
+                operation_advice="\u4e70\u5165",
+                trend_prediction="\u770b\u591a",
                 analysis_summary="legacy bare result",
                 created_at=datetime(2024, 1, 10, 0, 0, 0),
                 context_snapshot=json.dumps({"enhanced_context": {"date": "2024-01-10"}}),
@@ -1017,8 +1017,8 @@ class BacktestServiceTestCase(unittest.TestCase):
                 name="Apple",
                 report_type="simple",
                 sentiment_score=60,
-                operation_advice="买入",
-                trend_prediction="看多",
+                operation_advice="\u4e70\u5165",
+                trend_prediction="\u770b\u591a",
                 analysis_summary="legacy suffix result",
                 created_at=datetime(2024, 1, 11, 0, 0, 0),
                 context_snapshot=json.dumps({"enhanced_context": {"date": "2024-01-11"}}),
@@ -1035,7 +1035,7 @@ class BacktestServiceTestCase(unittest.TestCase):
                         engine_version="v1",
                         eval_status="completed",
                         evaluated_at=datetime(2024, 1, 20, 0, 0, 0),
-                        operation_advice="买入",
+                        operation_advice="\u4e70\u5165",
                         position_recommendation="long",
                         start_price=100.0,
                         end_close=103.0,
@@ -1053,7 +1053,7 @@ class BacktestServiceTestCase(unittest.TestCase):
                         engine_version="v1",
                         eval_status="completed",
                         evaluated_at=datetime(2024, 1, 21, 0, 0, 0),
-                        operation_advice="买入",
+                        operation_advice="\u4e70\u5165",
                         position_recommendation="long",
                         start_price=103.0,
                         end_close=105.0,
@@ -1120,11 +1120,11 @@ class BacktestServiceTestCase(unittest.TestCase):
                 AnalysisHistory(
                     query_id="q_hk_history_dot",
                     code="01810.HK",
-                    name="恒生指数成份股",
+                    name="\u6052\u751f\u6307\u6570\u6210\u4efd\u80a1",
                     report_type="simple",
                     sentiment_score=60,
-                    operation_advice="买入",
-                    trend_prediction="看多",
+                    operation_advice="\u4e70\u5165",
+                    trend_prediction="\u770b\u591a",
                     analysis_summary="HK history is dotted, daily is canonical",
                     stop_loss=None,
                     take_profit=None,
@@ -1180,11 +1180,11 @@ class BacktestServiceTestCase(unittest.TestCase):
                 AnalysisHistory(
                     query_id="q_hk_history_prefixed",
                     code="HK01810",
-                    name="恒生指数成份股",
+                    name="\u6052\u751f\u6307\u6570\u6210\u4efd\u80a1",
                     report_type="simple",
                     sentiment_score=60,
-                    operation_advice="买入",
-                    trend_prediction="看多",
+                    operation_advice="\u4e70\u5165",
+                    trend_prediction="\u770b\u591a",
                     analysis_summary="HK history is prefixed, daily is dotted",
                     stop_loss=None,
                     take_profit=None,
@@ -1240,11 +1240,11 @@ class BacktestServiceTestCase(unittest.TestCase):
                 AnalysisHistory(
                     query_id="q_hk_query_dot",
                     code="HK01810",
-                    name="恒生指数成份股",
+                    name="\u6052\u751f\u6307\u6570\u6210\u4efd\u80a1",
                     report_type="simple",
                     sentiment_score=60,
-                    operation_advice="买入",
-                    trend_prediction="看多",
+                    operation_advice="\u4e70\u5165",
+                    trend_prediction="\u770b\u591a",
                     analysis_summary="HK prefixed history with dotted query",
                     stop_loss=None,
                     take_profit=None,
@@ -1315,11 +1315,11 @@ class BacktestServiceTestCase(unittest.TestCase):
                 AnalysisHistory(
                     query_id="q-created-at-mismatch",
                     code="000003",
-                    name="测试股票",
+                    name="\u6d4b\u8bd5\u80a1\u7968",
                     report_type="simple",
                     sentiment_score=60,
-                    operation_advice="买入",
-                    trend_prediction="看多",
+                    operation_advice="\u4e70\u5165",
+                    trend_prediction="\u770b\u591a",
                     analysis_summary="created_at differs from analysis date",
                     stop_loss=None,
                     take_profit=None,
@@ -1362,11 +1362,11 @@ class BacktestServiceTestCase(unittest.TestCase):
                 AnalysisHistory(
                     query_id="q-non-trading-analysis-date",
                     code="000004",
-                    name="测试股票",
+                    name="\u6d4b\u8bd5\u80a1\u7968",
                     report_type="simple",
                     sentiment_score=60,
-                    operation_advice="买入",
-                    trend_prediction="看多",
+                    operation_advice="\u4e70\u5165",
+                    trend_prediction="\u770b\u591a",
                     analysis_summary="snapshot date is a non-trading day",
                     stop_loss=None,
                     take_profit=None,
@@ -1430,11 +1430,11 @@ class BacktestServiceTestCase(unittest.TestCase):
             history = AnalysisHistory(
                 query_id="q-legacy-result-date",
                 code="000005",
-                name="测试股票",
+                name="\u6d4b\u8bd5\u80a1\u7968",
                 report_type="simple",
                 sentiment_score=60,
-                operation_advice="买入",
-                trend_prediction="看多",
+                operation_advice="\u4e70\u5165",
+                trend_prediction="\u770b\u591a",
                 analysis_summary="legacy result stores fallback trading date",
                 stop_loss=None,
                 take_profit=None,
@@ -1452,7 +1452,7 @@ class BacktestServiceTestCase(unittest.TestCase):
                     engine_version="v1",
                     eval_status="completed",
                     evaluated_at=datetime(2024, 1, 8, 0, 0, 0),
-                    operation_advice="买入",
+                    operation_advice="\u4e70\u5165",
                     position_recommendation="long",
                     start_price=10.0,
                     end_close=10.5,
@@ -1500,11 +1500,11 @@ class BacktestServiceTestCase(unittest.TestCase):
             legacy_history = AnalysisHistory(
                 query_id="q-legacy-result-date-mixed",
                 code="000006",
-                name="测试股票",
+                name="\u6d4b\u8bd5\u80a1\u7968",
                 report_type="simple",
                 sentiment_score=60,
-                operation_advice="买入",
-                trend_prediction="看多",
+                operation_advice="\u4e70\u5165",
+                trend_prediction="\u770b\u591a",
                 analysis_summary="legacy result stores fallback trading date in mixed rerun",
                 stop_loss=None,
                 take_profit=None,
@@ -1514,11 +1514,11 @@ class BacktestServiceTestCase(unittest.TestCase):
             new_history = AnalysisHistory(
                 query_id="q-new-result-date-mixed",
                 code="000006",
-                name="测试股票",
+                name="\u6d4b\u8bd5\u80a1\u7968",
                 report_type="simple",
                 sentiment_score=62,
-                operation_advice="买入",
-                trend_prediction="看多",
+                operation_advice="\u4e70\u5165",
+                trend_prediction="\u770b\u591a",
                 analysis_summary="new matching analysis should not prevent legacy alignment",
                 stop_loss=None,
                 take_profit=None,
@@ -1537,7 +1537,7 @@ class BacktestServiceTestCase(unittest.TestCase):
                     engine_version="v1",
                     eval_status="completed",
                     evaluated_at=datetime(2024, 1, 8, 0, 0, 0),
-                    operation_advice="买入",
+                    operation_advice="\u4e70\u5165",
                     position_recommendation="long",
                     start_price=10.0,
                     end_close=10.5,
@@ -1603,11 +1603,11 @@ class BacktestServiceTestCase(unittest.TestCase):
                     AnalysisHistory(
                         query_id=f"q-newer-outside-date-{index}",
                         code=f"00010{index}",
-                        name="测试股票",
+                        name="\u6d4b\u8bd5\u80a1\u7968",
                         report_type="simple",
                         sentiment_score=50,
-                        operation_advice="持有",
-                        trend_prediction="震荡",
+                        operation_advice="\u6301\u6709",
+                        trend_prediction="\u9707\u8361",
                         analysis_summary="newer created_at but outside analysis date range",
                         stop_loss=None,
                         take_profit=None,
@@ -1652,7 +1652,7 @@ class BacktestServiceTestCase(unittest.TestCase):
         self.assertEqual(stats["processed"], 0)
         self.assertEqual(stats["saved"], 0)
         self.assertEqual(stats["diagnostics"]["empty_reason"], "no_matching_analysis")
-        self.assertIn("未找到符合条件的历史分析记录", stats["message"])
+        self.assertIn("\u672a\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u5386\u53f2\u5206\u6790\u8bb0\u5f55", stats["message"])
 
     def test_run_backtest_reports_insufficient_daily_data(self) -> None:
         with self.db.get_session() as session:
@@ -1660,11 +1660,11 @@ class BacktestServiceTestCase(unittest.TestCase):
                 AnalysisHistory(
                     query_id="q-insufficient",
                     code="000002",
-                    name="万科A",
+                    name="\u4e07\u79d1A",
                     report_type="simple",
                     sentiment_score=60,
-                    operation_advice="买入",
-                    trend_prediction="看多",
+                    operation_advice="\u4e70\u5165",
+                    trend_prediction="\u770b\u591a",
                     analysis_summary="insufficient daily bars",
                     stop_loss=None,
                     take_profit=None,
@@ -1686,7 +1686,7 @@ class BacktestServiceTestCase(unittest.TestCase):
         self.assertEqual(stats["completed"], 0)
         self.assertEqual(stats["insufficient"], 1)
         self.assertEqual(stats["diagnostics"]["empty_reason"], "insufficient_daily_data")
-        self.assertIn("可用日线行情不足", stats["message"])
+        self.assertIn("\u53ef\u7528\u65e5\u7ebf\u884c\u60c5\u4e0d\u8db3", stats["message"])
 
     def _run_and_get_result(self) -> BacktestResult:
         """Helper: run backtest and return the single BacktestResult row."""
@@ -1702,7 +1702,7 @@ class BacktestServiceTestCase(unittest.TestCase):
         self.assertEqual(result.eval_status, "completed")
         self.assertEqual(result.code, "600519")
         self.assertEqual(result.analysis_date, date(2024, 1, 1))
-        self.assertEqual(result.operation_advice, "买入")
+        self.assertEqual(result.operation_advice, "\u4e70\u5165")
         self.assertEqual(result.position_recommendation, "long")
         self.assertEqual(result.direction_expected, "up")
 
@@ -1810,7 +1810,7 @@ class BacktestServiceTestCase(unittest.TestCase):
         service = BacktestService(self.db)
         with self.db.get_session() as session:
             history = session.query(AnalysisHistory).filter(AnalysisHistory.query_id == "q1").one()
-            history.operation_advice = "持有"
+            history.operation_advice = "\u6301\u6709"
             history.sentiment_score = 78
             history.raw_result = None
             result = self._make_backtest_result(
@@ -1818,7 +1818,7 @@ class BacktestServiceTestCase(unittest.TestCase):
                 analysis_date=date(2024, 1, 1),
                 eval_window_days=1,
             )
-            result.operation_advice = "持有"
+            result.operation_advice = "\u6301\u6709"
             session.add(result)
             session.commit()
 
@@ -1831,22 +1831,22 @@ class BacktestServiceTestCase(unittest.TestCase):
 
         self.assertEqual(data["total"], 1)
         item = data["items"][0]
-        self.assertEqual(item["operation_advice"], "持有")
+        self.assertEqual(item["operation_advice"], "\u6301\u6709")
         self.assertEqual(item["action"], "buy")
-        self.assertEqual(item["action_label"], "买入")
+        self.assertEqual(item["action_label"], "\u4e70\u5165")
 
     def test_get_recent_evaluations_prefers_persisted_raw_action(self) -> None:
         service = BacktestService(self.db)
 
         with self.db.get_session() as session:
             history = session.query(AnalysisHistory).filter(AnalysisHistory.query_id == "q1").one()
-            history.operation_advice = "持有观察"
+            history.operation_advice = "\u6301\u6709\u89c2\u5bdf"
             history.raw_result = json.dumps(
                 {
-                    "operation_advice": "持有观察",
+                    "operation_advice": "\u6301\u6709\u89c2\u5bdf",
                     "action": "watch",
-                    "action_label": "观望",
-                    "guardrail_reason": "市场风险较高，建议观望",
+                    "action_label": "\u89c2\u671b",
+                    "guardrail_reason": "\u5e02\u573a\u98ce\u9669\u8f83\u9ad8，\u5efa\u8bae\u89c2\u671b",
                 },
                 ensure_ascii=False,
             )
@@ -1855,7 +1855,7 @@ class BacktestServiceTestCase(unittest.TestCase):
                 analysis_date=date(2024, 1, 1),
                 eval_window_days=1,
             )
-            result.operation_advice = "持有观察"
+            result.operation_advice = "\u6301\u6709\u89c2\u5bdf"
             result.position_recommendation = "long"
             session.add(result)
             session.commit()
@@ -1869,9 +1869,9 @@ class BacktestServiceTestCase(unittest.TestCase):
 
         self.assertEqual(data["total"], 1)
         item = data["items"][0]
-        self.assertEqual(item["operation_advice"], "持有观察")
+        self.assertEqual(item["operation_advice"], "\u6301\u6709\u89c2\u5bdf")
         self.assertEqual(item["action"], "watch")
-        self.assertEqual(item["action_label"], "观望")
+        self.assertEqual(item["action_label"], "\u89c2\u671b")
         self.assertEqual(item["position_recommendation"], "long")
 
     def test_get_recent_evaluations_supports_tracking_fields_and_analysis_date_filters(self) -> None:
@@ -1879,8 +1879,8 @@ class BacktestServiceTestCase(unittest.TestCase):
             query_id="q2",
             analysis_date=date(2024, 1, 10),
             created_at=datetime(2024, 1, 10, 0, 0, 0),
-            operation_advice="买入",
-            trend_prediction="看多",
+            operation_advice="\u4e70\u5165",
+            trend_prediction="\u770b\u591a",
             start_close=100.0,
             forward_bars=[
                 StockDaily(code="600519", date=date(2024, 1, 11), high=101.0, low=95.0, close=96.0),
@@ -1900,8 +1900,8 @@ class BacktestServiceTestCase(unittest.TestCase):
         )
         self.assertEqual(data["total"], 1)
         item = data["items"][0]
-        self.assertEqual(item["stock_name"], "贵州茅台")
-        self.assertEqual(item["trend_prediction"], "看多")
+        self.assertEqual(item["stock_name"], "\u8d35\u5dde\u8305\u53f0")
+        self.assertEqual(item["trend_prediction"], "\u770b\u591a")
         self.assertEqual(item["actual_movement"], "down")
         self.assertAlmostEqual(item["actual_return_pct"], -4.0)
         self.assertFalse(item["direction_correct"])
@@ -1911,8 +1911,8 @@ class BacktestServiceTestCase(unittest.TestCase):
             query_id="q2",
             analysis_date=date(2024, 1, 10),
             created_at=datetime(2024, 1, 10, 0, 0, 0),
-            operation_advice="买入",
-            trend_prediction="看多",
+            operation_advice="\u4e70\u5165",
+            trend_prediction="\u770b\u591a",
             start_close=100.0,
             forward_bars=[
                 StockDaily(code="600519", date=date(2024, 1, 11), high=101.0, low=95.0, close=96.0),
@@ -1956,7 +1956,7 @@ class BacktestServiceTestCase(unittest.TestCase):
                     engine_version="v1",
                     eval_status="completed",
                     evaluated_at=datetime(2024, 1, 5, 0, 0, 0),
-                    operation_advice="买入",
+                    operation_advice="\u4e70\u5165",
                     position_recommendation="long",
                     start_price=100.0,
                     end_close=96.0,
@@ -1974,7 +1974,7 @@ class BacktestServiceTestCase(unittest.TestCase):
                     engine_version="v2",
                     eval_status="completed",
                     evaluated_at=datetime(2024, 1, 6, 0, 0, 0),
-                    operation_advice="买入",
+                    operation_advice="\u4e70\u5165",
                     position_recommendation="long",
                     start_price=100.0,
                     end_close=96.0,
@@ -2007,9 +2007,9 @@ class BacktestServiceTestCase(unittest.TestCase):
         self.assertEqual(evaluations["total"], 1)
         self.assertEqual(len(evaluations["items"]), 1)
         self.assertEqual(evaluations["items"][0]["engine_version"], "v1")
-        self.assertEqual(evaluations["items"][0]["operation_advice"], "买入")
+        self.assertEqual(evaluations["items"][0]["operation_advice"], "\u4e70\u5165")
         self.assertEqual(evaluations["items"][0]["action"], "buy")
-        self.assertEqual(evaluations["items"][0]["action_label"], "买入")
+        self.assertEqual(evaluations["items"][0]["action_label"], "\u4e70\u5165")
         self.assertEqual(evaluations["items"][0]["position_recommendation"], "long")
 
         # Without explicit eval_window_days, summary infers the smallest
@@ -2079,18 +2079,18 @@ class BacktestServiceTestCase(unittest.TestCase):
         phase_snapshot = json.dumps({"market_phase_summary": {"phase": "intraday", "market": "cn"}})
         raw_result = json.dumps(
             {
-                "operation_advice": "持有观察",
+                "operation_advice": "\u6301\u6709\u89c2\u5bdf",
                 "action": "watch",
-                "action_label": "观望",
-                "guardrail_reason": "模型判定观望，保留原始动作",
+                "action_label": "\u89c2\u671b",
+                "guardrail_reason": "\u6a21\u578b\u5224\u5b9a\u89c2\u671b，\u4fdd\u7559\u539f\u59cb\u52a8\u4f5c",
             },
             ensure_ascii=False,
         )
         rows = [
             (
                 self._make_backtest_result(analysis_history_id=idx + 1, analysis_date=date(2024, 1, idx + 1)),
-                "贵州茅台",
-                "看多",
+                "\u8d35\u5dde\u8305\u53f0",
+                "\u770b\u591a",
                 datetime(2024, 1, idx + 1, 0, 0, 0),
                 phase_snapshot,
                 raw_result,
@@ -2120,7 +2120,7 @@ class BacktestServiceTestCase(unittest.TestCase):
         self.assertEqual(data["total"], 2)
         self.assertEqual(len(data["items"]), 2)
         self.assertEqual(data["items"][0]["action"], "watch")
-        self.assertEqual(data["items"][0]["action_label"], "观望")
+        self.assertEqual(data["items"][0]["action_label"], "\u89c2\u671b")
 
     def test_phase_filter_without_window_matches_summary_window(self) -> None:
         service = BacktestService(self.db)
@@ -2141,7 +2141,7 @@ class BacktestServiceTestCase(unittest.TestCase):
                     engine_version="v1",
                     eval_status="completed",
                     evaluated_at=datetime(2024, 1, 5, 0, 0, 0),
-                    operation_advice="买入",
+                    operation_advice="\u4e70\u5165",
                     position_recommendation="long",
                     start_price=100.0,
                     end_close=96.0,
@@ -2178,8 +2178,8 @@ class BacktestServiceTestCase(unittest.TestCase):
             query_id="q2",
             analysis_date=date(2024, 1, 10),
             created_at=datetime(2024, 1, 10, 0, 0, 0),
-            operation_advice="买入",
-            trend_prediction="看多",
+            operation_advice="\u4e70\u5165",
+            trend_prediction="\u770b\u591a",
             start_close=100.0,
             forward_bars=[
                 StockDaily(code="600519", date=date(2024, 1, 11), high=101.0, low=95.0, close=96.0),
@@ -2231,8 +2231,8 @@ class BacktestServiceTestCase(unittest.TestCase):
             query_id="q2",
             analysis_date=date(2024, 1, 10),
             created_at=datetime(2024, 1, 10, 0, 0, 0),
-            operation_advice="买入",
-            trend_prediction="看多",
+            operation_advice="\u4e70\u5165",
+            trend_prediction="\u770b\u591a",
             start_close=100.0,
             forward_bars=[
                 StockDaily(code="600519", date=date(2024, 1, 11), high=101.0, low=95.0, close=96.0),
@@ -2243,8 +2243,8 @@ class BacktestServiceTestCase(unittest.TestCase):
             query_id="q3",
             analysis_date=date(2024, 1, 12),
             created_at=datetime(2024, 1, 12, 0, 0, 0),
-            operation_advice="买入",
-            trend_prediction="看多",
+            operation_advice="\u4e70\u5165",
+            trend_prediction="\u770b\u591a",
             start_close=100.0,
             forward_bars=[
                 StockDaily(code="600519", date=date(2024, 1, 13), high=101.0, low=95.0, close=96.0),
@@ -2255,8 +2255,8 @@ class BacktestServiceTestCase(unittest.TestCase):
             query_id="q4",
             analysis_date=date(2024, 1, 14),
             created_at=datetime(2024, 1, 14, 0, 0, 0),
-            operation_advice="买入",
-            trend_prediction="看多",
+            operation_advice="\u4e70\u5165",
+            trend_prediction="\u770b\u591a",
             start_close=100.0,
             forward_bars=[
                 StockDaily(code="600519", date=date(2024, 1, 15), high=101.0, low=95.0, close=96.0),
@@ -2311,11 +2311,11 @@ class BacktestServiceTestCase(unittest.TestCase):
                 AnalysisHistory(
                     query_id="q2",
                     code="000001",
-                    name="平安银行",
+                    name="\u5e73\u5b89\u94f6\u884c",
                     report_type="simple",
                     sentiment_score=30,
-                    operation_advice="卖出",
-                    trend_prediction="看空",
+                    operation_advice="\u5356\u51fa",
+                    trend_prediction="\u770b\u7a7a",
                     analysis_summary="test2",
                     stop_loss=None,
                     take_profit=None,
@@ -2367,11 +2367,11 @@ class BacktestServiceTestCase(unittest.TestCase):
                 AnalysisHistory(
                     query_id="q-market-review",
                     code="MARKET",
-                    name="大盘复盘",
+                    name="\u5927\u76d8\u590d\u76d8",
                     report_type="market_review",
                     sentiment_score=50,
-                    operation_advice="查看复盘",
-                    trend_prediction="大盘复盘",
+                    operation_advice="\u67e5\u770b\u590d\u76d8",
+                    trend_prediction="\u5927\u76d8\u590d\u76d8",
                     analysis_summary="market review summary",
                     stop_loss=None,
                     take_profit=None,
@@ -2399,11 +2399,11 @@ class BacktestServiceTestCase(unittest.TestCase):
                 AnalysisHistory(
                     query_id="q-null-report-type",
                     code="000858",
-                    name="五粮液",
+                    name="\u4e94\u7cae\u6db2",
                     report_type=None,
                     sentiment_score=60,
-                    operation_advice="持有",
-                    trend_prediction="震荡",
+                    operation_advice="\u6301\u6709",
+                    trend_prediction="\u9707\u8361",
                     analysis_summary="legacy null report_type row",
                     stop_loss=None,
                     take_profit=None,

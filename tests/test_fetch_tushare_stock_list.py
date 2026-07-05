@@ -30,14 +30,14 @@ fetch_tushare_stock_list = importlib.import_module("fetch_tushare_stock_list")
 
 
 def test_should_fix_a_stock_name_matches_status_prefixes():
-    assert fetch_tushare_stock_list.should_fix_a_stock_name("XD西藏药")
-    assert fetch_tushare_stock_list.should_fix_a_stock_name("XR浦东建")
-    assert fetch_tushare_stock_list.should_fix_a_stock_name("DR罗曼股")
-    assert fetch_tushare_stock_list.should_fix_a_stock_name("N惠康")
-    assert fetch_tushare_stock_list.should_fix_a_stock_name("C天海")
-    assert not fetch_tushare_stock_list.should_fix_a_stock_name("平安银行")
-    assert not fetch_tushare_stock_list.should_fix_a_stock_name("ST罗顿")
-    assert not fetch_tushare_stock_list.should_fix_a_stock_name("*ST铖昌")
+    assert fetch_tushare_stock_list.should_fix_a_stock_name("XD\u897f\u85cf\u836f")
+    assert fetch_tushare_stock_list.should_fix_a_stock_name("XR\u6d66\u4e1c\u5efa")
+    assert fetch_tushare_stock_list.should_fix_a_stock_name("DR\u7f57\u66fc\u80a1")
+    assert fetch_tushare_stock_list.should_fix_a_stock_name("N\u60e0\u5eb7")
+    assert fetch_tushare_stock_list.should_fix_a_stock_name("C\u5929\u6d77")
+    assert not fetch_tushare_stock_list.should_fix_a_stock_name("\u5e73\u5b89\u94f6\u884c")
+    assert not fetch_tushare_stock_list.should_fix_a_stock_name("ST\u7f57\u987f")
+    assert not fetch_tushare_stock_list.should_fix_a_stock_name("*ST\u94d6\u660c")
 
 
 def test_fix_a_stock_names_with_rt_k_replaces_candidate_names():
@@ -45,20 +45,20 @@ def test_fix_a_stock_names_with_rt_k_replaces_candidate_names():
     source_df = pd.DataFrame(
         {
             "ts_code": ["000001.SZ", "600848.SH", "300001.SZ"],
-            "name": ["XD西藏药", "平安银行", "N惠康"],
+            "name": ["XD\u897f\u85cf\u836f", "\u5e73\u5b89\u94f6\u884c", "N\u60e0\u5eb7"],
         }
     )
 
     with patch.object(
         fetch_tushare_stock_list,
         "fetch_rt_k_names",
-        return_value={"000001.SZ": "西藏药", "300001.SZ": "惠康"},
+        return_value={"000001.SZ": "\u897f\u85cf\u836f", "300001.SZ": "\u60e0\u5eb7"},
     ) as fetch_rt_k_names:
         fixed_df = fetch_tushare_stock_list.fix_a_stock_names_with_rt_k(api, source_df)
 
-    assert fixed_df.loc[fixed_df["ts_code"] == "000001.SZ", "name"].iloc[0] == "西藏药"
-    assert fixed_df.loc[fixed_df["ts_code"] == "600848.SH", "name"].iloc[0] == "平安银行"
-    assert fixed_df.loc[fixed_df["ts_code"] == "300001.SZ", "name"].iloc[0] == "惠康"
+    assert fixed_df.loc[fixed_df["ts_code"] == "000001.SZ", "name"].iloc[0] == "\u897f\u85cf\u836f"
+    assert fixed_df.loc[fixed_df["ts_code"] == "600848.SH", "name"].iloc[0] == "\u5e73\u5b89\u94f6\u884c"
+    assert fixed_df.loc[fixed_df["ts_code"] == "300001.SZ", "name"].iloc[0] == "\u60e0\u5eb7"
     fetch_rt_k_names.assert_called_once_with(api, ["000001.SZ", "300001.SZ"])
 
 
@@ -67,7 +67,7 @@ def test_fetch_rt_k_names_batches_and_collects_results():
     api.rt_k.return_value = pd.DataFrame(
         {
             "ts_code": ["000001.SZ", "300001.SZ"],
-            "name": ["西藏药", "惠康"],
+            "name": ["\u897f\u85cf\u836f", "\u60e0\u5eb7"],
             "close": [1.0, 2.0],
             "pre_close": [1.0, 2.0],
             "trade_time": ["10:00:00", "10:00:00"],
@@ -77,7 +77,7 @@ def test_fetch_rt_k_names_batches_and_collects_results():
     with patch.object(fetch_tushare_stock_list, "random_sleep") as random_sleep:
         name_map = fetch_tushare_stock_list.fetch_rt_k_names(api, ["000001.SZ", "300001.SZ"])
 
-    assert name_map == {"000001.SZ": "西藏药", "300001.SZ": "惠康"}
+    assert name_map == {"000001.SZ": "\u897f\u85cf\u836f", "300001.SZ": "\u60e0\u5eb7"}
     api.rt_k.assert_called_once_with(
         ts_code="000001.SZ,300001.SZ",
         fields="ts_code,name,close,pre_close,trade_time",
@@ -87,9 +87,9 @@ def test_fetch_rt_k_names_batches_and_collects_results():
 
 def test_main_default_flow_keeps_original_filename():
     api = MagicMock()
-    a_df = pd.DataFrame({"ts_code": ["000001.SZ"], "name": ["平安银行"]})
-    hk_df = pd.DataFrame({"ts_code": ["00001.HK"], "name": ["长和"]})
-    us_df = pd.DataFrame({"ts_code": ["AAPL"], "name": ["苹果"]})
+    a_df = pd.DataFrame({"ts_code": ["000001.SZ"], "name": ["\u5e73\u5b89\u94f6\u884c"]})
+    hk_df = pd.DataFrame({"ts_code": ["00001.HK"], "name": ["\u957f\u548c"]})
+    us_df = pd.DataFrame({"ts_code": ["AAPL"], "name": ["\u82f9\u679c"]})
 
     with (
         patch.object(fetch_tushare_stock_list, "get_tushare_api", return_value=api),
@@ -105,20 +105,20 @@ def test_main_default_flow_keeps_original_filename():
 
     assert exit_code == 0
     fetch_a.assert_called_once_with(api)
-    save_to_csv.assert_any_call(a_df, "stock_list_a.csv", "A股")
+    save_to_csv.assert_any_call(a_df, "stock_list_a.csv", "A\u80a1")
     fetch_hk.assert_called_once_with(api)
     fetch_us.assert_called_once_with(api)
     fix_a_stock_names.assert_not_called()
-    generate_doc.assert_called_once_with(a_df, hk_df, us_df, a_filename="stock_list_a.csv", a_title="A股列表")
+    generate_doc.assert_called_once_with(a_df, hk_df, us_df, a_filename="stock_list_a.csv", a_title="A\u80a1\u5217\u8868")
     assert random_sleep.call_count == 2
 
 
 def test_main_a_rk_flow_overwrites_a_filename_and_rt_k():
     api = MagicMock()
-    a_df = pd.DataFrame({"ts_code": ["000001.SZ"], "name": ["XD西藏药"]})
-    fixed_df = pd.DataFrame({"ts_code": ["000001.SZ"], "name": ["西藏药"]})
-    hk_df = pd.DataFrame({"ts_code": ["00001.HK"], "name": ["长和"]})
-    us_df = pd.DataFrame({"ts_code": ["AAPL"], "name": ["苹果"]})
+    a_df = pd.DataFrame({"ts_code": ["000001.SZ"], "name": ["XD\u897f\u85cf\u836f"]})
+    fixed_df = pd.DataFrame({"ts_code": ["000001.SZ"], "name": ["\u897f\u85cf\u836f"]})
+    hk_df = pd.DataFrame({"ts_code": ["00001.HK"], "name": ["\u957f\u548c"]})
+    us_df = pd.DataFrame({"ts_code": ["AAPL"], "name": ["\u82f9\u679c"]})
 
     with (
         patch.object(fetch_tushare_stock_list, "get_tushare_api", return_value=api),
@@ -139,7 +139,7 @@ def test_main_a_rk_flow_overwrites_a_filename_and_rt_k():
         call for call in save_to_csv.call_args_list if call.args[1] == "stock_list_a.csv"
     )
     pd.testing.assert_frame_equal(fixed_save_call.args[0], fixed_df)
-    assert fixed_save_call.args[2] == "A股"
+    assert fixed_save_call.args[2] == "A\u80a1"
     fetch_hk.assert_called_once_with(api)
     fetch_us.assert_called_once_with(api)
     generate_doc.assert_called_once_with(
@@ -147,6 +147,6 @@ def test_main_a_rk_flow_overwrites_a_filename_and_rt_k():
         hk_df,
         us_df,
         a_filename="stock_list_a.csv",
-        a_title="A股列表（修正后）",
+        a_title="A\u80a1\u5217\u8868（\u4fee\u6b63\u540e）",
     )
     assert random_sleep.call_count == 2

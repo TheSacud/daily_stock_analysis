@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 """
 ===================================
-股票数据服务层
+\u80a1\u7968\u6570\u636e\u670d\u52a1\u5c42
 ===================================
 
-职责：
-1. 封装股票数据获取逻辑
-2. 提供实时行情和历史数据接口
+\u804c\u8d23:
+1. \u5c01\u88c5\u80a1\u7968\u6570\u636e\u83b7\u53d6\u903b\u8f91
+2. \u63d0\u4f9brealtime quote\u548chistory\u6570\u636e\u63a5\u53e3
 """
 
 import logging
@@ -20,38 +20,38 @@ logger = logging.getLogger(__name__)
 
 class StockService:
     """
-    股票数据服务
-    
-    封装股票数据获取的业务逻辑
+    \u80a1\u7968\u6570\u636e\u670d\u52a1
+
+    \u5c01\u88c5\u80a1\u7968\u6570\u636e\u83b7\u53d6\u7684\u4e1a\u52a1\u903b\u8f91
     """
-    
+
     def __init__(self):
-        """初始化股票数据服务"""
+        """\u521d\u59cb\u5316\u80a1\u7968\u6570\u636e\u670d\u52a1"""
         self.repo = StockRepository()
-    
+
     def get_realtime_quote(self, stock_code: str) -> Optional[Dict[str, Any]]:
         """
-        获取股票实时行情
-        
+        \u83b7\u53d6\u80a1\u7968realtime quote
+
         Args:
-            stock_code: 股票代码
-            
+            stock_code: stock code
+
         Returns:
-            实时行情数据字典
+            realtime quote\u6570\u636e\u5b57\u5178
         """
         try:
-            # 调用数据获取器获取实时行情
+            # \u8c03\u7528\u6570\u636e\u83b7\u53d6\u5668\u83b7\u53d6realtime quote
             from data_provider.base import DataFetcherManager
-            
+
             manager = DataFetcherManager()
             quote = manager.get_realtime_quote(stock_code)
-            
+
             if quote is None:
-                logger.warning(f"获取 {stock_code} 实时行情失败")
+                logger.warning(f"\u83b7\u53d6 {stock_code} realtime quotefailed")
                 return None
-            
-            # UnifiedRealtimeQuote 是 dataclass，使用 getattr 安全访问字段
-            # 字段映射: UnifiedRealtimeQuote -> API 响应
+
+            # UnifiedRealtimeQuote \u662f dataclass; \u4f7f\u7528 getattr \u5b89\u5168\u8bbfask\u5b57\u6bb5
+            # \u5b57\u6bb5\u6620\u5c04: UnifiedRealtimeQuote -> API \u54cd\u5e94
             # - code -> stock_code
             # - name -> stock_name
             # - price -> current_price
@@ -77,14 +77,14 @@ class StockService:
                 "amount": getattr(quote, "amount", None),
                 "update_time": datetime.now().isoformat(),
             }
-            
+
         except ImportError:
-            logger.warning("DataFetcherManager 未找到，使用占位数据")
+            logger.warning("DataFetcherManager \u672a\u627e\u5230; \u4f7f\u7528\u5360characters\u6570\u636e")
             return self._get_placeholder_quote(stock_code)
         except Exception as e:
-            logger.error(f"获取实时行情失败: {e}", exc_info=True)
+            logger.error(f"\u83b7\u53d6realtime quotefailed: {e}", exc_info=True)
             return None
-    
+
     def get_history_data(
         self,
         stock_code: str,
@@ -92,41 +92,41 @@ class StockService:
         days: int = 30
     ) -> Dict[str, Any]:
         """
-        获取股票历史行情
-        
+        \u83b7\u53d6\u80a1\u7968history\u884c\u60c5
+
         Args:
-            stock_code: 股票代码
-            period: K 线周期 (daily/weekly/monthly)
-            days: 获取天数
-            
+            stock_code: stock code
+            period: K \u7ebf\u5468\u671f (daily/weekly/monthly)
+            days: \u83b7\u53d6\u5929\u6570
+
         Returns:
-            历史行情数据字典
-            
+            history\u884c\u60c5\u6570\u636e\u5b57\u5178
+
         Raises:
-            ValueError: 当 period 不是 daily 时抛出（weekly/monthly 暂未实现）
+            ValueError: \u5f53 period \u4e0d\u662f daily \u65f6\u629b\u51fa (weekly/monthly \u6682\u672a\u5b9e\u73b0)
         """
-        # 验证 period 参数，只支持 daily
+        # \u9a8c\u8bc1 period parameter; \u53ea\u652f\u6301 daily
         if period != "daily":
             raise ValueError(
-                f"暂不支持 '{period}' 周期，目前仅支持 'daily'。"
-                "weekly/monthly 聚合功能将在后续版本实现。"
+                f"\u6682does not support '{period}' \u5468\u671f; \u76ee\u524d\u4ec5\u652f\u6301 'daily'."
+                "weekly/monthly \u805a\u5408\u529f\u80fd\u5c06\u5728\u540e\u7eed\u7248\u672c\u5b9e\u73b0."
             )
-        
+
         try:
-            # 调用数据获取器获取历史数据
+            # \u8c03\u7528\u6570\u636e\u83b7\u53d6\u5668\u83b7\u53d6history\u6570\u636e
             from data_provider.base import DataFetcherManager
-            
+
             manager = DataFetcherManager()
             df, source = manager.get_daily_data(stock_code, days=days)
-            
+
             if df is None or df.empty:
-                logger.warning(f"获取 {stock_code} 历史数据失败")
+                logger.warning(f"\u83b7\u53d6 {stock_code} history\u6570\u636efailed")
                 return {"stock_code": stock_code, "period": period, "data": []}
-            
-            # 获取股票名称
+
+            # \u83b7\u53d6stock name
             stock_name = manager.get_stock_name(stock_code)
-            
-            # 转换为响应格式
+
+            # \u8f6c\u6362\u4e3a\u54cd\u5e94\u683c\u5f0f
             data = []
             for _, row in df.iterrows():
                 date_val = row.get("date")
@@ -134,7 +134,7 @@ class StockService:
                     date_str = date_val.strftime("%Y-%m-%d")
                 else:
                     date_str = str(date_val)
-                
+
                 data.append({
                     "date": date_str,
                     "open": float(row.get("open", 0)),
@@ -145,34 +145,34 @@ class StockService:
                     "amount": float(row.get("amount", 0)) if row.get("amount") else None,
                     "change_percent": float(row.get("pct_chg", 0)) if row.get("pct_chg") else None,
                 })
-            
+
             return {
                 "stock_code": stock_code,
                 "stock_name": stock_name,
                 "period": period,
                 "data": data,
             }
-            
+
         except ImportError:
-            logger.warning("DataFetcherManager 未找到，返回空数据")
+            logger.warning("DataFetcherManager \u672a\u627e\u5230; returned empty data")
             return {"stock_code": stock_code, "period": period, "data": []}
         except Exception as e:
-            logger.error(f"获取历史数据失败: {e}", exc_info=True)
+            logger.error(f"\u83b7\u53d6history\u6570\u636efailed: {e}", exc_info=True)
             return {"stock_code": stock_code, "period": period, "data": []}
-    
+
     def _get_placeholder_quote(self, stock_code: str) -> Dict[str, Any]:
         """
-        获取占位行情数据（用于测试）
-        
+        \u83b7\u53d6\u5360characters\u884c\u60c5\u6570\u636e (\u7528\u4e8e\u6d4b\u8bd5)
+
         Args:
-            stock_code: 股票代码
-            
+            stock_code: stock code
+
         Returns:
-            占位行情数据
+            \u5360characters\u884c\u60c5\u6570\u636e
         """
         return {
             "stock_code": stock_code,
-            "stock_name": f"股票{stock_code}",
+            "stock_name": f"\u80a1\u7968{stock_code}",
             "current_price": 0.0,
             "change": None,
             "change_percent": None,

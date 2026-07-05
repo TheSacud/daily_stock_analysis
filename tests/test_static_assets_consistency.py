@@ -289,7 +289,7 @@ def test_frontend_index_responses_are_not_cacheable(tmp_path: Path) -> None:
         assert response.headers["expires"] == "0"
 
 
-def _write_stock_index(path: Path, name: str = "平安银行", size: int = 1) -> None:
+def _write_stock_index(path: Path, name: str = "\u5e73\u5b89\u94f6\u884c", size: int = 1) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(
         json.dumps(
@@ -321,9 +321,9 @@ def test_stock_index_route_serves_newer_remote_cache(tmp_path: Path) -> None:
     static_dir = tmp_path / "static"
     cache_path = tmp_path / "cache" / "stocks.index.json"
     bundled_path = tmp_path / "bundled" / "stocks.index.json"
-    _write_stock_index(static_dir / "stocks.index.json", "内置静态")
-    _write_stock_index(cache_path, "远程缓存", size=100)
-    _write_stock_index(bundled_path, "源码内置")
+    _write_stock_index(static_dir / "stocks.index.json", "\u5185\u7f6e\u9759\u6001")
+    _write_stock_index(cache_path, "\u8fdc\u7a0b\u7f13\u5b58", size=100)
+    _write_stock_index(bundled_path, "\u6e90\u7801\u5185\u7f6e")
     os.utime(static_dir / "stocks.index.json", (1_000, 1_000))
     os.utime(cache_path, (2_000, 2_000))
     os.utime(bundled_path, (1_000, 1_000))
@@ -338,7 +338,7 @@ def test_stock_index_route_serves_newer_remote_cache(tmp_path: Path) -> None:
     assert response.status_code == 200
     assert response.headers["content-type"].startswith("application/json")
     assert response.headers["cache-control"] == "no-cache"
-    assert response.json()[0][2] == "远程缓存"
+    assert response.json()[0][2] == "\u8fdc\u7a0b\u7f13\u5b58"
     schedule.assert_any_call(ANY, "serve-stock-index")
 
 
@@ -349,9 +349,9 @@ def test_stock_index_route_prefers_newer_static_index_over_older_remote_cache(tm
     static_dir = tmp_path / "static"
     cache_path = tmp_path / "cache" / "stocks.index.json"
     bundled_path = tmp_path / "bundled" / "stocks.index.json"
-    _write_stock_index(static_dir / "stocks.index.json", "新内置静态")
-    _write_stock_index(cache_path, "旧远程缓存", size=100)
-    _write_stock_index(bundled_path, "源码内置")
+    _write_stock_index(static_dir / "stocks.index.json", "\u65b0\u5185\u7f6e\u9759\u6001")
+    _write_stock_index(cache_path, "\u65e7\u8fdc\u7a0b\u7f13\u5b58", size=100)
+    _write_stock_index(bundled_path, "\u6e90\u7801\u5185\u7f6e")
     os.utime(static_dir / "stocks.index.json", (2_000, 2_000))
     os.utime(cache_path, (1_000, 1_000))
     os.utime(bundled_path, (1_000, 1_000))
@@ -364,7 +364,7 @@ def test_stock_index_route_prefers_newer_static_index_over_older_remote_cache(tm
         response = client.get("/stocks.index.json")
 
     assert response.status_code == 200
-    assert response.json()[0][2] == "新内置静态"
+    assert response.json()[0][2] == "\u65b0\u5185\u7f6e\u9759\u6001"
 
 
 def test_stock_index_route_falls_back_to_static_index(tmp_path: Path) -> None:
@@ -374,8 +374,8 @@ def test_stock_index_route_falls_back_to_static_index(tmp_path: Path) -> None:
     static_dir = tmp_path / "static"
     cache_path = tmp_path / "cache" / "missing.json"
     bundled_path = tmp_path / "bundled" / "stocks.index.json"
-    _write_stock_index(static_dir / "stocks.index.json", "内置静态")
-    _write_stock_index(bundled_path, "源码内置")
+    _write_stock_index(static_dir / "stocks.index.json", "\u5185\u7f6e\u9759\u6001")
+    _write_stock_index(bundled_path, "\u6e90\u7801\u5185\u7f6e")
     os.utime(static_dir / "stocks.index.json", (1_000, 1_000))
     os.utime(bundled_path, (2_000, 2_000))
 
@@ -387,7 +387,7 @@ def test_stock_index_route_falls_back_to_static_index(tmp_path: Path) -> None:
         response = client.get("/stocks.index.json")
 
     assert response.status_code == 200
-    assert response.json()[0][2] == "内置静态"
+    assert response.json()[0][2] == "\u5185\u7f6e\u9759\u6001"
 
 
 def test_stock_index_route_does_not_parse_bundled_candidates_on_hot_path(tmp_path: Path) -> None:
@@ -398,8 +398,8 @@ def test_stock_index_route_does_not_parse_bundled_candidates_on_hot_path(tmp_pat
     static_dir = tmp_path / "static"
     cache_path = tmp_path / "cache" / "missing.json"
     bundled_path = tmp_path / "bundled" / "stocks.index.json"
-    _write_stock_index(static_dir / "stocks.index.json", "内置静态")
-    _write_stock_index(bundled_path, "源码内置")
+    _write_stock_index(static_dir / "stocks.index.json", "\u5185\u7f6e\u9759\u6001")
+    _write_stock_index(bundled_path, "\u6e90\u7801\u5185\u7f6e")
     os.utime(static_dir / "stocks.index.json", (2_000, 2_000))
     os.utime(bundled_path, (1_000, 1_000))
 
@@ -412,7 +412,7 @@ def test_stock_index_route_does_not_parse_bundled_candidates_on_hot_path(tmp_pat
         response = client.get("/stocks.index.json")
 
     assert response.status_code == 200
-    assert response.json()[0][2] == "内置静态"
+    assert response.json()[0][2] == "\u5185\u7f6e\u9759\u6001"
 
 
 def test_stock_index_route_skips_invalid_remote_cache(tmp_path: Path) -> None:
@@ -424,8 +424,8 @@ def test_stock_index_route_skips_invalid_remote_cache(tmp_path: Path) -> None:
     bundled_path = tmp_path / "bundled" / "stocks.index.json"
     cache_path.parent.mkdir(parents=True, exist_ok=True)
     cache_path.write_text("not-json", encoding="utf-8")
-    _write_stock_index(static_dir / "stocks.index.json", "内置静态")
-    _write_stock_index(bundled_path, "源码内置")
+    _write_stock_index(static_dir / "stocks.index.json", "\u5185\u7f6e\u9759\u6001")
+    _write_stock_index(bundled_path, "\u6e90\u7801\u5185\u7f6e")
     os.utime(cache_path, (3_000, 3_000))
     os.utime(static_dir / "stocks.index.json", (2_000, 2_000))
     os.utime(bundled_path, (1_000, 1_000))
@@ -438,7 +438,7 @@ def test_stock_index_route_skips_invalid_remote_cache(tmp_path: Path) -> None:
         response = client.get("/stocks.index.json")
 
     assert response.status_code == 200
-    assert response.json()[0][2] == "内置静态"
+    assert response.json()[0][2] == "\u5185\u7f6e\u9759\u6001"
 
 
 def test_stock_index_route_returns_404_when_all_candidates_missing(tmp_path: Path) -> None:

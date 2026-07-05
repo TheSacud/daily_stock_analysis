@@ -20,7 +20,7 @@ class TestSearchPerformance:
         """Benchmark the common fast paths without typo/fuzzy fallbacks dominating runtime."""
         inputs = [
             "600519", "00700", "AAPL", "TSLA",
-            "贵州茅台", "腾讯控股", "阿里巴巴",
+            "\u8d35\u5dde\u8305\u53f0", "\u817e\u8baf\u63a7\u80a1", "\u963f\u91cc\u5df4\u5df4",
             "aaaaaaa", "1234567",
         ]
 
@@ -45,8 +45,8 @@ class TestSearchPerformance:
     def test_resolve_name_to_code_typo_fallback_budget(self, mock_akshare):
         """Benchmark typo/fuzzy fallback separately with a smaller iteration budget."""
         typo_inputs = [
-            "贵州茅苔",
-            "平安银形",
+            "\u8d35\u5dde\u8305\u82d4",
+            "\u5e73\u5b89\u94f6\u5f62",
         ]
 
         for s in typo_inputs:
@@ -69,20 +69,20 @@ class TestSearchPerformance:
     def test_fuzzy_match_performance_large_set(self, mock_akshare):
         """Test difflib fuzzy matching performance with a 5000+ stock set."""
         # Simulate 5000 stocks from AkShare
-        fake_market = {f"股票_{i}": f"{i:06d}" for i in range(5000)}
+        fake_market = {f"\u80a1\u7968_{i}": f"{i:06d}" for i in range(5000)}
         mock_akshare.return_value = fake_market
-        
-        query = "股票_4999" # Worst case or near worst case for fuzzy matching
-        
+
+        query = "\u80a1\u7968_4999" # Worst case or near worst case for fuzzy matching
+
         start_time = time.time()
         iterations = 20
         for _ in range(iterations):
             resolve_name_to_code(query)
-        
+
         duration = time.time() - start_time
         avg_ms = (duration / iterations) * 1000
-        
+
         print(f"\nFuzzy match (5000 stocks) avg time: {avg_ms:.2f}ms")
-        # Fuzzy matching 5000 strings is CPU intensive. 
+        # Fuzzy matching 5000 strings is CPU intensive.
         # Aiming for < 100ms per request on a standard CI environment.
         assert avg_ms < 200, f"Fuzzy matching too slow: {avg_ms:.2f}ms"

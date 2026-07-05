@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 """
 ===================================
-股票数据访问层
+\u80a1\u7968\u6570\u636e\u8bbfask\u5c42
 ===================================
 
-职责：
-1. 封装股票数据的数据库操作
-2. 提供日线数据查询接口
+\u804c\u8d23:
+1. \u5c01\u88c5\u80a1\u7968\u6570\u636edatalibrary\u64cd\u4f5c
+2. \u63d0\u4f9bdaily data\u6570\u636equery\u63a5\u53e3
 """
 
 import logging
@@ -23,37 +23,37 @@ logger = logging.getLogger(__name__)
 
 class StockRepository:
     """
-    股票数据访问层
-    
-    封装 StockDaily 表的数据库操作
+    \u80a1\u7968\u6570\u636e\u8bbfask\u5c42
+
+    \u5c01\u88c5 StockDaily \u8868datalibrary\u64cd\u4f5c
     """
-    
+
     def __init__(self, db_manager: Optional[DatabaseManager] = None):
         """
-        初始化数据访问层
-        
+        \u521d\u59cb\u5316\u6570\u636e\u8bbfask\u5c42
+
         Args:
-            db_manager: 数据库管理器（可选，默认使用单例）
+            db_manager: \u6570\u636elibrary\u7ba1\u7406\u5668 (optional; default\u4f7f\u7528\u5355\u4f8b)
         """
         self.db = db_manager or DatabaseManager.get_instance()
-    
+
     def get_latest(self, code: str, days: int = 2) -> List[StockDaily]:
         """
-        获取最近 N 天的数据
-        
+        \u83b7\u53d6\u6700\u8fd1 N \u5929data
+
         Args:
-            code: 股票代码
-            days: 获取天数
-            
+            code: stock code
+            days: \u83b7\u53d6\u5929\u6570
+
         Returns:
-            StockDaily 对象列表（按日期降序）
+            StockDaily \u5bf9\u8c61\u5217\u8868 (\u6309date\u964d\u5e8f)
         """
         try:
             return self.db.get_latest_data(code, days)
         except Exception as e:
-            logger.error(f"获取最新数据失败: {e}")
+            logger.error(f"\u83b7\u53d6\u6700\u65b0\u6570\u636efailed: {e}")
             return []
-    
+
     def get_range(
         self,
         code: str,
@@ -61,22 +61,22 @@ class StockRepository:
         end_date: date
     ) -> List[StockDaily]:
         """
-        获取指定日期范围的数据
-        
+        \u83b7\u53d6\u6307\u5b9adate\u8303\u56f4data
+
         Args:
-            code: 股票代码
-            start_date: 开始日期
-            end_date: 结束日期
-            
+            code: stock code
+            start_date: \u5f00\u59cbdate
+            end_date: \u7ed3\u675fdate
+
         Returns:
-            StockDaily 对象列表
+            StockDaily \u5bf9\u8c61\u5217\u8868
         """
         try:
             return self.db.get_data_range(code, start_date, end_date)
         except Exception as e:
-            logger.error(f"获取日期范围数据失败: {e}")
+            logger.error(f"\u83b7\u53d6date\u8303\u56f4\u6570\u636efailed: {e}")
             return []
-    
+
     def save_dataframe(
         self,
         df: pd.DataFrame,
@@ -84,58 +84,58 @@ class StockRepository:
         data_source: str = "Unknown"
     ) -> int:
         """
-        保存 DataFrame 到数据库
-        
+        \u4fdd\u5b58 DataFrame \u5230\u6570\u636elibrary
+
         Args:
-            df: 包含日线数据的 DataFrame
-            code: 股票代码
-            data_source: 数据来源
-            
+            df: \u5305\u542bdaily data\u6570\u636e\u7684 DataFrame
+            code: stock code
+            data_source: \u6570\u636esource
+
         Returns:
-            保存的记录数
+            \u4fdd\u5b58\u7684\u8bb0\u5f55\u6570
         """
         try:
             return self.db.save_daily_data(df, code, data_source)
         except Exception as e:
-            logger.error(f"保存日线数据失败: {e}")
+            logger.error(f"\u4fdd\u5b58daily data\u6570\u636efailed: {e}")
             return 0
-    
+
     def has_today_data(self, code: str, target_date: Optional[date] = None) -> bool:
         """
-        检查是否有指定日期的数据
-        
+        \u68c0check\u662f\u5426\u6709\u6307\u5b9adatedata
+
         Args:
-            code: 股票代码
-            target_date: 目标日期（默认今天）
-            
+            code: stock code
+            target_date: \u76ee\u6807date (default\u4eca\u5929)
+
         Returns:
-            是否存在数据
+            \u662f\u5426\u5b58\u5728\u6570\u636e
         """
         try:
             return self.db.has_today_data(code, target_date)
         except Exception as e:
-            logger.error(f"检查数据存在失败: {e}")
+            logger.error(f"\u68c0check\u6570\u636e\u5b58\u5728failed: {e}")
             return False
-    
+
     def get_analysis_context(
-        self, 
-        code: str, 
+        self,
+        code: str,
         target_date: Optional[date] = None
     ) -> Optional[Dict[str, Any]]:
         """
-        获取分析上下文
-        
+        \u83b7\u53d6analyze\u4e0a\u4e0b\u6587
+
         Args:
-            code: 股票代码
-            target_date: 目标日期
-            
+            code: stock code
+            target_date: \u76ee\u6807date
+
         Returns:
-            分析上下文字典
+            analyze\u4e0a\u4e0b\u6587\u5b57\u5178
         """
         try:
             return self.db.get_analysis_context(code, target_date)
         except Exception as e:
-            logger.error(f"获取分析上下文失败: {e}")
+            logger.error(f"\u83b7\u53d6analyze\u4e0a\u4e0b\u6587failed: {e}")
             return None
 
     def get_start_daily(self, *, code: str, analysis_date: date) -> Optional[StockDaily]:

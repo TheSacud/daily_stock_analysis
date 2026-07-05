@@ -674,7 +674,7 @@ def _handle_get_capital_flow(stock_code: str) -> dict:
 get_capital_flow_tool = ToolDefinition(
     name="get_capital_flow",
     description=(
-        "Get main-force (主力) capital flow data for an A-share stock. "
+        "Get main-force (\u4e3b\u529b) capital flow data for an A-share stock. "
         "Returns today's net inflow, 5-day and 10-day cumulative inflows, "
         "and top sector-level capital flow rankings. "
         "Only supported for A-share individual stocks (not ETFs, indices, HK, or US stocks)."

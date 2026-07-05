@@ -168,7 +168,7 @@ def resolve_name_to_code(name: str) -> Optional[str]:
     if s in local_reverse:
         return local_reverse[s]
     if s in _LOCAL_AMBIGUOUS_NAMES:
-        logger.debug(f"[NameResolver] 命中本地歧义名称，快速返回 None: {s}")
+        logger.debug(f"[NameResolver] \u547dMedium\u672c\u5730\u6b67\u4e49name; \u5feb\u901f\u8fd4\u56de None: {s}")
         return None
 
     # 3. Pinyin match (exact)
@@ -194,7 +194,7 @@ def resolve_name_to_code(name: str) -> Optional[str]:
     # 4. AkShare fallback
     akshare_map = _get_akshare_name_to_code()
     if akshare_map and s in akshare_map:
-        logger.debug(f"[NameResolver] 命中 AkShare 映射: {s} -> {akshare_map[s]}")
+        logger.debug(f"[NameResolver] \u547dMedium AkShare \u6620\u5c04: {s} -> {akshare_map[s]}")
         return akshare_map[s]
 
     # 5. Fuzzy match (local + akshare, local takes precedence)
@@ -202,22 +202,22 @@ def resolve_name_to_code(name: str) -> Optional[str]:
     if akshare_map:
         all_name_to_code.update(akshare_map)
     # Skip fuzzy matching for very short inputs (<=2 chars) to avoid false positives,
-    # e.g. '中国' matching arbitrary company names in a pool of 5000+ stocks.
+    # e.g. 'Medium\u56fd' matching arbitrary company names in a pool of 5000+ stocks.
     # Use a higher cutoff (0.8) to reduce mis-hits on longer inputs as well.
     if len(s) > 2:
         names = list(all_name_to_code.keys())
         matches = difflib.get_close_matches(s, names, n=1, cutoff=0.8)
         if matches:
-            logger.debug(f"[NameResolver] 命中模糊匹配: input={s}, matched={matches[0]}")
+            logger.debug(f"[NameResolver] \u547dMedium\u6a21\u7cca\u5339\u914d: input={s}, matched={matches[0]}")
             return all_name_to_code[matches[0]]
 
         # Conservative fallback for one-character typo in medium/long names.
         # This keeps the strict default threshold while fixing obvious misspellings
-        # such as "贵州茅苔" -> "贵州茅台".
+        # such as "\u8d35\u5dde\u8305\u82d4" -> "\u8d35\u5dde\u8305\u53f0".
         typo_matches = difflib.get_close_matches(s, names, n=1, cutoff=0.7)
         if typo_matches and _is_single_char_typo(s, typo_matches[0]):
-            logger.debug(f"[NameResolver] 命中单字误写兜底: input={s}, matched={typo_matches[0]}")
+            logger.debug(f"[NameResolver] \u547dMedium\u5355\u5b57\u8bef\u5199\u515c\u5e95: input={s}, matched={typo_matches[0]}")
             return all_name_to_code[typo_matches[0]]
 
-    logger.debug(f"[NameResolver] 解析失败: {s}")
+    logger.debug(f"[NameResolver] parse failed: {s}")
     return None

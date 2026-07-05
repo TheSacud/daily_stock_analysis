@@ -88,14 +88,14 @@ describe('LLMChannelEditor', () => {
       />
     );
 
-    fireEvent.click(screen.getByRole('button', { name: /OpenAI 官方/i }));
+    fireEvent.click(screen.getByRole('button', { name: /OpenAI \u5b98\u65b9/i }));
     fireEvent.change(await screen.findByLabelText('Base URL'), {
       target: { value: 'https://proxy.example.com/v1' },
     });
     fireEvent.change(screen.getByLabelText('API Key'), {
       target: { value: 'sk-draft' },
     });
-    fireEvent.change(screen.getByLabelText('模型（逗号分隔）'), {
+    fireEvent.change(screen.getByLabelText('\u6a21\u578b（\u9017\u53f7\u5206\u9694）'), {
       target: { value: 'gpt-4o-mini,gpt-4o' },
     });
 
@@ -119,7 +119,7 @@ describe('LLMChannelEditor', () => {
       />
     );
 
-    fireEvent.click(screen.getByRole('button', { name: /OpenAI 官方/i }));
+    fireEvent.click(screen.getByRole('button', { name: /OpenAI \u5b98\u65b9/i }));
     const baseUrlInput = await screen.findByLabelText('Base URL');
     fireEvent.change(baseUrlInput, { target: { value: 'https://proxy.example.com/v1' } });
     await waitFor(() => expect(lastDraftCall(onDraftItemsChange)).toContainEqual({
@@ -146,8 +146,8 @@ describe('LLMChannelEditor', () => {
       />
     );
 
-    fireEvent.click(screen.getByRole('button', { name: /OpenAI 官方/i }));
-    fireEvent.change(await screen.findByLabelText('渠道名称'), { target: { value: '' } });
+    fireEvent.click(screen.getByRole('button', { name: /OpenAI \u5b98\u65b9/i }));
+    fireEvent.change(await screen.findByLabelText('\u6e20\u9053\u540d\u79f0'), { target: { value: '' } });
 
     await waitFor(() => {
       expect(lastDraftCall(onDraftItemsChange)).toEqual([]);
@@ -172,12 +172,12 @@ describe('LLMChannelEditor', () => {
       />
     );
 
-    fireEvent.click(screen.getByRole('button', { name: /OpenAI 官方/i }));
+    fireEvent.click(screen.getByRole('button', { name: /OpenAI \u5b98\u65b9/i }));
 
     const input = await screen.findByLabelText('API Key');
     expect(input).toHaveAttribute('type', 'password');
 
-    fireEvent.click(screen.getByRole('button', { name: '显示内容' }));
+    fireEvent.click(screen.getByRole('button', { name: '\u663e\u793a\u5185\u5bb9' }));
     expect(input).toHaveAttribute('type', 'text');
   });
 
@@ -198,24 +198,24 @@ describe('LLMChannelEditor', () => {
       />
     );
 
-    fireEvent.click(screen.getByRole('button', { name: /DeepSeek 官方/i }));
-    fireEvent.click(await screen.findByRole('button', { name: '查看 Base URL 配置说明' }));
+    fireEvent.click(screen.getByRole('button', { name: /DeepSeek \u5b98\u65b9/i }));
+    fireEvent.click(await screen.findByRole('button', { name: '\u67e5\u770b Base URL \u914d\u7f6e\u8bf4\u660e' }));
 
     expect(screen.getByRole('dialog', { name: 'Base URL' })).toBeInTheDocument();
-    expect(screen.getByText('该渠道的接口根地址。')).toBeInTheDocument();
+    expect(screen.getByText('\u8be5\u6e20\u9053\u7684\u63a5\u53e3\u6839\u5730\u5740。')).toBeInTheDocument();
     expect(screen.getByText('LLM_DEEPSEEK_BASE_URL=https://api.deepseek.com')).toBeInTheDocument();
 
     fireEvent.keyDown(document, { key: 'Escape' });
-    fireEvent.click(await screen.findByRole('button', { name: '查看 Temperature 配置说明' }));
+    fireEvent.click(await screen.findByRole('button', { name: '\u67e5\u770b Temperature \u914d\u7f6e\u8bf4\u660e' }));
 
     expect(screen.getByRole('dialog', { name: 'Temperature' })).toBeInTheDocument();
-    expect(screen.getByText('运行时统一采样温度。')).toBeInTheDocument();
+    expect(screen.getByText('\u8fd0\u884c\u65f6\u7edf\u4e00\u91c7\u6837\u6e29\u5ea6。')).toBeInTheDocument();
 
     fireEvent.keyDown(document, { key: 'Escape' });
-    fireEvent.click(await screen.findByRole('button', { name: '查看 运行时能力检测 配置说明' }));
+    fireEvent.click(await screen.findByRole('button', { name: '\u67e5\u770b \u8fd0\u884c\u65f6\u80fd\u529b\u68c0\u6d4b \u914d\u7f6e\u8bf4\u660e' }));
 
-    expect(screen.getByRole('dialog', { name: '运行时能力检测' })).toBeInTheDocument();
-    expect(screen.getByText('选择能力后点击检测；检测会发起真实 LLM 请求。')).toBeInTheDocument();
+    expect(screen.getByRole('dialog', { name: '\u8fd0\u884c\u65f6\u80fd\u529b\u68c0\u6d4b' })).toBeInTheDocument();
+    expect(screen.getByText('\u9009\u62e9\u80fd\u529b\u540e\u70b9\u51fb\u68c0\u6d4b；\u68c0\u6d4b\u4f1a\u53d1\u8d77\u771f\u5b9e LLM \u8bf7\u6c42。')).toBeInTheDocument();
   });
 
   it('hides LiteLLM wording when advanced YAML routing is enabled', () => {
@@ -236,8 +236,8 @@ describe('LLMChannelEditor', () => {
       />
     );
 
-    expect(screen.getByText(/检测到已配置高级模型路由 YAML/i)).toBeInTheDocument();
-    expect(screen.getByText(/运行时主模型 \/ 备选模型 \/ Vision \/ Temperature 仍由下方通用字段决定/i)).toBeInTheDocument();
+    expect(screen.getByText(/\u68c0\u6d4b\u5230\u5df2\u914d\u7f6e\u9ad8\u7ea7\u6a21\u578b\u8def\u7531 YAML/i)).toBeInTheDocument();
+    expect(screen.getByText(/\u8fd0\u884c\u65f6\u4e3b\u6a21\u578b \/ \u5907\u9009\u6a21\u578b \/ Vision \/ Temperature \u4ecd\u7531\u4e0b\u65b9\u901a\u7528\u5b57\u6bb5\u51b3\u5b9a/i)).toBeInTheDocument();
     expect(screen.queryByText(/LiteLLM/i)).not.toBeInTheDocument();
     expect(screen.queryByText(/LITELLM_CONFIG/i)).not.toBeInTheDocument();
   });
@@ -259,9 +259,9 @@ describe('LLMChannelEditor', () => {
       />
     );
 
-    expect(selectOptionValues('主模型')).toContain('openai/hermes-agent');
-    expect(selectOptionValues('Agent 主模型')).not.toContain('openai/hermes-agent');
-    expect(selectOptionValues('Vision 模型')).not.toContain('openai/hermes-agent');
+    expect(selectOptionValues('\u4e3b\u6a21\u578b')).toContain('openai/hermes-agent');
+    expect(selectOptionValues('Agent \u4e3b\u6a21\u578b')).not.toContain('openai/hermes-agent');
+    expect(selectOptionValues('Vision \u6a21\u578b')).not.toContain('openai/hermes-agent');
   });
 
   it('keeps mixed Hermes route for Agent but excludes it from Vision', () => {
@@ -291,10 +291,10 @@ describe('LLMChannelEditor', () => {
       />
     );
 
-    expect(selectOptionValues('主模型')).not.toContain('openai/shared-route');
-    expect(selectOptionValues('主模型')).toContain('openai/pure-route');
-    expect(selectOptionValues('Agent 主模型')).toContain('openai/shared-route');
-    expect(selectOptionValues('Vision 模型')).not.toContain('openai/shared-route');
+    expect(selectOptionValues('\u4e3b\u6a21\u578b')).not.toContain('openai/shared-route');
+    expect(selectOptionValues('\u4e3b\u6a21\u578b')).toContain('openai/pure-route');
+    expect(selectOptionValues('Agent \u4e3b\u6a21\u578b')).toContain('openai/shared-route');
+    expect(selectOptionValues('Vision \u6a21\u578b')).not.toContain('openai/shared-route');
   });
 
   it('rejects bare mixed Hermes route before saving runtime generation config', async () => {
@@ -321,9 +321,9 @@ describe('LLMChannelEditor', () => {
     );
 
     fireEvent.change(screen.getByRole('slider'), { target: { value: '0.2' } });
-    fireEvent.click(screen.getByRole('button', { name: '保存 AI 配置' }));
+    fireEvent.click(screen.getByRole('button', { name: '\u4fdd\u5b58 AI \u914d\u7f6e' }));
 
-    expect(await screen.findByText(/Mixed Hermes\/non-Hermes route 暂不支持作为主生成或备选模型/i)).toBeInTheDocument();
+    expect(await screen.findByText(/Mixed Hermes\/non-Hermes route \u6682\u4e0d\u652f\u6301\u4f5c\u4e3a\u4e3b\u751f\u6210\u6216\u5907\u9009\u6a21\u578b/i)).toBeInTheDocument();
     expect(update).not.toHaveBeenCalled();
   });
 
@@ -345,12 +345,12 @@ describe('LLMChannelEditor', () => {
     );
 
     fireEvent.click(screen.getByRole('button', { name: /Hermes/i }));
-    fireEvent.click(screen.getByRole('button', { name: '测试连接' }));
-    fireEvent.click(screen.getByRole('button', { name: '获取模型' }));
+    fireEvent.click(screen.getByRole('button', { name: '\u6d4b\u8bd5\u8fde\u63a5' }));
+    fireEvent.click(screen.getByRole('button', { name: '\u83b7\u53d6\u6a21\u578b' }));
     fireEvent.click(screen.getByLabelText('JSON'));
-    fireEvent.click(screen.getByRole('button', { name: '检测能力' }));
+    fireEvent.click(screen.getByRole('button', { name: '\u68c0\u6d4b\u80fd\u529b' }));
 
-    const messages = await screen.findAllByText(/运行时注入的 Hermes Key 不会回传/i);
+    const messages = await screen.findAllByText(/\u8fd0\u884c\u65f6\u6ce8\u5165\u7684 Hermes Key \u4e0d\u4f1a\u56de\u4f20/i);
     expect(messages.length).toBeGreaterThanOrEqual(3);
     expect(testLLMChannel).not.toHaveBeenCalled();
     expect(discoverLLMChannelModels).not.toHaveBeenCalled();
@@ -373,9 +373,9 @@ describe('LLMChannelEditor', () => {
       />
     );
 
-    expect(selectOptionValues('主模型')).toContain('openai/gpt-4o-mini');
-    expect(selectOptionValues('Agent 主模型')).toContain('openai/gpt-4o-mini');
-    expect(selectOptionValues('Vision 模型')).toContain('openai/gpt-4o-mini');
+    expect(selectOptionValues('\u4e3b\u6a21\u578b')).toContain('openai/gpt-4o-mini');
+    expect(selectOptionValues('Agent \u4e3b\u6a21\u578b')).toContain('openai/gpt-4o-mini');
+    expect(selectOptionValues('Vision \u6a21\u578b')).toContain('openai/gpt-4o-mini');
   });
 
   it('keeps minimax-prefixed models in runtime selections', () => {
@@ -395,9 +395,9 @@ describe('LLMChannelEditor', () => {
       />
     );
 
-    const primaryModelSelect = screen.getByRole('combobox', { name: '主模型' });
-    const agentModelSelect = screen.getByRole('combobox', { name: 'Agent 主模型' });
-    const visionModelSelect = screen.getByRole('combobox', { name: 'Vision 模型' });
+    const primaryModelSelect = screen.getByRole('combobox', { name: '\u4e3b\u6a21\u578b' });
+    const agentModelSelect = screen.getByRole('combobox', { name: 'Agent \u4e3b\u6a21\u578b' });
+    const visionModelSelect = screen.getByRole('combobox', { name: 'Vision \u6a21\u578b' });
 
     expect(within(primaryModelSelect).getByRole('option', { name: 'minimax/MiniMax-M1' })).toBeInTheDocument();
     expect(within(agentModelSelect).getByRole('option', { name: 'minimax/MiniMax-M1' })).toBeInTheDocument();
@@ -415,16 +415,16 @@ describe('LLMChannelEditor', () => {
     );
 
     fireEvent.change(screen.getByRole('combobox'), { target: { value: 'deepseek' } });
-    fireEvent.click(screen.getByRole('button', { name: '+ 添加渠道' }));
+    fireEvent.click(screen.getByRole('button', { name: '+ \u6dfb\u52a0\u6e20\u9053' }));
 
-    await screen.findByRole('button', { name: /DeepSeek 官方/i });
+    await screen.findByRole('button', { name: /DeepSeek \u5b98\u65b9/i });
     expect(screen.getByLabelText('Base URL')).toHaveValue('https://api.deepseek.com');
-    expect(screen.getByLabelText('模型（逗号分隔）')).toHaveValue('deepseek-v4-flash,deepseek-v4-pro');
+    expect(screen.getByLabelText('\u6a21\u578b（\u9017\u53f7\u5206\u9694）')).toHaveValue('deepseek-v4-flash,deepseek-v4-pro');
   });
 
   it.each([
-    ['minimax', /MiniMax 官方/i, 'https://api.minimax.io/v1', 'MiniMax-M3,MiniMax-M2.7,MiniMax-M2.7-highspeed'],
-    ['volcengine', /火山方舟/i, 'https://ark.cn-beijing.volces.com/api/v3', 'doubao-seed-1-6-251015,doubao-seed-1-6-thinking-251015'],
+    ['minimax', /MiniMax \u5b98\u65b9/i, 'https://api.minimax.io/v1', 'MiniMax-M3,MiniMax-M2.7,MiniMax-M2.7-highspeed'],
+    ['volcengine', /\u706b\u5c71\u65b9\u821f/i, 'https://ark.cn-beijing.volces.com/api/v3', 'doubao-seed-1-6-251015,doubao-seed-1-6-thinking-251015'],
   ])('uses %s OpenAI-compatible defaults when adding the official preset', async (preset, buttonName, baseUrl, models) => {
     render(
       <LLMChannelEditor
@@ -436,14 +436,14 @@ describe('LLMChannelEditor', () => {
     );
 
     fireEvent.change(screen.getByRole('combobox'), { target: { value: preset } });
-    fireEvent.click(screen.getByRole('button', { name: '+ 添加渠道' }));
+    fireEvent.click(screen.getByRole('button', { name: '+ \u6dfb\u52a0\u6e20\u9053' }));
 
     await screen.findByRole('button', { name: buttonName });
     expect(screen.getAllByRole('combobox').some((select) => (
       select instanceof HTMLSelectElement && select.value === 'openai'
     ))).toBe(true);
     expect(screen.getByLabelText('Base URL')).toHaveValue(baseUrl);
-    expect(screen.getByLabelText('模型（逗号分隔）')).toHaveValue(models);
+    expect(screen.getByLabelText('\u6a21\u578b（\u9017\u53f7\u5206\u9694）')).toHaveValue(models);
   });
 
   it('shows provider capability badges, official sources, and config hints', async () => {
@@ -465,16 +465,16 @@ describe('LLMChannelEditor', () => {
 
     fireEvent.click(screen.getByRole('button', { name: /OpenRouter/i }));
 
-    expect(await screen.findByText('配置参考')).toBeInTheDocument();
-    expect(screen.getByText('OpenAI 兼容')).toBeInTheDocument();
-    expect(screen.getByText('聚合平台')).toBeInTheDocument();
-    expect(screen.getByText('可获取模型')).toBeInTheDocument();
-    expect(screen.getByText(/模型列表和模型可见性依赖账号权限与 API Key/i)).toBeInTheDocument();
+    expect(await screen.findByText('\u914d\u7f6e\u53c2\u8003')).toBeInTheDocument();
+    expect(screen.getByText('OpenAI \u517c\u5bb9')).toBeInTheDocument();
+    expect(screen.getByText('\u805a\u5408\u5e73\u53f0')).toBeInTheDocument();
+    expect(screen.getByText('\u53ef\u83b7\u53d6\u6a21\u578b')).toBeInTheDocument();
+    expect(screen.getByText(/\u6a21\u578b\u5217\u8868\u548c\u6a21\u578b\u53ef\u89c1\u6027\u4f9d\u8d56\u8d26\u53f7\u6743\u9650\u4e0e API Key/i)).toBeInTheDocument();
     expect(screen.getByRole('link', { name: 'OpenRouter Models API' })).toHaveAttribute(
       'href',
       'https://openrouter.ai/docs/api/api-reference/models/get-models',
     );
-    expect(screen.getByText(/能力标签仅用于配置参考，不代表运行时能力已验证通过/i)).toBeInTheDocument();
+    expect(screen.getByText(/\u80fd\u529b\u6807\u7b7e\u4ec5\u7528\u4e8e\u914d\u7f6e\u53c2\u8003，\u4e0d\u4ee3\u8868\u8fd0\u884c\u65f6\u80fd\u529b\u5df2\u9a8c\u8bc1\u901a\u8fc7/i)).toBeInTheDocument();
   });
 
   it('shows model-discovery capability for SiliconFlow provider hints', async () => {
@@ -496,7 +496,7 @@ describe('LLMChannelEditor', () => {
 
     fireEvent.click(screen.getByRole('button', { name: /SiliconFlow/i }));
 
-    expect(await screen.findByText('可获取模型')).toBeInTheDocument();
+    expect(await screen.findByText('\u53ef\u83b7\u53d6\u6a21\u578b')).toBeInTheDocument();
     expect(screen.getByRole('link', { name: 'SiliconFlow Models' })).toBeInTheDocument();
   });
 
@@ -519,9 +519,9 @@ describe('LLMChannelEditor', () => {
 
     fireEvent.click(screen.getByRole('button', { name: /my_proxy/i }));
 
-    expect(screen.queryByText('配置参考')).not.toBeInTheDocument();
-    expect(screen.queryByText(/官方来源/i)).not.toBeInTheDocument();
-    expect(screen.queryByText(/能力标签仅用于配置参考/i)).not.toBeInTheDocument();
+    expect(screen.queryByText('\u914d\u7f6e\u53c2\u8003')).not.toBeInTheDocument();
+    expect(screen.queryByText(/\u5b98\u65b9\u6765\u6e90/i)).not.toBeInTheDocument();
+    expect(screen.queryByText(/\u80fd\u529b\u6807\u7b7e\u4ec5\u7528\u4e8e\u914d\u7f6e\u53c2\u8003/i)).not.toBeInTheDocument();
   });
 
   it('preserves manually edited base URL and models when switching preset names', async () => {
@@ -535,22 +535,22 @@ describe('LLMChannelEditor', () => {
     );
 
     fireEvent.change(screen.getByRole('combobox'), { target: { value: 'deepseek' } });
-    fireEvent.click(screen.getByRole('button', { name: '+ 添加渠道' }));
+    fireEvent.click(screen.getByRole('button', { name: '+ \u6dfb\u52a0\u6e20\u9053' }));
 
-    await screen.findByRole('button', { name: /DeepSeek 官方/i });
+    await screen.findByRole('button', { name: /DeepSeek \u5b98\u65b9/i });
     fireEvent.change(screen.getByLabelText('Base URL'), {
       target: { value: 'https://proxy.example.com/v1' },
     });
-    fireEvent.change(screen.getByLabelText('模型（逗号分隔）'), {
+    fireEvent.change(screen.getByLabelText('\u6a21\u578b（\u9017\u53f7\u5206\u9694）'), {
       target: { value: 'custom-model-a,custom-model-b' },
     });
-    fireEvent.change(screen.getByLabelText('渠道名称'), {
+    fireEvent.change(screen.getByLabelText('\u6e20\u9053\u540d\u79f0'), {
       target: { value: 'minimax' },
     });
 
-    await screen.findByRole('button', { name: /MiniMax 官方/i });
+    await screen.findByRole('button', { name: /MiniMax \u5b98\u65b9/i });
     expect(screen.getByLabelText('Base URL')).toHaveValue('https://proxy.example.com/v1');
-    expect(screen.getByLabelText('模型（逗号分隔）')).toHaveValue('custom-model-a,custom-model-b');
+    expect(screen.getByLabelText('\u6a21\u578b（\u9017\u53f7\u5206\u9694）')).toHaveValue('custom-model-a,custom-model-b');
   });
 
   it('uses the selected preset defaults when adding a duplicate provider channel', async () => {
@@ -564,12 +564,12 @@ describe('LLMChannelEditor', () => {
     );
 
     fireEvent.change(screen.getByRole('combobox'), { target: { value: 'minimax' } });
-    fireEvent.click(screen.getByRole('button', { name: '+ 添加渠道' }));
-    await screen.findByRole('button', { name: /MiniMax 官方/i });
-    fireEvent.click(screen.getByRole('button', { name: '+ 添加渠道' }));
+    fireEvent.click(screen.getByRole('button', { name: '+ \u6dfb\u52a0\u6e20\u9053' }));
+    await screen.findByRole('button', { name: /MiniMax \u5b98\u65b9/i });
+    fireEvent.click(screen.getByRole('button', { name: '+ \u6dfb\u52a0\u6e20\u9053' }));
 
     await screen.findByRole('button', { name: /minimax2/i });
-    expect(screen.getAllByLabelText('渠道名称').map((input) => (input as HTMLInputElement).value)).toEqual([
+    expect(screen.getAllByLabelText('\u6e20\u9053\u540d\u79f0').map((input) => (input as HTMLInputElement).value)).toEqual([
       'minimax',
       'minimax2',
     ]);
@@ -577,7 +577,7 @@ describe('LLMChannelEditor', () => {
       'https://api.minimax.io/v1',
       'https://api.minimax.io/v1',
     ]);
-    expect(screen.getAllByLabelText('模型（逗号分隔）').map((input) => (input as HTMLInputElement).value)).toEqual([
+    expect(screen.getAllByLabelText('\u6a21\u578b（\u9017\u53f7\u5206\u9694）').map((input) => (input as HTMLInputElement).value)).toEqual([
       'MiniMax-M3,MiniMax-M2.7,MiniMax-M2.7-highspeed',
       'MiniMax-M3,MiniMax-M2.7,MiniMax-M2.7-highspeed',
     ]);
@@ -605,9 +605,9 @@ describe('LLMChannelEditor', () => {
     );
 
     fireEvent.change(screen.getByRole('combobox'), { target: { value: 'minimax' } });
-    fireEvent.click(screen.getByRole('button', { name: '+ 添加渠道' }));
-    await screen.findByRole('button', { name: /MiniMax 官方/i });
-    fireEvent.click(screen.getByRole('button', { name: '保存 AI 配置' }));
+    fireEvent.click(screen.getByRole('button', { name: '+ \u6dfb\u52a0\u6e20\u9053' }));
+    await screen.findByRole('button', { name: /MiniMax \u5b98\u65b9/i });
+    fireEvent.click(screen.getByRole('button', { name: '\u4fdd\u5b58 AI \u914d\u7f6e' }));
 
     await waitFor(() => {
       expect(update).toHaveBeenCalled();
@@ -633,7 +633,7 @@ describe('LLMChannelEditor', () => {
       reloadTriggered: true,
       updatedKeys: ['LLM_HERMES_API_KEYS', 'LLM_HERMES_EXTRA_HEADERS'],
       warnings: [
-        '检测到已清理 Hermes Phase 3 不支持的配置项：LLM_HERMES_API_KEYS, LLM_HERMES_EXTRA_HEADERS。Hermes reserved channel 只支持单个 LLM_HERMES_API_KEY，不支持多 Key 或额外 Header；如需恢复旧值，请从 .env 备份、Git 历史或桌面端导出备份手动还原，但非空 LLM_HERMES_API_KEYS / LLM_HERMES_EXTRA_HEADERS 仍会被后端校验拒绝。',
+        '\u68c0\u6d4b\u5230\u5df2\u6e05\u7406 Hermes Phase 3 \u4e0d\u652f\u6301\u7684\u914d\u7f6e\u9879：LLM_HERMES_API_KEYS, LLM_HERMES_EXTRA_HEADERS。Hermes reserved channel \u53ea\u652f\u6301\u5355\u4e2a LLM_HERMES_API_KEY，\u4e0d\u652f\u6301\u591a Key \u6216\u989d\u5916 Header；\u5982\u9700\u6062\u590d\u65e7\u503c，\u8bf7\u4ece .env \u5907\u4efd、Git \u5386\u53f2\u6216\u684c\u9762\u7aef\u5bfc\u51fa\u5907\u4efd\u624b\u52a8\u8fd8\u539f，\u4f46\u975e\u7a7a LLM_HERMES_API_KEYS / LLM_HERMES_EXTRA_HEADERS \u4ecd\u4f1a\u88ab\u540e\u7aef\u6821\u9a8c\u62d2\u7edd。',
       ],
     });
 
@@ -656,8 +656,8 @@ describe('LLMChannelEditor', () => {
     );
 
     fireEvent.click(screen.getByRole('button', { name: /Hermes/i }));
-    fireEvent.change(screen.getByLabelText('模型（逗号分隔）'), { target: { value: 'hermes-agent,hermes-agent-2' } });
-    fireEvent.click(screen.getByRole('button', { name: '保存 AI 配置' }));
+    fireEvent.change(screen.getByLabelText('\u6a21\u578b（\u9017\u53f7\u5206\u9694）'), { target: { value: 'hermes-agent,hermes-agent-2' } });
+    fireEvent.click(screen.getByRole('button', { name: '\u4fdd\u5b58 AI \u914d\u7f6e' }));
 
     await waitFor(() => {
       expect(update).toHaveBeenCalled();
@@ -669,8 +669,8 @@ describe('LLMChannelEditor', () => {
     expect(updateItemMap.get('LLM_HERMES_API_KEY')).toBe('sk-hermes-test-value');
     expect(updateItemMap.get('LLM_HERMES_API_KEYS')).toBe('');
     expect(updateItemMap.get('LLM_HERMES_EXTRA_HEADERS')).toBe('');
-    expect(await screen.findByText(/已清理 Hermes Phase 3 不支持的配置项/i)).toBeInTheDocument();
-    expect(screen.getByText(/如需恢复旧值，请从 \.env 备份/i)).toBeInTheDocument();
+    expect(await screen.findByText(/\u5df2\u6e05\u7406 Hermes Phase 3 \u4e0d\u652f\u6301\u7684\u914d\u7f6e\u9879/i)).toBeInTheDocument();
+    expect(screen.getByText(/\u5982\u9700\u6062\u590d\u65e7\u503c，\u8bf7\u4ece \.env \u5907\u4efd/i)).toBeInTheDocument();
   });
 
   it('only persists edited values for runtime-only channel keys', async () => {
@@ -702,8 +702,8 @@ describe('LLMChannelEditor', () => {
     );
 
     fireEvent.click(screen.getByRole('button', { name: /my_proxy/i }));
-    fireEvent.change(screen.getByLabelText('模型（逗号分隔）'), { target: { value: 'gpt-4o-mini,gpt-4o' } });
-    fireEvent.click(screen.getByRole('button', { name: '保存 AI 配置' }));
+    fireEvent.change(screen.getByLabelText('\u6a21\u578b（\u9017\u53f7\u5206\u9694）'), { target: { value: 'gpt-4o-mini,gpt-4o' } });
+    fireEvent.click(screen.getByRole('button', { name: '\u4fdd\u5b58 AI \u914d\u7f6e' }));
 
     await waitFor(() => {
       expect(update).toHaveBeenCalled();
@@ -748,8 +748,8 @@ describe('LLMChannelEditor', () => {
     );
 
     fireEvent.click(screen.getByRole('button', { name: /my_proxy/i }));
-    fireEvent.change(screen.getByLabelText('渠道名称'), { target: { value: 'my_proxy2' } });
-    fireEvent.click(screen.getByRole('button', { name: '保存 AI 配置' }));
+    fireEvent.change(screen.getByLabelText('\u6e20\u9053\u540d\u79f0'), { target: { value: 'my_proxy2' } });
+    fireEvent.click(screen.getByRole('button', { name: '\u4fdd\u5b58 AI \u914d\u7f6e' }));
 
     await waitFor(() => {
       expect(update).toHaveBeenCalled();
@@ -819,8 +819,8 @@ describe('LLMChannelEditor', () => {
     );
 
     fireEvent.click(screen.getByRole('button', { name: /my_proxy/i }));
-    fireEvent.change(screen.getByLabelText('渠道名称'), { target: { value: 'my_proxy2' } });
-    fireEvent.click(screen.getByRole('button', { name: '保存 AI 配置' }));
+    fireEvent.change(screen.getByLabelText('\u6e20\u9053\u540d\u79f0'), { target: { value: 'my_proxy2' } });
+    fireEvent.click(screen.getByRole('button', { name: '\u4fdd\u5b58 AI \u914d\u7f6e' }));
 
     await waitFor(() => {
       expect(update).toHaveBeenCalled();
@@ -867,8 +867,8 @@ describe('LLMChannelEditor', () => {
     );
 
     fireEvent.click(screen.getByRole('button', { name: /my_proxy/i }));
-    fireEvent.change(screen.getByLabelText('渠道名称'), { target: { value: 'my_proxy2' } });
-    fireEvent.click(screen.getByRole('button', { name: '保存 AI 配置' }));
+    fireEvent.change(screen.getByLabelText('\u6e20\u9053\u540d\u79f0'), { target: { value: 'my_proxy2' } });
+    fireEvent.click(screen.getByRole('button', { name: '\u4fdd\u5b58 AI \u914d\u7f6e' }));
 
     await waitFor(() => {
       expect(update).toHaveBeenCalled();
@@ -916,11 +916,11 @@ describe('LLMChannelEditor', () => {
       />
     );
 
-    fireEvent.click(screen.getByRole('button', { name: /DeepSeek 官方/i }));
-    fireEvent.change(screen.getByLabelText('模型（逗号分隔）'), {
+    fireEvent.click(screen.getByRole('button', { name: /DeepSeek \u5b98\u65b9/i }));
+    fireEvent.change(screen.getByLabelText('\u6a21\u578b（\u9017\u53f7\u5206\u9694）'), {
       target: { value: 'deepseek-v4-flash,deepseek-v4-pro' },
     });
-    fireEvent.click(screen.getByRole('button', { name: '保存 AI 配置' }));
+    fireEvent.click(screen.getByRole('button', { name: '\u4fdd\u5b58 AI \u914d\u7f6e' }));
 
     await waitFor(() => {
       expect(update).toHaveBeenCalled();
@@ -973,10 +973,10 @@ describe('LLMChannelEditor', () => {
     fireEvent.change(screen.getByLabelText('Base URL'), {
       target: { value: 'https://api.example.com/compatible/v1' },
     });
-    fireEvent.click(screen.getByRole('button', { name: '保存 AI 配置' }));
+    fireEvent.click(screen.getByRole('button', { name: '\u4fdd\u5b58 AI \u914d\u7f6e' }));
 
     await waitFor(() => {
-      expect(screen.getByText('当前运行时模型使用非规范 route alias，请从下拉框重新选择规范模型。')).toBeInTheDocument();
+      expect(screen.getByText('\u5f53\u524d\u8fd0\u884c\u65f6\u6a21\u578b\u4f7f\u7528\u975e\u89c4\u8303 route alias，\u8bf7\u4ece\u4e0b\u62c9\u6846\u91cd\u65b0\u9009\u62e9\u89c4\u8303\u6a21\u578b。')).toBeInTheDocument();
     });
 
     expect(update).not.toHaveBeenCalled();
@@ -1017,7 +1017,7 @@ describe('LLMChannelEditor', () => {
     fireEvent.change(screen.getByLabelText('Base URL'), {
       target: { value: 'https://api.example.com/compatible/v1' },
     });
-    fireEvent.click(screen.getByRole('button', { name: '保存 AI 配置' }));
+    fireEvent.click(screen.getByRole('button', { name: '\u4fdd\u5b58 AI \u914d\u7f6e' }));
 
     await waitFor(() => {
       expect(update).toHaveBeenCalled();
@@ -1062,11 +1062,11 @@ describe('LLMChannelEditor', () => {
       />,
     );
 
-    fireEvent.click(screen.getByRole('button', { name: /DeepSeek 官方/i }));
+    fireEvent.click(screen.getByRole('button', { name: /DeepSeek \u5b98\u65b9/i }));
     fireEvent.change(screen.getByLabelText('Base URL'), {
       target: { value: 'https://api.deepseek.com/v1' },
     });
-    fireEvent.click(screen.getByRole('button', { name: '保存 AI 配置' }));
+    fireEvent.click(screen.getByRole('button', { name: '\u4fdd\u5b58 AI \u914d\u7f6e' }));
 
     await waitFor(() => {
       expect(update).toHaveBeenCalled();
@@ -1119,7 +1119,7 @@ describe('LLMChannelEditor', () => {
     fireEvent.change(screen.getByLabelText('Base URL'), {
       target: { value: 'https://api.example.com/compatible/v1' },
     });
-    fireEvent.click(screen.getByRole('button', { name: '保存 AI 配置' }));
+    fireEvent.click(screen.getByRole('button', { name: '\u4fdd\u5b58 AI \u914d\u7f6e' }));
 
     await waitFor(() => {
       expect(update).toHaveBeenCalled();
@@ -1143,7 +1143,7 @@ describe('LLMChannelEditor', () => {
       reloadTriggered: true,
       updatedKeys: ['LLM_DEEPSEEK_MODELS', 'LITELLM_MODEL'],
       warnings: [
-        '检测到已同步清理失效的运行时模型引用：主模型 / Agent 主模型 / Vision 模型 / 备选模型中的失效项。如需恢复，请先补回对应渠道模型列表后重新选择；也可用桌面端导出备份或手动 .env 还原之前的 LLM_* / LITELLM_MODEL / AGENT_LITELLM_MODEL / VISION_MODEL / LLM_TEMPERATURE。',
+        '\u68c0\u6d4b\u5230\u5df2\u540c\u6b65\u6e05\u7406\u5931\u6548\u7684\u8fd0\u884c\u65f6\u6a21\u578b\u5f15\u7528：\u4e3b\u6a21\u578b / Agent \u4e3b\u6a21\u578b / Vision \u6a21\u578b / \u5907\u9009\u6a21\u578b\u4e2d\u7684\u5931\u6548\u9879。\u5982\u9700\u6062\u590d，\u8bf7\u5148\u8865\u56de\u5bf9\u5e94\u6e20\u9053\u6a21\u578b\u5217\u8868\u540e\u91cd\u65b0\u9009\u62e9；\u4e5f\u53ef\u7528\u684c\u9762\u7aef\u5bfc\u51fa\u5907\u4efd\u6216\u624b\u52a8 .env \u8fd8\u539f\u4e4b\u524d\u7684 LLM_* / LITELLM_MODEL / AGENT_LITELLM_MODEL / VISION_MODEL / LLM_TEMPERATURE。',
       ],
     });
 
@@ -1167,19 +1167,19 @@ describe('LLMChannelEditor', () => {
       />
     );
 
-    fireEvent.click(screen.getByRole('button', { name: /DeepSeek 官方/i }));
-    fireEvent.change(screen.getByLabelText('模型（逗号分隔）'), {
+    fireEvent.click(screen.getByRole('button', { name: /DeepSeek \u5b98\u65b9/i }));
+    fireEvent.change(screen.getByLabelText('\u6a21\u578b（\u9017\u53f7\u5206\u9694）'), {
       target: { value: 'deepseek-v4-flash,deepseek-v4-pro' },
     });
-    fireEvent.click(screen.getByRole('button', { name: '保存 AI 配置' }));
+    fireEvent.click(screen.getByRole('button', { name: '\u4fdd\u5b58 AI \u914d\u7f6e' }));
 
-    expect(await screen.findByText('保存后提示')).toBeInTheDocument();
-    expect(screen.getByText(/已同步清理失效的运行时模型引用/i)).toBeInTheDocument();
-    expect(screen.getByText(/桌面端导出备份或手动 \.env 还原/i)).toBeInTheDocument();
+    expect(await screen.findByText('\u4fdd\u5b58\u540e\u63d0\u793a')).toBeInTheDocument();
+    expect(screen.getByText(/\u5df2\u540c\u6b65\u6e05\u7406\u5931\u6548\u7684\u8fd0\u884c\u65f6\u6a21\u578b\u5f15\u7528/i)).toBeInTheDocument();
+    expect(screen.getByText(/\u684c\u9762\u7aef\u5bfc\u51fa\u5907\u4efd\u6216\u624b\u52a8 \.env \u8fd8\u539f/i)).toBeInTheDocument();
   });
 
   it('keeps save warnings visible after onSaved-driven refresh', async () => {
-    const warningMessage = '检测到已同步清理失效的运行时模型引用：主模型 / Agent 主模型 / Vision 模型 / 备选模型中的失效项。';
+    const warningMessage = '\u68c0\u6d4b\u5230\u5df2\u540c\u6b65\u6e05\u7406\u5931\u6548\u7684\u8fd0\u884c\u65f6\u6a21\u578b\u5f15\u7528：\u4e3b\u6a21\u578b / Agent \u4e3b\u6a21\u578b / Vision \u6a21\u578b / \u5907\u9009\u6a21\u578b\u4e2d\u7684\u5931\u6548\u9879。';
     const initialItems = [
       { key: 'LLM_CHANNELS', value: 'deepseek' },
       { key: 'LLM_DEEPSEEK_PROTOCOL', value: 'deepseek' },
@@ -1219,13 +1219,13 @@ describe('LLMChannelEditor', () => {
 
     render(<Component />);
 
-    fireEvent.click(screen.getByRole('button', { name: /DeepSeek 官方/i }));
-    fireEvent.change(screen.getByLabelText('模型（逗号分隔）'), {
+    fireEvent.click(screen.getByRole('button', { name: /DeepSeek \u5b98\u65b9/i }));
+    fireEvent.change(screen.getByLabelText('\u6a21\u578b（\u9017\u53f7\u5206\u9694）'), {
       target: { value: 'deepseek-v4-flash,deepseek-v4-pro' },
     });
-    fireEvent.click(screen.getByRole('button', { name: '保存 AI 配置' }));
+    fireEvent.click(screen.getByRole('button', { name: '\u4fdd\u5b58 AI \u914d\u7f6e' }));
 
-    expect(await screen.findByText('保存后提示')).toBeInTheDocument();
+    expect(await screen.findByText('\u4fdd\u5b58\u540e\u63d0\u793a')).toBeInTheDocument();
     expect(screen.getByText(warningMessage)).toBeInTheDocument();
   });
 
@@ -1261,11 +1261,11 @@ describe('LLMChannelEditor', () => {
       />,
     );
 
-    fireEvent.click(screen.getByRole('button', { name: /OpenAI 官方/i }));
+    fireEvent.click(screen.getByRole('button', { name: /OpenAI \u5b98\u65b9/i }));
     fireEvent.change(screen.getByLabelText('Base URL'), {
       target: { value: 'https://api.openai.com/v1/test' },
     });
-    fireEvent.click(screen.getByRole('button', { name: '保存 AI 配置' }));
+    fireEvent.click(screen.getByRole('button', { name: '\u4fdd\u5b58 AI \u914d\u7f6e' }));
 
     expect(await screen.findByText('refresh failed')).toBeInTheDocument();
 
@@ -1315,14 +1315,14 @@ describe('LLMChannelEditor', () => {
       />,
     );
 
-    fireEvent.click(screen.getByRole('button', { name: /DeepSeek 官方/i }));
-    fireEvent.change(screen.getByLabelText('模型（逗号分隔）'), {
+    fireEvent.click(screen.getByRole('button', { name: /DeepSeek \u5b98\u65b9/i }));
+    fireEvent.change(screen.getByLabelText('\u6a21\u578b（\u9017\u53f7\u5206\u9694）'), {
       target: { value: 'deepseek-chat,deepseek-old' },
     });
 
     expect(await screen.findByLabelText('deepseek/deepseek-old')).toBeChecked();
 
-    fireEvent.click(screen.getByRole('button', { name: '保存 AI 配置' }));
+    fireEvent.click(screen.getByRole('button', { name: '\u4fdd\u5b58 AI \u914d\u7f6e' }));
     await waitFor(() => {
       expect(update).toHaveBeenCalled();
     });
@@ -1356,12 +1356,12 @@ describe('LLMChannelEditor', () => {
       />
     );
 
-    const primaryModelSelect = screen.getByRole('combobox', { name: '主模型' });
-    const agentModelSelect = screen.getByRole('combobox', { name: 'Agent 主模型' });
-    const visionModelSelect = screen.getByRole('combobox', { name: 'Vision 模型' });
+    const primaryModelSelect = screen.getByRole('combobox', { name: '\u4e3b\u6a21\u578b' });
+    const agentModelSelect = screen.getByRole('combobox', { name: 'Agent \u4e3b\u6a21\u578b' });
+    const visionModelSelect = screen.getByRole('combobox', { name: 'Vision \u6a21\u578b' });
 
-    fireEvent.click(screen.getByRole('button', { name: /DeepSeek 官方/i }));
-    const modelInput = screen.getByLabelText('模型（逗号分隔）');
+    fireEvent.click(screen.getByRole('button', { name: /DeepSeek \u5b98\u65b9/i }));
+    const modelInput = screen.getByLabelText('\u6a21\u578b（\u9017\u53f7\u5206\u9694）');
     fireEvent.change(modelInput, {
       target: { value: 'deepseek-v4-flash' },
     });
@@ -1415,11 +1415,11 @@ describe('LLMChannelEditor', () => {
       />
     );
 
-    fireEvent.click(screen.getByRole('button', { name: /DeepSeek 官方/i }));
+    fireEvent.click(screen.getByRole('button', { name: /DeepSeek \u5b98\u65b9/i }));
     fireEvent.change(screen.getByLabelText('Base URL'), {
       target: { value: 'https://api.deepseek.com' },
     });
-    fireEvent.click(screen.getByRole('button', { name: '保存 AI 配置' }));
+    fireEvent.click(screen.getByRole('button', { name: '\u4fdd\u5b58 AI \u914d\u7f6e' }));
 
     await waitFor(() => {
       expect(update).toHaveBeenCalled();
@@ -1462,15 +1462,15 @@ describe('LLMChannelEditor', () => {
       />
     );
 
-    fireEvent.click(screen.getByRole('button', { name: /通义千问/i }));
-    fireEvent.click(screen.getByRole('button', { name: '获取模型' }));
+    fireEvent.click(screen.getByRole('button', { name: /\u901a\u4e49\u5343\u95ee/i }));
+    fireEvent.click(screen.getByRole('button', { name: '\u83b7\u53d6\u6a21\u578b' }));
 
     const checkbox = await screen.findByLabelText('MiniMax-M1');
     expect(checkbox).toBeChecked();
 
     fireEvent.click(checkbox);
     await waitFor(() => {
-      expect(screen.getByLabelText('手动模型（逗号分隔）')).toHaveValue('');
+      expect(screen.getByLabelText('\u624b\u52a8\u6a21\u578b（\u9017\u53f7\u5206\u9694）')).toHaveValue('');
     });
   });
 
@@ -1500,12 +1500,12 @@ describe('LLMChannelEditor', () => {
       />
     );
 
-    fireEvent.click(screen.getByRole('button', { name: /通义千问/i }));
-    fireEvent.click(screen.getByRole('button', { name: '获取模型' }));
+    fireEvent.click(screen.getByRole('button', { name: /\u901a\u4e49\u5343\u95ee/i }));
+    fireEvent.click(screen.getByRole('button', { name: '\u83b7\u53d6\u6a21\u578b' }));
 
     const checkbox = await screen.findByLabelText('MiniMax-M1');
     expect(checkbox).not.toBeChecked();
-    expect(screen.getByLabelText('手动模型（逗号分隔）')).toHaveValue('minimax/MiniMax-M1');
+    expect(screen.getByLabelText('\u624b\u52a8\u6a21\u578b（\u9017\u53f7\u5206\u9694）')).toHaveValue('minimax/MiniMax-M1');
   });
 
   it('discovers models and writes selected values back to channel config', async () => {
@@ -1544,13 +1544,13 @@ describe('LLMChannelEditor', () => {
     );
 
     fireEvent.click(screen.getByRole('button', { name: /Dashscope/i }));
-    fireEvent.click(screen.getByRole('button', { name: '获取模型' }));
+    fireEvent.click(screen.getByRole('button', { name: '\u83b7\u53d6\u6a21\u578b' }));
 
     const qwenPlusCheckbox = await screen.findByLabelText('qwen-plus');
     fireEvent.click(qwenPlusCheckbox);
 
     await waitFor(() => {
-      expect(screen.getByLabelText('手动模型（逗号分隔）')).toHaveValue('qwen-old,qwen-plus');
+      expect(screen.getByLabelText('\u624b\u52a8\u6a21\u578b（\u9017\u53f7\u5206\u9694）')).toHaveValue('qwen-old,qwen-plus');
     });
 
     expect(discoverLLMChannelModels).toHaveBeenCalledWith(
@@ -1563,7 +1563,7 @@ describe('LLMChannelEditor', () => {
       }),
     );
 
-    fireEvent.click(screen.getByRole('button', { name: '保存 AI 配置' }));
+    fireEvent.click(screen.getByRole('button', { name: '\u4fdd\u5b58 AI \u914d\u7f6e' }));
 
     await waitFor(() => {
       expect(update).toHaveBeenCalled();
@@ -1589,12 +1589,12 @@ describe('LLMChannelEditor', () => {
       />
     );
 
-    fireEvent.click(screen.getByRole('button', { name: /OpenAI 官方/i }));
-    fireEvent.click(screen.getByRole('button', { name: '测试连接' }));
+    fireEvent.click(screen.getByRole('button', { name: /OpenAI \u5b98\u65b9/i }));
+    fireEvent.click(screen.getByRole('button', { name: '\u6d4b\u8bd5\u8fde\u63a5' }));
 
-    expect(await screen.findByText(/聊天调用 · 鉴权失败：LLM authentication failed/i)).toBeInTheDocument();
-    expect(screen.getByText(/请检查 API Key 是否正确/i)).toBeInTheDocument();
-    expect(screen.queryByText(/调整模型顺序或移除不可用模型/i)).not.toBeInTheDocument();
+    expect(await screen.findByText(/\u804a\u5929\u8c03\u7528 · \u9274\u6743\u5931\u8d25：LLM authentication failed/i)).toBeInTheDocument();
+    expect(screen.getByText(/\u8bf7\u68c0\u67e5 API Key \u662f\u5426\u6b63\u786e/i)).toBeInTheDocument();
+    expect(screen.queryByText(/\u8c03\u6574\u6a21\u578b\u987a\u5e8f\u6216\u79fb\u9664\u4e0d\u53ef\u7528\u6a21\u578b/i)).not.toBeInTheDocument();
   });
 
   it('shows tested model and model-availability hints when a model is disabled', async () => {
@@ -1628,15 +1628,15 @@ describe('LLMChannelEditor', () => {
     );
 
     fireEvent.click(screen.getByRole('button', { name: /SiliconFlow/i }));
-    fireEvent.click(screen.getByRole('button', { name: '测试连接' }));
+    fireEvent.click(screen.getByRole('button', { name: '\u6d4b\u8bd5\u8fde\u63a5' }));
 
-    expect(await screen.findByText(/聊天调用 · 模型不可用：LLM channel test failed/i)).toBeInTheDocument();
-    expect(screen.getByText(/本次测试模型：openai\/deepseek-ai\/DeepSeek-V3/i)).toBeInTheDocument();
-    expect(screen.getByText(/基础连接测试默认使用模型列表首项：deepseek-ai\/DeepSeek-V3/i)).toBeInTheDocument();
-    expect(screen.getByText(/基础连接测试默认只测试模型列表中的第一个模型/i)).toBeInTheDocument();
-    expect(screen.getByText(/调整模型顺序或移除不可用模型/i)).toBeInTheDocument();
-    expect(screen.getByText(/模型是否已开通、账号是否可见/i)).toBeInTheDocument();
-    expect(screen.queryByText(/Base URL、代理、TLS/i)).not.toBeInTheDocument();
+    expect(await screen.findByText(/\u804a\u5929\u8c03\u7528 · \u6a21\u578b\u4e0d\u53ef\u7528：LLM channel test failed/i)).toBeInTheDocument();
+    expect(screen.getByText(/\u672c\u6b21\u6d4b\u8bd5\u6a21\u578b：openai\/deepseek-ai\/DeepSeek-V3/i)).toBeInTheDocument();
+    expect(screen.getByText(/\u57fa\u7840\u8fde\u63a5\u6d4b\u8bd5\u9ed8\u8ba4\u4f7f\u7528\u6a21\u578b\u5217\u8868\u9996\u9879：deepseek-ai\/DeepSeek-V3/i)).toBeInTheDocument();
+    expect(screen.getByText(/\u57fa\u7840\u8fde\u63a5\u6d4b\u8bd5\u9ed8\u8ba4\u53ea\u6d4b\u8bd5\u6a21\u578b\u5217\u8868\u4e2d\u7684\u7b2c\u4e00\u4e2a\u6a21\u578b/i)).toBeInTheDocument();
+    expect(screen.getByText(/\u8c03\u6574\u6a21\u578b\u987a\u5e8f\u6216\u79fb\u9664\u4e0d\u53ef\u7528\u6a21\u578b/i)).toBeInTheDocument();
+    expect(screen.getByText(/\u6a21\u578b\u662f\u5426\u5df2\u5f00\u901a、\u8d26\u53f7\u662f\u5426\u53ef\u89c1/i)).toBeInTheDocument();
+    expect(screen.queryByText(/Base URL、\u4ee3\u7406、TLS/i)).not.toBeInTheDocument();
     expect(testLLMChannel).toHaveBeenCalledWith(expect.objectContaining({
       models: ['deepseek-ai/DeepSeek-V3', 'Qwen/Qwen3-Coder'],
     }));
@@ -1673,13 +1673,13 @@ describe('LLMChannelEditor', () => {
     );
 
     fireEvent.click(screen.getByRole('button', { name: /proxy/i }));
-    fireEvent.click(screen.getByRole('button', { name: '测试连接' }));
+    fireEvent.click(screen.getByRole('button', { name: '\u6d4b\u8bd5\u8fde\u63a5' }));
 
-    expect(await screen.findByText(/聊天调用 · 请求被拦截/i)).toBeInTheDocument();
-    expect(screen.getByText(/本次测试模型：openai\/gpt-5\.5/i)).toBeInTheDocument();
-    expect(screen.getByText(/账号风控、地域限制、模型权限/i)).toBeInTheDocument();
-    expect(screen.queryByText(/Base URL、代理、TLS/i)).not.toBeInTheDocument();
-    expect(screen.queryByText(/调整模型顺序或移除不可用模型/i)).not.toBeInTheDocument();
+    expect(await screen.findByText(/\u804a\u5929\u8c03\u7528 · \u8bf7\u6c42\u88ab\u62e6\u622a/i)).toBeInTheDocument();
+    expect(screen.getByText(/\u672c\u6b21\u6d4b\u8bd5\u6a21\u578b：openai\/gpt-5\.5/i)).toBeInTheDocument();
+    expect(screen.getByText(/\u8d26\u53f7\u98ce\u63a7、\u5730\u57df\u9650\u5236、\u6a21\u578b\u6743\u9650/i)).toBeInTheDocument();
+    expect(screen.queryByText(/Base URL、\u4ee3\u7406、TLS/i)).not.toBeInTheDocument();
+    expect(screen.queryByText(/\u8c03\u6574\u6a21\u578b\u987a\u5e8f\u6216\u79fb\u9664\u4e0d\u53ef\u7528\u6a21\u578b/i)).not.toBeInTheDocument();
   });
 
   it('shows focused quota exceeded troubleshooting hints', async () => {
@@ -1705,11 +1705,11 @@ describe('LLMChannelEditor', () => {
       />
     );
 
-    fireEvent.click(screen.getByRole('button', { name: /OpenAI 官方/i }));
-    fireEvent.click(screen.getByRole('button', { name: '测试连接' }));
+    fireEvent.click(screen.getByRole('button', { name: /OpenAI \u5b98\u65b9/i }));
+    fireEvent.click(screen.getByRole('button', { name: '\u6d4b\u8bd5\u8fde\u63a5' }));
 
-    expect(await screen.findByText(/服务商返回配额已耗尽/i)).toBeInTheDocument();
-    expect(screen.queryByText(/调整模型顺序或移除不可用模型/i)).not.toBeInTheDocument();
+    expect(await screen.findByText(/\u670d\u52a1\u5546\u8fd4\u56de\u914d\u989d\u5df2\u8017\u5c3d/i)).toBeInTheDocument();
+    expect(screen.queryByText(/\u8c03\u6574\u6a21\u578b\u987a\u5e8f\u6216\u79fb\u9664\u4e0d\u53ef\u7528\u6a21\u578b/i)).not.toBeInTheDocument();
   });
 
   it('does not show model-list action hints for network failures', async () => {
@@ -1735,11 +1735,11 @@ describe('LLMChannelEditor', () => {
       />
     );
 
-    fireEvent.click(screen.getByRole('button', { name: /OpenAI 官方/i }));
-    fireEvent.click(screen.getByRole('button', { name: '测试连接' }));
+    fireEvent.click(screen.getByRole('button', { name: /OpenAI \u5b98\u65b9/i }));
+    fireEvent.click(screen.getByRole('button', { name: '\u6d4b\u8bd5\u8fde\u63a5' }));
 
-    expect(await screen.findByText(/域名解析失败/i)).toBeInTheDocument();
-    expect(screen.queryByText(/调整模型顺序或移除不可用模型/i)).not.toBeInTheDocument();
+    expect(await screen.findByText(/\u57df\u540d\u89e3\u6790\u5931\u8d25/i)).toBeInTheDocument();
+    expect(screen.queryByText(/\u8c03\u6574\u6a21\u578b\u987a\u5e8f\u6216\u79fb\u9664\u4e0d\u53ef\u7528\u6a21\u578b/i)).not.toBeInTheDocument();
   });
 
   it('does not request runtime capabilities during the basic connection test', async () => {
@@ -1766,10 +1766,10 @@ describe('LLMChannelEditor', () => {
       />
     );
 
-    fireEvent.click(screen.getByRole('button', { name: /OpenAI 官方/i }));
-    fireEvent.click(screen.getByRole('button', { name: '测试连接' }));
+    fireEvent.click(screen.getByRole('button', { name: /OpenAI \u5b98\u65b9/i }));
+    fireEvent.click(screen.getByRole('button', { name: '\u6d4b\u8bd5\u8fde\u63a5' }));
 
-    await screen.findByText(/连接成功 · openai\/gpt-4o-mini/i);
+    await screen.findByText(/\u8fde\u63a5\u6210\u529f · openai\/gpt-4o-mini/i);
     expect(testLLMChannel).toHaveBeenCalledWith(expect.not.objectContaining({ capabilityChecks: expect.anything() }));
   });
 
@@ -1814,15 +1814,15 @@ describe('LLMChannelEditor', () => {
       />
     );
 
-    fireEvent.click(screen.getByRole('button', { name: /OpenAI 官方/i }));
+    fireEvent.click(screen.getByRole('button', { name: /OpenAI \u5b98\u65b9/i }));
     fireEvent.click(screen.getByLabelText('JSON'));
     fireEvent.click(screen.getByLabelText('Tools'));
-    fireEvent.click(screen.getByRole('button', { name: '检测能力' }));
+    fireEvent.click(screen.getByRole('button', { name: '\u68c0\u6d4b\u80fd\u529b' }));
 
-    expect(await screen.findByText(/能力检测完成：1 通过 \/ 1 失败 \/ 0 跳过/i)).toBeInTheDocument();
-    expect(screen.getByText('JSON 通过')).toBeInTheDocument();
-    expect(screen.getByText('Tools 失败')).toBeInTheDocument();
-    expect(screen.getByText(/当前模型或兼容层不支持该能力/i)).toBeInTheDocument();
+    expect(await screen.findByText(/\u80fd\u529b\u68c0\u6d4b\u5b8c\u6210：1 \u901a\u8fc7 \/ 1 \u5931\u8d25 \/ 0 \u8df3\u8fc7/i)).toBeInTheDocument();
+    expect(screen.getByText('JSON \u901a\u8fc7')).toBeInTheDocument();
+    expect(screen.getByText('Tools \u5931\u8d25')).toBeInTheDocument();
+    expect(screen.getByText(/\u5f53\u524d\u6a21\u578b\u6216\u517c\u5bb9\u5c42\u4e0d\u652f\u6301\u8be5\u80fd\u529b/i)).toBeInTheDocument();
     expect(testLLMChannel).toHaveBeenCalledWith(expect.objectContaining({ capabilityChecks: ['json', 'tools'] }));
   });
 
@@ -1859,14 +1859,14 @@ describe('LLMChannelEditor', () => {
       />
     );
 
-    fireEvent.click(screen.getByRole('button', { name: /OpenAI 官方/i }));
+    fireEvent.click(screen.getByRole('button', { name: /OpenAI \u5b98\u65b9/i }));
     fireEvent.click(screen.getByLabelText('JSON'));
-    fireEvent.click(screen.getByRole('button', { name: '检测能力' }));
+    fireEvent.click(screen.getByRole('button', { name: '\u68c0\u6d4b\u80fd\u529b' }));
 
-    expect(await screen.findByText(/能力检测完成：0 通过 \/ 0 失败 \/ 1 跳过/i)).toBeInTheDocument();
-    expect(screen.getByText('JSON 跳过')).toBeInTheDocument();
-    expect(screen.getByText(/服务商拒绝了当前 API Key/i)).toBeInTheDocument();
-    expect(screen.getByLabelText('模型（逗号分隔）')).toBeEnabled();
+    expect(await screen.findByText(/\u80fd\u529b\u68c0\u6d4b\u5b8c\u6210：0 \u901a\u8fc7 \/ 0 \u5931\u8d25 \/ 1 \u8df3\u8fc7/i)).toBeInTheDocument();
+    expect(screen.getByText('JSON \u8df3\u8fc7')).toBeInTheDocument();
+    expect(screen.getByText(/\u670d\u52a1\u5546\u62d2\u7edd\u4e86\u5f53\u524d API Key/i)).toBeInTheDocument();
+    expect(screen.getByLabelText('\u6a21\u578b（\u9017\u53f7\u5206\u9694）')).toBeEnabled();
   });
 
   it('keeps manual model input available when discovery fails', async () => {
@@ -1899,13 +1899,13 @@ describe('LLMChannelEditor', () => {
       />
     );
 
-    fireEvent.click(screen.getByRole('button', { name: /Gemini 官方/i }));
-    fireEvent.click(screen.getByRole('button', { name: '获取模型' }));
+    fireEvent.click(screen.getByRole('button', { name: /Gemini \u5b98\u65b9/i }));
+    fireEvent.click(screen.getByRole('button', { name: '\u83b7\u53d6\u6a21\u578b' }));
 
-    await screen.findByText(/模型发现 · 协议暂不支持：Model discovery is not supported for this protocol/i);
-    expect(screen.getByText(/当前仅对 OpenAI Compatible \/ DeepSeek 渠道提供自动模型发现/i)).toBeInTheDocument();
+    await screen.findByText(/\u6a21\u578b\u53d1\u73b0 · \u534f\u8bae\u6682\u4e0d\u652f\u6301：Model discovery is not supported for this protocol/i);
+    expect(screen.getByText(/\u5f53\u524d\u4ec5\u5bf9 OpenAI Compatible \/ DeepSeek \u6e20\u9053\u63d0\u4f9b\u81ea\u52a8\u6a21\u578b\u53d1\u73b0/i)).toBeInTheDocument();
 
-    const manualInput = screen.getByLabelText('模型（逗号分隔）');
+    const manualInput = screen.getByLabelText('\u6a21\u578b（\u9017\u53f7\u5206\u9694）');
     fireEvent.change(manualInput, { target: { value: 'gemini-2.5-flash' } });
     expect(manualInput).toHaveValue('gemini-2.5-flash');
   });
@@ -1940,11 +1940,11 @@ describe('LLMChannelEditor', () => {
       />
     );
 
-    fireEvent.click(screen.getByRole('button', { name: /OpenAI 官方/i }));
-    fireEvent.click(screen.getByRole('button', { name: '获取模型' }));
+    fireEvent.click(screen.getByRole('button', { name: /OpenAI \u5b98\u65b9/i }));
+    fireEvent.click(screen.getByRole('button', { name: '\u83b7\u53d6\u6a21\u578b' }));
 
-    expect(await screen.findByText(/响应解析 · 格式异常：Failed to parse \/models response/i)).toBeInTheDocument();
-    expect(screen.getByText(/该渠道返回的 \/models 响应格式不兼容，请改为手动填写模型列表。/i)).toBeInTheDocument();
+    expect(await screen.findByText(/\u54cd\u5e94\u89e3\u6790 · \u683c\u5f0f\u5f02\u5e38：Failed to parse \/models response/i)).toBeInTheDocument();
+    expect(screen.getByText(/\u8be5\u6e20\u9053\u8fd4\u56de\u7684 \/models \u54cd\u5e94\u683c\u5f0f\u4e0d\u517c\u5bb9，\u8bf7\u6539\u4e3a\u624b\u52a8\u586b\u5199\u6a21\u578b\u5217\u8868。/i)).toBeInTheDocument();
   });
 
   it('maps discovery empty responses to the /models troubleshooting hint', async () => {
@@ -1977,12 +1977,12 @@ describe('LLMChannelEditor', () => {
       />
     );
 
-    fireEvent.click(screen.getByRole('button', { name: /OpenAI 官方/i }));
-    fireEvent.click(screen.getByRole('button', { name: '获取模型' }));
+    fireEvent.click(screen.getByRole('button', { name: /OpenAI \u5b98\u65b9/i }));
+    fireEvent.click(screen.getByRole('button', { name: '\u83b7\u53d6\u6a21\u578b' }));
 
-    expect(await screen.findByText(/模型发现 · 空响应：No model IDs returned from \/models response/i)).toBeInTheDocument();
-    expect(screen.getByText(/该渠道的 \/models 接口未返回可用模型 ID/i)).toBeInTheDocument();
-    expect(screen.queryByText(/切换兼容模型、关闭额外响应模式/i)).not.toBeInTheDocument();
+    expect(await screen.findByText(/\u6a21\u578b\u53d1\u73b0 · \u7a7a\u54cd\u5e94：No model IDs returned from \/models response/i)).toBeInTheDocument();
+    expect(screen.getByText(/\u8be5\u6e20\u9053\u7684 \/models \u63a5\u53e3\u672a\u8fd4\u56de\u53ef\u7528\u6a21\u578b ID/i)).toBeInTheDocument();
+    expect(screen.queryByText(/\u5207\u6362\u517c\u5bb9\u6a21\u578b、\u5173\u95ed\u989d\u5916\u54cd\u5e94\u6a21\u5f0f/i)).not.toBeInTheDocument();
   });
 
   it('does not apply stale discovery response after channel list re-sync', async () => {
@@ -2023,8 +2023,8 @@ describe('LLMChannelEditor', () => {
       />,
     );
 
-    fireEvent.click(screen.getByRole('button', { name: /OpenAI 官方/i }));
-    fireEvent.click(screen.getByRole('button', { name: '获取模型' }));
+    fireEvent.click(screen.getByRole('button', { name: /OpenAI \u5b98\u65b9/i }));
+    fireEvent.click(screen.getByRole('button', { name: '\u83b7\u53d6\u6a21\u578b' }));
 
     renderResult.rerender(
       <LLMChannelEditor
@@ -2042,13 +2042,13 @@ describe('LLMChannelEditor', () => {
       />,
     );
 
-    fireEvent.click(screen.getByRole('button', { name: /通义千问/i }));
-    fireEvent.click(screen.getByRole('button', { name: '获取模型' }));
+    fireEvent.click(screen.getByRole('button', { name: /\u901a\u4e49\u5343\u95ee/i }));
+    fireEvent.click(screen.getByRole('button', { name: '\u83b7\u53d6\u6a21\u578b' }));
 
     const dashModelCheckbox = await screen.findByLabelText('dashscope-plus');
     fireEvent.click(dashModelCheckbox);
 
-    expect(screen.getByLabelText('手动模型（逗号分隔）')).toHaveValue('dash-old,dashscope-plus');
+    expect(screen.getByLabelText('\u624b\u52a8\u6a21\u578b（\u9017\u53f7\u5206\u9694）')).toHaveValue('dash-old,dashscope-plus');
 
     resolvePendingFirst({
       success: true,
@@ -2060,7 +2060,7 @@ describe('LLMChannelEditor', () => {
     });
 
     await waitFor(() => {
-      expect(screen.getByLabelText('手动模型（逗号分隔）')).toHaveValue('dash-old,dashscope-plus');
+      expect(screen.getByLabelText('\u624b\u52a8\u6a21\u578b（\u9017\u53f7\u5206\u9694）')).toHaveValue('dash-old,dashscope-plus');
     });
     expect(screen.queryByLabelText('stale-openai')).not.toBeInTheDocument();
   });
@@ -2090,7 +2090,7 @@ describe('LLMChannelEditor', () => {
     );
 
     fireEvent.click(screen.getByRole('button', { name: /Dashscope/i }));
-    fireEvent.click(screen.getByRole('button', { name: '获取模型' }));
+    fireEvent.click(screen.getByRole('button', { name: '\u83b7\u53d6\u6a21\u578b' }));
 
     const baseUrlInput = screen.getByLabelText('Base URL');
     fireEvent.change(baseUrlInput, {
@@ -2107,7 +2107,7 @@ describe('LLMChannelEditor', () => {
     });
 
     await waitFor(() => {
-      expect(screen.getByLabelText('模型（逗号分隔）')).toHaveValue('qwen-old');
+      expect(screen.getByLabelText('\u6a21\u578b（\u9017\u53f7\u5206\u9694）')).toHaveValue('qwen-old');
       expect(screen.queryByLabelText('stale-openai')).not.toBeInTheDocument();
     });
   });

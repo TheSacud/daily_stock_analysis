@@ -1363,7 +1363,7 @@ const SettingsPage: React.FC = () => {
   const settingsPanelDiagnosticHint = isDesktopRuntime
     ? uiLanguage === 'en'
       ? <>Check and provide the desktop log <code>desktop.log</code>, plus the release version, Windows version, and trigger path.</>
-      : <>请查看并提供桌面端日志 <code>desktop.log</code>，同时补充 release 版本、Windows 版本和触发入口。</>
+      : <>Review and provide the desktop log <code>desktop.log</code>, plus the release version, Windows version, and entry point that triggered the issue.</>
     : t('settings.diagnosticHintWeb');
   const activeCategoryTitle = getCategoryTitle(activeCategory as SystemConfigCategory, t('settings.activePanelTitle'), uiLanguage);
   const activeCategoryDescription = getCategoryDescription(activeCategory as SystemConfigCategory, '', uiLanguage);

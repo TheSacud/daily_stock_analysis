@@ -1,14 +1,14 @@
 # -*- coding: utf-8 -*-
 """
 ===================================
-股票数据接口
+\u80a1\u7968\u6570\u636e\u63a5\u53e3
 ===================================
 
-职责：
-1. POST /api/v1/stocks/extract-from-image 从图片提取股票代码
-2. POST /api/v1/stocks/parse-import 解析 CSV/Excel/剪贴板
-3. GET /api/v1/stocks/{code}/quote 实时行情接口
-4. GET /api/v1/stocks/{code}/history 历史行情接口
+\u804c\u8d23:
+1. POST /api/v1/stocks/extract-from-image \u4ece\u56fe\u7247\u63d0\u53d6stock code
+2. POST /api/v1/stocks/parse-import \u89e3\u6790 CSV/Excel/\u526a\u8d34\u677f
+3. GET /api/v1/stocks/{code}/quote realtime quote\u63a5\u53e3
+4. GET /api/v1/stocks/{code}/history history\u884c\u60c5\u63a5\u53e3
 """
 
 import logging
@@ -47,7 +47,7 @@ logger = logging.getLogger(__name__)
 
 router = APIRouter()
 
-# 须在 /{stock_code} 路由之前定义
+# \u987b\u5728 /{stock_code} \u8def\u7531\u4e4b\u524d\u5b9a\u4e49
 ALLOWED_MIME_STR = ", ".join(ALLOWED_MIME)
 
 
@@ -97,14 +97,14 @@ def _validate_and_normalize_stock_code(code: str) -> str:
     if not stripped:
         raise HTTPException(
             status_code=400,
-            detail={"error": "invalid_stock_code", "message": "股票代码不能为空"},
+            detail={"error": "invalid_stock_code", "message": "stock codecannot be empty"},
         )
     if not _STOCK_CODE_RE.match(stripped):
         raise HTTPException(
             status_code=400,
             detail={
                 "error": "invalid_stock_code",
-                "message": f"'{stripped}' 不是合法的股票代码格式",
+                "message": f"'{stripped}' \u4e0d\u662f\u5408\u6cd5\u7684stock code\u683c\u5f0f",
             },
         )
     return normalize_stock_code(stripped)
@@ -122,26 +122,26 @@ def _watchlist_match_key(code: str) -> str:
     "/extract-from-image",
     response_model=ExtractFromImageResponse,
     responses={
-        200: {"description": "提取的股票代码"},
-        400: {"description": "图片无效", "model": ErrorResponse},
-        500: {"description": "服务器错误", "model": ErrorResponse},
+        200: {"description": "\u63d0\u53d6\u7684stock code"},
+        400: {"description": "\u56fe\u7247\u65e0\u6548", "model": ErrorResponse},
+        500: {"description": "\u670d\u52a1\u5668error", "model": ErrorResponse},
     },
-    summary="从图片提取股票代码",
-    description="上传截图/图片，通过 Vision LLM 提取股票代码。支持 JPEG、PNG、WebP、GIF，最大 5MB。",
+    summary="\u4ece\u56fe\u7247\u63d0\u53d6stock code",
+    description="\u4e0a\u4f20\u622a\u56fe/\u56fe\u7247; \u901a\u8fc7 Vision LLM \u63d0\u53d6stock code.\u652f\u6301 JPEG、PNG、WebP、GIF; \u6700\u5927 5MB.",
 )
 def extract_from_image(
-    file: Optional[UploadFile] = File(None, description="图片文件（表单字段名 file）"),
-    include_raw: bool = Query(False, description="是否在结果中包含原始 LLM 响应"),
+    file: Optional[UploadFile] = File(None, description="\u56fe\u7247\u6587\u4ef6 (\u8868\u5355\u5b57\u6bb5\u540d file)"),
+    include_raw: bool = Query(False, description="\u662f\u5426\u5728resultMedium\u5305\u542b\u539f\u59cb LLM \u54cd\u5e94"),
 ) -> ExtractFromImageResponse:
     """
-    从上传的图片中提取股票代码（使用 Vision LLM）。
+    \u4ece\u4e0a\u4f20\u7684\u56fe\u7247Medium\u63d0\u53d6stock code (\u4f7f\u7528 Vision LLM).
 
-    表单字段请使用 file 上传图片。优先级：Gemini / Anthropic / OpenAI（首个可用）。
+    \u8868\u5355\u5b57\u6bb5please use file \u4e0a\u4f20\u56fe\u7247.\u4f18\u5148\u7ea7: Gemini / Anthropic / OpenAI (\u9996\u4e2a\u53ef\u7528).
     """
     if not file or not file.filename:
         raise HTTPException(
             status_code=400,
-            detail={"error": "bad_request", "message": "未提供文件，请使用表单字段 file 上传图片"},
+            detail={"error": "bad_request", "message": "\u672a\u63d0\u4f9b\u6587\u4ef6; please use\u8868\u5355\u5b57\u6bb5 file \u4e0a\u4f20\u56fe\u7247"},
         )
 
     content_type = (file.content_type or "").split(";")[0].strip().lower()
@@ -150,28 +150,28 @@ def extract_from_image(
             status_code=400,
             detail={
                 "error": "unsupported_type",
-                "message": f"不支持的类型: {content_type}。允许: {ALLOWED_MIME_STR}",
+                "message": f"does not support\u7684\u7c7b\u578b: {content_type}.\u5141\u8bb8: {ALLOWED_MIME_STR}",
             },
         )
 
     try:
-        # 先读取限定大小，再检查是否还有剩余（语义清晰：超出则拒绝）
+        # \u5148\u8bfb\u53d6\u9650\u5b9a\u5927\u5c0f; \u518d\u68c0check\u662f\u5426\u8fd8\u6709\u5269\u4f59 (\u8bed\u4e49\u6e05\u6670: \u8d85\u51fa\u5219\u62d2\u7edd)
         data = file.file.read(MAX_SIZE_BYTES)
         if file.file.read(1):
             raise HTTPException(
                 status_code=400,
                 detail={
                     "error": "file_too_large",
-                    "message": f"图片超过 {MAX_SIZE_BYTES // (1024 * 1024)}MB 限制",
+                    "message": f"\u56fe\u7247\u8d85\u8fc7 {MAX_SIZE_BYTES // (1024 * 1024)}MB limit",
                 },
             )
     except HTTPException:
         raise
     except Exception as e:
-        logger.warning(f"读取上传文件失败: {e}")
+        logger.warning(f"\u8bfb\u53d6\u4e0a\u4f20\u6587\u4ef6failed: {e}")
         raise HTTPException(
             status_code=400,
-            detail={"error": "read_failed", "message": "读取上传文件失败"},
+            detail={"error": "read_failed", "message": "\u8bfb\u53d6\u4e0a\u4f20\u6587\u4ef6failed"},
         )
 
     try:
@@ -188,10 +188,10 @@ def extract_from_image(
     except ValueError as e:
         raise HTTPException(status_code=400, detail={"error": "extract_failed", "message": str(e)})
     except Exception as e:
-        logger.error(f"图片提取失败: {e}", exc_info=True)
+        logger.error(f"\u56fe\u7247\u63d0\u53d6failed: {e}", exc_info=True)
         raise HTTPException(
             status_code=500,
-            detail={"error": "internal_error", "message": "图片提取失败"},
+            detail={"error": "internal_error", "message": "\u56fe\u7247\u63d0\u53d6failed"},
         )
 
 
@@ -199,20 +199,20 @@ def extract_from_image(
     "/parse-import",
     response_model=ExtractFromImageResponse,
     responses={
-        200: {"description": "解析结果"},
-        400: {"description": "未提供数据或解析失败", "model": ErrorResponse},
-        500: {"description": "服务器错误", "model": ErrorResponse},
+        200: {"description": "\u89e3\u6790result"},
+        400: {"description": "\u672a\u63d0\u4f9b\u6570\u636eorparse failed", "model": ErrorResponse},
+        500: {"description": "\u670d\u52a1\u5668error", "model": ErrorResponse},
     },
-    summary="解析 CSV/Excel/剪贴板",
-    description="上传 CSV/Excel 文件或粘贴文本，自动解析股票代码。文件上限 2MB，文本上限 100KB。",
+    summary="\u89e3\u6790 CSV/Excel/\u526a\u8d34\u677f",
+    description="\u4e0a\u4f20 CSV/Excel \u6587\u4ef6or\u7c98\u8d34\u6587\u672c; \u81ea\u52a8\u89e3\u6790stock code.\u6587\u4ef6\u4e0a\u9650 2MB; \u6587\u672c\u4e0a\u9650 100KB.",
 )
 async def parse_import(request: Request) -> ExtractFromImageResponse:
     """
-    解析 CSV/Excel 文件或剪贴板文本。
+    \u89e3\u6790 CSV/Excel \u6587\u4ef6or\u526a\u8d34\u677f\u6587\u672c.
 
-    - multipart/form-data + file: 上传文件
-    - application/json + {"text": "..."}: 粘贴文本
-    - 优先使用 file，若同时提供则忽略 text
+    - multipart/form-data + file: \u4e0a\u4f20\u6587\u4ef6
+    - application/json + {"text": "..."}: \u7c98\u8d34\u6587\u672c
+    - \u4f18\u5148\u4f7f\u7528 file; \u82e5\u540c\u65f6\u63d0\u4f9b\u5219\u5ffd\u7565 text
     """
     content_type = (request.headers.get("content-type") or "").lower()
 
@@ -223,13 +223,13 @@ async def parse_import(request: Request) -> ExtractFromImageResponse:
             logger.warning("[parse_import] JSON parse failed: %s", e)
             raise HTTPException(
                 status_code=400,
-                detail={"error": "invalid_json", "message": f"JSON 解析失败: {e}"},
+                detail={"error": "invalid_json", "message": f"JSON parse failed: {e}"},
             )
         text = body.get("text") if isinstance(body, dict) else None
         if not text or not isinstance(text, str):
             raise HTTPException(
                 status_code=400,
-                detail={"error": "bad_request", "message": "未提供 text，请使用 {\"text\": \"...\"}"},
+                detail={"error": "bad_request", "message": "\u672a\u63d0\u4f9b text; please use {\"text\": \"...\"}"},
             )
         try:
             items = parse_import_from_text(text)
@@ -247,7 +247,7 @@ async def parse_import(request: Request) -> ExtractFromImageResponse:
         if not file or not hasattr(file, "read"):
             raise HTTPException(
                 status_code=400,
-                detail={"error": "bad_request", "message": "未提供文件，请使用表单字段 file"},
+                detail={"error": "bad_request", "message": "\u672a\u63d0\u4f9b\u6587\u4ef6; please use\u8868\u5355\u5b57\u6bb5 file"},
             )
         file_size = getattr(file, "size", None)
         if isinstance(file_size, int) and file_size > MAX_FILE_BYTES:
@@ -255,7 +255,7 @@ async def parse_import(request: Request) -> ExtractFromImageResponse:
                 status_code=400,
                 detail={
                     "error": "file_too_large",
-                    "message": f"文件超过 {MAX_FILE_BYTES // (1024 * 1024)}MB 限制",
+                    "message": f"file exceeds {MAX_FILE_BYTES // (1024 * 1024)}MB limit",
                 },
             )
         try:
@@ -265,7 +265,7 @@ async def parse_import(request: Request) -> ExtractFromImageResponse:
                     status_code=400,
                     detail={
                         "error": "file_too_large",
-                        "message": f"文件超过 {MAX_FILE_BYTES // (1024 * 1024)}MB 限制",
+                        "message": f"file exceeds {MAX_FILE_BYTES // (1024 * 1024)}MB limit",
                     },
                 )
         except HTTPException:
@@ -281,7 +281,7 @@ async def parse_import(request: Request) -> ExtractFromImageResponse:
             )
             raise HTTPException(
                 status_code=400,
-                detail={"error": "read_failed", "message": "读取文件失败"},
+                detail={"error": "read_failed", "message": "\u8bfb\u53d6\u6587\u4ef6failed"},
             )
         filename = getattr(file, "filename", None) or ""
         try:
@@ -301,7 +301,7 @@ async def parse_import(request: Request) -> ExtractFromImageResponse:
             status_code=400,
             detail={
                 "error": "bad_request",
-                "message": "请使用 multipart/form-data 上传文件，或 application/json 提交 {\"text\": \"...\"}",
+                "message": "please use multipart/form-data \u4e0a\u4f20\u6587\u4ef6; or application/json \u63d0\u4ea4 {\"text\": \"...\"}",
             },
         )
 
@@ -317,23 +317,23 @@ async def parse_import(request: Request) -> ExtractFromImageResponse:
     "/watchlist",
     response_model=WatchlistResponse,
     responses={
-        200: {"description": "当前自选队列"},
-        500: {"description": "服务器错误", "model": ErrorResponse},
+        200: {"description": "current watchlist hasqueue"},
+        500: {"description": "\u670d\u52a1\u5668error", "model": ErrorResponse},
     },
-    summary="获取自选队列",
-    description="返回当前 STOCK_LIST 配置中的所有股票代码。",
+    summary="\u83b7\u53d6\u81ea\u9009queue",
+    description="\u8fd4\u56de\u5f53\u524d STOCK_LIST configMedium\u7684\u6240\u6709stock code.",
 )
 def get_watchlist(
     service: SystemConfigService = Depends(get_system_config_service),
 ) -> WatchlistResponse:
     try:
         codes = _read_watchlist_codes(service)
-        return WatchlistResponse(stock_codes=codes, message=f"当前自选 {len(codes)} 只股票")
+        return WatchlistResponse(stock_codes=codes, message=f"current watchlist has {len(codes)} stocks")
     except Exception as e:
-        logger.error(f"获取自选队列失败: {e}", exc_info=True)
+        logger.error(f"\u83b7\u53d6\u81ea\u9009queuefailed: {e}", exc_info=True)
         raise HTTPException(
             status_code=500,
-            detail={"error": "internal_error", "message": f"获取自选队列失败: {str(e)}"},
+            detail={"error": "internal_error", "message": f"\u83b7\u53d6\u81ea\u9009queuefailed: {str(e)}"},
         )
 
 
@@ -341,12 +341,12 @@ def get_watchlist(
     "/watchlist/add",
     response_model=WatchlistResponse,
     responses={
-        200: {"description": "已加入自选"},
-        400: {"description": "参数错误", "model": ErrorResponse},
-        500: {"description": "服务器错误", "model": ErrorResponse},
+        200: {"description": "added\u81ea\u9009"},
+        400: {"description": "invalid parameters", "model": ErrorResponse},
+        500: {"description": "\u670d\u52a1\u5668error", "model": ErrorResponse},
     },
-    summary="加入自选队列",
-    description="将指定股票代码加入 STOCK_LIST。",
+    summary="\u52a0\u5165\u81ea\u9009queue",
+    description="\u5c06\u6307\u5b9astock code\u52a0\u5165 STOCK_LIST.",
 )
 def add_to_watchlist(
     request: WatchlistRequest,
@@ -359,14 +359,14 @@ def add_to_watchlist(
         if _watchlist_match_key(validated) not in existing_keys:
             codes.append(request.stock_code.strip())
             _write_watchlist_codes(service, codes)
-        return WatchlistResponse(stock_codes=codes, message=f"已加入 {request.stock_code.strip()}")
+        return WatchlistResponse(stock_codes=codes, message=f"added {request.stock_code.strip()}")
     except HTTPException:
         raise
     except Exception as e:
-        logger.error(f"加入自选失败: {e}", exc_info=True)
+        logger.error(f"\u52a0\u5165\u81ea\u9009failed: {e}", exc_info=True)
         raise HTTPException(
             status_code=500,
-            detail={"error": "internal_error", "message": f"加入自选失败: {str(e)}"},
+            detail={"error": "internal_error", "message": f"\u52a0\u5165\u81ea\u9009failed: {str(e)}"},
         )
 
 
@@ -374,12 +374,12 @@ def add_to_watchlist(
     "/watchlist/remove",
     response_model=WatchlistResponse,
     responses={
-        200: {"description": "已从自选删除"},
-        400: {"description": "参数错误", "model": ErrorResponse},
-        500: {"description": "服务器错误", "model": ErrorResponse},
+        200: {"description": "\u5df2\u4ece\u81ea\u9009\u5220\u9664"},
+        400: {"description": "invalid parameters", "model": ErrorResponse},
+        500: {"description": "\u670d\u52a1\u5668error", "model": ErrorResponse},
     },
-    summary="从自选队列删除",
-    description="从 STOCK_LIST 中移除指定股票代码。",
+    summary="\u4ece\u81ea\u9009queue\u5220\u9664",
+    description="\u4ece STOCK_LIST Medium\u79fb\u9664\u6307\u5b9astock code.",
 )
 def remove_from_watchlist(
     request: WatchlistRequest,
@@ -394,14 +394,14 @@ def remove_from_watchlist(
             idx = existing_keys.index(requested_key)
             codes.pop(idx)
             _write_watchlist_codes(service, codes)
-        return WatchlistResponse(stock_codes=codes, message=f"已移除 {request.stock_code.strip()}")
+        return WatchlistResponse(stock_codes=codes, message=f"removed {request.stock_code.strip()}")
     except HTTPException:
         raise
     except Exception as e:
-        logger.error(f"从自选删除失败: {e}", exc_info=True)
+        logger.error(f"\u4ece\u81ea\u9009delete failed: {e}", exc_info=True)
         raise HTTPException(
             status_code=500,
-            detail={"error": "internal_error", "message": f"从自选删除失败: {str(e)}"},
+            detail={"error": "internal_error", "message": f"\u4ece\u81ea\u9009delete failed: {str(e)}"},
         )
 
 
@@ -409,43 +409,43 @@ def remove_from_watchlist(
     "/{stock_code}/quote",
     response_model=StockQuote,
     responses={
-        200: {"description": "行情数据"},
-        404: {"description": "股票不存在", "model": ErrorResponse},
-        500: {"description": "服务器错误", "model": ErrorResponse},
+        200: {"description": "\u884c\u60c5\u6570\u636e"},
+        404: {"description": "\u80a1\u7968does not exist", "model": ErrorResponse},
+        500: {"description": "\u670d\u52a1\u5668error", "model": ErrorResponse},
     },
-    summary="获取股票实时行情",
-    description="获取指定股票的最新行情数据"
+    summary="\u83b7\u53d6\u80a1\u7968realtime quote",
+    description="\u83b7\u53d6\u6307\u5b9a\u80a1\u7968\u7684\u6700\u65b0\u884c\u60c5\u6570\u636e"
 )
 def get_stock_quote(stock_code: str) -> StockQuote:
     """
-    获取股票实时行情
-    
-    获取指定股票的最新行情数据
-    
+    \u83b7\u53d6\u80a1\u7968realtime quote
+
+    \u83b7\u53d6\u6307\u5b9a\u80a1\u7968\u7684\u6700\u65b0\u884c\u60c5\u6570\u636e
+
     Args:
-        stock_code: 股票代码（如 600519、00700、AAPL）
-        
+        stock_code: stock code (\u5982 600519、00700、AAPL)
+
     Returns:
-        StockQuote: 实时行情数据
-        
+        StockQuote: realtime quote\u6570\u636e
+
     Raises:
-        HTTPException: 404 - 股票不存在
+        HTTPException: 404 - \u80a1\u7968does not exist
     """
     try:
         service = StockService()
-        
-        # 使用 def 而非 async def，FastAPI 自动在线程池中执行
+
+        # \u4f7f\u7528 def \u800c\u975e async def; FastAPI \u81ea\u52a8\u5728\u7ebf\u7a0b\u6c60Medium\u6267\u884c
         result = service.get_realtime_quote(stock_code)
-        
+
         if result is None:
             raise HTTPException(
                 status_code=404,
                 detail={
                     "error": "not_found",
-                    "message": f"未找到股票 {stock_code} 的行情数据"
+                    "message": f"\u672a\u627e\u5230\u80a1\u7968 {stock_code} \u7684\u884c\u60c5\u6570\u636e"
                 }
             )
-        
+
         return StockQuote(
             stock_code=result.get("stock_code", stock_code),
             stock_name=result.get("stock_name"),
@@ -460,16 +460,16 @@ def get_stock_quote(stock_code: str) -> StockQuote:
             amount=result.get("amount"),
             update_time=result.get("update_time")
         )
-        
+
     except HTTPException:
         raise
     except Exception as e:
-        logger.error(f"获取实时行情失败: {e}", exc_info=True)
+        logger.error(f"\u83b7\u53d6realtime quotefailed: {e}", exc_info=True)
         raise HTTPException(
             status_code=500,
             detail={
                 "error": "internal_error",
-                "message": f"获取实时行情失败: {str(e)}"
+                "message": f"\u83b7\u53d6realtime quotefailed: {str(e)}"
             }
         )
 
@@ -478,42 +478,42 @@ def get_stock_quote(stock_code: str) -> StockQuote:
     "/{stock_code}/history",
     response_model=StockHistoryResponse,
     responses={
-        200: {"description": "历史行情数据"},
-        422: {"description": "不支持的周期参数", "model": ErrorResponse},
-        500: {"description": "服务器错误", "model": ErrorResponse},
+        200: {"description": "history\u884c\u60c5\u6570\u636e"},
+        422: {"description": "does not support\u7684\u5468\u671fparameter", "model": ErrorResponse},
+        500: {"description": "\u670d\u52a1\u5668error", "model": ErrorResponse},
     },
-    summary="获取股票历史行情",
-    description="获取指定股票的历史 K 线数据"
+    summary="\u83b7\u53d6\u80a1\u7968history\u884c\u60c5",
+    description="\u83b7\u53d6\u6307\u5b9a\u80a1\u7968\u7684history K \u7ebf\u6570\u636e"
 )
 def get_stock_history(
     stock_code: str,
-    period: str = Query("daily", description="K 线周期", pattern="^(daily|weekly|monthly)$"),
-    days: int = Query(30, ge=1, le=365, description="获取天数")
+    period: str = Query("daily", description="K \u7ebf\u5468\u671f", pattern="^(daily|weekly|monthly)$"),
+    days: int = Query(30, ge=1, le=365, description="\u83b7\u53d6\u5929\u6570")
 ) -> StockHistoryResponse:
     """
-    获取股票历史行情
-    
-    获取指定股票的历史 K 线数据
-    
+    \u83b7\u53d6\u80a1\u7968history\u884c\u60c5
+
+    \u83b7\u53d6\u6307\u5b9a\u80a1\u7968\u7684history K \u7ebf\u6570\u636e
+
     Args:
-        stock_code: 股票代码
-        period: K 线周期 (daily/weekly/monthly)
-        days: 获取天数
-        
+        stock_code: stock code
+        period: K \u7ebf\u5468\u671f (daily/weekly/monthly)
+        days: \u83b7\u53d6\u5929\u6570
+
     Returns:
-        StockHistoryResponse: 历史行情数据
+        StockHistoryResponse: history\u884c\u60c5\u6570\u636e
     """
     try:
         service = StockService()
-        
-        # 使用 def 而非 async def，FastAPI 自动在线程池中执行
+
+        # \u4f7f\u7528 def \u800c\u975e async def; FastAPI \u81ea\u52a8\u5728\u7ebf\u7a0b\u6c60Medium\u6267\u884c
         result = service.get_history_data(
             stock_code=stock_code,
             period=period,
             days=days
         )
-        
-        # 转换为响应模型
+
+        # \u8f6c\u6362\u4e3a\u54cd\u5e94\u6a21\u578b
         data = [
             KLineData(
                 date=item.get("date"),
@@ -527,16 +527,16 @@ def get_stock_history(
             )
             for item in result.get("data", [])
         ]
-        
+
         return StockHistoryResponse(
             stock_code=stock_code,
             stock_name=result.get("stock_name"),
             period=period,
             data=data
         )
-    
+
     except ValueError as e:
-        # period 参数不支持的错误（如 weekly/monthly）
+        # period parameterdoes not support\u7684error (\u5982 weekly/monthly)
         raise HTTPException(
             status_code=422,
             detail={
@@ -545,11 +545,11 @@ def get_stock_history(
             }
         )
     except Exception as e:
-        logger.error(f"获取历史行情失败: {e}", exc_info=True)
+        logger.error(f"\u83b7\u53d6history\u884c\u60c5failed: {e}", exc_info=True)
         raise HTTPException(
             status_code=500,
             detail={
                 "error": "internal_error",
-                "message": f"获取历史行情失败: {str(e)}"
+                "message": f"\u83b7\u53d6history\u884c\u60c5failed: {str(e)}"
             }
         )

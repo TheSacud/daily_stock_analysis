@@ -28,21 +28,21 @@ from src.storage import get_db, persist_llm_usage
 logger = logging.getLogger(__name__)
 
 VISIBLE_ROLES = {"user", "assistant"}
-SUMMARY_USER_PREFIX = "[系统生成的历史对话摘要，仅供延续本会话]"
+SUMMARY_USER_PREFIX = "[\u7cfb\u7edf\u751f\u6210\u7684history\u5bf9\u8bddsummary; \u4ec5\u4f9b\u5ef6\u7eed\u672cconversation]"
 SUMMARY_LLM_TIMEOUT_SECONDS = 20
 
-SUMMARY_SYSTEM_PROMPT = """你是股票问答系统的会话压缩器，只能总结已经出现过的用户可见对话内容。
+SUMMARY_SYSTEM_PROMPT = """\u4f60\u662f\u80a1\u7968ask\u7b54\u7cfb\u7edf\u7684conversation\u538b\u7f29\u5668; \u53ea\u80fd\u603b\u7ed3\u5df2\u7ecf\u51fa\u73b0\u8fc7\u7684user\u53ef\u89c1\u5bf9\u8bdd\u5185\u5bb9.
 
-硬性规则：
-- 只总结已有对话，不新增行情、新闻、财务数据或投资建议。
-- 不推断未出现的事实，不补充新的买卖建议。
-- 必须保留标的、持仓成本、周期、风险偏好、策略视角、关键判断、操作条件、止损止盈、数据时效、工具失败和未决问题。
-- 输出必须使用 Markdown，并严格包含以下 5 个二级标题：
-  ## 会话摘要
-  ## 当前关注标的
-  ## 用户偏好与约束
-  ## 已有判断与操作条件
-  ## 风险、数据时效与未决问题
+\u786c\u89c4\u5219:
+- \u53ea\u603b\u7ed3\u5df2\u6709\u5bf9\u8bdd; \u4e0d\u65b0\u589e\u884c\u60c5、news、\u8d22\u52a1\u6570\u636eor\u6295\u8d44\u5efa\u8bae.
+- \u4e0d\u63a8\u65ad\u672a\u51fa\u73b0\u7684\u4e8b\u5b9e; \u4e0d\u8865\u5145\u65b0\u7684\u4e70\u5356\u5efa\u8bae.
+- \u5fc5\u987b\u4fdd\u7559\u6807\u7684、\u6301\u4ed3\u6210\u672c、\u5468\u671f、\u98ce\u9669Slightly \u597d、strategy\u89c6\u89d2、\u5173\u952e\u5224\u65ad、\u64cd\u4f5c\u6761\u4ef6、\u6b62\u635f\u6b62\u76c8、\u6570\u636e\u65f6\u6548、\u5de5\u5177failed\u548c\u672a\u51b3question.
+- \u8f93\u51fa\u5fc5\u987b\u4f7f\u7528 Markdown; \u5e76\u4e25\u683c\u5305\u542b\u4ee5\u4e0b 5 \u4e2a\u4e8c\u7ea7\u6807\u9898:
+  ## conversationsummary
+  ## \u5f53\u524d\u5173\u6ce8\u6807\u7684
+  ## userSlightly \u597d\u4e0e\u7ea6\u675f
+  ## \u5df2\u6709\u5224\u65ad\u4e0e\u64cd\u4f5c\u6761\u4ef6
+  ## \u98ce\u9669、\u6570\u636e\u65f6\u6548\u4e0e\u672a\u51b3question
 """
 
 
@@ -107,8 +107,8 @@ def build_summary_messages(
     """Build the text-only summary request messages."""
     sections: List[str] = []
     if previous_summary.strip():
-        sections.append("已有滚动摘要：\n" + previous_summary.strip())
-    sections.append("本次需要纳入摘要的新增对话：")
+        sections.append("\u5df2\u6709\u6eda\u52a8summary: \n" + previous_summary.strip())
+    sections.append("this run\u9700\u8981\u7eb3\u5165summary\u7684\u65b0\u589e\u5bf9\u8bdd: ")
     sections.append(_render_visible_messages(messages))
     user_payload = "\n\n".join(sections).strip()
     return [

@@ -82,7 +82,7 @@ vi.mock('recharts', () => ({
 const signal: DecisionSignalItem = {
   id: 7,
   stockCode: '600519',
-  stockName: '贵州茅台',
+  stockName: '\u8d35\u5dde\u8305\u53f0',
   market: 'cn',
   sourceType: 'analysis',
   sourceReportId: 3001,
@@ -97,11 +97,11 @@ const signal: DecisionSignalItem = {
   entryHigh: 1620,
   stopLoss: 1550,
   targetPrice: 1700,
-  invalidation: '跌破 1550',
-  watchConditions: '观察成交量',
-  reason: '趋势保持',
-  riskSummary: '放量下跌风险',
-  catalystSummary: '业绩窗口',
+  invalidation: '\u8dcc\u7834 1550',
+  watchConditions: '\u89c2\u5bdf\u6210\u4ea4\u91cf',
+  reason: '\u8d8b\u52bf\u4fdd\u6301',
+  riskSummary: '\u653e\u91cf\u4e0b\u8dcc\u98ce\u9669',
+  catalystSummary: '\u4e1a\u7ee9\u7a97\u53e3',
   evidence: { technical: 'ma' },
   dataQualitySummary: { freshness: 'ok' },
   planQuality: 'complete',
@@ -116,10 +116,10 @@ const stockIndexItems: StockIndexItem[] = [
   {
     canonicalCode: '600519.SH',
     displayCode: '600519',
-    nameZh: '贵州茅台',
+    nameZh: '\u8d35\u5dde\u8305\u53f0',
     pinyinFull: 'guizhoumaotai',
     pinyinAbbr: 'gzmt',
-    aliases: ['茅台'],
+    aliases: ['\u8305\u53f0'],
     market: 'CN',
     assetType: 'stock',
     active: true,
@@ -137,7 +137,7 @@ const stockIndexItems: StockIndexItem[] = [
   {
     canonicalCode: '00700.HK',
     displayCode: '00700',
-    nameZh: '腾讯控股',
+    nameZh: '\u817e\u8baf\u63a7\u80a1',
     market: 'HK',
     assetType: 'stock',
     active: true,
@@ -278,9 +278,9 @@ function deferredPromise<T>() {
 }
 
 function submitCurrentStock(value: string) {
-  const input = screen.getByLabelText('当前股票');
+  const input = screen.getByLabelText('\u5f53\u524d\u80a1\u7968');
   fireEvent.change(input, { target: { value } });
-  fireEvent.click(screen.getByRole('button', { name: '查看股票' }));
+  fireEvent.click(screen.getByRole('button', { name: '\u67e5\u770b\u80a1\u7968' }));
 }
 
 beforeEach(() => {
@@ -314,7 +314,7 @@ describe('DecisionSignalsPage', () => {
   it('loads active signals by default', async () => {
     renderPage();
 
-    expect(await screen.findByRole('heading', { name: 'AI 建议' })).toBeInTheDocument();
+    expect(await screen.findByRole('heading', { name: 'AI \u5efa\u8bae' })).toBeInTheDocument();
     await waitFor(() => {
       expect(decisionSignalsApi.list).toHaveBeenCalledWith(expect.objectContaining({
         status: 'active',
@@ -322,14 +322,14 @@ describe('DecisionSignalsPage', () => {
         pageSize: 20,
       }));
     });
-    expect(screen.getByText('贵州茅台')).toBeInTheDocument();
-    expect(await screen.findByText('信号表现统计')).toBeInTheDocument();
+    expect(screen.getByText('\u8d35\u5dde\u8305\u53f0')).toBeInTheDocument();
+    expect(await screen.findByText('\u4fe1\u53f7\u8868\u73b0\u7edf\u8ba1')).toBeInTheDocument();
     expect(screen.getByText('50%')).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: '查看 贵州茅台 AI 建议详情' })).toBeInTheDocument();
-    expect(screen.getByText('贵州茅台').closest('button')).toBeNull();
-    expect(screen.getByText('放量下跌风险')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: '\u67e5\u770b \u8d35\u5dde\u8305\u53f0 AI \u5efa\u8bae\u8be6\u60c5' })).toBeInTheDocument();
+    expect(screen.getByText('\u8d35\u5dde\u8305\u53f0').closest('button')).toBeNull();
+    expect(screen.getByText('\u653e\u91cf\u4e0b\u8dcc\u98ce\u9669')).toBeInTheDocument();
     expect(screen.getByText(formattedCreatedAt)).toBeInTheDocument();
-    expect(screen.getByText('当前统计为全局已复盘 outcome 口径，不等于当前可见信号数量，也不随当前股票过滤。')).toBeInTheDocument();
+    expect(screen.getByText('\u5f53\u524d\u7edf\u8ba1\u4e3a\u5168\u5c40\u5df2\u590d\u76d8 outcome \u53e3\u5f84，\u4e0d\u7b49\u4e8e\u5f53\u524d\u53ef\u89c1\u4fe1\u53f7\u6570\u91cf，\u4e5f\u4e0d\u968f\u5f53\u524d\u80a1\u7968\u8fc7\u6ee4。')).toBeInTheDocument();
   });
 
   it('shows a zero-sample outcome stats state instead of misleading zero metrics', async () => {
@@ -347,8 +347,8 @@ describe('DecisionSignalsPage', () => {
 
     renderPage();
 
-    expect(await screen.findByText('暂无已复盘样本')).toBeInTheDocument();
-    expect(screen.getByText('当前统计为全局已复盘 outcome 口径，不等于当前可见信号数量，也不随当前股票过滤。')).toBeInTheDocument();
+    expect(await screen.findByText('\u6682\u65e0\u5df2\u590d\u76d8\u6837\u672c')).toBeInTheDocument();
+    expect(screen.getByText('\u5f53\u524d\u7edf\u8ba1\u4e3a\u5168\u5c40\u5df2\u590d\u76d8 outcome \u53e3\u5f84，\u4e0d\u7b49\u4e8e\u5f53\u524d\u53ef\u89c1\u4fe1\u53f7\u6570\u91cf，\u4e5f\u4e0d\u968f\u5f53\u524d\u80a1\u7968\u8fc7\u6ee4。')).toBeInTheDocument();
     expect(screen.queryByText('0%')).not.toBeInTheDocument();
   });
 
@@ -357,7 +357,7 @@ describe('DecisionSignalsPage', () => {
 
     renderPage();
 
-    expect(await screen.findByRole('heading', { name: 'AI 建议' })).toBeInTheDocument();
+    expect(await screen.findByRole('heading', { name: 'AI \u5efa\u8bae' })).toBeInTheDocument();
     await waitFor(() => {
       expect(decisionSignalsApi.list).toHaveBeenCalledWith({
         sourceReportId: 3001,
@@ -366,19 +366,19 @@ describe('DecisionSignalsPage', () => {
         pageSize: 20,
       });
     });
-    expect(screen.getByLabelText('来源报告 ID')).toHaveValue(3001);
+    expect(screen.getByLabelText('\u6765\u6e90\u62a5\u544a ID')).toHaveValue(3001);
   });
 
   it('renders decision signal enum filter labels in Chinese', async () => {
     renderPage();
-    await screen.findByText('贵州茅台');
+    await screen.findByText('\u8d35\u5dde\u8305\u53f0');
 
-    expect(within(screen.getByLabelText('市场')).getByRole('option', { name: '日股' })).toHaveValue('jp');
-    expect(within(screen.getByLabelText('市场')).getByRole('option', { name: '韩股' })).toHaveValue('kr');
-    expect(within(screen.getByLabelText('阶段')).getByRole('option', { name: '午间休市' })).toHaveValue('lunch_break');
-    expect(within(screen.getByLabelText('阶段')).getByRole('option', { name: '集合竞价' })).toHaveValue('closing_auction');
-    expect(within(screen.getByLabelText('来源')).getByRole('option', { name: '大盘复盘' })).toHaveValue('market_review');
-    expect(screen.getByLabelText('来源报告 ID')).toBeInTheDocument();
+    expect(within(screen.getByLabelText('\u5e02\u573a')).getByRole('option', { name: '\u65e5\u80a1' })).toHaveValue('jp');
+    expect(within(screen.getByLabelText('\u5e02\u573a')).getByRole('option', { name: '\u97e9\u80a1' })).toHaveValue('kr');
+    expect(within(screen.getByLabelText('\u9636\u6bb5')).getByRole('option', { name: '\u5348\u95f4\u4f11\u5e02' })).toHaveValue('lunch_break');
+    expect(within(screen.getByLabelText('\u9636\u6bb5')).getByRole('option', { name: '\u96c6\u5408\u7ade\u4ef7' })).toHaveValue('closing_auction');
+    expect(within(screen.getByLabelText('\u6765\u6e90')).getByRole('option', { name: '\u5927\u76d8\u590d\u76d8' })).toHaveValue('market_review');
+    expect(screen.getByLabelText('\u6765\u6e90\u62a5\u544a ID')).toBeInTheDocument();
   });
 
   it('renders decision signal filters and card value labels in English', async () => {
@@ -411,12 +411,12 @@ describe('DecisionSignalsPage', () => {
 
   it('passes filter parameters when applying filters', async () => {
     renderPage();
-    await screen.findByText('贵州茅台');
+    await screen.findByText('\u8d35\u5dde\u8305\u53f0');
 
-    fireEvent.change(screen.getByLabelText('市场'), { target: { value: 'cn' } });
-    fireEvent.change(screen.getByLabelText('股票代码'), { target: { value: '600519' } });
-    fireEvent.change(screen.getByLabelText('动作'), { target: { value: 'hold' } });
-    fireEvent.click(screen.getByRole('button', { name: '筛选' }));
+    fireEvent.change(screen.getByLabelText('\u5e02\u573a'), { target: { value: 'cn' } });
+    fireEvent.change(screen.getByLabelText('\u80a1\u7968\u4ee3\u7801'), { target: { value: '600519' } });
+    fireEvent.change(screen.getByLabelText('\u52a8\u4f5c'), { target: { value: 'hold' } });
+    fireEvent.click(screen.getByRole('button', { name: '\u7b5b\u9009' }));
 
     await waitFor(() => {
       expect(decisionSignalsApi.list).toHaveBeenLastCalledWith(expect.objectContaining({
@@ -432,15 +432,15 @@ describe('DecisionSignalsPage', () => {
 
   it('uses an exact analysis source report lookup when a report id filter is applied', async () => {
     renderPage();
-    await screen.findByText('贵州茅台');
+    await screen.findByText('\u8d35\u5dde\u8305\u53f0');
 
-    fireEvent.change(screen.getByLabelText('市场'), { target: { value: 'cn' } });
-    fireEvent.change(screen.getByLabelText('股票代码'), { target: { value: '600519' } });
-    fireEvent.change(screen.getByLabelText('动作'), { target: { value: 'hold' } });
-    fireEvent.change(screen.getByLabelText('来源'), { target: { value: 'alert' } });
-    fireEvent.change(screen.getByLabelText('状态'), { target: { value: 'closed' } });
-    fireEvent.change(screen.getByLabelText('来源报告 ID'), { target: { value: '3001' } });
-    fireEvent.click(screen.getByRole('button', { name: '筛选' }));
+    fireEvent.change(screen.getByLabelText('\u5e02\u573a'), { target: { value: 'cn' } });
+    fireEvent.change(screen.getByLabelText('\u80a1\u7968\u4ee3\u7801'), { target: { value: '600519' } });
+    fireEvent.change(screen.getByLabelText('\u52a8\u4f5c'), { target: { value: 'hold' } });
+    fireEvent.change(screen.getByLabelText('\u6765\u6e90'), { target: { value: 'alert' } });
+    fireEvent.change(screen.getByLabelText('\u72b6\u6001'), { target: { value: 'closed' } });
+    fireEvent.change(screen.getByLabelText('\u6765\u6e90\u62a5\u544a ID'), { target: { value: '3001' } });
+    fireEvent.click(screen.getByRole('button', { name: '\u7b5b\u9009' }));
 
     await waitFor(() => {
       expect(decisionSignalsApi.list).toHaveBeenLastCalledWith({
@@ -454,13 +454,13 @@ describe('DecisionSignalsPage', () => {
 
   it('reassesses from the selected signal source report without triggering list lookup', async () => {
     renderPage();
-    await screen.findByText('贵州茅台');
+    await screen.findByText('\u8d35\u5dde\u8305\u53f0');
 
-    fireEvent.click(screen.getByRole('button', { name: '查看 贵州茅台 AI 建议详情' }));
-    expect(await screen.findByText('决策风格重评估预览')).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: '\u67e5\u770b \u8d35\u5dde\u8305\u53f0 AI \u5efa\u8bae\u8be6\u60c5' }));
+    expect(await screen.findByText('\u51b3\u7b56\u98ce\u683c\u91cd\u8bc4\u4f30\u9884\u89c8')).toBeInTheDocument();
     vi.mocked(decisionSignalsApi.list).mockClear();
 
-    fireEvent.click(screen.getByRole('button', { name: '生成预览' }));
+    fireEvent.click(screen.getByRole('button', { name: '\u751f\u6210\u9884\u89c8' }));
 
     await waitFor(() => {
       expect(decisionSignalsApi.reassess).toHaveBeenCalledWith({
@@ -480,10 +480,10 @@ describe('DecisionSignalsPage', () => {
     vi.mocked(decisionSignalsApi.list).mockResolvedValueOnce(listResponse([], 0));
 
     renderPage();
-    expect(await screen.findByText('决策风格重评估预览')).toBeInTheDocument();
+    expect(await screen.findByText('\u51b3\u7b56\u98ce\u683c\u91cd\u8bc4\u4f30\u9884\u89c8')).toBeInTheDocument();
     vi.mocked(decisionSignalsApi.list).mockClear();
 
-    fireEvent.click(screen.getByRole('button', { name: '生成预览' }));
+    fireEvent.click(screen.getByRole('button', { name: '\u751f\u6210\u9884\u89c8' }));
 
     await waitFor(() => {
       expect(decisionSignalsApi.reassess).toHaveBeenCalledWith({
@@ -501,13 +501,13 @@ describe('DecisionSignalsPage', () => {
     ]));
 
     renderPage();
-    await screen.findByText('贵州茅台');
-    fireEvent.click(screen.getByRole('button', { name: '查看 贵州茅台 AI 建议详情' }));
+    await screen.findByText('\u8d35\u5dde\u8305\u53f0');
+    fireEvent.click(screen.getByRole('button', { name: '\u67e5\u770b \u8d35\u5dde\u8305\u53f0 AI \u5efa\u8bae\u8be6\u60c5' }));
 
     await waitFor(() => {
-      expect(screen.getAllByText('该信号不支持重评估').length).toBeGreaterThan(0);
+      expect(screen.getAllByText('\u8be5\u4fe1\u53f7\u4e0d\u652f\u6301\u91cd\u8bc4\u4f30').length).toBeGreaterThan(0);
     });
-    expect(screen.getByRole('button', { name: '生成预览' })).toBeDisabled();
+    expect(screen.getByRole('button', { name: '\u751f\u6210\u9884\u89c8' })).toBeDisabled();
   });
 
   it('does not fallback to page source report id for a selected signal without source report id', async () => {
@@ -517,13 +517,13 @@ describe('DecisionSignalsPage', () => {
     ]));
 
     renderPage();
-    await screen.findByText('决策风格重评估预览');
-    fireEvent.click(screen.getByRole('button', { name: '查看 贵州茅台 AI 建议详情' }));
+    await screen.findByText('\u51b3\u7b56\u98ce\u683c\u91cd\u8bc4\u4f30\u9884\u89c8');
+    fireEvent.click(screen.getByRole('button', { name: '\u67e5\u770b \u8d35\u5dde\u8305\u53f0 AI \u5efa\u8bae\u8be6\u60c5' }));
 
     await waitFor(() => {
-      expect(screen.getAllByText('该信号不支持重评估').length).toBeGreaterThan(0);
+      expect(screen.getAllByText('\u8be5\u4fe1\u53f7\u4e0d\u652f\u6301\u91cd\u8bc4\u4f30').length).toBeGreaterThan(0);
     });
-    expect(screen.getByRole('button', { name: '生成预览' })).toBeDisabled();
+    expect(screen.getByRole('button', { name: '\u751f\u6210\u9884\u89c8' })).toBeDisabled();
     expect(decisionSignalsApi.reassess).not.toHaveBeenCalled();
   });
 
@@ -531,7 +531,7 @@ describe('DecisionSignalsPage', () => {
     const nextSignal = makeSignal({
       id: 8,
       stockCode: '000001',
-      stockName: '平安银行',
+      stockName: '\u5e73\u5b89\u94f6\u884c',
       sourceReportId: 3002,
     });
     const pending = deferredPromise<DecisionSignalReassessResponse>();
@@ -539,10 +539,10 @@ describe('DecisionSignalsPage', () => {
     vi.mocked(decisionSignalsApi.reassess).mockReturnValueOnce(pending.promise);
 
     renderPage();
-    await screen.findByText('贵州茅台');
-    fireEvent.click(screen.getByRole('button', { name: '查看 贵州茅台 AI 建议详情' }));
-    fireEvent.click(await screen.findByRole('button', { name: '生成预览' }));
-    fireEvent.click(screen.getByRole('button', { name: '查看 平安银行 AI 建议详情' }));
+    await screen.findByText('\u8d35\u5dde\u8305\u53f0');
+    fireEvent.click(screen.getByRole('button', { name: '\u67e5\u770b \u8d35\u5dde\u8305\u53f0 AI \u5efa\u8bae\u8be6\u60c5' }));
+    fireEvent.click(await screen.findByRole('button', { name: '\u751f\u6210\u9884\u89c8' }));
+    fireEvent.click(screen.getByRole('button', { name: '\u67e5\u770b \u5e73\u5b89\u94f6\u884c AI \u5efa\u8bae\u8be6\u60c5' }));
 
     await act(async () => {
       pending.resolve({
@@ -556,7 +556,7 @@ describe('DecisionSignalsPage', () => {
 
   it('queries latest active signals by stock code', async () => {
     renderPage();
-    await screen.findByText('贵州茅台');
+    await screen.findByText('\u8d35\u5dde\u8305\u53f0');
 
     submitCurrentStock('600519');
 
@@ -570,7 +570,7 @@ describe('DecisionSignalsPage', () => {
 
   it('submits the main stock context once and keeps the applied context separate from the draft', async () => {
     renderPage();
-    await screen.findByText('贵州茅台');
+    await screen.findByText('\u8d35\u5dde\u8305\u53f0');
     vi.mocked(decisionSignalsApi.getLatest).mockClear();
     vi.mocked(decisionSignalsApi.list).mockClear();
 
@@ -580,22 +580,22 @@ describe('DecisionSignalsPage', () => {
       expect(decisionSignalsApi.getLatest).toHaveBeenCalledTimes(1);
       expect(decisionSignalsApi.list).toHaveBeenCalledTimes(1);
     });
-    expect(screen.getByText('当前查看：AAPL')).toBeInTheDocument();
+    expect(screen.getByText('\u5f53\u524d\u67e5\u770b：AAPL')).toBeInTheDocument();
 
-    fireEvent.change(screen.getByLabelText('当前股票'), { target: { value: 'MSFT' } });
+    fireEvent.change(screen.getByLabelText('\u5f53\u524d\u80a1\u7968'), { target: { value: 'MSFT' } });
 
-    expect(screen.getByText('当前查看：AAPL')).toBeInTheDocument();
+    expect(screen.getByText('\u5f53\u524d\u67e5\u770b：AAPL')).toBeInTheDocument();
     expect(decisionSignalsApi.getLatest).toHaveBeenCalledTimes(1);
     expect(decisionSignalsApi.list).toHaveBeenCalledTimes(1);
   });
 
   it('uses autocomplete metadata for the active context instead of the old draft value', async () => {
     renderPage();
-    await screen.findByText('贵州茅台');
+    await screen.findByText('\u8d35\u5dde\u8305\u53f0');
 
-    fireEvent.change(screen.getByLabelText('当前股票'), { target: { value: '6005' } });
+    fireEvent.change(screen.getByLabelText('\u5f53\u524d\u80a1\u7968'), { target: { value: '6005' } });
     const listbox = await screen.findByRole('listbox');
-    fireEvent.click(within(listbox).getByRole('option', { name: /贵州茅台.*600519/ }));
+    fireEvent.click(within(listbox).getByRole('option', { name: /\u8d35\u5dde\u8305\u53f0.*600519/ }));
 
     await waitFor(() => {
       expect(decisionSignalsApi.getLatest).toHaveBeenCalledWith('600519.SH', {
@@ -603,14 +603,14 @@ describe('DecisionSignalsPage', () => {
         limit: 5,
       });
     });
-    expect(screen.getByText('当前查看：600519 / 贵州茅台 / cn')).toBeInTheDocument();
-    expect(screen.getByLabelText('当前股票')).toHaveValue('600519');
+    expect(screen.getByText('\u5f53\u524d\u67e5\u770b：600519 / \u8d35\u5dde\u8305\u53f0 / cn')).toBeInTheDocument();
+    expect(screen.getByLabelText('\u5f53\u524d\u80a1\u7968')).toHaveValue('600519');
   });
 
   it('shows recent history candidates and passes normalized market when a candidate is selected', async () => {
     renderPage();
 
-    expect(await screen.findByText('最近分析')).toBeInTheDocument();
+    expect(await screen.findByText('\u6700\u8fd1\u5206\u6790')).toBeInTheDocument();
     fireEvent.click(screen.getByRole('button', { name: /600519/ }));
 
     await waitFor(() => {
@@ -619,13 +619,13 @@ describe('DecisionSignalsPage', () => {
         limit: 5,
       });
     });
-    expect(screen.getByText('当前查看：600519 / cn')).toBeInTheDocument();
+    expect(screen.getByText('\u5f53\u524d\u67e5\u770b：600519 / cn')).toBeInTheDocument();
   });
 
   it('preserves the applied stock context metadata when the unchanged draft is submitted again', async () => {
     renderPage();
 
-    expect(await screen.findByText('最近分析')).toBeInTheDocument();
+    expect(await screen.findByText('\u6700\u8fd1\u5206\u6790')).toBeInTheDocument();
     fireEvent.click(screen.getByRole('button', { name: /600519/ }));
 
     await waitFor(() => {
@@ -634,9 +634,9 @@ describe('DecisionSignalsPage', () => {
         limit: 5,
       });
     });
-    expect(screen.getByLabelText('当前股票')).toHaveValue('600519');
+    expect(screen.getByLabelText('\u5f53\u524d\u80a1\u7968')).toHaveValue('600519');
 
-    fireEvent.click(screen.getByRole('button', { name: '查看股票' }));
+    fireEvent.click(screen.getByRole('button', { name: '\u67e5\u770b\u80a1\u7968' }));
 
     await waitFor(() => {
       expect(decisionSignalsApi.getLatest).toHaveBeenLastCalledWith('600519', {
@@ -678,7 +678,7 @@ describe('DecisionSignalsPage', () => {
     vi.mocked(historyApi.getStockBarList).mockResolvedValueOnce({ total: 0, items: [] });
     const { unmount } = renderPage();
 
-    expect(await screen.findByText('热门候选')).toBeInTheDocument();
+    expect(await screen.findByText('\u70ed\u95e8\u5019\u9009')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /AAPL.*Apple.*us/ })).toBeInTheDocument();
     expect(decisionSignalsApi.getLatest).not.toHaveBeenCalled();
 
@@ -690,7 +690,7 @@ describe('DecisionSignalsPage', () => {
     vi.mocked(decisionSignalsApi.getOutcomeStats).mockResolvedValue(outcomeStats);
     renderPage();
 
-    expect(await screen.findByText('热门候选')).toBeInTheDocument();
+    expect(await screen.findByText('\u70ed\u95e8\u5019\u9009')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /AAPL.*Apple.*us/ })).toBeInTheDocument();
   });
 
@@ -706,8 +706,8 @@ describe('DecisionSignalsPage', () => {
 
     renderPage();
 
-    expect(await screen.findByText('暂无可用候选，可直接输入股票代码或名称。')).toBeInTheDocument();
-    expect(screen.getByRole('heading', { name: 'AI 建议' })).toBeInTheDocument();
+    expect(await screen.findByText('\u6682\u65e0\u53ef\u7528\u5019\u9009，\u53ef\u76f4\u63a5\u8f93\u5165\u80a1\u7968\u4ee3\u7801\u6216\u540d\u79f0。')).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'AI \u5efa\u8bae' })).toBeInTheDocument();
   });
 
   it('deduplicates history candidates with market-aware keys and falls back to stock code without market', async () => {
@@ -722,7 +722,7 @@ describe('DecisionSignalsPage', () => {
     });
     renderPage();
 
-    expect(await screen.findByText('最近分析')).toBeInTheDocument();
+    expect(await screen.findByText('\u6700\u8fd1\u5206\u6790')).toBeInTheDocument();
     const candidateButtons = screen.getAllByRole('button').filter((button) => (
       button.textContent?.includes('600519') || button.textContent?.includes('AAPL')
     ));
@@ -733,11 +733,11 @@ describe('DecisionSignalsPage', () => {
 
   it('does not use the advanced list market filter for latest lookup', async () => {
     renderPage();
-    await screen.findByText('贵州茅台');
+    await screen.findByText('\u8d35\u5dde\u8305\u53f0');
 
-    const marketSelect = screen.getByLabelText('市场');
+    const marketSelect = screen.getByLabelText('\u5e02\u573a');
     fireEvent.change(marketSelect, { target: { value: 'cn' } });
-    fireEvent.click(screen.getByRole('button', { name: '筛选' }));
+    fireEvent.click(screen.getByRole('button', { name: '\u7b5b\u9009' }));
     await waitFor(() => {
       expect(decisionSignalsApi.list).toHaveBeenLastCalledWith(expect.objectContaining({
         market: 'cn',
@@ -763,39 +763,39 @@ describe('DecisionSignalsPage', () => {
       stockCode: 'AAPL',
       stockName: 'Apple',
       market: 'us' as const,
-      riskSummary: '第二次查询结果',
+      riskSummary: '\u7b2c\u4e8c\u6b21\u67e5\u8be2\u7ed3\u679c',
     };
     vi.mocked(decisionSignalsApi.getLatest)
       .mockReturnValueOnce(firstSearch.promise)
       .mockResolvedValueOnce(listResponse([secondSignal]));
     renderPage();
-    await screen.findByText('贵州茅台');
+    await screen.findByText('\u8d35\u5dde\u8305\u53f0');
 
     submitCurrentStock('600519');
 
     submitCurrentStock('AAPL');
 
-    expect(await screen.findByText('第二次查询结果')).toBeInTheDocument();
+    expect(await screen.findByText('\u7b2c\u4e8c\u6b21\u67e5\u8be2\u7ed3\u679c')).toBeInTheDocument();
 
     await act(async () => {
-      firstSearch.resolve(listResponse([{ ...signal, riskSummary: '第一次晚返回结果' }]));
+      firstSearch.resolve(listResponse([{ ...signal, riskSummary: '\u7b2c\u4e00\u6b21\u665a\u8fd4\u56de\u7ed3\u679c' }]));
       await firstSearch.promise;
     });
 
     await waitFor(() => {
-      expect(screen.queryByText('第一次晚返回结果')).not.toBeInTheDocument();
+      expect(screen.queryByText('\u7b2c\u4e00\u6b21\u665a\u8fd4\u56de\u7ed3\u679c')).not.toBeInTheDocument();
     });
-    expect(screen.getByText('第二次查询结果')).toBeInTheDocument();
+    expect(screen.getByText('\u7b2c\u4e8c\u6b21\u67e5\u8be2\u7ed3\u679c')).toBeInTheDocument();
   });
 
   it('renders latest empty and error states', async () => {
     vi.mocked(decisionSignalsApi.getLatest).mockResolvedValueOnce(listResponse([], 0));
     renderPage();
-    await screen.findByText('贵州茅台');
+    await screen.findByText('\u8d35\u5dde\u8305\u53f0');
 
     submitCurrentStock('600519');
 
-    expect(await screen.findByText('暂无最新有效信号')).toBeInTheDocument();
+    expect(await screen.findByText('\u6682\u65e0\u6700\u65b0\u6709\u6548\u4fe1\u53f7')).toBeInTheDocument();
 
     vi.mocked(decisionSignalsApi.getLatest).mockRejectedValueOnce(new Error('latest down'));
     submitCurrentStock('600519');
@@ -806,24 +806,24 @@ describe('DecisionSignalsPage', () => {
   it('does not request the timeline before a current stock is selected', async () => {
     renderPage();
 
-    await screen.findByText('贵州茅台');
-    expect(screen.getAllByText('选择股票查看 AI 建议').length).toBeGreaterThan(0);
-    expect(screen.getByRole('button', { name: '查询时间线' })).toBeDisabled();
+    await screen.findByText('\u8d35\u5dde\u8305\u53f0');
+    expect(screen.getAllByText('\u9009\u62e9\u80a1\u7968\u67e5\u770b AI \u5efa\u8bae').length).toBeGreaterThan(0);
+    expect(screen.getByRole('button', { name: '\u67e5\u8be2\u65f6\u95f4\u7ebf' })).toBeDisabled();
     expect(decisionSignalsApi.list).toHaveBeenCalledTimes(1);
-    expect(within(screen.getByLabelText('时间线状态')).queryByRole('option', { name: '已关闭' })).not.toBeInTheDocument();
+    expect(within(screen.getByLabelText('\u65f6\u95f4\u7ebf\u72b6\u6001')).queryByRole('option', { name: '\u5df2\u5173\u95ed' })).not.toBeInTheDocument();
     expect(screen.queryByLabelText('profile')).not.toBeInTheDocument();
   });
 
   it('queries timeline with independent filters and no default status', async () => {
     renderPage();
-    await screen.findByText('贵州茅台');
+    await screen.findByText('\u8d35\u5dde\u8305\u53f0');
 
     submitCurrentStock('600519');
     await waitFor(() => expect(decisionSignalsApi.list).toHaveBeenCalledTimes(2));
 
-    fireEvent.change(screen.getByLabelText('时间线市场'), { target: { value: 'cn' } });
-    fireEvent.change(screen.getByLabelText('时间范围'), { target: { value: '30d' } });
-    fireEvent.click(screen.getByRole('button', { name: '查询时间线' }));
+    fireEvent.change(screen.getByLabelText('\u65f6\u95f4\u7ebf\u5e02\u573a'), { target: { value: 'cn' } });
+    fireEvent.change(screen.getByLabelText('\u65f6\u95f4\u8303\u56f4'), { target: { value: '30d' } });
+    fireEvent.click(screen.getByRole('button', { name: '\u67e5\u8be2\u65f6\u95f4\u7ebf' }));
 
     await waitFor(() => {
       expect(decisionSignalsApi.list).toHaveBeenCalledTimes(3);
@@ -842,7 +842,7 @@ describe('DecisionSignalsPage', () => {
 
   it('initializes timeline market from a new stock context once and preserves later user overrides', async () => {
     renderPage();
-    await screen.findByText('贵州茅台');
+    await screen.findByText('\u8d35\u5dde\u8305\u53f0');
 
     const getHistoryCandidateButton = () => screen.getAllByRole('button').find((button) => (
       button.textContent?.includes('600519') && button.textContent.includes('/ cn')
@@ -854,20 +854,20 @@ describe('DecisionSignalsPage', () => {
     }));
 
     await waitFor(() => {
-      expect(screen.getByLabelText('时间线市场')).toHaveValue('cn');
+      expect(screen.getByLabelText('\u65f6\u95f4\u7ebf\u5e02\u573a')).toHaveValue('cn');
       expect(decisionSignalsApi.list).toHaveBeenLastCalledWith(expect.objectContaining({
         stockCode: '600519',
         market: 'cn',
       }));
     });
 
-    fireEvent.change(screen.getByLabelText('时间线市场'), { target: { value: 'hk' } });
+    fireEvent.change(screen.getByLabelText('\u65f6\u95f4\u7ebf\u5e02\u573a'), { target: { value: 'hk' } });
     const sameCandidateButton = getHistoryCandidateButton();
     expect(sameCandidateButton).toBeTruthy();
     fireEvent.click(sameCandidateButton as HTMLButtonElement);
 
     await waitFor(() => {
-      expect(screen.getByLabelText('时间线市场')).toHaveValue('hk');
+      expect(screen.getByLabelText('\u65f6\u95f4\u7ebf\u5e02\u573a')).toHaveValue('hk');
       expect(decisionSignalsApi.list).toHaveBeenLastCalledWith(expect.objectContaining({
         stockCode: '600519',
         market: 'hk',
@@ -877,7 +877,7 @@ describe('DecisionSignalsPage', () => {
 
   it('clears timeline market from a previous stock context before a later manual stock submit without metadata', async () => {
     renderPage();
-    await screen.findByText('贵州茅台');
+    await screen.findByText('\u8d35\u5dde\u8305\u53f0');
 
     const historyCandidateButton = await waitFor(() => {
       const button = screen.getAllByRole('button').find((candidateButton) => (
@@ -889,16 +889,16 @@ describe('DecisionSignalsPage', () => {
     fireEvent.click(historyCandidateButton);
 
     await waitFor(() => {
-      expect(screen.getByLabelText('时间线市场')).toHaveValue('cn');
+      expect(screen.getByLabelText('\u65f6\u95f4\u7ebf\u5e02\u573a')).toHaveValue('cn');
       expect(decisionSignalsApi.list).toHaveBeenLastCalledWith(expect.objectContaining({
         stockCode: '600519',
         market: 'cn',
       }));
     });
 
-    fireEvent.click(screen.getByRole('button', { name: '清空当前股票' }));
+    fireEvent.click(screen.getByRole('button', { name: '\u6e05\u7a7a\u5f53\u524d\u80a1\u7968' }));
     await waitFor(() => {
-      expect(screen.getByLabelText('时间线市场')).toHaveValue('');
+      expect(screen.getByLabelText('\u65f6\u95f4\u7ebf\u5e02\u573a')).toHaveValue('');
     });
 
     submitCurrentStock('AAPL');
@@ -917,13 +917,13 @@ describe('DecisionSignalsPage', () => {
 
   it('preserves a user-selected timeline market when a later manual stock submit has no metadata', async () => {
     renderPage();
-    await screen.findByText('贵州茅台');
+    await screen.findByText('\u8d35\u5dde\u8305\u53f0');
 
-    fireEvent.change(screen.getByLabelText('时间线市场'), { target: { value: 'us' } });
+    fireEvent.change(screen.getByLabelText('\u65f6\u95f4\u7ebf\u5e02\u573a'), { target: { value: 'us' } });
     submitCurrentStock('AAPL');
 
     await waitFor(() => {
-      expect(screen.getByLabelText('时间线市场')).toHaveValue('us');
+      expect(screen.getByLabelText('\u65f6\u95f4\u7ebf\u5e02\u573a')).toHaveValue('us');
       expect(decisionSignalsApi.getLatest).toHaveBeenLastCalledWith('AAPL', {
         market: undefined,
         limit: 5,
@@ -937,18 +937,18 @@ describe('DecisionSignalsPage', () => {
 
   it('applies timeline draft filters only after the query button is clicked', async () => {
     renderPage();
-    await screen.findByText('贵州茅台');
+    await screen.findByText('\u8d35\u5dde\u8305\u53f0');
 
     submitCurrentStock('AAPL');
     await waitFor(() => expect(decisionSignalsApi.list).toHaveBeenCalledTimes(2));
 
-    fireEvent.change(screen.getByLabelText('时间线市场'), { target: { value: 'us' } });
-    fireEvent.change(screen.getByLabelText('时间范围'), { target: { value: '30d' } });
-    fireEvent.change(screen.getByLabelText('时间线状态'), { target: { value: 'active' } });
+    fireEvent.change(screen.getByLabelText('\u65f6\u95f4\u7ebf\u5e02\u573a'), { target: { value: 'us' } });
+    fireEvent.change(screen.getByLabelText('\u65f6\u95f4\u8303\u56f4'), { target: { value: '30d' } });
+    fireEvent.change(screen.getByLabelText('\u65f6\u95f4\u7ebf\u72b6\u6001'), { target: { value: 'active' } });
 
     expect(decisionSignalsApi.list).toHaveBeenCalledTimes(2);
 
-    fireEvent.click(screen.getByRole('button', { name: '查询时间线' }));
+    fireEvent.click(screen.getByRole('button', { name: '\u67e5\u8be2\u65f6\u95f4\u7ebf' }));
 
     await waitFor(() => {
       expect(decisionSignalsApi.list).toHaveBeenCalledTimes(3);
@@ -973,9 +973,9 @@ describe('DecisionSignalsPage', () => {
       .mockResolvedValueOnce(listResponse())
       .mockResolvedValueOnce(listResponse([timelineSignal], 150));
     renderPage();
-    await screen.findByText('贵州茅台');
+    await screen.findByText('\u8d35\u5dde\u8305\u53f0');
 
-    fireEvent.change(screen.getByLabelText('时间线状态'), { target: { value: 'active' } });
+    fireEvent.change(screen.getByLabelText('\u65f6\u95f4\u7ebf\u72b6\u6001'), { target: { value: 'active' } });
     submitCurrentStock('AAPL');
 
     await waitFor(() => {
@@ -985,7 +985,7 @@ describe('DecisionSignalsPage', () => {
         pageSize: 100,
       }));
     });
-    expect(await screen.findByText('仅展示最近 100 条信号，请缩小时间范围。')).toBeInTheDocument();
+    expect(await screen.findByText('\u4ec5\u5c55\u793a\u6700\u8fd1 100 \u6761\u4fe1\u53f7，\u8bf7\u7f29\u5c0f\u65f6\u95f4\u8303\u56f4。')).toBeInTheDocument();
     fireEvent.click(await screen.findByTestId('timeline-click-8'));
 
     const dialog = await screen.findByRole('dialog');
@@ -1004,16 +1004,16 @@ describe('DecisionSignalsPage', () => {
       .mockResolvedValueOnce(listResponse())
       .mockResolvedValueOnce(listResponse([timelineSignal], 1));
     renderPage();
-    await screen.findByText('贵州茅台');
+    await screen.findByText('\u8d35\u5dde\u8305\u53f0');
 
     submitCurrentStock('AAPL');
     fireEvent.click(await screen.findByTestId('timeline-click-8'));
     expect(within(await screen.findByRole('dialog')).getByText('Timeline stale risk')).toBeInTheDocument();
 
-    fireEvent.click(screen.getByRole('button', { name: '清空当前股票' }));
+    fireEvent.click(screen.getByRole('button', { name: '\u6e05\u7a7a\u5f53\u524d\u80a1\u7968' }));
 
-    expect(screen.getAllByText('选择股票查看 AI 建议').length).toBeGreaterThan(0);
-    expect(screen.getByRole('button', { name: '查询时间线' })).toBeDisabled();
+    expect(screen.getAllByText('\u9009\u62e9\u80a1\u7968\u67e5\u770b AI \u5efa\u8bae').length).toBeGreaterThan(0);
+    expect(screen.getByRole('button', { name: '\u67e5\u8be2\u65f6\u95f4\u7ebf' })).toBeDisabled();
     expect(screen.queryByTestId('timeline-click-8')).not.toBeInTheDocument();
     await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument());
     expect(decisionSignalsApi.list).toHaveBeenCalledTimes(2);
@@ -1021,18 +1021,18 @@ describe('DecisionSignalsPage', () => {
 
   it('clears current stock derived state without closing a list-sourced drawer', async () => {
     renderPage();
-    fireEvent.click(await screen.findByRole('button', { name: '查看 贵州茅台 AI 建议详情' }));
-    expect(within(await screen.findByRole('dialog')).getByText('趋势保持')).toBeInTheDocument();
+    fireEvent.click(await screen.findByRole('button', { name: '\u67e5\u770b \u8d35\u5dde\u8305\u53f0 AI \u5efa\u8bae\u8be6\u60c5' }));
+    expect(within(await screen.findByRole('dialog')).getByText('\u8d8b\u52bf\u4fdd\u6301')).toBeInTheDocument();
 
     submitCurrentStock('AAPL');
-    expect(await screen.findByText('当前查看：AAPL')).toBeInTheDocument();
+    expect(await screen.findByText('\u5f53\u524d\u67e5\u770b：AAPL')).toBeInTheDocument();
 
-    fireEvent.click(screen.getByRole('button', { name: '清空当前股票' }));
+    fireEvent.click(screen.getByRole('button', { name: '\u6e05\u7a7a\u5f53\u524d\u80a1\u7968' }));
 
-    expect(screen.getByLabelText('当前股票')).toHaveValue('');
-    expect(screen.getAllByText('选择股票查看 AI 建议').length).toBeGreaterThan(0);
-    expect(screen.getByRole('button', { name: '查询时间线' })).toBeDisabled();
-    expect(within(screen.getByRole('dialog')).getByText('趋势保持')).toBeInTheDocument();
+    expect(screen.getByLabelText('\u5f53\u524d\u80a1\u7968')).toHaveValue('');
+    expect(screen.getAllByText('\u9009\u62e9\u80a1\u7968\u67e5\u770b AI \u5efa\u8bae').length).toBeGreaterThan(0);
+    expect(screen.getByRole('button', { name: '\u67e5\u8be2\u65f6\u95f4\u7ebf' })).toBeDisabled();
+    expect(within(screen.getByRole('dialog')).getByText('\u8d8b\u52bf\u4fdd\u6301')).toBeInTheDocument();
   });
 
   it('closes a timeline-sourced drawer when an active timeline status update removes it', async () => {
@@ -1049,20 +1049,20 @@ describe('DecisionSignalsPage', () => {
       .mockResolvedValueOnce(listResponse());
     vi.mocked(decisionSignalsApi.updateStatus).mockResolvedValueOnce({ ...timelineSignal, status: 'invalidated' });
     renderPage();
-    await screen.findByText('贵州茅台');
+    await screen.findByText('\u8d35\u5dde\u8305\u53f0');
 
-    fireEvent.change(screen.getByLabelText('时间线状态'), { target: { value: 'active' } });
+    fireEvent.change(screen.getByLabelText('\u65f6\u95f4\u7ebf\u72b6\u6001'), { target: { value: 'active' } });
     submitCurrentStock('AAPL');
     fireEvent.click(await screen.findByTestId('timeline-click-8'));
     const dialog = await screen.findByRole('dialog');
-    fireEvent.click(within(dialog).getByRole('button', { name: '标记失效' }));
-    fireEvent.click(await screen.findByRole('button', { name: '确定' }));
+    fireEvent.click(within(dialog).getByRole('button', { name: '\u6807\u8bb0\u5931\u6548' }));
+    fireEvent.click(await screen.findByRole('button', { name: '\u786e\u5b9a' }));
 
     await waitFor(() => {
       expect(decisionSignalsApi.updateStatus).toHaveBeenCalledWith(8, { status: 'invalidated' });
     });
     await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument());
-    expect(screen.getByText('暂无时间线信号')).toBeInTheDocument();
+    expect(screen.getByText('\u6682\u65e0\u65f6\u95f4\u7ebf\u4fe1\u53f7')).toBeInTheDocument();
   });
 
   it('uses applied timeline filters instead of draft filters after status updates', async () => {
@@ -1079,22 +1079,22 @@ describe('DecisionSignalsPage', () => {
       .mockResolvedValueOnce(listResponse());
     vi.mocked(decisionSignalsApi.updateStatus).mockResolvedValueOnce({ ...timelineSignal, status: 'invalidated' });
     renderPage();
-    await screen.findByText('贵州茅台');
+    await screen.findByText('\u8d35\u5dde\u8305\u53f0');
 
     submitCurrentStock('AAPL');
-    fireEvent.change(screen.getByLabelText('时间线状态'), { target: { value: 'active' } });
+    fireEvent.change(screen.getByLabelText('\u65f6\u95f4\u7ebf\u72b6\u6001'), { target: { value: 'active' } });
     fireEvent.click(await screen.findByTestId('timeline-click-8'));
     const dialog = await screen.findByRole('dialog');
-    fireEvent.click(within(dialog).getByRole('button', { name: '标记失效' }));
-    fireEvent.click(await screen.findByRole('button', { name: '确定' }));
+    fireEvent.click(within(dialog).getByRole('button', { name: '\u6807\u8bb0\u5931\u6548' }));
+    fireEvent.click(await screen.findByRole('button', { name: '\u786e\u5b9a' }));
 
     await waitFor(() => {
       expect(decisionSignalsApi.updateStatus).toHaveBeenCalledWith(8, { status: 'invalidated' });
     });
     await waitFor(() => {
-      expect(within(screen.getByRole('dialog')).getByText('已失效')).toBeInTheDocument();
+      expect(within(screen.getByRole('dialog')).getByText('\u5df2\u5931\u6548')).toBeInTheDocument();
     });
-    expect(screen.queryByText('暂无时间线信号')).not.toBeInTheDocument();
+    expect(screen.queryByText('\u6682\u65e0\u65f6\u95f4\u7ebf\u4fe1\u53f7')).not.toBeInTheDocument();
   });
 
   it('renders empty and error states', async () => {
@@ -1102,9 +1102,9 @@ describe('DecisionSignalsPage', () => {
 
     renderPage();
 
-    expect(await screen.findByText('暂无决策信号')).toBeInTheDocument();
+    expect(await screen.findByText('\u6682\u65e0\u51b3\u7b56\u4fe1\u53f7')).toBeInTheDocument();
     vi.mocked(decisionSignalsApi.list).mockRejectedValueOnce(new Error('boom'));
-    fireEvent.click(screen.getByRole('button', { name: '刷新' }));
+    fireEvent.click(screen.getByRole('button', { name: '\u5237\u65b0' }));
 
     expect(await screen.findByRole('alert')).toHaveTextContent('boom');
   });
@@ -1115,16 +1115,16 @@ describe('DecisionSignalsPage', () => {
       .mockRejectedValueOnce(new Error('filter failed'));
     renderPage();
 
-    fireEvent.click(await screen.findByRole('button', { name: '查看 贵州茅台 AI 建议详情' }));
+    fireEvent.click(await screen.findByRole('button', { name: '\u67e5\u770b \u8d35\u5dde\u8305\u53f0 AI \u5efa\u8bae\u8be6\u60c5' }));
     expect(await screen.findByRole('dialog')).toBeInTheDocument();
 
-    fireEvent.change(screen.getByLabelText('股票代码'), { target: { value: 'AAPL' } });
-    fireEvent.click(screen.getByRole('button', { name: '筛选' }));
+    fireEvent.change(screen.getByLabelText('\u80a1\u7968\u4ee3\u7801'), { target: { value: 'AAPL' } });
+    fireEvent.click(screen.getByRole('button', { name: '\u7b5b\u9009' }));
 
     expect(await screen.findByRole('alert')).toHaveTextContent('filter failed');
     await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument());
-    expect(screen.queryByRole('button', { name: '查看 贵州茅台 AI 建议详情' })).not.toBeInTheDocument();
-    expect(screen.getByText('共 0 条信号')).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: '\u67e5\u770b \u8d35\u5dde\u8305\u53f0 AI \u5efa\u8bae\u8be6\u60c5' })).not.toBeInTheDocument();
+    expect(screen.getByText('\u5171 0 \u6761\u4fe1\u53f7')).toBeInTheDocument();
   });
 
   it('opens details and confirms terminal status updates', async () => {
@@ -1133,32 +1133,32 @@ describe('DecisionSignalsPage', () => {
       .mockResolvedValueOnce(listResponse([], 0));
     renderPage();
 
-    fireEvent.click(await screen.findByRole('button', { name: '查看 贵州茅台 AI 建议详情' }));
+    fireEvent.click(await screen.findByRole('button', { name: '\u67e5\u770b \u8d35\u5dde\u8305\u53f0 AI \u5efa\u8bae\u8be6\u60c5' }));
     const dialog = await screen.findByRole('dialog');
-    expect(screen.getAllByText('贵州茅台')).toHaveLength(2);
-    expect(within(dialog).getByText('趋势保持')).toBeInTheDocument();
+    expect(screen.getAllByText('\u8d35\u5dde\u8305\u53f0')).toHaveLength(2);
+    expect(within(dialog).getByText('\u8d8b\u52bf\u4fdd\u6301')).toBeInTheDocument();
     expect(within(dialog).getByText('#3001')).toBeInTheDocument();
-    expect(await within(dialog).findByText('命中')).toBeInTheDocument();
-    expect(within(dialog).getByText('暂无反馈')).toBeInTheDocument();
+    expect(await within(dialog).findByText('\u547d\u4e2d')).toBeInTheDocument();
+    expect(within(dialog).getByText('\u6682\u65e0\u53cd\u9988')).toBeInTheDocument();
 
-    fireEvent.click(within(dialog).getByRole('button', { name: '标记失效' }));
-    expect(await screen.findByRole('heading', { name: '更新信号状态' })).toBeInTheDocument();
-    fireEvent.click(screen.getByRole('button', { name: '确定' }));
+    fireEvent.click(within(dialog).getByRole('button', { name: '\u6807\u8bb0\u5931\u6548' }));
+    expect(await screen.findByRole('heading', { name: '\u66f4\u65b0\u4fe1\u53f7\u72b6\u6001' })).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: '\u786e\u5b9a' }));
 
     await waitFor(() => {
       expect(decisionSignalsApi.updateStatus).toHaveBeenCalledWith(7, { status: 'invalidated' });
     });
     await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument());
-    expect(screen.getByText('共 0 条信号')).toBeInTheDocument();
-    expect(screen.getByText('暂无决策信号')).toBeInTheDocument();
+    expect(screen.getByText('\u5171 0 \u6761\u4fe1\u53f7')).toBeInTheDocument();
+    expect(screen.getByText('\u6682\u65e0\u51b3\u7b56\u4fe1\u53f7')).toBeInTheDocument();
   });
 
   it('submits useful feedback from the details drawer', async () => {
     renderPage();
 
-    fireEvent.click(await screen.findByRole('button', { name: '查看 贵州茅台 AI 建议详情' }));
+    fireEvent.click(await screen.findByRole('button', { name: '\u67e5\u770b \u8d35\u5dde\u8305\u53f0 AI \u5efa\u8bae\u8be6\u60c5' }));
     const dialog = await screen.findByRole('dialog');
-    fireEvent.click(await within(dialog).findByRole('button', { name: '有用' }));
+    fireEvent.click(await within(dialog).findByRole('button', { name: '\u6709\u7528' }));
 
     await waitFor(() => {
       expect(decisionSignalsApi.putFeedback).toHaveBeenCalledWith(7, {
@@ -1167,7 +1167,7 @@ describe('DecisionSignalsPage', () => {
       });
     });
     await waitFor(() => {
-      expect(within(dialog).getAllByText('有用').length).toBeGreaterThan(1);
+      expect(within(dialog).getAllByText('\u6709\u7528').length).toBeGreaterThan(1);
     });
   });
 
@@ -1188,10 +1188,10 @@ describe('DecisionSignalsPage', () => {
     vi.mocked(decisionSignalsApi.putFeedback).mockReturnValueOnce(feedbackSave.promise);
     renderPage();
 
-    fireEvent.click(await screen.findByRole('button', { name: '查看 贵州茅台 AI 建议详情' }));
+    fireEvent.click(await screen.findByRole('button', { name: '\u67e5\u770b \u8d35\u5dde\u8305\u53f0 AI \u5efa\u8bae\u8be6\u60c5' }));
     let dialog = await screen.findByRole('dialog');
-    fireEvent.click(await within(dialog).findByRole('button', { name: '有用' }));
-    fireEvent.click(screen.getByRole('button', { name: '查看 Apple AI 建议详情' }));
+    fireEvent.click(await within(dialog).findByRole('button', { name: '\u6709\u7528' }));
+    fireEvent.click(screen.getByRole('button', { name: '\u67e5\u770b Apple AI \u5efa\u8bae\u8be6\u60c5' }));
     dialog = await screen.findByRole('dialog');
     expect(await within(dialog).findByText('Second signal reason')).toBeInTheDocument();
 
@@ -1205,8 +1205,8 @@ describe('DecisionSignalsPage', () => {
     });
 
     await waitFor(() => {
-      expect(within(dialog).getByText('暂无反馈')).toBeInTheDocument();
-      expect(within(dialog).getAllByText('有用')).toHaveLength(1);
+      expect(within(dialog).getByText('\u6682\u65e0\u53cd\u9988')).toBeInTheDocument();
+      expect(within(dialog).getAllByText('\u6709\u7528')).toHaveLength(1);
     });
   });
 
@@ -1216,14 +1216,14 @@ describe('DecisionSignalsPage', () => {
       .mockResolvedValueOnce(listResponse([], 0));
     renderPage();
 
-    fireEvent.click(await screen.findByRole('button', { name: '查看 贵州茅台 AI 建议详情' }));
+    fireEvent.click(await screen.findByRole('button', { name: '\u67e5\u770b \u8d35\u5dde\u8305\u53f0 AI \u5efa\u8bae\u8be6\u60c5' }));
     expect(await screen.findByRole('dialog')).toBeInTheDocument();
 
-    fireEvent.change(screen.getByLabelText('股票代码'), { target: { value: 'AAPL' } });
-    fireEvent.click(screen.getByRole('button', { name: '筛选' }));
+    fireEvent.change(screen.getByLabelText('\u80a1\u7968\u4ee3\u7801'), { target: { value: 'AAPL' } });
+    fireEvent.click(screen.getByRole('button', { name: '\u7b5b\u9009' }));
 
     await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument());
-    expect(screen.getByText('暂无决策信号')).toBeInTheDocument();
+    expect(screen.getByText('\u6682\u65e0\u51b3\u7b56\u4fe1\u53f7')).toBeInTheDocument();
   });
 
   it('keeps a latest-sourced drawer open when the main list refreshes', async () => {
@@ -1240,14 +1240,14 @@ describe('DecisionSignalsPage', () => {
     vi.mocked(decisionSignalsApi.getLatest).mockResolvedValueOnce(listResponse([latestSignal]));
     renderPage();
 
-    await screen.findByText('贵州茅台');
+    await screen.findByText('\u8d35\u5dde\u8305\u53f0');
     submitCurrentStock('AAPL');
-    fireEvent.click(await screen.findByRole('button', { name: '查看 Apple AI 建议详情' }));
+    fireEvent.click(await screen.findByRole('button', { name: '\u67e5\u770b Apple AI \u5efa\u8bae\u8be6\u60c5' }));
     const dialog = await screen.findByRole('dialog');
     expect(within(dialog).getByText('Latest risk')).toBeInTheDocument();
 
-    fireEvent.change(screen.getByLabelText('股票代码'), { target: { value: '600519' } });
-    fireEvent.click(screen.getByRole('button', { name: '筛选' }));
+    fireEvent.change(screen.getByLabelText('\u80a1\u7968\u4ee3\u7801'), { target: { value: '600519' } });
+    fireEvent.click(screen.getByRole('button', { name: '\u7b5b\u9009' }));
 
     await waitFor(() => {
       expect(within(screen.getByRole('dialog')).getByText('Latest risk')).toBeInTheDocument();
@@ -1274,9 +1274,9 @@ describe('DecisionSignalsPage', () => {
       .mockResolvedValueOnce(listResponse([nextLatestSignal]));
     renderPage();
 
-    await screen.findByText('贵州茅台');
+    await screen.findByText('\u8d35\u5dde\u8305\u53f0');
     submitCurrentStock('AAPL');
-    fireEvent.click(await screen.findByRole('button', { name: '查看 Apple AI 建议详情' }));
+    fireEvent.click(await screen.findByRole('button', { name: '\u67e5\u770b Apple AI \u5efa\u8bae\u8be6\u60c5' }));
     expect(within(await screen.findByRole('dialog')).getByText('Latest A risk')).toBeInTheDocument();
 
     submitCurrentStock('MSFT');
@@ -1298,9 +1298,9 @@ describe('DecisionSignalsPage', () => {
       .mockRejectedValueOnce(new Error('latest failed'));
     renderPage();
 
-    await screen.findByText('贵州茅台');
+    await screen.findByText('\u8d35\u5dde\u8305\u53f0');
     submitCurrentStock('AAPL');
-    fireEvent.click(await screen.findByRole('button', { name: '查看 Apple AI 建议详情' }));
+    fireEvent.click(await screen.findByRole('button', { name: '\u67e5\u770b Apple AI \u5efa\u8bae\u8be6\u60c5' }));
     expect(within(await screen.findByRole('dialog')).getByText('Latest risk before failure')).toBeInTheDocument();
 
     submitCurrentStock('MSFT');
@@ -1320,13 +1320,13 @@ describe('DecisionSignalsPage', () => {
     vi.mocked(decisionSignalsApi.getLatest).mockResolvedValueOnce(listResponse([latestSignal]));
     renderPage();
 
-    fireEvent.click(await screen.findByRole('button', { name: '查看 贵州茅台 AI 建议详情' }));
-    expect(within(await screen.findByRole('dialog')).getByText('趋势保持')).toBeInTheDocument();
+    fireEvent.click(await screen.findByRole('button', { name: '\u67e5\u770b \u8d35\u5dde\u8305\u53f0 AI \u5efa\u8bae\u8be6\u60c5' }));
+    expect(within(await screen.findByRole('dialog')).getByText('\u8d8b\u52bf\u4fdd\u6301')).toBeInTheDocument();
 
     submitCurrentStock('AAPL');
 
     expect(await screen.findByText('Latest lookup risk')).toBeInTheDocument();
-    expect(within(screen.getByRole('dialog')).getByText('趋势保持')).toBeInTheDocument();
+    expect(within(screen.getByRole('dialog')).getByText('\u8d8b\u52bf\u4fdd\u6301')).toBeInTheDocument();
   });
 
   it('ignores duplicate status confirmation clicks and disables confirmation controls', async () => {
@@ -1334,10 +1334,10 @@ describe('DecisionSignalsPage', () => {
     vi.mocked(decisionSignalsApi.updateStatus).mockReturnValueOnce(statusUpdate.promise);
     renderPage();
 
-    fireEvent.click(await screen.findByRole('button', { name: '查看 贵州茅台 AI 建议详情' }));
+    fireEvent.click(await screen.findByRole('button', { name: '\u67e5\u770b \u8d35\u5dde\u8305\u53f0 AI \u5efa\u8bae\u8be6\u60c5' }));
     const dialog = await screen.findByRole('dialog');
-    fireEvent.click(within(dialog).getByRole('button', { name: '标记失效' }));
-    const confirmButton = await screen.findByRole('button', { name: '确定' });
+    fireEvent.click(within(dialog).getByRole('button', { name: '\u6807\u8bb0\u5931\u6548' }));
+    const confirmButton = await screen.findByRole('button', { name: '\u786e\u5b9a' });
 
     fireEvent.click(confirmButton);
     fireEvent.click(confirmButton);
@@ -1361,12 +1361,12 @@ describe('DecisionSignalsPage', () => {
     vi.mocked(decisionSignalsApi.updateStatus).mockResolvedValueOnce({ ...pageTwoSignal, status: 'invalidated' });
     renderPage();
 
-    await screen.findByText('贵州茅台');
+    await screen.findByText('\u8d35\u5dde\u8305\u53f0');
     fireEvent.click(screen.getByRole('button', { name: '2' }));
-    fireEvent.click(await screen.findByRole('button', { name: '查看 Apple AI 建议详情' }));
+    fireEvent.click(await screen.findByRole('button', { name: '\u67e5\u770b Apple AI \u5efa\u8bae\u8be6\u60c5' }));
     const dialog = await screen.findByRole('dialog');
-    fireEvent.click(within(dialog).getByRole('button', { name: '标记失效' }));
-    fireEvent.click(await screen.findByRole('button', { name: '确定' }));
+    fireEvent.click(within(dialog).getByRole('button', { name: '\u6807\u8bb0\u5931\u6548' }));
+    fireEvent.click(await screen.findByRole('button', { name: '\u786e\u5b9a' }));
 
     await waitFor(() => {
       expect(decisionSignalsApi.list).toHaveBeenLastCalledWith(expect.objectContaining({
@@ -1374,47 +1374,47 @@ describe('DecisionSignalsPage', () => {
         pageSize: 20,
       }));
     });
-    expect(screen.getByText('共 20 条信号')).toBeInTheDocument();
-    expect(screen.queryByText('暂无决策信号')).not.toBeInTheDocument();
+    expect(screen.getByText('\u5171 20 \u6761\u4fe1\u53f7')).toBeInTheDocument();
+    expect(screen.queryByText('\u6682\u65e0\u51b3\u7b56\u4fe1\u53f7')).not.toBeInTheDocument();
   });
 
   it('closes the status confirmation dialog and shows an error when status update fails', async () => {
     vi.mocked(decisionSignalsApi.updateStatus).mockRejectedValueOnce(new Error('status update failed'));
     renderPage();
 
-    fireEvent.click(await screen.findByRole('button', { name: '查看 贵州茅台 AI 建议详情' }));
+    fireEvent.click(await screen.findByRole('button', { name: '\u67e5\u770b \u8d35\u5dde\u8305\u53f0 AI \u5efa\u8bae\u8be6\u60c5' }));
     const dialog = await screen.findByRole('dialog');
-    fireEvent.click(within(dialog).getByRole('button', { name: '标记失效' }));
-    expect(await screen.findByRole('heading', { name: '更新信号状态' })).toBeInTheDocument();
+    fireEvent.click(within(dialog).getByRole('button', { name: '\u6807\u8bb0\u5931\u6548' }));
+    expect(await screen.findByRole('heading', { name: '\u66f4\u65b0\u4fe1\u53f7\u72b6\u6001' })).toBeInTheDocument();
 
-    fireEvent.click(screen.getByRole('button', { name: '确定' }));
+    fireEvent.click(screen.getByRole('button', { name: '\u786e\u5b9a' }));
 
     const errorMessage = await screen.findByText('status update failed');
     expect(errorMessage.closest('[role="alert"]')).toBeInTheDocument();
     await waitFor(() => {
-      expect(screen.queryByRole('heading', { name: '更新信号状态' })).not.toBeInTheDocument();
+      expect(screen.queryByRole('heading', { name: '\u66f4\u65b0\u4fe1\u53f7\u72b6\u6001' })).not.toBeInTheDocument();
     });
-    expect(within(dialog).getByText('有效')).toBeInTheDocument();
+    expect(within(dialog).getByText('\u6709\u6548')).toBeInTheDocument();
   });
 
   it.each([
-    ['关闭信号', 'closed'],
-    ['归档', 'archived'],
+    ['\u5173\u95ed\u4fe1\u53f7', 'closed'],
+    ['\u5f52\u6863', 'archived'],
   ] as const)('confirms %s without exposing active recovery', async (buttonName, status) => {
     vi.mocked(decisionSignalsApi.updateStatus).mockResolvedValueOnce({ ...signal, status });
     renderPage();
 
-    fireEvent.click(await screen.findByRole('button', { name: '查看 贵州茅台 AI 建议详情' }));
+    fireEvent.click(await screen.findByRole('button', { name: '\u67e5\u770b \u8d35\u5dde\u8305\u53f0 AI \u5efa\u8bae\u8be6\u60c5' }));
     const dialog = await screen.findByRole('dialog');
 
-    expect(within(dialog).getByRole('button', { name: '关闭信号' })).toBeInTheDocument();
-    expect(within(dialog).getByRole('button', { name: '标记失效' })).toBeInTheDocument();
-    expect(within(dialog).getByRole('button', { name: '归档' })).toBeInTheDocument();
-    expect(within(dialog).queryByRole('button', { name: '有效' })).not.toBeInTheDocument();
-    expect(within(dialog).queryByRole('button', { name: '已过期' })).not.toBeInTheDocument();
+    expect(within(dialog).getByRole('button', { name: '\u5173\u95ed\u4fe1\u53f7' })).toBeInTheDocument();
+    expect(within(dialog).getByRole('button', { name: '\u6807\u8bb0\u5931\u6548' })).toBeInTheDocument();
+    expect(within(dialog).getByRole('button', { name: '\u5f52\u6863' })).toBeInTheDocument();
+    expect(within(dialog).queryByRole('button', { name: '\u6709\u6548' })).not.toBeInTheDocument();
+    expect(within(dialog).queryByRole('button', { name: '\u5df2\u8fc7\u671f' })).not.toBeInTheDocument();
 
     fireEvent.click(within(dialog).getByRole('button', { name: buttonName }));
-    fireEvent.click(await screen.findByRole('button', { name: '确定' }));
+    fireEvent.click(await screen.findByRole('button', { name: '\u786e\u5b9a' }));
 
     await waitFor(() => {
       expect(decisionSignalsApi.updateStatus).toHaveBeenCalledWith(7, { status });

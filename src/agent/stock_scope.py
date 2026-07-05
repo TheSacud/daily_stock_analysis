@@ -24,18 +24,18 @@ SWITCH_CLEANUP_KEYS = {
     "market_phase_context",
 }
 
-_STRONG_COMPARE_PATTERN = re.compile(r"比较|对比|vs\b|和[^，。,.!?！？]{0,40}比", re.IGNORECASE)
-_WEAK_COMPARE_HINT_PATTERN = re.compile(r"差异(?!化)|区别|不同|相比|对照|比一比")
-_CHOICE_COMPARE_PATTERN = re.compile(r"哪个|哪只|哪一个|谁更|更值得|更适合|怎么选|选哪|二选一")
+_STRONG_COMPARE_PATTERN = re.compile(r"\u6bd4\u8f83|\u5bf9\u6bd4|vs\b|\u548c[^; .,.!?！？]{0,40}\u6bd4", re.IGNORECASE)
+_WEAK_COMPARE_HINT_PATTERN = re.compile(r"\u5dee\u5f02(?!\u5316)|\u533a\u522b|\u4e0d\u540c|\u76f8\u6bd4|\u5bf9\u7167|\u6bd4\u4e00\u6bd4")
+_CHOICE_COMPARE_PATTERN = re.compile(r"\u54ea\u4e2a|\u54ea\u53ea|\u54ea\u4e00\u4e2a|\u8c01\u66f4|\u66f4\u503c\u5f97|\u66f4\u9002\u5408|\u600e\u4e48\u9009|\u9009\u54ea|\u4e8c\u9009\u4e00")
 _LINKED_COMPARE_PATTERN = re.compile(
-    r"(?:和|与|跟|同)(?P<body>[^，。,.!?！？]{0,40})(?:差异(?!化)|区别|不同|相比|对照|比一比)"
+    r"(?:\u548c|\u4e0e|\u8ddf|\u540c)(?P<body>[^; .,.!?！？]{0,40})(?:\u5dee\u5f02(?!\u5316)|\u533a\u522b|\u4e0d\u540c|\u76f8\u6bd4|\u5bf9\u7167|\u6bd4\u4e00\u6bd4)"
 )
-_SWITCH_PATTERN = re.compile(r"换成|改看|分析|看看|研究|诊断")
+_SWITCH_PATTERN = re.compile(r"\u6362\u6210|\u6539\u770b|analyze|\u770b\u770b|\u7814\u7a76|\u8bca\u65ad")
 _LOWERCASE_TICKER_PATTERN = re.compile(r"(?<![a-zA-Z.])([a-z]{2,5}(?:\.[a-z]{1,2})?)(?![a-zA-Z0-9])")
 _EXCHANGE_TOKEN_CANDIDATES = {"SH", "SZ", "BJ", "HK", "SS"}
 _CONTEXTUAL_INDICATOR_TOKENS = {"MA"}
 _INDICATOR_CONTEXT_PATTERN = re.compile(
-    r"指标|均线|移动平均|排列|多头|空头|金叉|死叉|支撑|压力|MA\d|SMA|EMA",
+    r"\u6307\u6807|\u5747\u7ebf|\u79fb\u52a8\u5e73\u5747|\u6392\u5217|\u591a\u5934|\u7a7a\u5934|\u91d1\u53c9|\u6b7b\u53c9|\u652f\u6491|\u538b\u529b|MA\d|SMA|EMA",
     re.IGNORECASE,
 )
 
@@ -150,7 +150,7 @@ def _is_compare_message(message: str, candidates: List[str], current_code: str) 
         return False
 
     for match in _LINKED_COMPARE_PATTERN.finditer(message):
-        body_candidates = set(extract_stock_codes(f"比较 {match.group('body')}"))
+        body_candidates = set(extract_stock_codes(f"\u6bd4\u8f83 {match.group('body')}"))
         if body_candidates & new_candidates:
             return True
     return False

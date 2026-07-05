@@ -1,6 +1,6 @@
-# 对 changelog 使用 union 合并策略
-# 多个并发 PR 向 [Unreleased] 末尾追加条目时，Git 直接取两边所有行而不产生冲突标记。
-# 适用于 append-only 的 changelog 文件。
+# \u5bf9 changelog \u4f7f\u7528 union \u5408\u5e76\u7b56\u7565
+# \u591a\u4e2a\u5e76\u53d1 PR \u5411 [Unreleased] \u672b\u5c3e\u8ffd\u52a0\u6761\u76ee\u65f6，Git \u76f4\u63a5\u53d6\u4e24\u8fb9\u6240\u6709\u884c\u800c\u4e0d\u4ea7\u751f\u51b2\u7a81\u6807\u8bb0。
+# \u9002\u7528\u4e8e append-only \u7684 changelog \u6587\u4ef6。
 docs/CHANGELOG.md merge=union
 
 # Documentation image/design assets are binary. Keep GitHub review diffs from
@@ -20,23 +20,23 @@ docs/assets/**/*.jpeg binary
 docs/assets/**/*.png binary
 docs/assets/**/*.psd binary
 
-# === 强制 LF 的文件类型（内核/系统解释器直接消费） ===
-# Shell 脚本（entrypoint.sh、任何 .sh）
+# === \u5f3a\u5236 LF \u7684\u6587\u4ef6\u7c7b\u578b（\u5185\u6838/\u7cfb\u7edf\u89e3\u91ca\u5668\u76f4\u63a5\u6d88\u8d39） ===
+# Shell \u811a\u672c（entrypoint.sh、\u4efb\u4f55 .sh）
 *.sh text eol=lf
 *.bash text eol=lf
 
-# Dockerfile（包括多阶段或变体）
+# Dockerfile（\u5305\u62ec\u591a\u9636\u6bb5\u6216\u53d8\u4f53）
 Dockerfile text eol=lf
 Dockerfile.* text eol=lf
 
 # Makefile
 Makefile text eol=lf
 
-# 环境变量文件（如果被 shell 直接 source 使用）
+# \u73af\u5883\u53d8\u91cf\u6587\u4ef6（\u5982\u679c\u88ab shell \u76f4\u63a5 source \u4f7f\u7528）
 .env text eol=lf
 
-# === 新增：二进制文件（禁止 Git 修改换行/编码） ===
-# 证书、密钥等（如果有）
+# === \u65b0\u589e：\u4e8c\u8fdb\u5236\u6587\u4ef6（\u7981\u6b62 Git \u4fee\u6539\u6362\u884c/\u7f16\u7801） ===
+# \u8bc1\u4e66、\u5bc6\u94a5\u7b49（\u5982\u679c\u6709）
 *.pem binary
 *.crt binary
 *.key binary

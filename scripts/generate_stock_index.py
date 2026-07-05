@@ -127,7 +127,7 @@ def determine_market_and_type(code: str) -> tuple:
             # Four digits: likely a US symbol or special market code.
             return 'US', 'stock'
 
-    # 字母代码，美股或其他
+    # \u5b57\u6bcd\u4ee3\u7801，\u7f8e\u80a1\u6216\u5176\u4ed6
     return 'US', 'stock'
 
 
@@ -142,7 +142,7 @@ def market_to_suffix(market: str) -> str:
         Market suffix
     """
     suffix_map = {
-        'CN': 'SH',  # 简化处理，默认上海
+        'CN': 'SH',  # \u7b80\u5316\u5904\u7406，\u9ed8\u8ba4\u4e0a\u6d77
         'HK': 'HK',
         'US': 'US',
         'INDEX': 'SH',
@@ -194,31 +194,31 @@ def generate_aliases(name: str) -> List[str]:
     """
     aliases = []
 
-    # 常见简称映射
+    # \u5e38\u89c1\u7b80\u79f0\u6620\u5c04
     alias_map = {
-        '贵州茅台': ['茅台'],
-        '中国平安': ['平安'],
-        '平安银行': ['平银'],
-        '招商银行': ['招行'],
-        '五粮液': ['五粮'],
-        '宁德时代': ['宁德'],
-        '比亚迪': ['比亚'],
-        '工商银行': ['工行'],
-        '建设银行': ['建行'],
-        '农业银行': ['农行'],
-        '中国银行': ['中行'],
-        '交通银行': ['交行'],
-        '兴业银行': ['兴业'],
-        '浦发银行': ['浦发'],
-        '民生银行': ['民生'],
-        '中信证券': ['中信'],
-        '东方财富': ['东财'],
-        '海康威视': ['海康'],
-        '隆基绿能': ['隆基'],
-        '中国神华': ['神华'],
-        '长江电力': ['长电'],
-        '中国石化': ['石化'],
-        '中国石油': ['石油'],
+        '\u8d35\u5dde\u8305\u53f0': ['\u8305\u53f0'],
+        '\u4e2d\u56fd\u5e73\u5b89': ['\u5e73\u5b89'],
+        '\u5e73\u5b89\u94f6\u884c': ['\u5e73\u94f6'],
+        '\u62db\u5546\u94f6\u884c': ['\u62db\u884c'],
+        '\u4e94\u7cae\u6db2': ['\u4e94\u7cae'],
+        '\u5b81\u5fb7\u65f6\u4ee3': ['\u5b81\u5fb7'],
+        '\u6bd4\u4e9a\u8fea': ['\u6bd4\u4e9a'],
+        '\u5de5\u5546\u94f6\u884c': ['\u5de5\u884c'],
+        '\u5efa\u8bbe\u94f6\u884c': ['\u5efa\u884c'],
+        '\u519c\u4e1a\u94f6\u884c': ['\u519c\u884c'],
+        '\u4e2d\u56fd\u94f6\u884c': ['\u4e2d\u884c'],
+        '\u4ea4\u901a\u94f6\u884c': ['\u4ea4\u884c'],
+        '\u5174\u4e1a\u94f6\u884c': ['\u5174\u4e1a'],
+        '\u6d66\u53d1\u94f6\u884c': ['\u6d66\u53d1'],
+        '\u6c11\u751f\u94f6\u884c': ['\u6c11\u751f'],
+        '\u4e2d\u4fe1\u8bc1\u5238': ['\u4e2d\u4fe1'],
+        '\u4e1c\u65b9\u8d22\u5bcc': ['\u4e1c\u8d22'],
+        '\u6d77\u5eb7\u5a01\u89c6': ['\u6d77\u5eb7'],
+        '\u9686\u57fa\u7eff\u80fd': ['\u9686\u57fa'],
+        '\u4e2d\u56fd\u795e\u534e': ['\u795e\u534e'],
+        '\u957f\u6c5f\u7535\u529b': ['\u957f\u7535'],
+        '\u4e2d\u56fd\u77f3\u5316': ['\u77f3\u5316'],
+        '\u4e2d\u56fd\u77f3\u6cb9': ['\u77f3\u6cb9'],
     }
 
     if name in alias_map:
@@ -256,63 +256,63 @@ def compress_index(index: List[Dict[str, Any]]) -> List[List]:
 
 def main():
     """Main function"""
-    # 解析命令行参数
+    # \u89e3\u6790\u547d\u4ee4\u884c\u53c2\u6570
     parser = argparse.ArgumentParser(
-        description='生成股票自动补全索引文件',
+        description='\u751f\u6210\u80a1\u7968\u81ea\u52a8\u8865\u5168\u7d22\u5f15\u6587\u4ef6',
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
-示例:
-  python3 scripts/generate_stock_index.py              # 默认：生成索引文件
-  python3 scripts/generate_stock_index.py --test       # 测试模式：只读取不写入
-  python3 scripts/generate_stock_index.py --test -v    # 测试模式 + 显示详细数据
+\u793a\u4f8b:
+  python3 scripts/generate_stock_index.py              # \u9ed8\u8ba4：\u751f\u6210\u7d22\u5f15\u6587\u4ef6
+  python3 scripts/generate_stock_index.py --test       # \u6d4b\u8bd5\u6a21\u5f0f：\u53ea\u8bfb\u53d6\u4e0d\u5199\u5165
+  python3 scripts/generate_stock_index.py --test -v    # \u6d4b\u8bd5\u6a21\u5f0f + \u663e\u793a\u8be6\u7ec6\u6570\u636e
         """
     )
     parser.add_argument(
         '--test', '-t',
         action='store_true',
-        help='测试模式：只读取和验证数据，不写入文件'
+        help='\u6d4b\u8bd5\u6a21\u5f0f：\u53ea\u8bfb\u53d6\u548c\u9a8c\u8bc1\u6570\u636e，\u4e0d\u5199\u5165\u6587\u4ef6'
     )
     parser.add_argument(
         '--verbose', '-v',
         action='store_true',
-        help='详细模式：显示前10条数据预览'
+        help='\u8be6\u7ec6\u6a21\u5f0f：\u663e\u793a\u524d10\u6761\u6570\u636e\u9884\u89c8'
     )
     args = parser.parse_args()
 
-    print("开始生成股票索引...")
+    print("\u5f00\u59cb\u751f\u6210\u80a1\u7968\u7d22\u5f15...")
 
-    # 生成索引（MVP：使用现有映射）
+    # \u751f\u6210\u7d22\u5f15（MVP：\u4f7f\u7528\u73b0\u6709\u6620\u5c04）
     index = generate_stock_index_from_map()
-    print(f"共生成 {len(index)} 条索引")
+    print(f"\u5171\u751f\u6210 {len(index)} \u6761\u7d22\u5f15")
 
-    # 按市场统计
+    # \u6309\u5e02\u573a\u7edf\u8ba1
     market_stats = {}
     for item in index:
         market = item['market']
         market_stats[market] = market_stats.get(market, 0) + 1
-    print(f"市场分布：{market_stats}")
+    print(f"\u5e02\u573a\u5206\u5e03：{market_stats}")
 
-    # 压缩格式（减少文件大小）
+    # \u538b\u7f29\u683c\u5f0f（\u51cf\u5c11\u6587\u4ef6\u5927\u5c0f）
     compressed = compress_index(index)
 
-    # 测试模式：不写入文件
+    # \u6d4b\u8bd5\u6a21\u5f0f：\u4e0d\u5199\u5165\u6587\u4ef6
     if args.test:
-        print("\n[测试模式] 不会写入文件")
-        print(f"预计文件大小：{len(json.dumps(compressed, ensure_ascii=False, separators=(',', ':'))) / 1024:.2f} KB")
+        print("\n[\u6d4b\u8bd5\u6a21\u5f0f] \u4e0d\u4f1a\u5199\u5165\u6587\u4ef6")
+        print(f"\u9884\u8ba1\u6587\u4ef6\u5927\u5c0f：{len(json.dumps(compressed, ensure_ascii=False, separators=(',', ':'))) / 1024:.2f} KB")
 
         if args.verbose:
-            print("\n前10条数据预览：")
+            print("\n\u524d10\u6761\u6570\u636e\u9884\u89c8：")
             for i, item in enumerate(index[:10]):
                 print(f"  {i + 1}. {item['canonicalCode']} - {item['nameZh']} ({item['market']})")
 
-        print("\n✓ 测试通过，数据格式正确")
+        print("\n✓ \u6d4b\u8bd5\u901a\u8fc7，\u6570\u636e\u683c\u5f0f\u6b63\u786e")
         return 0
 
-    # 输出路径
+    # \u8f93\u51fa\u8def\u5f84
     output_path = Path(__file__).parent.parent / "apps" / "dsa-web" / "public" / "stocks.index.json"
     output_path.parent.mkdir(parents=True, exist_ok=True)
 
-    # 写入文件
+    # \u5199\u5165\u6587\u4ef6
     with open(output_path, 'w', encoding='utf-8') as f:
         f.write('[\n')
         for i, item in enumerate(compressed):
@@ -324,13 +324,13 @@ def main():
         f.write(']\n')
 
     file_size = output_path.stat().st_size
-    print(f"索引已生成：{output_path}")
-    print(f"文件大小：{file_size / 1024:.2f} KB")
+    print(f"\u7d22\u5f15\u5df2\u751f\u6210：{output_path}")
+    print(f"\u6587\u4ef6\u5927\u5c0f：{file_size / 1024:.2f} KB")
 
-    # 验证文件可读
+    # \u9a8c\u8bc1\u6587\u4ef6\u53ef\u8bfb
     with open(output_path, 'r', encoding='utf-8') as f:
         test_data = json.load(f)
-        print(f"验证通过：{len(test_data)} 条记录")
+        print(f"\u9a8c\u8bc1\u901a\u8fc7：{len(test_data)} \u6761\u8bb0\u5f55")
 
     return 0
 

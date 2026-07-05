@@ -2,35 +2,35 @@
   "openapi": "3.1.0",
   "info": {
     "title": "Daily Stock Analysis API",
-    "description": "A股/港股/美股自选股智能分析系统 API\n\n## 功能模块\n- 股票分析：触发 AI 智能分析\n- 历史记录：查询历史分析报告\n- 股票数据：获取行情数据\n\n## 认证方式\n支持可选管理员认证：ADMIN_AUTH_ENABLED=true 时，除登录、状态、健康检查和 OpenAPI 文档外，/api/v1/* 需要有效管理员会话 Cookie；关闭时不强制认证。",
+    "description": "English description unavailable in the generated API snapshot.",
     "version": "1.0.0"
   },
   "servers": [
     {
       "url": "http://localhost:8000",
-      "description": "本地开发服务器"
+      "description": "English description unavailable in the generated API snapshot."
     }
   ],
   "tags": [
     {
       "name": "Health",
-      "description": "健康检查接口"
+      "description": "English description unavailable in the generated API snapshot."
     },
     {
       "name": "Analysis",
-      "description": "股票分析相关接口"
+      "description": "English description unavailable in the generated API snapshot."
     },
     {
       "name": "History",
-      "description": "历史记录相关接口"
+      "description": "English description unavailable in the generated API snapshot."
     },
     {
       "name": "SystemConfig",
-      "description": "系统配置管理接口"
+      "description": "English description unavailable in the generated API snapshot."
     },
     {
       "name": "DecisionSignals",
-      "description": "AI 决策信号资产接口"
+      "description": "English description unavailable in the generated API snapshot."
     }
   ],
   "paths": {
@@ -39,12 +39,12 @@
         "tags": [
           "Health"
         ],
-        "summary": "API 根路由",
-        "description": "返回 API 运行状态信息",
+        "summary": "English description unavailable in the generated API snapshot.",
+        "description": "English description unavailable in the generated API snapshot.",
         "operationId": "root",
         "responses": {
           "200": {
-            "description": "API 正常运行",
+            "description": "English description unavailable in the generated API snapshot.",
             "content": {
               "application/json": {
                 "schema": {
@@ -61,12 +61,12 @@
         "tags": [
           "Health"
         ],
-        "summary": "根路径健康检查",
-        "description": "用于负载均衡器或监控系统检查服务状态；即使静态 Web 前端已构建，也返回 JSON 而不是 SPA HTML fallback。",
+        "summary": "English description unavailable in the generated API snapshot.",
+        "description": "English description unavailable in the generated API snapshot.",
         "operationId": "rootHealthCheck",
         "responses": {
           "200": {
-            "description": "服务健康",
+            "description": "English description unavailable in the generated API snapshot.",
             "content": {
               "application/json": {
                 "schema": {
@@ -83,12 +83,12 @@
         "tags": [
           "Health"
         ],
-        "summary": "健康检查",
-        "description": "用于负载均衡器或监控系统检查服务状态",
+        "summary": "English description unavailable in the generated API snapshot.",
+        "description": "English description unavailable in the generated API snapshot.",
         "operationId": "healthCheck",
         "responses": {
           "200": {
-            "description": "服务健康",
+            "description": "English description unavailable in the generated API snapshot.",
             "content": {
               "application/json": {
                 "schema": {
@@ -105,12 +105,12 @@
         "tags": [
           "Health"
         ],
-        "summary": "v1 健康检查",
-        "description": "API v1 前缀下的健康检查接口，用于监控系统和客户端探测服务状态。",
+        "summary": "English description unavailable in the generated API snapshot.",
+        "description": "English description unavailable in the generated API snapshot.",
         "operationId": "v1HealthCheck",
         "responses": {
           "200": {
-            "description": "服务健康",
+            "description": "English description unavailable in the generated API snapshot.",
             "content": {
               "application/json": {
                 "schema": {
@@ -127,8 +127,8 @@
         "tags": [
           "Analysis"
         ],
-        "summary": "触发股票分析",
-        "description": "启动 AI 智能分析任务，支持单只或多只股票批量分析",
+        "summary": "English description unavailable in the generated API snapshot.",
+        "description": "English description unavailable in the generated API snapshot.",
         "operationId": "triggerAnalysis",
         "requestBody": {
           "required": true,
@@ -142,7 +142,7 @@
         },
         "responses": {
           "200": {
-            "description": "分析完成（同步模式）",
+            "description": "English description unavailable in the generated API snapshot.",
             "content": {
               "application/json": {
                 "schema": {
@@ -152,7 +152,7 @@
             }
           },
           "202": {
-            "description": "分析任务已接受（异步模式）",
+            "description": "English description unavailable in the generated API snapshot.",
             "content": {
               "application/json": {
                 "schema": {
@@ -169,7 +169,7 @@
             }
           },
           "400": {
-            "description": "请求参数错误",
+            "description": "English description unavailable in the generated API snapshot.",
             "content": {
               "application/json": {
                 "schema": {
@@ -179,7 +179,7 @@
             }
           },
           "409": {
-            "description": "股票正在分析中，拒绝重复提交",
+            "description": "English description unavailable in the generated API snapshot.",
             "content": {
               "application/json": {
                 "schema": {
@@ -189,7 +189,7 @@
             }
           },
           "500": {
-            "description": "分析失败",
+            "description": "English description unavailable in the generated API snapshot.",
             "content": {
               "application/json": {
                 "schema": {
@@ -206,14 +206,14 @@
         "tags": [
           "Analysis"
         ],
-        "summary": "获取分析任务列表",
-        "description": "获取当前所有分析任务，支持按状态筛选。返回进行中和最近完成的任务。",
+        "summary": "English description unavailable in the generated API snapshot.",
+        "description": "English description unavailable in the generated API snapshot.",
         "operationId": "getAnalysisTasks",
         "parameters": [
           {
             "name": "status",
             "in": "query",
-            "description": "筛选状态：pending, processing, completed, failed, cancel_requested, cancelled（支持逗号分隔多个）",
+            "description": "English description unavailable in the generated API snapshot.",
             "schema": {
               "type": "string",
               "example": "pending,processing"
@@ -222,7 +222,7 @@
           {
             "name": "limit",
             "in": "query",
-            "description": "返回数量限制",
+            "description": "English description unavailable in the generated API snapshot.",
             "schema": {
               "type": "integer",
               "default": 20,
@@ -233,7 +233,7 @@
         ],
         "responses": {
           "200": {
-            "description": "任务列表",
+            "description": "English description unavailable in the generated API snapshot.",
             "content": {
               "application/json": {
                 "schema": {
@@ -250,12 +250,12 @@
         "tags": [
           "Analysis"
         ],
-        "summary": "任务状态 SSE 流",
-        "description": "通过 Server-Sent Events 实时推送任务状态变化。\n\n## 事件类型\n- `connected`: 连接成功\n- `task_created`: 新任务创建\n- `task_started`: 任务开始执行\n- `task_completed`: 任务完成\n- `task_failed`: 任务失败\n- `heartbeat`: 心跳（每 30 秒）",
+        "summary": "English description unavailable in the generated API snapshot.",
+        "description": "English description unavailable in the generated API snapshot.",
         "operationId": "taskStream",
         "responses": {
           "200": {
-            "description": "SSE 事件流",
+            "description": "English description unavailable in the generated API snapshot.",
             "content": {
               "text/event-stream": {
                 "schema": {
@@ -273,14 +273,14 @@
         "tags": [
           "History"
         ],
-        "summary": "获取历史分析列表",
-        "description": "分页获取历史分析记录摘要，支持按股票代码、报告类型和日期范围筛选",
+        "summary": "English description unavailable in the generated API snapshot.",
+        "description": "English description unavailable in the generated API snapshot.",
         "operationId": "getHistoryList",
         "parameters": [
           {
             "name": "stock_code",
             "in": "query",
-            "description": "股票代码筛选",
+            "description": "English description unavailable in the generated API snapshot.",
             "schema": {
               "type": "string"
             }
@@ -288,7 +288,7 @@
           {
             "name": "report_type",
             "in": "query",
-            "description": "报告类型筛选（如 market_review）；不传则返回所有类型历史。",
+            "description": "English description unavailable in the generated API snapshot.",
             "schema": {
               "type": "string"
             }
@@ -296,7 +296,7 @@
           {
             "name": "start_date",
             "in": "query",
-            "description": "开始日期 (YYYY-MM-DD)",
+            "description": "English description unavailable in the generated API snapshot.",
             "schema": {
               "type": "string",
               "format": "date"
@@ -305,7 +305,7 @@
           {
             "name": "end_date",
             "in": "query",
-            "description": "结束日期 (YYYY-MM-DD)",
+            "description": "English description unavailable in the generated API snapshot.",
             "schema": {
               "type": "string",
               "format": "date"
@@ -314,7 +314,7 @@
           {
             "name": "page",
             "in": "query",
-            "description": "页码（从 1 开始）",
+            "description": "English description unavailable in the generated API snapshot.",
             "schema": {
               "type": "integer",
               "default": 1,
@@ -324,7 +324,7 @@
           {
             "name": "limit",
             "in": "query",
-            "description": "每页数量",
+            "description": "English description unavailable in the generated API snapshot.",
             "schema": {
               "type": "integer",
               "default": 20,
@@ -335,7 +335,7 @@
         ],
         "responses": {
           "200": {
-            "description": "历史记录列表",
+            "description": "English description unavailable in the generated API snapshot.",
             "content": {
               "application/json": {
                 "schema": {
@@ -352,15 +352,15 @@
         "tags": [
           "History"
         ],
-        "summary": "获取历史报告详情",
-        "description": "根据 query_id 获取完整的历史分析报告",
+        "summary": "English description unavailable in the generated API snapshot.",
+        "description": "English description unavailable in the generated API snapshot.",
         "operationId": "getHistoryDetail",
         "parameters": [
           {
             "name": "query_id",
             "in": "path",
             "required": true,
-            "description": "分析记录唯一标识",
+            "description": "English description unavailable in the generated API snapshot.",
             "schema": {
               "type": "string"
             }
@@ -368,7 +368,7 @@
         ],
         "responses": {
           "200": {
-            "description": "报告详情",
+            "description": "English description unavailable in the generated API snapshot.",
             "content": {
               "application/json": {
                 "schema": {
@@ -378,7 +378,7 @@
             }
           },
           "404": {
-            "description": "报告不存在",
+            "description": "English description unavailable in the generated API snapshot.",
             "content": {
               "application/json": {
                 "schema": {
@@ -395,15 +395,15 @@
         "tags": [
           "History"
         ],
-        "summary": "获取历史报告关联新闻",
-        "description": "根据 query_id 获取关联的新闻情报列表（为空也返回 200）",
+        "summary": "English description unavailable in the generated API snapshot.",
+        "description": "English description unavailable in the generated API snapshot.",
         "operationId": "getHistoryNews",
         "parameters": [
           {
             "name": "query_id",
             "in": "path",
             "required": true,
-            "description": "分析记录唯一标识",
+            "description": "English description unavailable in the generated API snapshot.",
             "schema": {
               "type": "string"
             }
@@ -411,7 +411,7 @@
           {
             "name": "limit",
             "in": "query",
-            "description": "返回数量限制",
+            "description": "English description unavailable in the generated API snapshot.",
             "schema": {
               "type": "integer",
               "default": 20,
@@ -422,7 +422,7 @@
         ],
         "responses": {
           "200": {
-            "description": "新闻情报列表",
+            "description": "English description unavailable in the generated API snapshot.",
             "content": {
               "application/json": {
                 "schema": {
@@ -432,7 +432,7 @@
             }
           },
           "500": {
-            "description": "服务器错误",
+            "description": "English description unavailable in the generated API snapshot.",
             "content": {
               "application/json": {
                 "schema": {
@@ -449,14 +449,14 @@
         "tags": [
           "SystemConfig"
         ],
-        "summary": "获取系统配置",
-        "description": "读取当前系统配置并返回分类后的显示值。服务端掩码的敏感字段可能返回 mask_token；客户端应结合 raw_value_exists 与 is_masked 判断。",
+        "summary": "English description unavailable in the generated API snapshot.",
+        "description": "English description unavailable in the generated API snapshot.",
         "operationId": "getSystemConfig",
         "parameters": [
           {
             "name": "include_schema",
             "in": "query",
-            "description": "是否携带字段元数据（默认 true）",
+            "description": "English description unavailable in the generated API snapshot.",
             "schema": {
               "type": "boolean",
               "default": true
@@ -465,7 +465,7 @@
         ],
         "responses": {
           "200": {
-            "description": "配置读取成功",
+            "description": "English description unavailable in the generated API snapshot.",
             "content": {
               "application/json": {
                 "schema": {
@@ -475,7 +475,7 @@
             }
           },
           "401": {
-            "description": "未认证",
+            "description": "English description unavailable in the generated API snapshot.",
             "content": {
               "application/json": {
                 "schema": {
@@ -485,7 +485,7 @@
             }
           },
           "500": {
-            "description": "读取失败",
+            "description": "English description unavailable in the generated API snapshot.",
             "content": {
               "application/json": {
                 "schema": {
@@ -500,8 +500,8 @@
         "tags": [
           "SystemConfig"
         ],
-        "summary": "更新系统配置",
-        "description": "按键更新系统配置。若字段值为掩码（如 ******），则保留原值不覆盖。",
+        "summary": "English description unavailable in the generated API snapshot.",
+        "description": "English description unavailable in the generated API snapshot.",
         "operationId": "updateSystemConfig",
         "requestBody": {
           "required": true,
@@ -515,7 +515,7 @@
         },
         "responses": {
           "200": {
-            "description": "更新成功",
+            "description": "English description unavailable in the generated API snapshot.",
             "content": {
               "application/json": {
                 "schema": {
@@ -525,7 +525,7 @@
             }
           },
           "400": {
-            "description": "参数校验失败",
+            "description": "English description unavailable in the generated API snapshot.",
             "content": {
               "application/json": {
                 "schema": {
@@ -535,7 +535,7 @@
             }
           },
           "409": {
-            "description": "配置版本冲突",
+            "description": "English description unavailable in the generated API snapshot.",
             "content": {
               "application/json": {
                 "schema": {
@@ -545,7 +545,7 @@
             }
           },
           "500": {
-            "description": "更新失败",
+            "description": "English description unavailable in the generated API snapshot.",
             "content": {
               "application/json": {
                 "schema": {
@@ -562,12 +562,12 @@
         "tags": [
           "SystemConfig"
         ],
-        "summary": "导出 `.env` 备份",
-        "description": "返回当前已保存 `.env` 的原始文本内容，用于配置备份。",
+        "summary": "English description unavailable in the generated API snapshot.",
+        "description": "English description unavailable in the generated API snapshot.",
         "operationId": "exportSystemConfig",
         "responses": {
           "200": {
-            "description": "导出成功",
+            "description": "English description unavailable in the generated API snapshot.",
             "content": {
               "application/json": {
                 "schema": {
@@ -577,7 +577,7 @@
             }
           },
           "401": {
-            "description": "未登录",
+            "description": "English description unavailable in the generated API snapshot.",
             "content": {
               "application/json": {
                 "schema": {
@@ -587,7 +587,7 @@
             }
           },
           "403": {
-            "description": "未开启管理员鉴权（`ADMIN_AUTH_ENABLED=false`）",
+            "description": "English description unavailable in the generated API snapshot.",
             "content": {
               "application/json": {
                 "schema": {
@@ -597,7 +597,7 @@
             }
           },
           "500": {
-            "description": "导出失败",
+            "description": "English description unavailable in the generated API snapshot.",
             "content": {
               "application/json": {
                 "schema": {
@@ -614,8 +614,8 @@
         "tags": [
           "SystemConfig"
         ],
-        "summary": "导入 `.env` 备份",
-        "description": "按键级覆盖方式把备份文本合并到当前 `.env`，并沿用现有配置版本冲突保护。",
+        "summary": "English description unavailable in the generated API snapshot.",
+        "description": "English description unavailable in the generated API snapshot.",
         "operationId": "importSystemConfig",
         "requestBody": {
           "required": true,
@@ -629,7 +629,7 @@
         },
         "responses": {
           "200": {
-            "description": "导入成功",
+            "description": "English description unavailable in the generated API snapshot.",
             "content": {
               "application/json": {
                 "schema": {
@@ -639,7 +639,7 @@
             }
           },
           "400": {
-            "description": "导入文件无效或配置校验失败",
+            "description": "English description unavailable in the generated API snapshot.",
             "content": {
               "application/json": {
                 "schema": {
@@ -656,7 +656,7 @@
             }
           },
           "401": {
-            "description": "未认证",
+            "description": "English description unavailable in the generated API snapshot.",
             "content": {
               "application/json": {
                 "schema": {
@@ -666,7 +666,7 @@
             }
           },
           "403": {
-            "description": "未开启管理员鉴权（`ADMIN_AUTH_ENABLED=false`）",
+            "description": "English description unavailable in the generated API snapshot.",
             "content": {
               "application/json": {
                 "schema": {
@@ -676,7 +676,7 @@
             }
           },
           "409": {
-            "description": "配置版本冲突",
+            "description": "English description unavailable in the generated API snapshot.",
             "content": {
               "application/json": {
                 "schema": {
@@ -686,7 +686,7 @@
             }
           },
           "500": {
-            "description": "导入失败",
+            "description": "English description unavailable in the generated API snapshot.",
             "content": {
               "application/json": {
                 "schema": {
@@ -703,8 +703,8 @@
         "tags": [
           "SystemConfig"
         ],
-        "summary": "校验配置",
-        "description": "仅校验提交内容，不写入 .env。用于前端保存前预检查。",
+        "summary": "English description unavailable in the generated API snapshot.",
+        "description": "English description unavailable in the generated API snapshot.",
         "operationId": "validateSystemConfig",
         "requestBody": {
           "required": true,
@@ -718,7 +718,7 @@
         },
         "responses": {
           "200": {
-            "description": "校验完成",
+            "description": "English description unavailable in the generated API snapshot.",
             "content": {
               "application/json": {
                 "schema": {
@@ -728,7 +728,7 @@
             }
           },
           "500": {
-            "description": "校验失败",
+            "description": "English description unavailable in the generated API snapshot.",
             "content": {
               "application/json": {
                 "schema": {
@@ -745,12 +745,12 @@
         "tags": [
           "SystemConfig"
         ],
-        "summary": "获取配置字段元数据",
-        "description": "返回配置分类、字段类型、校验规则和 UI 控件建议，用于前端动态渲染。",
+        "summary": "English description unavailable in the generated API snapshot.",
+        "description": "English description unavailable in the generated API snapshot.",
         "operationId": "getSystemConfigSchema",
         "responses": {
           "200": {
-            "description": "元数据读取成功",
+            "description": "English description unavailable in the generated API snapshot.",
             "content": {
               "application/json": {
                 "schema": {
@@ -760,7 +760,7 @@
             }
           },
           "500": {
-            "description": "元数据读取失败",
+            "description": "English description unavailable in the generated API snapshot.",
             "content": {
               "application/json": {
                 "schema": {
@@ -777,8 +777,8 @@
         "tags": [
           "DecisionSignals"
         ],
-        "summary": "创建或去重决策信号",
-        "description": "显式写入 DecisionSignal。未传 horizon/expires_at 时由服务补默认生命周期；命中同源去重键或窄 relaxed 去重时返回已有记录和 created=false；active 新建或 expired 续期会失效同股旧 active 相反信号，active duplicate retry 也会重跑该修复；普通旧 duplicate/replay 不作为新的激活事件；不保证并发绝对幂等。",
+        "summary": "English description unavailable in the generated API snapshot.",
+        "description": "English description unavailable in the generated API snapshot.",
         "operationId": "createDecisionSignal",
         "security": [
           {
@@ -807,7 +807,7 @@
             }
           },
           "401": {
-            "description": "未登录或管理员会话无效（ADMIN_AUTH_ENABLED=true 时）",
+            "description": "English description unavailable in the generated API snapshot.",
             "content": {
               "application/json": {
                 "schema": {
@@ -817,7 +817,7 @@
             }
           },
           "400": {
-            "description": "请求字段非法",
+            "description": "English description unavailable in the generated API snapshot.",
             "content": {
               "application/json": {
                 "schema": {
@@ -827,7 +827,7 @@
             }
           },
           "422": {
-            "description": "请求体或路径参数校验失败",
+            "description": "English description unavailable in the generated API snapshot.",
             "content": {
               "application/json": {
                 "schema": {
@@ -837,7 +837,7 @@
             }
           },
           "500": {
-            "description": "创建失败",
+            "description": "English description unavailable in the generated API snapshot.",
             "content": {
               "application/json": {
                 "schema": {
@@ -852,8 +852,8 @@
         "tags": [
           "DecisionSignals"
         ],
-        "summary": "查询决策信号列表",
-        "description": "分页查询 DecisionSignal；读取前会懒过期已到 expires_at 的 active 信号。当 source_type=analysis 且只传 source_report_id 查询时，若无命中信号会尝试基于该历史报告一次性懒回填 （仅首次命中列表场景，且该精确查询会触发历史决策信号回填写入，属于 read-with-write 行为；不影响其他分页列表筛选参数场景）。holding_only=true 只读取 active 账户的 portfolio_positions 缓存持仓，不触发 portfolio snapshot replay。",
+        "summary": "English description unavailable in the generated API snapshot.",
+        "description": "English description unavailable in the generated API snapshot.",
         "operationId": "listDecisionSignals",
         "security": [
           {
@@ -1161,7 +1161,7 @@
             }
           },
           "401": {
-            "description": "未登录或管理员会话无效（ADMIN_AUTH_ENABLED=true 时）",
+            "description": "English description unavailable in the generated API snapshot.",
             "content": {
               "application/json": {
                 "schema": {
@@ -1171,7 +1171,7 @@
             }
           },
           "400": {
-            "description": "查询参数非法",
+            "description": "English description unavailable in the generated API snapshot.",
             "content": {
               "application/json": {
                 "schema": {
@@ -1181,7 +1181,7 @@
             }
           },
           "422": {
-            "description": "查询参数校验失败",
+            "description": "English description unavailable in the generated API snapshot.",
             "content": {
               "application/json": {
                 "schema": {
@@ -1191,7 +1191,7 @@
             }
           },
           "500": {
-            "description": "查询失败",
+            "description": "English description unavailable in the generated API snapshot.",
             "content": {
               "application/json": {
                 "schema": {
@@ -1208,8 +1208,8 @@
         "tags": [
           "DecisionSignals"
         ],
-        "summary": "查询股票最新 active 决策信号",
-        "description": "返回指定股票最新 active 信号列表；读取前会执行懒过期。",
+        "summary": "English description unavailable in the generated API snapshot.",
+        "description": "English description unavailable in the generated API snapshot.",
         "operationId": "getLatestDecisionSignals",
         "security": [
           {
@@ -1269,7 +1269,7 @@
             }
           },
           "401": {
-            "description": "未登录或管理员会话无效（ADMIN_AUTH_ENABLED=true 时）",
+            "description": "English description unavailable in the generated API snapshot.",
             "content": {
               "application/json": {
                 "schema": {
@@ -1279,7 +1279,7 @@
             }
           },
           "400": {
-            "description": "请求参数非法",
+            "description": "English description unavailable in the generated API snapshot.",
             "content": {
               "application/json": {
                 "schema": {
@@ -1289,7 +1289,7 @@
             }
           },
           "422": {
-            "description": "路径或查询参数校验失败",
+            "description": "English description unavailable in the generated API snapshot.",
             "content": {
               "application/json": {
                 "schema": {
@@ -1299,7 +1299,7 @@
             }
           },
           "500": {
-            "description": "查询失败",
+            "description": "English description unavailable in the generated API snapshot.",
             "content": {
               "application/json": {
                 "schema": {
@@ -1316,8 +1316,8 @@
         "tags": [
           "DecisionSignals"
         ],
-        "summary": "查询单条决策信号",
-        "description": "按 ID 查询单条 DecisionSignal；读取前会执行懒过期。",
+        "summary": "English description unavailable in the generated API snapshot.",
+        "description": "English description unavailable in the generated API snapshot.",
         "operationId": "getDecisionSignal",
         "security": [
           {
@@ -1347,7 +1347,7 @@
             }
           },
           "401": {
-            "description": "未登录或管理员会话无效（ADMIN_AUTH_ENABLED=true 时）",
+            "description": "English description unavailable in the generated API snapshot.",
             "content": {
               "application/json": {
                 "schema": {
@@ -1357,7 +1357,7 @@
             }
           },
           "404": {
-            "description": "信号不存在",
+            "description": "English description unavailable in the generated API snapshot.",
             "content": {
               "application/json": {
                 "schema": {
@@ -1367,7 +1367,7 @@
             }
           },
           "422": {
-            "description": "路径参数校验失败",
+            "description": "English description unavailable in the generated API snapshot.",
             "content": {
               "application/json": {
                 "schema": {
@@ -1377,7 +1377,7 @@
             }
           },
           "500": {
-            "description": "查询失败",
+            "description": "English description unavailable in the generated API snapshot.",
             "content": {
               "application/json": {
                 "schema": {
@@ -1394,8 +1394,8 @@
         "tags": [
           "DecisionSignals"
         ],
-        "summary": "更新决策信号状态",
-        "description": "只更新合法状态和可选 metadata；传入 metadata 时按整包替换保存。expired/invalidated/closed/archived 等 terminal 状态不能直接 PATCH 回 active。",
+        "summary": "English description unavailable in the generated API snapshot.",
+        "description": "English description unavailable in the generated API snapshot.",
         "operationId": "updateDecisionSignalStatus",
         "security": [
           {
@@ -1435,7 +1435,7 @@
             }
           },
           "401": {
-            "description": "未登录或管理员会话无效（ADMIN_AUTH_ENABLED=true 时）",
+            "description": "English description unavailable in the generated API snapshot.",
             "content": {
               "application/json": {
                 "schema": {
@@ -1445,7 +1445,7 @@
             }
           },
           "400": {
-            "description": "状态非法",
+            "description": "English description unavailable in the generated API snapshot.",
             "content": {
               "application/json": {
                 "schema": {
@@ -1455,7 +1455,7 @@
             }
           },
           "404": {
-            "description": "信号不存在",
+            "description": "English description unavailable in the generated API snapshot.",
             "content": {
               "application/json": {
                 "schema": {
@@ -1465,7 +1465,7 @@
             }
           },
           "422": {
-            "description": "请求体或路径参数校验失败",
+            "description": "English description unavailable in the generated API snapshot.",
             "content": {
               "application/json": {
                 "schema": {
@@ -1475,7 +1475,7 @@
             }
           },
           "500": {
-            "description": "更新失败",
+            "description": "English description unavailable in the generated API snapshot.",
             "content": {
               "application/json": {
                 "schema": {
@@ -1492,15 +1492,15 @@
         "tags": [
           "Analysis"
         ],
-        "summary": "获取分析任务运行流",
-        "description": "根据 task_id 查询活跃任务或已落库任务的运行流快照。活跃任务缺少诊断时返回 skeleton flow；完成任务可按同一 task_id/query_id 尝试读取历史诊断。",
+        "summary": "English description unavailable in the generated API snapshot.",
+        "description": "English description unavailable in the generated API snapshot.",
         "operationId": "getTaskRunFlow",
         "parameters": [
           {
             "name": "task_id",
             "in": "path",
             "required": true,
-            "description": "分析任务 ID",
+            "description": "English description unavailable in the generated API snapshot.",
             "schema": {
               "type": "string"
             }
@@ -1508,7 +1508,7 @@
         ],
         "responses": {
           "200": {
-            "description": "任务运行流快照",
+            "description": "English description unavailable in the generated API snapshot.",
             "content": {
               "application/json": {
                 "schema": {
@@ -1518,7 +1518,7 @@
             }
           },
           "404": {
-            "description": "任务不存在或已过期",
+            "description": "English description unavailable in the generated API snapshot.",
             "content": {
               "application/json": {
                 "schema": {
@@ -1528,7 +1528,7 @@
             }
           },
           "500": {
-            "description": "服务器错误",
+            "description": "English description unavailable in the generated API snapshot.",
             "content": {
               "application/json": {
                 "schema": {
@@ -1545,15 +1545,15 @@
         "tags": [
           "History"
         ],
-        "summary": "获取历史报告运行流",
-        "description": "根据历史记录 ID 或可解析的 query_id 获取历史报告运行流快照。旧历史缺少诊断时返回 skeleton/unknown 状态，不影响报告详情读取。",
+        "summary": "English description unavailable in the generated API snapshot.",
+        "description": "English description unavailable in the generated API snapshot.",
         "operationId": "getHistoryRunFlow",
         "parameters": [
           {
             "name": "record_id",
             "in": "path",
             "required": true,
-            "description": "历史记录主键 ID 或 query_id",
+            "description": "English description unavailable in the generated API snapshot.",
             "schema": {
               "type": "string"
             }
@@ -1561,7 +1561,7 @@
         ],
         "responses": {
           "200": {
-            "description": "历史报告运行流快照",
+            "description": "English description unavailable in the generated API snapshot.",
             "content": {
               "application/json": {
                 "schema": {
@@ -1571,7 +1571,7 @@
             }
           },
           "404": {
-            "description": "报告不存在",
+            "description": "English description unavailable in the generated API snapshot.",
             "content": {
               "application/json": {
                 "schema": {
@@ -1581,7 +1581,7 @@
             }
           },
           "500": {
-            "description": "服务器错误",
+            "description": "English description unavailable in the generated API snapshot.",
             "content": {
               "application/json": {
                 "schema": {
@@ -1704,8 +1704,8 @@
         "tags": [
           "DecisionSignals"
         ],
-        "summary": "触发决策信号后验评估",
-        "description": "显式触发 signal-level outcome 计算；默认跳过 completed 和终态 unable，但会重算缺少行情数据等可恢复 unable；force=true 会重算并覆盖同一 signal_id+horizon+engine_version。",
+        "summary": "English description unavailable in the generated API snapshot.",
+        "description": "English description unavailable in the generated API snapshot.",
         "operationId": "runDecisionSignalOutcomes",
         "requestBody": {
           "content": {
@@ -1729,7 +1729,7 @@
             }
           },
           "401": {
-            "description": "未登录或管理员会话无效（ADMIN_AUTH_ENABLED=true 时）",
+            "description": "English description unavailable in the generated API snapshot.",
             "content": {
               "application/json": {
                 "schema": {
@@ -1739,7 +1739,7 @@
             }
           },
           "400": {
-            "description": "请求字段非法",
+            "description": "English description unavailable in the generated API snapshot.",
             "content": {
               "application/json": {
                 "schema": {
@@ -1749,7 +1749,7 @@
             }
           },
           "404": {
-            "description": "信号不存在",
+            "description": "English description unavailable in the generated API snapshot.",
             "content": {
               "application/json": {
                 "schema": {
@@ -1759,7 +1759,7 @@
             }
           },
           "422": {
-            "description": "请求体校验失败",
+            "description": "English description unavailable in the generated API snapshot.",
             "content": {
               "application/json": {
                 "schema": {
@@ -1769,7 +1769,7 @@
             }
           },
           "500": {
-            "description": "后验计算失败",
+            "description": "English description unavailable in the generated API snapshot.",
             "content": {
               "application/json": {
                 "schema": {
@@ -1791,8 +1791,8 @@
         "tags": [
           "DecisionSignals"
         ],
-        "summary": "查询决策信号后验结果",
-        "description": "分页查询 signal-level outcome；默认只查当前 signal 后验 engine_version。",
+        "summary": "English description unavailable in the generated API snapshot.",
+        "description": "English description unavailable in the generated API snapshot.",
         "operationId": "listDecisionSignalOutcomes",
         "security": [
           {
@@ -1917,7 +1917,7 @@
             }
           },
           "401": {
-            "description": "未登录或管理员会话无效（ADMIN_AUTH_ENABLED=true 时）",
+            "description": "English description unavailable in the generated API snapshot.",
             "content": {
               "application/json": {
                 "schema": {
@@ -1927,7 +1927,7 @@
             }
           },
           "400": {
-            "description": "查询参数非法",
+            "description": "English description unavailable in the generated API snapshot.",
             "content": {
               "application/json": {
                 "schema": {
@@ -1937,7 +1937,7 @@
             }
           },
           "422": {
-            "description": "查询参数校验失败",
+            "description": "English description unavailable in the generated API snapshot.",
             "content": {
               "application/json": {
                 "schema": {
@@ -1947,7 +1947,7 @@
             }
           },
           "500": {
-            "description": "查询失败",
+            "description": "English description unavailable in the generated API snapshot.",
             "content": {
               "application/json": {
                 "schema": {
@@ -1964,8 +1964,8 @@
         "tags": [
           "DecisionSignals"
         ],
-        "summary": "查询决策信号后验统计",
-        "description": "默认统计当前 engine_version，且排除 archived 信号。",
+        "summary": "English description unavailable in the generated API snapshot.",
+        "description": "English description unavailable in the generated API snapshot.",
         "operationId": "getDecisionSignalOutcomeStats",
         "security": [
           {
@@ -2040,7 +2040,7 @@
             }
           },
           "401": {
-            "description": "未登录或管理员会话无效（ADMIN_AUTH_ENABLED=true 时）",
+            "description": "English description unavailable in the generated API snapshot.",
             "content": {
               "application/json": {
                 "schema": {
@@ -2050,7 +2050,7 @@
             }
           },
           "400": {
-            "description": "查询参数非法",
+            "description": "English description unavailable in the generated API snapshot.",
             "content": {
               "application/json": {
                 "schema": {
@@ -2060,7 +2060,7 @@
             }
           },
           "422": {
-            "description": "查询参数校验失败",
+            "description": "English description unavailable in the generated API snapshot.",
             "content": {
               "application/json": {
                 "schema": {
@@ -2070,7 +2070,7 @@
             }
           },
           "500": {
-            "description": "统计失败",
+            "description": "English description unavailable in the generated API snapshot.",
             "content": {
               "application/json": {
                 "schema": {
@@ -2087,8 +2087,8 @@
         "tags": [
           "DecisionSignals"
         ],
-        "summary": "查询单个决策信号后验结果",
-        "description": "返回指定 signal_id 在当前 engine_version 下的后验结果。",
+        "summary": "English description unavailable in the generated API snapshot.",
+        "description": "English description unavailable in the generated API snapshot.",
         "operationId": "listDecisionSignalOutcomesBySignal",
         "security": [
           {
@@ -2118,7 +2118,7 @@
             }
           },
           "401": {
-            "description": "未登录或管理员会话无效（ADMIN_AUTH_ENABLED=true 时）",
+            "description": "English description unavailable in the generated API snapshot.",
             "content": {
               "application/json": {
                 "schema": {
@@ -2128,7 +2128,7 @@
             }
           },
           "404": {
-            "description": "信号不存在",
+            "description": "English description unavailable in the generated API snapshot.",
             "content": {
               "application/json": {
                 "schema": {
@@ -2138,7 +2138,7 @@
             }
           },
           "422": {
-            "description": "路径参数校验失败",
+            "description": "English description unavailable in the generated API snapshot.",
             "content": {
               "application/json": {
                 "schema": {
@@ -2148,7 +2148,7 @@
             }
           },
           "500": {
-            "description": "查询失败",
+            "description": "English description unavailable in the generated API snapshot.",
             "content": {
               "application/json": {
                 "schema": {
@@ -2165,8 +2165,8 @@
         "tags": [
           "DecisionSignals"
         ],
-        "summary": "查询决策信号用户反馈",
-        "description": "没有反馈时返回 feedback_value=null；信号不存在时返回 404。",
+        "summary": "English description unavailable in the generated API snapshot.",
+        "description": "English description unavailable in the generated API snapshot.",
         "operationId": "getDecisionSignalFeedback",
         "security": [
           {
@@ -2196,7 +2196,7 @@
             }
           },
           "401": {
-            "description": "未登录或管理员会话无效（ADMIN_AUTH_ENABLED=true 时）",
+            "description": "English description unavailable in the generated API snapshot.",
             "content": {
               "application/json": {
                 "schema": {
@@ -2206,7 +2206,7 @@
             }
           },
           "404": {
-            "description": "信号不存在",
+            "description": "English description unavailable in the generated API snapshot.",
             "content": {
               "application/json": {
                 "schema": {
@@ -2216,7 +2216,7 @@
             }
           },
           "422": {
-            "description": "路径参数校验失败",
+            "description": "English description unavailable in the generated API snapshot.",
             "content": {
               "application/json": {
                 "schema": {
@@ -2226,7 +2226,7 @@
             }
           },
           "500": {
-            "description": "查询失败",
+            "description": "English description unavailable in the generated API snapshot.",
             "content": {
               "application/json": {
                 "schema": {
@@ -2241,8 +2241,8 @@
         "tags": [
           "DecisionSignals"
         ],
-        "summary": "写入决策信号用户反馈",
-        "description": "按 signal_id upsert 最新 useful/not_useful 反馈。",
+        "summary": "English description unavailable in the generated API snapshot.",
+        "description": "English description unavailable in the generated API snapshot.",
         "operationId": "putDecisionSignalFeedback",
         "security": [
           {
@@ -2282,7 +2282,7 @@
             }
           },
           "401": {
-            "description": "未登录或管理员会话无效（ADMIN_AUTH_ENABLED=true 时）",
+            "description": "English description unavailable in the generated API snapshot.",
             "content": {
               "application/json": {
                 "schema": {
@@ -2292,7 +2292,7 @@
             }
           },
           "400": {
-            "description": "请求字段非法",
+            "description": "English description unavailable in the generated API snapshot.",
             "content": {
               "application/json": {
                 "schema": {
@@ -2302,7 +2302,7 @@
             }
           },
           "404": {
-            "description": "信号不存在",
+            "description": "English description unavailable in the generated API snapshot.",
             "content": {
               "application/json": {
                 "schema": {
@@ -2312,7 +2312,7 @@
             }
           },
           "422": {
-            "description": "请求体或路径参数校验失败",
+            "description": "English description unavailable in the generated API snapshot.",
             "content": {
               "application/json": {
                 "schema": {
@@ -2322,7 +2322,7 @@
             }
           },
           "500": {
-            "description": "更新失败",
+            "description": "English description unavailable in the generated API snapshot.",
             "content": {
               "application/json": {
                 "schema": {
@@ -2608,12 +2608,12 @@
         "properties": {
           "stock_code": {
             "type": "string",
-            "description": "单只股票代码",
+            "description": "English description unavailable in the generated API snapshot.",
             "example": "600519"
           },
           "stock_codes": {
             "type": "array",
-            "description": "多只股票代码（与 stock_code 二选一）",
+            "description": "English description unavailable in the generated API snapshot.",
             "items": {
               "type": "string"
             },
@@ -2631,17 +2631,17 @@
               "brief"
             ],
             "default": "detailed",
-            "description": "报告类型：simple(精简) / detailed(完整) / full(完整) / brief(简洁)"
+            "description": "English description unavailable in the generated API snapshot."
           },
           "force_refresh": {
             "type": "boolean",
             "default": false,
-            "description": "是否强制刷新（忽略缓存）"
+            "description": "English description unavailable in the generated API snapshot."
           },
           "async_mode": {
             "type": "boolean",
             "default": false,
-            "description": "是否使用异步模式"
+            "description": "English description unavailable in the generated API snapshot."
           },
           "analysis_phase": {
             "type": "string",
@@ -2652,7 +2652,7 @@
               "postmarket"
             ],
             "default": "auto",
-            "description": "分析阶段覆盖：auto(自动推断) / premarket(盘前) / intraday(盘中) / postmarket(盘后)"
+            "description": "English description unavailable in the generated API snapshot."
           }
         }
       },
@@ -2661,7 +2661,7 @@
         "properties": {
           "query_id": {
             "type": "string",
-            "description": "分析记录唯一标识"
+            "description": "English description unavailable in the generated API snapshot."
           },
           "stock_code": {
             "type": "string"
@@ -2689,7 +2689,7 @@
         "properties": {
           "task_id": {
             "type": "string",
-            "description": "任务 ID，用于查询状态"
+            "description": "English description unavailable in the generated API snapshot."
           },
           "status": {
             "type": "string",
@@ -2712,7 +2712,7 @@
               "postmarket"
             ],
             "default": "auto",
-            "description": "请求的分析阶段"
+            "description": "English description unavailable in the generated API snapshot."
           }
         },
         "required": [
@@ -2725,11 +2725,11 @@
         "properties": {
           "task_id": {
             "type": "string",
-            "description": "任务 ID，用于查询状态"
+            "description": "English description unavailable in the generated API snapshot."
           },
           "stock_code": {
             "type": "string",
-            "description": "股票代码"
+            "description": "English description unavailable in the generated API snapshot."
           },
           "status": {
             "type": "string",
@@ -2750,7 +2750,7 @@
               "postmarket"
             ],
             "default": "auto",
-            "description": "请求的分析阶段"
+            "description": "English description unavailable in the generated API snapshot."
           }
         },
         "required": [
@@ -2764,15 +2764,15 @@
         "properties": {
           "stock_code": {
             "type": "string",
-            "description": "股票代码"
+            "description": "English description unavailable in the generated API snapshot."
           },
           "existing_task_id": {
             "type": "string",
-            "description": "已存在的任务 ID"
+            "description": "English description unavailable in the generated API snapshot."
           },
           "message": {
             "type": "string",
-            "description": "错误信息"
+            "description": "English description unavailable in the generated API snapshot."
           }
         },
         "required": [
@@ -2798,7 +2798,7 @@
           },
           "message": {
             "type": "string",
-            "description": "汇总信息"
+            "description": "English description unavailable in the generated API snapshot."
           }
         },
         "required": [
@@ -2824,14 +2824,14 @@
           },
           "progress": {
             "type": "integer",
-            "description": "进度百分比 (0-100)"
+            "description": "English description unavailable in the generated API snapshot."
           },
           "result": {
             "$ref": "#/components/schemas/AnalysisResult"
           },
           "error": {
             "type": "string",
-            "description": "错误信息（仅在 failed 时存在）"
+            "description": "English description unavailable in the generated API snapshot."
           },
           "analysis_phase": {
             "type": "string",
@@ -2842,7 +2842,7 @@
               "postmarket"
             ],
             "nullable": true,
-            "description": "请求的分析阶段；无持久化字段的历史 DB fallback 可能为空"
+            "description": "English description unavailable in the generated API snapshot."
           }
         },
         "required": [
@@ -2852,19 +2852,19 @@
       },
       "TaskInfo": {
         "type": "object",
-        "description": "任务详情（用于任务列表和 SSE 事件）",
+        "description": "English description unavailable in the generated API snapshot.",
         "properties": {
           "task_id": {
             "type": "string",
-            "description": "任务 ID"
+            "description": "English description unavailable in the generated API snapshot."
           },
           "stock_code": {
             "type": "string",
-            "description": "股票代码"
+            "description": "English description unavailable in the generated API snapshot."
           },
           "stock_name": {
             "type": "string",
-            "description": "股票名称"
+            "description": "English description unavailable in the generated API snapshot."
           },
           "status": {
             "type": "string",
@@ -2874,17 +2874,17 @@
               "completed",
               "failed"
             ],
-            "description": "任务状态"
+            "description": "English description unavailable in the generated API snapshot."
           },
           "progress": {
             "type": "integer",
             "minimum": 0,
             "maximum": 100,
-            "description": "进度百分比"
+            "description": "English description unavailable in the generated API snapshot."
           },
           "message": {
             "type": "string",
-            "description": "状态消息"
+            "description": "English description unavailable in the generated API snapshot."
           },
           "report_type": {
             "type": "string",
@@ -2892,26 +2892,26 @@
               "simple",
               "detailed"
             ],
-            "description": "报告类型"
+            "description": "English description unavailable in the generated API snapshot."
           },
           "created_at": {
             "type": "string",
             "format": "date-time",
-            "description": "创建时间"
+            "description": "English description unavailable in the generated API snapshot."
           },
           "started_at": {
             "type": "string",
             "format": "date-time",
-            "description": "开始执行时间"
+            "description": "English description unavailable in the generated API snapshot."
           },
           "completed_at": {
             "type": "string",
             "format": "date-time",
-            "description": "完成时间"
+            "description": "English description unavailable in the generated API snapshot."
           },
           "error": {
             "type": "string",
-            "description": "错误信息"
+            "description": "English description unavailable in the generated API snapshot."
           },
           "analysis_phase": {
             "type": "string",
@@ -2922,7 +2922,7 @@
               "postmarket"
             ],
             "default": "auto",
-            "description": "请求的分析阶段"
+            "description": "English description unavailable in the generated API snapshot."
           }
         },
         "required": [
@@ -2934,26 +2934,26 @@
       },
       "TaskListResponse": {
         "type": "object",
-        "description": "任务列表响应",
+        "description": "English description unavailable in the generated API snapshot.",
         "properties": {
           "total": {
             "type": "integer",
-            "description": "任务总数"
+            "description": "English description unavailable in the generated API snapshot."
           },
           "pending": {
             "type": "integer",
-            "description": "等待中的任务数"
+            "description": "English description unavailable in the generated API snapshot."
           },
           "processing": {
             "type": "integer",
-            "description": "处理中的任务数"
+            "description": "English description unavailable in the generated API snapshot."
           },
           "tasks": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/TaskInfo"
             },
-            "description": "任务列表"
+            "description": "English description unavailable in the generated API snapshot."
           }
         },
         "required": [
@@ -2965,27 +2965,27 @@
       },
       "DuplicateTaskError": {
         "type": "object",
-        "description": "重复任务错误响应",
+        "description": "English description unavailable in the generated API snapshot.",
         "properties": {
           "error": {
             "type": "string",
             "example": "duplicate_task",
-            "description": "错误类型"
+            "description": "English description unavailable in the generated API snapshot."
           },
           "message": {
             "type": "string",
-            "example": "股票 600519 正在分析中",
-            "description": "错误信息"
+            "example": "English description unavailable in the generated API snapshot.",
+            "description": "English description unavailable in the generated API snapshot."
           },
           "stock_code": {
             "type": "string",
             "example": "600519",
-            "description": "股票代码"
+            "description": "English description unavailable in the generated API snapshot."
           },
           "existing_task_id": {
             "type": "string",
             "example": "abc123def456",
-            "description": "已存在的任务 ID"
+            "description": "English description unavailable in the generated API snapshot."
           }
         },
         "required": [
@@ -3000,7 +3000,7 @@
         "properties": {
           "total": {
             "type": "integer",
-            "description": "总记录数"
+            "description": "English description unavailable in the generated API snapshot."
           },
           "page": {
             "type": "integer"
@@ -3024,19 +3024,19 @@
       },
       "NewsIntelItem": {
         "type": "object",
-        "description": "新闻情报条目",
+        "description": "English description unavailable in the generated API snapshot.",
         "properties": {
           "title": {
             "type": "string",
-            "description": "新闻标题"
+            "description": "English description unavailable in the generated API snapshot."
           },
           "snippet": {
             "type": "string",
-            "description": "新闻摘要（最多50字）"
+            "description": "English description unavailable in the generated API snapshot."
           },
           "url": {
             "type": "string",
-            "description": "新闻链接"
+            "description": "English description unavailable in the generated API snapshot."
           }
         },
         "required": [
@@ -3046,18 +3046,18 @@
       },
       "NewsIntelResponse": {
         "type": "object",
-        "description": "新闻情报响应",
+        "description": "English description unavailable in the generated API snapshot.",
         "properties": {
           "total": {
             "type": "integer",
-            "description": "新闻条数"
+            "description": "English description unavailable in the generated API snapshot."
           },
           "items": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/NewsIntelItem"
             },
-            "description": "新闻列表"
+            "description": "English description unavailable in the generated API snapshot."
           }
         },
         "required": [
@@ -3067,7 +3067,7 @@
       },
       "HistoryItem": {
         "type": "object",
-        "description": "历史记录摘要（列表展示用）",
+        "description": "English description unavailable in the generated API snapshot.",
         "properties": {
           "query_id": {
             "type": "string"
@@ -3091,7 +3091,7 @@
           },
           "action": {
             "type": "string",
-            "description": "结构化建议动作 taxonomy",
+            "description": "English description unavailable in the generated API snapshot.",
             "nullable": true,
             "enum": [
               "buy",
@@ -3106,7 +3106,7 @@
           },
           "action_label": {
             "type": "string",
-            "description": "建议动作展示标签",
+            "description": "English description unavailable in the generated API snapshot.",
             "nullable": true
           },
           "created_at": {
@@ -3122,11 +3122,11 @@
       },
       "AnalysisReport": {
         "type": "object",
-        "description": "完整分析报告",
+        "description": "English description unavailable in the generated API snapshot.",
         "properties": {
           "meta": {
             "type": "object",
-            "description": "元信息",
+            "description": "English description unavailable in the generated API snapshot.",
             "properties": {
               "query_id": {
                 "type": "string"
@@ -3146,25 +3146,25 @@
               },
               "model_used": {
                 "type": "string",
-                "description": "分析使用的 LLM 模型（完整名，如 gemini/gemini-2.0-flash）"
+                "description": "English description unavailable in the generated API snapshot."
               }
             }
           },
           "summary": {
             "type": "object",
-            "description": "概览区（首屏展示）",
+            "description": "English description unavailable in the generated API snapshot.",
             "properties": {
               "analysis_summary": {
                 "type": "string",
-                "description": "关键结论"
+                "description": "English description unavailable in the generated API snapshot."
               },
               "operation_advice": {
                 "type": "string",
-                "description": "操作建议"
+                "description": "English description unavailable in the generated API snapshot."
               },
               "action": {
                 "type": "string",
-                "description": "结构化建议动作 taxonomy",
+                "description": "English description unavailable in the generated API snapshot.",
                 "nullable": true,
                 "enum": [
                   "buy",
@@ -3179,67 +3179,67 @@
               },
               "action_label": {
                 "type": "string",
-                "description": "建议动作展示标签",
+                "description": "English description unavailable in the generated API snapshot.",
                 "nullable": true
               },
               "trend_prediction": {
                 "type": "string",
-                "description": "趋势预测"
+                "description": "English description unavailable in the generated API snapshot."
               },
               "sentiment_score": {
                 "type": "integer",
-                "description": "情绪评分 (0-100)"
+                "description": "English description unavailable in the generated API snapshot."
               },
               "sentiment_label": {
                 "type": "string",
-                "description": "情绪标签",
+                "description": "English description unavailable in the generated API snapshot.",
                 "enum": [
-                  "极度悲观",
-                  "悲观",
-                  "中性",
-                  "乐观",
-                  "极度乐观"
+                  "English description unavailable in the generated API snapshot.",
+                  "English description unavailable in the generated API snapshot.",
+                  "English description unavailable in the generated API snapshot.",
+                  "English description unavailable in the generated API snapshot.",
+                  "English description unavailable in the generated API snapshot."
                 ]
               }
             }
           },
           "strategy": {
             "type": "object",
-            "description": "策略点位区",
+            "description": "English description unavailable in the generated API snapshot.",
             "properties": {
               "ideal_buy": {
                 "type": "string",
-                "description": "理想买入价"
+                "description": "English description unavailable in the generated API snapshot."
               },
               "secondary_buy": {
                 "type": "string",
-                "description": "第二买入价"
+                "description": "English description unavailable in the generated API snapshot."
               },
               "stop_loss": {
                 "type": "string",
-                "description": "止损价"
+                "description": "English description unavailable in the generated API snapshot."
               },
               "take_profit": {
                 "type": "string",
-                "description": "止盈价"
+                "description": "English description unavailable in the generated API snapshot."
               }
             }
           },
           "details": {
             "type": "object",
-            "description": "详情区（可折叠）",
+            "description": "English description unavailable in the generated API snapshot.",
             "properties": {
               "news_content": {
                 "type": "string",
-                "description": "新闻摘要"
+                "description": "English description unavailable in the generated API snapshot."
               },
               "raw_result": {
                 "type": "object",
-                "description": "原始分析结果（JSON）"
+                "description": "English description unavailable in the generated API snapshot."
               },
               "context_snapshot": {
                 "type": "object",
-                "description": "分析时上下文快照（JSON）"
+                "description": "English description unavailable in the generated API snapshot."
               }
             }
           }
@@ -3251,7 +3251,7 @@
       },
       "StockQuote": {
         "type": "object",
-        "description": "股票实时行情",
+        "description": "English description unavailable in the generated API snapshot.",
         "properties": {
           "stock_code": {
             "type": "string"
@@ -3264,11 +3264,11 @@
           },
           "change": {
             "type": "number",
-            "description": "涨跌额"
+            "description": "English description unavailable in the generated API snapshot."
           },
           "change_percent": {
             "type": "number",
-            "description": "涨跌幅 (%)"
+            "description": "English description unavailable in the generated API snapshot."
           },
           "open": {
             "type": "number"
@@ -3284,11 +3284,11 @@
           },
           "volume": {
             "type": "number",
-            "description": "成交量（股）"
+            "description": "English description unavailable in the generated API snapshot."
           },
           "amount": {
             "type": "number",
-            "description": "成交额（元）"
+            "description": "English description unavailable in the generated API snapshot."
           },
           "update_time": {
             "type": "string",
@@ -3302,21 +3302,21 @@
       },
       "SystemConfigFieldSchema": {
         "type": "object",
-        "description": "系统配置字段元数据",
+        "description": "English description unavailable in the generated API snapshot.",
         "properties": {
           "key": {
             "type": "string",
-            "description": "配置键名（ENV 变量）",
+            "description": "English description unavailable in the generated API snapshot.",
             "example": "GEMINI_API_KEY"
           },
           "title": {
             "type": "string",
-            "description": "前端展示标题",
+            "description": "English description unavailable in the generated API snapshot.",
             "example": "Gemini API Key"
           },
           "description": {
             "type": "string",
-            "description": "字段说明"
+            "description": "English description unavailable in the generated API snapshot."
           },
           "category": {
             "type": "string",
@@ -3329,7 +3329,7 @@
               "backtest",
               "uncategorized"
             ],
-            "description": "分类"
+            "description": "English description unavailable in the generated API snapshot."
           },
           "data_type": {
             "type": "string",
@@ -3354,7 +3354,7 @@
               "switch",
               "time"
             ],
-            "description": "前端控件建议"
+            "description": "English description unavailable in the generated API snapshot."
           },
           "is_sensitive": {
             "type": "boolean"
@@ -3374,11 +3374,11 @@
             "items": {
               "type": "string"
             },
-            "description": "可选值列表（用于 select）"
+            "description": "English description unavailable in the generated API snapshot."
           },
           "validation": {
             "type": "object",
-            "description": "校验规则定义（min/max/regex/enum/custom）"
+            "description": "English description unavailable in the generated API snapshot."
           },
           "display_order": {
             "type": "integer"
@@ -3397,7 +3397,7 @@
       },
       "SystemConfigCategorySchema": {
         "type": "object",
-        "description": "配置分类元数据",
+        "description": "English description unavailable in the generated API snapshot.",
         "properties": {
           "category": {
             "type": "string"
@@ -3427,7 +3427,7 @@
       },
       "SystemConfigSchemaResponse": {
         "type": "object",
-        "description": "配置元数据响应",
+        "description": "English description unavailable in the generated API snapshot.",
         "properties": {
           "schema_version": {
             "type": "string",
@@ -3447,22 +3447,22 @@
       },
       "SystemConfigItem": {
         "type": "object",
-        "description": "系统配置项（含脱敏显示值）",
+        "description": "English description unavailable in the generated API snapshot.",
         "properties": {
           "key": {
             "type": "string"
           },
           "value": {
             "type": "string",
-            "description": "当前配置值；敏感字段可能返回掩码，真实值不保证返回，客户端应结合 raw_value_exists 与 is_masked 判断"
+            "description": "English description unavailable in the generated API snapshot."
           },
           "raw_value_exists": {
             "type": "boolean",
-            "description": "保存配置中是否存在该 key 的原始值；为 false 时 value 可能来自默认值或运行时环境，敏感运行时值仍可能被服务端掩码"
+            "description": "English description unavailable in the generated API snapshot."
           },
           "is_masked": {
             "type": "boolean",
-            "description": "value 是否为服务端掩码显示值"
+            "description": "English description unavailable in the generated API snapshot."
           },
           "schema": {
             "$ref": "#/components/schemas/SystemConfigFieldSchema"
@@ -3477,11 +3477,11 @@
       },
       "SystemConfigResponse": {
         "type": "object",
-        "description": "系统配置读取响应",
+        "description": "English description unavailable in the generated API snapshot.",
         "properties": {
           "config_version": {
             "type": "string",
-            "description": "配置版本（用于乐观锁）",
+            "description": "English description unavailable in the generated API snapshot.",
             "example": "2026-02-09T13:20:31Z:sha256:4f9a..."
           },
           "mask_token": {
@@ -3507,15 +3507,15 @@
       },
       "ExportSystemConfigResponse": {
         "type": "object",
-        "description": "`.env` 原文导出响应",
+        "description": "English description unavailable in the generated API snapshot.",
         "properties": {
           "content": {
             "type": "string",
-            "description": "当前已保存 `.env` 的原始文本内容"
+            "description": "English description unavailable in the generated API snapshot."
           },
           "config_version": {
             "type": "string",
-            "description": "导出时对应的配置版本"
+            "description": "English description unavailable in the generated API snapshot."
           },
           "updated_at": {
             "type": "string",
@@ -3529,7 +3529,7 @@
       },
       "SystemConfigUpdateItem": {
         "type": "object",
-        "description": "配置更新项",
+        "description": "English description unavailable in the generated API snapshot.",
         "properties": {
           "key": {
             "type": "string",
@@ -3537,7 +3537,7 @@
           },
           "value": {
             "type": "string",
-            "description": "字段新值；若敏感字段传入掩码 token 则表示保持原值"
+            "description": "English description unavailable in the generated API snapshot."
           }
         },
         "required": [
@@ -3547,7 +3547,7 @@
       },
       "UpdateSystemConfigRequest": {
         "type": "object",
-        "description": "系统配置更新请求",
+        "description": "English description unavailable in the generated API snapshot.",
         "properties": {
           "config_version": {
             "type": "string"
@@ -3575,14 +3575,14 @@
       },
       "ImportSystemConfigRequest": {
         "type": "object",
-        "description": "`.env` 导入请求",
+        "description": "English description unavailable in the generated API snapshot.",
         "properties": {
           "config_version": {
             "type": "string"
           },
           "content": {
             "type": "string",
-            "description": "待导入的 `.env` 原始文本"
+            "description": "English description unavailable in the generated API snapshot."
           },
           "reload_now": {
             "type": "boolean",
@@ -3596,7 +3596,7 @@
       },
       "UpdateSystemConfigResponse": {
         "type": "object",
-        "description": "系统配置更新结果",
+        "description": "English description unavailable in the generated API snapshot.",
         "properties": {
           "success": {
             "type": "boolean"
@@ -3637,7 +3637,7 @@
       },
       "ValidateSystemConfigRequest": {
         "type": "object",
-        "description": "配置校验请求",
+        "description": "English description unavailable in the generated API snapshot.",
         "properties": {
           "items": {
             "type": "array",
@@ -3653,7 +3653,7 @@
       },
       "ConfigValidationIssue": {
         "type": "object",
-        "description": "配置校验问题",
+        "description": "English description unavailable in the generated API snapshot.",
         "properties": {
           "key": {
             "type": "string"
@@ -3688,7 +3688,7 @@
       },
       "ValidateSystemConfigResponse": {
         "type": "object",
-        "description": "配置校验结果",
+        "description": "English description unavailable in the generated API snapshot.",
         "properties": {
           "valid": {
             "type": "boolean"
@@ -3707,7 +3707,7 @@
       },
       "SystemConfigValidationErrorResponse": {
         "type": "object",
-        "description": "配置更新校验失败响应",
+        "description": "English description unavailable in the generated API snapshot.",
         "properties": {
           "error": {
             "type": "string",
@@ -3731,7 +3731,7 @@
       },
       "SystemConfigConflictResponse": {
         "type": "object",
-        "description": "配置版本冲突响应",
+        "description": "English description unavailable in the generated API snapshot.",
         "properties": {
           "error": {
             "type": "string",
@@ -3762,7 +3762,7 @@
           "avoid",
           "alert"
         ],
-        "description": "八态建议动作，独立于旧 decision_type=buy|hold|sell 统计口径。"
+        "description": "English description unavailable in the generated API snapshot."
       },
       "MarketPhaseValue": {
         "type": "string",
@@ -4539,14 +4539,14 @@
           "error": {
             "type": "string",
             "title": "Error",
-            "description": "错误类型",
+            "description": "English description unavailable in the generated API snapshot.",
             "example": "validation_error"
           },
           "message": {
             "type": "string",
             "title": "Message",
-            "description": "错误详情",
-            "example": "请求参数错误"
+            "description": "English description unavailable in the generated API snapshot.",
+            "example": "English description unavailable in the generated API snapshot."
           },
           "detail": {
             "anyOf": [
@@ -4556,7 +4556,7 @@
               }
             ],
             "title": "Detail",
-            "description": "附加错误信息"
+            "description": "English description unavailable in the generated API snapshot."
           }
         },
         "type": "object",
@@ -4565,27 +4565,27 @@
           "message"
         ],
         "title": "ErrorResponse",
-        "description": "错误响应",
+        "description": "English description unavailable in the generated API snapshot.",
         "example": {
           "error": "not_found",
-          "message": "资源不存在"
+          "message": "English description unavailable in the generated API snapshot."
         }
       },
       "RunFlowLane": {
         "type": "object",
-        "description": "运行流泳道定义",
+        "description": "English description unavailable in the generated API snapshot.",
         "properties": {
           "id": {
             "type": "string",
-            "description": "稳定泳道 ID"
+            "description": "English description unavailable in the generated API snapshot."
           },
           "label": {
             "type": "string",
-            "description": "展示标签"
+            "description": "English description unavailable in the generated API snapshot."
           },
           "order": {
             "type": "integer",
-            "description": "展示顺序"
+            "description": "English description unavailable in the generated API snapshot."
           }
         },
         "required": [
@@ -4596,15 +4596,15 @@
       },
       "RunFlowNode": {
         "type": "object",
-        "description": "运行流中的一个节点",
+        "description": "English description unavailable in the generated API snapshot.",
         "properties": {
           "id": {
             "type": "string",
-            "description": "稳定节点 ID"
+            "description": "English description unavailable in the generated API snapshot."
           },
           "lane": {
             "type": "string",
-            "description": "所属泳道 ID"
+            "description": "English description unavailable in the generated API snapshot."
           },
           "kind": {
             "type": "string",
@@ -4617,11 +4617,11 @@
               "artifact",
               "notification"
             ],
-            "description": "节点类型"
+            "description": "English description unavailable in the generated API snapshot."
           },
           "label": {
             "type": "string",
-            "description": "展示标签"
+            "description": "English description unavailable in the generated API snapshot."
           },
           "status": {
             "type": "string",
@@ -4638,49 +4638,49 @@
               "skipped",
               "unknown"
             ],
-            "description": "节点状态"
+            "description": "English description unavailable in the generated API snapshot."
           },
           "provider": {
             "type": "string",
             "nullable": true,
-            "description": "Provider、模型或通知渠道名称"
+            "description": "English description unavailable in the generated API snapshot."
           },
           "started_at": {
             "type": "string",
             "nullable": true,
-            "description": "开始时间 ISO 字符串"
+            "description": "English description unavailable in the generated API snapshot."
           },
           "ended_at": {
             "type": "string",
             "nullable": true,
-            "description": "结束时间 ISO 字符串"
+            "description": "English description unavailable in the generated API snapshot."
           },
           "duration_ms": {
             "type": "integer",
             "nullable": true,
             "minimum": 0,
-            "description": "耗时毫秒数"
+            "description": "English description unavailable in the generated API snapshot."
           },
           "attempts": {
             "type": "integer",
             "nullable": true,
             "minimum": 1,
-            "description": "节点代表的尝试次数"
+            "description": "English description unavailable in the generated API snapshot."
           },
           "record_count": {
             "type": "integer",
             "nullable": true,
             "minimum": 0,
-            "description": "返回记录数"
+            "description": "English description unavailable in the generated API snapshot."
           },
           "message": {
             "type": "string",
             "nullable": true,
-            "description": "短脱敏状态说明"
+            "description": "English description unavailable in the generated API snapshot."
           },
           "metadata": {
             "type": "object",
-            "description": "脱敏后的低敏元数据",
+            "description": "English description unavailable in the generated API snapshot.",
             "additionalProperties": true
           }
         },
@@ -4694,19 +4694,19 @@
       },
       "RunFlowEdge": {
         "type": "object",
-        "description": "运行流中的有向连线",
+        "description": "English description unavailable in the generated API snapshot.",
         "properties": {
           "id": {
             "type": "string",
-            "description": "稳定连线 ID"
+            "description": "English description unavailable in the generated API snapshot."
           },
           "from": {
             "type": "string",
-            "description": "来源节点 ID"
+            "description": "English description unavailable in the generated API snapshot."
           },
           "to": {
             "type": "string",
-            "description": "目标节点 ID"
+            "description": "English description unavailable in the generated API snapshot."
           },
           "kind": {
             "type": "string",
@@ -4716,7 +4716,7 @@
               "fallback",
               "retry"
             ],
-            "description": "连线类型"
+            "description": "English description unavailable in the generated API snapshot."
           },
           "status": {
             "type": "string",
@@ -4733,21 +4733,21 @@
               "skipped",
               "unknown"
             ],
-            "description": "连线状态"
+            "description": "English description unavailable in the generated API snapshot."
           },
           "label": {
             "type": "string",
             "nullable": true,
-            "description": "短展示标签"
+            "description": "English description unavailable in the generated API snapshot."
           },
           "message": {
             "type": "string",
             "nullable": true,
-            "description": "短脱敏说明"
+            "description": "English description unavailable in the generated API snapshot."
           },
           "metadata": {
             "type": "object",
-            "description": "脱敏后的低敏元数据",
+            "description": "English description unavailable in the generated API snapshot.",
             "additionalProperties": true
           }
         },
@@ -4761,16 +4761,16 @@
       },
       "RunFlowEvent": {
         "type": "object",
-        "description": "运行流事件",
+        "description": "English description unavailable in the generated API snapshot.",
         "properties": {
           "id": {
             "type": "string",
-            "description": "稳定事件 ID"
+            "description": "English description unavailable in the generated API snapshot."
           },
           "timestamp": {
             "type": "string",
             "nullable": true,
-            "description": "事件时间 ISO 字符串"
+            "description": "English description unavailable in the generated API snapshot."
           },
           "severity": {
             "type": "string",
@@ -4780,29 +4780,29 @@
               "warning",
               "danger"
             ],
-            "description": "事件严重级别"
+            "description": "English description unavailable in the generated API snapshot."
           },
           "type": {
             "type": "string",
-            "description": "稳定事件类型"
+            "description": "English description unavailable in the generated API snapshot."
           },
           "node_id": {
             "type": "string",
             "nullable": true,
-            "description": "关联节点 ID"
+            "description": "English description unavailable in the generated API snapshot."
           },
           "title": {
             "type": "string",
-            "description": "短标题"
+            "description": "English description unavailable in the generated API snapshot."
           },
           "message": {
             "type": "string",
             "nullable": true,
-            "description": "短脱敏说明"
+            "description": "English description unavailable in the generated API snapshot."
           },
           "metadata": {
             "type": "object",
-            "description": "脱敏后的低敏元数据",
+            "description": "English description unavailable in the generated API snapshot.",
             "additionalProperties": true
           }
         },
@@ -4815,43 +4815,43 @@
       },
       "RunFlowSummary": {
         "type": "object",
-        "description": "运行流摘要指标",
+        "description": "English description unavailable in the generated API snapshot.",
         "properties": {
           "elapsed_ms": {
             "type": "integer",
             "nullable": true,
             "minimum": 0,
-            "description": "观测到的总耗时毫秒数"
+            "description": "English description unavailable in the generated API snapshot."
           },
           "bottleneck_node_id": {
             "type": "string",
             "nullable": true,
-            "description": "耗时最长节点 ID"
+            "description": "English description unavailable in the generated API snapshot."
           },
           "failed_attempts": {
             "type": "integer",
             "minimum": 0,
-            "description": "失败尝试次数"
+            "description": "English description unavailable in the generated API snapshot."
           },
           "fallback_count": {
             "type": "integer",
             "minimum": 0,
-            "description": "fallback 或 retry 转换次数"
+            "description": "English description unavailable in the generated API snapshot."
           },
           "model": {
             "type": "string",
             "nullable": true,
-            "description": "诊断中观测到的脱敏模型名"
+            "description": "English description unavailable in the generated API snapshot."
           },
           "data_source_count": {
             "type": "integer",
             "minimum": 0,
-            "description": "数据来源节点数量"
+            "description": "English description unavailable in the generated API snapshot."
           },
           "event_count": {
             "type": "integer",
             "minimum": 0,
-            "description": "事件数量"
+            "description": "English description unavailable in the generated API snapshot."
           }
         },
         "required": [
@@ -4863,25 +4863,25 @@
       },
       "RunFlowSnapshot": {
         "type": "object",
-        "description": "任务或历史报告运行流快照",
+        "description": "English description unavailable in the generated API snapshot.",
         "properties": {
           "task_id": {
             "type": "string",
-            "description": "任务 ID 或 query_id"
+            "description": "English description unavailable in the generated API snapshot."
           },
           "trace_id": {
             "type": "string",
             "nullable": true,
-            "description": "诊断 trace ID"
+            "description": "English description unavailable in the generated API snapshot."
           },
           "stock_code": {
             "type": "string",
-            "description": "股票代码"
+            "description": "English description unavailable in the generated API snapshot."
           },
           "stock_name": {
             "type": "string",
             "nullable": true,
-            "description": "股票名称"
+            "description": "English description unavailable in the generated API snapshot."
           },
           "status": {
             "type": "string",
@@ -4898,7 +4898,7 @@
               "skipped",
               "unknown"
             ],
-            "description": "整体运行流状态"
+            "description": "English description unavailable in the generated API snapshot."
           },
           "summary": {
             "$ref": "#/components/schemas/RunFlowSummary"
@@ -4929,7 +4929,7 @@
           },
           "generated_at": {
             "type": "string",
-            "description": "快照生成时间 ISO 字符串"
+            "description": "English description unavailable in the generated API snapshot."
           }
         },
         "required": [
@@ -6121,7 +6121,7 @@
               }
             ],
             "title": "Analysis Visibility Source",
-            "description": "公开摘要来源：alert_trigger_market_context / analysis_history_snapshot / evaluator_snapshot / legacy_text / null"
+            "description": "English description unavailable in the generated API snapshot."
           },
           "decision_signal_summary": {
             "anyOf": [
@@ -6312,7 +6312,7 @@
               }
             ],
             "title": "Market",
-            "description": "市场区域"
+            "description": "English description unavailable in the generated API snapshot."
           },
           "phase": {
             "type": "string",
@@ -6326,7 +6326,7 @@
               "unknown"
             ],
             "title": "Phase",
-            "description": "市场阶段"
+            "description": "English description unavailable in the generated API snapshot."
           },
           "market_local_time": {
             "anyOf": [
@@ -6338,7 +6338,7 @@
               }
             ],
             "title": "Market Local Time",
-            "description": "市场本地时间"
+            "description": "English description unavailable in the generated API snapshot."
           },
           "session_date": {
             "anyOf": [
@@ -6350,7 +6350,7 @@
               }
             ],
             "title": "Session Date",
-            "description": "市场本地日期"
+            "description": "English description unavailable in the generated API snapshot."
           },
           "effective_daily_bar_date": {
             "anyOf": [
@@ -6362,7 +6362,7 @@
               }
             ],
             "title": "Effective Daily Bar Date",
-            "description": "最新可复用完整日线日期"
+            "description": "English description unavailable in the generated API snapshot."
           },
           "is_trading_day": {
             "anyOf": [
@@ -6374,7 +6374,7 @@
               }
             ],
             "title": "Is Trading Day",
-            "description": "是否交易日"
+            "description": "English description unavailable in the generated API snapshot."
           },
           "is_market_open_now": {
             "anyOf": [
@@ -6386,7 +6386,7 @@
               }
             ],
             "title": "Is Market Open Now",
-            "description": "当前是否开市"
+            "description": "English description unavailable in the generated API snapshot."
           },
           "is_partial_bar": {
             "anyOf": [
@@ -6398,7 +6398,7 @@
               }
             ],
             "title": "Is Partial Bar",
-            "description": "最新日线是否可能未完成"
+            "description": "English description unavailable in the generated API snapshot."
           },
           "minutes_to_open": {
             "anyOf": [
@@ -6410,7 +6410,7 @@
               }
             ],
             "title": "Minutes To Open",
-            "description": "距离开盘分钟数"
+            "description": "English description unavailable in the generated API snapshot."
           },
           "minutes_to_close": {
             "anyOf": [
@@ -6422,7 +6422,7 @@
               }
             ],
             "title": "Minutes To Close",
-            "description": "距离收盘分钟数"
+            "description": "English description unavailable in the generated API snapshot."
           },
           "trigger_source": {
             "anyOf": [
@@ -6434,7 +6434,7 @@
               }
             ],
             "title": "Trigger Source",
-            "description": "触发来源"
+            "description": "English description unavailable in the generated API snapshot."
           },
           "analysis_intent": {
             "anyOf": [
@@ -6446,7 +6446,7 @@
               }
             ],
             "title": "Analysis Intent",
-            "description": "分析意图"
+            "description": "English description unavailable in the generated API snapshot."
           },
           "warnings": {
             "items": {
@@ -6454,7 +6454,7 @@
             },
             "type": "array",
             "title": "Warnings",
-            "description": "阶段推断降级告警码"
+            "description": "English description unavailable in the generated API snapshot."
           }
         },
         "type": "object",
@@ -6469,7 +6469,7 @@
           "pack_version": {
             "type": "string",
             "title": "Pack Version",
-            "description": "AnalysisContextPack 版本"
+            "description": "English description unavailable in the generated API snapshot."
           },
           "created_at": {
             "anyOf": [
@@ -6481,7 +6481,7 @@
               }
             ],
             "title": "Created At",
-            "description": "创建时间"
+            "description": "English description unavailable in the generated API snapshot."
           },
           "subject": {
             "$ref": "#/components/schemas/AnalysisContextPackOverviewSubject"
@@ -6505,7 +6505,7 @@
                 "type": "null"
               }
             ],
-            "description": "本次分析输入数据质量低敏摘要"
+            "description": "English description unavailable in the generated API snapshot."
           },
           "warnings": {
             "items": {
@@ -6513,7 +6513,7 @@
             },
             "type": "array",
             "title": "Warnings",
-            "description": "顶层数据质量提醒"
+            "description": "English description unavailable in the generated API snapshot."
           },
           "metadata": {
             "$ref": "#/components/schemas/AnalysisContextPackOverviewMetadata"
@@ -6526,14 +6526,14 @@
           "counts"
         ],
         "title": "AnalysisContextPackOverview",
-        "description": "历史/API 可见的低敏 AnalysisContextPack 摘要"
+        "description": "English description unavailable in the generated API snapshot."
       },
       "AnalysisContextPackOverviewSubject": {
         "properties": {
           "code": {
             "type": "string",
             "title": "Code",
-            "description": "股票代码"
+            "description": "English description unavailable in the generated API snapshot."
           },
           "stock_name": {
             "anyOf": [
@@ -6545,7 +6545,7 @@
               }
             ],
             "title": "Stock Name",
-            "description": "股票名称"
+            "description": "English description unavailable in the generated API snapshot."
           },
           "market": {
             "anyOf": [
@@ -6557,7 +6557,7 @@
               }
             ],
             "title": "Market",
-            "description": "市场"
+            "description": "English description unavailable in the generated API snapshot."
           }
         },
         "type": "object",
@@ -6565,19 +6565,19 @@
           "code"
         ],
         "title": "AnalysisContextPackOverviewSubject",
-        "description": "AnalysisContextPack 可见摘要标的信息"
+        "description": "English description unavailable in the generated API snapshot."
       },
       "AnalysisContextPackOverviewBlock": {
         "properties": {
           "key": {
             "type": "string",
             "title": "Key",
-            "description": "数据块稳定 key"
+            "description": "English description unavailable in the generated API snapshot."
           },
           "label": {
             "type": "string",
             "title": "Label",
-            "description": "数据块展示名称"
+            "description": "English description unavailable in the generated API snapshot."
           },
           "status": {
             "type": "string",
@@ -6592,7 +6592,7 @@
               "fetch_failed"
             ],
             "title": "Status",
-            "description": "数据块质量状态"
+            "description": "English description unavailable in the generated API snapshot."
           },
           "source": {
             "anyOf": [
@@ -6604,7 +6604,7 @@
               }
             ],
             "title": "Source",
-            "description": "数据来源"
+            "description": "English description unavailable in the generated API snapshot."
           },
           "warnings": {
             "items": {
@@ -6612,7 +6612,7 @@
             },
             "type": "array",
             "title": "Warnings",
-            "description": "数据块告警码"
+            "description": "English description unavailable in the generated API snapshot."
           },
           "missing_reasons": {
             "items": {
@@ -6620,7 +6620,7 @@
             },
             "type": "array",
             "title": "Missing Reasons",
-            "description": "缺失原因"
+            "description": "English description unavailable in the generated API snapshot."
           }
         },
         "type": "object",
@@ -6630,7 +6630,7 @@
           "status"
         ],
         "title": "AnalysisContextPackOverviewBlock",
-        "description": "AnalysisContextPack 可见摘要数据块"
+        "description": "English description unavailable in the generated API snapshot."
       },
       "AnalysisContextPackOverviewCounts": {
         "properties": {
@@ -6677,7 +6677,7 @@
         },
         "type": "object",
         "title": "AnalysisContextPackOverviewCounts",
-        "description": "AnalysisContextPack 可见摘要状态计数"
+        "description": "English description unavailable in the generated API snapshot."
       },
       "AnalysisContextPackOverviewDataQuality": {
         "properties": {
@@ -6693,7 +6693,7 @@
               }
             ],
             "title": "Overall Score",
-            "description": "输入数据质量总分"
+            "description": "English description unavailable in the generated API snapshot."
           },
           "level": {
             "anyOf": [
@@ -6711,7 +6711,7 @@
               }
             ],
             "title": "Level",
-            "description": "输入数据质量等级"
+            "description": "English description unavailable in the generated API snapshot."
           },
           "block_scores": {
             "additionalProperties": {
@@ -6719,7 +6719,7 @@
             },
             "type": "object",
             "title": "Block Scores",
-            "description": "固定数据块质量分"
+            "description": "English description unavailable in the generated API snapshot."
           },
           "limitations": {
             "items": {
@@ -6727,12 +6727,12 @@
             },
             "type": "array",
             "title": "Limitations",
-            "description": "低敏数据限制说明"
+            "description": "English description unavailable in the generated API snapshot."
           }
         },
         "type": "object",
         "title": "AnalysisContextPackOverviewDataQuality",
-        "description": "AnalysisContextPack 可见摘要数据质量评分"
+        "description": "English description unavailable in the generated API snapshot."
       },
       "AnalysisContextPackOverviewMetadata": {
         "properties": {
@@ -6746,7 +6746,7 @@
               }
             ],
             "title": "Trigger Source",
-            "description": "触发来源"
+            "description": "English description unavailable in the generated API snapshot."
           },
           "news_result_count": {
             "anyOf": [
@@ -6758,12 +6758,12 @@
               }
             ],
             "title": "News Result Count",
-            "description": "新闻结果数量"
+            "description": "English description unavailable in the generated API snapshot."
           }
         },
         "type": "object",
         "title": "AnalysisContextPackOverviewMetadata",
-        "description": "AnalysisContextPack 可见摘要元数据"
+        "description": "English description unavailable in the generated API snapshot."
       },
       "HTTPValidationError": {
         "properties": {

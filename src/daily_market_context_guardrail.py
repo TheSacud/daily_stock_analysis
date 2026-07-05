@@ -14,20 +14,20 @@ from src.report_language import (
 
 
 _CONSERVATIVE_TAGS = {"high_risk", "market_cooling", "conservative", "low_position_cap"}
-_CONSERVATIVE_TEXT_MARKERS_ZH = ("退潮", "观望", "高风险", "谨慎", "保守", "仓位上限", "仓位不超过", "轻仓")
+_CONSERVATIVE_TEXT_MARKERS_ZH = ("\u9000\u6f6e", "Watch", "High\u98ce\u9669", "\u8c28\u614e", "\u4fdd\u5b88", "\u4ed3characters\u4e0a\u9650", "\u4ed3characters\u4e0d\u8d85\u8fc7", "\u8f7b\u4ed3")
 _CONSERVATIVE_TEXT_MARKERS_EN = ("high risk", "risk-off", "risk off", "watch", "cautious", "conservative", "position cap", "position limit")
 _CONSERVATIVE_TEXT_MARKERS_KO = ("고위험", "관망", "위험", "신중", "보수", "비중 상한", "비중 축소", "경량")
 _AGGRESSIVE_BUY_MARKERS_ZH = (
-    "立即买入",
-    "马上买入",
-    "建议买入",
-    "分批买入",
-    "分批低吸",
-    "回踩买入",
-    "积极买入",
-    "激进买入",
-    "追高",
-    "加仓",
+    "\u7acb\u5373\u4e70\u5165",
+    "\u9a6c\u4e0a\u4e70\u5165",
+    "\u5efa\u8bae\u4e70\u5165",
+    "\u5206\u6279\u4e70\u5165",
+    "\u5206\u6279Low\u5438",
+    "\u56de\u8e29\u4e70\u5165",
+    "\u79ef\u6781\u4e70\u5165",
+    "\u6fc0\u8fdb\u4e70\u5165",
+    "\u8ffdHigh",
+    "\u52a0\u4ed3",
 )
 _AGGRESSIVE_BUY_MARKERS_EN = ("buy now", "strong buy", "aggressive buy", "chase", "add aggressively")
 _AGGRESSIVE_BUY_MARKERS_KO = (
@@ -40,7 +40,7 @@ _AGGRESSIVE_BUY_MARKERS_KO = (
     "추격 매수",
     "비중 확대",
 )
-_NEGATION_HINTS_ZH = ("暂不", "不建议", "不应", "不宜", "不能", "无法", "不允许", "禁止", "避免", "不要", "别", "先不")
+_NEGATION_HINTS_ZH = ("\u6682\u4e0d", "\u4e0d\u5efa\u8bae", "\u4e0d\u5e94", "\u4e0d\u5b9c", "\u4e0d\u80fd", "\u65e0\u6cd5", "\u4e0d\u5141\u8bb8", "\u7981\u6b62", "\u907f\u514d", "\u4e0d\u8981", "\u522b", "\u5148\u4e0d")
 _NEGATION_HINTS_EN = (" not ", "do not", "don't", "no ", "never", "avoid")
 _NEGATION_HINTS_KO = ("권하지 않", "하지 않", "하지 마", "불가", "금지", "피하", "보류", "않", "말")
 _NEGATION_LOOKBACK = 16
@@ -48,7 +48,7 @@ _GUARDRAIL_SENTIMENT_SCORE = 52
 
 
 def _softened_operation_advice(language: str) -> str:
-    return localize_operation_advice("观望", language)
+    return localize_operation_advice("Watch", language)
 
 
 def _negation_hints_for(language: str) -> tuple[str, ...]:
@@ -146,8 +146,8 @@ def _softened_position_advice(language: str) -> dict[str, str]:
             "has_position": "소량만 보유하고 비중을 늘리지 마세요. 리스크 관리선이 무너지면 비중을 줄이세요.",
         }
     return {
-        "no_position": "大盘环境偏谨慎，暂不开新仓，等待风险缓解或确认信号。",
-        "has_position": "仅保留小仓观察，暂不扩大仓位；若跌破风控位优先降低仓位。",
+        "no_position": "\u5927\u76d8\u73af\u5883Slightly \u8c28\u614e; \u6682\u4e0d\u5f00\u65b0\u4ed3; waiting\u98ce\u9669\u7f13\u89e3or\u786e\u8ba4\u4fe1\u53f7.",
+        "has_position": "\u4ec5\u4fdd\u7559\u5c0f\u4ed3\u89c2\u5bdf; \u6682\u4e0d\u6269\u5927\u4ed3characters；\u82e5\u8dcc\u7834\u98ce\u63a7characters\u4f18\u5148\u964dLow\u4ed3characters.",
     }
 
 
@@ -166,9 +166,9 @@ def _softened_position_strategy(language: str) -> dict[str, str]:
             "risk_control": "시장 위험이 완화되기 전까지 비중을 늘리지 말고 낙폭을 엄격히 관리하세요.",
         }
     return {
-        "suggested_position": "小仓/低仓位",
+        "suggested_position": "\u5c0f\u4ed3/Low\u4ed3characters",
         "entry_plan": position_advice["no_position"],
-        "risk_control": "大盘风险未缓解前不扩大仓位，严格控制回撤。",
+        "risk_control": "\u5927\u76d8\u98ce\u9669\u672a\u7f13\u89e3\u524d\u4e0d\u6269\u5927\u4ed3characters; \u4e25\u683c\u63a7\u5236\u56de\u64a4.",
     }
 
 
@@ -181,7 +181,7 @@ def _append_softening_limitation(phase_decision: dict[str, Any], *, language: st
     elif language == "ko":
         limitation = "대시장 환경이 보수적/고위험이라 공격적 매수 권고를 완화했습니다."
     else:
-        limitation = "大盘环境偏谨慎/高风险，已软化激进买入建议。"
+        limitation = "\u5927\u76d8\u73af\u5883Slightly \u8c28\u614e/High\u98ce\u9669; \u5df2\u8f6f\u5316\u6fc0\u8fdb\u4e70\u5165\u5efa\u8bae."
     if limitation not in limitations:
         limitations.append(limitation)
     phase_decision["data_limitations"] = limitations
@@ -191,7 +191,7 @@ def _append_softening_limitation(phase_decision: dict[str, Any], *, language: st
     elif language == "ko":
         reason_note = "시장 환경상 보수적인 비중 관리가 필요합니다."
     else:
-        reason_note = "大盘环境要求降低进攻性并控制仓位。"
+        reason_note = "\u5927\u76d8\u73af\u5883\u8981\u6c42\u964dLow\u8fdb\u653b\u5e76Control position size."
     separator = "; " if language == "en" else "；"
     phase_decision["confidence_reason"] = (
         f"{reason}{separator}{reason_note}" if reason else reason_note
@@ -265,7 +265,7 @@ def _contains_any(
 
 
 def _contains_negation_near_marker(context: str, negation_hints: tuple[str, ...]) -> bool:
-    separators = ("，", ",", "。", "；", ";", "：", ":", "？", "!", "！", "）", ")", "（", "(")
+    separators = ("; ", ",", ".", "；", ";", ": ", ":", "？", "!", "！", ")", ")", " (", "(")
     tail = context
     sep_pos = -1
     for separator in separators:
@@ -285,4 +285,4 @@ def _cap_conservative_sentiment_score(value: Any) -> int:
     return min(_GUARDRAIL_SENTIMENT_SCORE, max(0, score))
 
 def _is_high_confidence(value: Any) -> bool:
-    return str(value or "").strip().lower() in {"高", "high", "높음"}
+    return str(value or "").strip().lower() in {"High", "high", "높음"}

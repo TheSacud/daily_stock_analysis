@@ -394,7 +394,7 @@ def test_opencode_static_instruction_does_not_force_stock_json_contract() -> Non
 
 
 def test_opencode_preset_accepts_free_text_without_json_validator(tmp_path: Path) -> None:
-    review = "## 今日复盘\n\n市场震荡，保持观察。"
+    review = "## \u4eca\u65e5\u590d\u76d8\n\n\u5e02\u573a\u9707\u8361，\u4fdd\u6301\u89c2\u5bdf。"
     script = _script(
         tmp_path,
         f"""
@@ -418,7 +418,7 @@ print(json.dumps({{"type": "step_finish", "reason": "stop"}}))
         preset=preset,
     )
 
-    result = backend.generate("请生成 Markdown 复盘", {}, response_validator=None)
+    result = backend.generate("\u8bf7\u751f\u6210 Markdown \u590d\u76d8", {}, response_validator=None)
 
     assert result.text == review
 
@@ -861,7 +861,7 @@ def test_stderr_does_not_affect_successful_stdout_or_json_parsing(tmp_path: Path
         tmp_path,
         """
 import sys
-print('{"sentiment_score": 70, "trend_prediction": "看多"}')
+print('{"sentiment_score": 70, "trend_prediction": "\u770b\u591a"}')
 print('{"bad": "stderr"}', file=sys.stderr)
 """,
     )

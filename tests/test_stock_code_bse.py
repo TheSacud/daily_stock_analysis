@@ -99,12 +99,12 @@ class TestNormalizeStockCode(unittest.TestCase):
         self.assertEqual(normalize_stock_code("bj920748"), "920748")
 
     def test_hk_suffix_normalized_to_canonical_prefix(self):
-        """港股 .HK 后缀格式应归一为 HK+5 位数字。"""
+        """\u6e2f\u80a1 .HK \u540e\u7f00\u683c\u5f0f\u5e94\u5f52\u4e00\u4e3a HK+5 \u4f4d\u6570\u5b57。"""
         self.assertEqual(normalize_stock_code("1810.HK"), "HK01810")
         self.assertEqual(normalize_stock_code("0700.hk"), "HK00700")
 
     def test_hk_prefix_is_zero_padded(self):
-        """HK 前缀的短数字格式应补足到 5 位，便于后续缓存与去重。"""
+        """HK \u524d\u7f00\u7684\u77ed\u6570\u5b57\u683c\u5f0f\u5e94\u8865\u8db3\u5230 5 \u4f4d，\u4fbf\u4e8e\u540e\u7eed\u7f13\u5b58\u4e0e\u53bb\u91cd。"""
         self.assertEqual(normalize_stock_code("hk1810"), "HK01810")
         self.assertEqual(normalize_stock_code("HK700"), "HK00700")
 

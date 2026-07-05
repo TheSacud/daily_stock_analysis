@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 """
 ===================================
-通知发送层模块
+\u901a\u77e5\u53d1\u9001\u5c42\u6a21chunks
 ===================================
 
-提供各种通知发送服务
+\u63d0\u4f9b\u5404\u79cd\u901a\u77e5\u53d1\u9001\u670d\u52a1
 """
 
 from .astrbot_sender import AstrbotSender

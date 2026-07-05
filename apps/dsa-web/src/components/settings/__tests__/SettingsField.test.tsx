@@ -34,7 +34,7 @@ describe('SettingsField', () => {
       />
     );
 
-    expect(screen.getByLabelText('自选股列表')).toBeInTheDocument();
+    expect(screen.getByLabelText('\u81ea\u9009\u80a1\u5217\u8868')).toBeInTheDocument();
     expect(screen.queryByLabelText('Stock List')).not.toBeInTheDocument();
   });
 
@@ -67,8 +67,8 @@ describe('SettingsField', () => {
       />
     );
 
-    expect(screen.getByLabelText('TickFlow 日 K 优先级')).toBeInTheDocument();
-    expect(screen.getByText(/控制 TickFlow 在 A 股日 K 数据源回退链中的尝试顺序/)).toBeInTheDocument();
+    expect(screen.getByLabelText('TickFlow \u65e5 K \u4f18\u5148\u7ea7')).toBeInTheDocument();
+    expect(screen.getByText(/\u63a7\u5236 TickFlow \u5728 A \u80a1\u65e5 K \u6570\u636e\u6e90\u56de\u9000\u94fe\u4e2d\u7684\u5c1d\u8bd5\u987a\u5e8f/)).toBeInTheDocument();
     expect(screen.queryByText(/Priority for TickFlow daily K-line fetcher/)).not.toBeInTheDocument();
   });
   it('uses schema key for TickFlow localization when the runtime item key differs', () => {
@@ -134,15 +134,15 @@ describe('SettingsField', () => {
           {
             key: 'OPENAI_API_KEY',
             code: 'required',
-            message: 'API Key 必填',
+            message: 'API Key \u5fc5\u586b',
             severity: 'error',
           },
         ]}
       />
     );
 
-    expect(screen.getByText('敏感')).toBeInTheDocument();
-    expect(screen.getByText('API Key 必填')).toBeInTheDocument();
+    expect(screen.getByText('\u654f\u611f')).toBeInTheDocument();
+    expect(screen.getByText('API Key \u5fc5\u586b')).toBeInTheDocument();
 
     const input = screen.getByLabelText('OpenAI API Key');
     fireEvent.focus(input);
@@ -181,8 +181,8 @@ describe('SettingsField', () => {
       />
     );
 
-    expect(screen.getAllByRole('button', { name: '显示内容' })).toHaveLength(2);
-    expect(screen.getAllByRole('button', { name: '删除' })).toHaveLength(2);
+    expect(screen.getAllByRole('button', { name: '\u663e\u793a\u5185\u5bb9' })).toHaveLength(2);
+    expect(screen.getAllByRole('button', { name: '\u5220\u9664' })).toHaveLength(2);
   });
 
   it('allows optional select fields to be cleared when schema provides an empty option', () => {
@@ -220,9 +220,9 @@ describe('SettingsField', () => {
       />
     );
 
-    const select = screen.getByLabelText('最小通知级别');
-    expect(screen.getByRole('option', { name: '未设置' })).not.toBeDisabled();
-    expect(screen.queryByRole('option', { name: '请选择' })).not.toBeInTheDocument();
+    const select = screen.getByLabelText('\u6700\u5c0f\u901a\u77e5\u7ea7\u522b');
+    expect(screen.getByRole('option', { name: '\u672a\u8bbe\u7f6e' })).not.toBeDisabled();
+    expect(screen.queryByRole('option', { name: '\u8bf7\u9009\u62e9' })).not.toBeInTheDocument();
 
     fireEvent.change(select, { target: { value: '' } });
 
@@ -259,7 +259,7 @@ describe('SettingsField', () => {
       />
     );
 
-    expect(screen.getByLabelText('分析生成方式')).toHaveValue('litellm');
+    expect(screen.getByLabelText('\u5206\u6790\u751f\u6210\u65b9\u5f0f')).toHaveValue('litellm');
     expect(onChange).not.toHaveBeenCalled();
   });
 
@@ -269,19 +269,19 @@ describe('SettingsField', () => {
         key: 'NEWS_STRATEGY_PROFILE',
         category: 'data_source',
         options: ['ultra_short', 'short', 'medium', 'long'],
-        expectedLabels: ['超短线（1天）', '短期（3天）', '中期（7天）', '长期（30天）'],
+        expectedLabels: ['\u8d85\u77ed\u7ebf（1\u5929）', '\u77ed\u671f（3\u5929）', '\u4e2d\u671f（7\u5929）', '\u957f\u671f（30\u5929）'],
       },
       {
         key: 'REPORT_TYPE',
         category: 'notification',
         options: ['simple', 'full', 'brief'],
-        expectedLabels: ['简洁', '完整', '简报'],
+        expectedLabels: ['\u7b80\u6d01', '\u5b8c\u6574', '\u7b80\u62a5'],
       },
       {
         key: 'LOG_LEVEL',
         category: 'system',
         options: ['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'],
-        expectedLabels: ['调试', '信息', '警告', '错误', '严重'],
+        expectedLabels: ['\u8c03\u8bd5', '\u4fe1\u606f', '\u8b66\u544a', '\u9519\u8bef', '\u4e25\u91cd'],
       },
     ] as const;
 
@@ -352,7 +352,7 @@ describe('SettingsField', () => {
       />
     );
 
-    const input = screen.getByLabelText('大盘复盘市场') as HTMLInputElement;
+    const input = screen.getByLabelText('\u5927\u76d8\u590d\u76d8\u5e02\u573a') as HTMLInputElement;
     expect(input).toHaveValue('cn,jp');
     expect(screen.queryByRole('combobox')).not.toBeInTheDocument();
 
@@ -382,9 +382,9 @@ describe('SettingsField', () => {
             isRequired: false,
             isEditable: true,
             options: [
-              { label: '成本优先', value: 'cost' },
-              { label: '均衡推荐', value: 'balanced' },
-              { label: '长上下文原文优先', value: 'long_context_raw_first' },
+              { label: '\u6210\u672c\u4f18\u5148', value: 'cost' },
+              { label: '\u5747\u8861\u63a8\u8350', value: 'balanced' },
+              { label: '\u957f\u4e0a\u4e0b\u6587\u539f\u6587\u4f18\u5148', value: 'long_context_raw_first' },
             ],
             validation: {
               enum: ['cost', 'balanced', 'long_context_raw_first'],
@@ -397,10 +397,10 @@ describe('SettingsField', () => {
       />
     );
 
-    expect(screen.getByLabelText('上下文压缩策略')).toBeInTheDocument();
-    expect(screen.getByRole('option', { name: '成本优先' })).toBeInTheDocument();
-    expect(screen.getByRole('option', { name: '均衡推荐' })).toBeInTheDocument();
-    expect(screen.getByRole('option', { name: '长上下文原文优先' })).toBeInTheDocument();
+    expect(screen.getByLabelText('\u4e0a\u4e0b\u6587\u538b\u7f29\u7b56\u7565')).toBeInTheDocument();
+    expect(screen.getByRole('option', { name: '\u6210\u672c\u4f18\u5148' })).toBeInTheDocument();
+    expect(screen.getByRole('option', { name: '\u5747\u8861\u63a8\u8350' })).toBeInTheDocument();
+    expect(screen.getByRole('option', { name: '\u957f\u4e0a\u4e0b\u6587\u539f\u6587\u4f18\u5148' })).toBeInTheDocument();
   });
 
   it('renders blank-value preset guidance for context compression numeric fields', () => {
@@ -455,10 +455,10 @@ describe('SettingsField', () => {
       </>
     );
 
-    expect(screen.getByLabelText('压缩触发阈值（tokens）')).toBeInTheDocument();
-    expect(screen.getByLabelText('原文保护轮次')).toBeInTheDocument();
-    expect(screen.getByText(/估算历史 token 超过该值时触发摘要/)).toHaveTextContent('留空则跟随当前上下文压缩策略 profile 默认值');
-    expect(screen.getByText(/压缩时最近 N 个用户轮次及其后的回复保持原文/)).toHaveTextContent('留空则跟随当前上下文压缩策略 profile 默认值');
+    expect(screen.getByLabelText('\u538b\u7f29\u89e6\u53d1\u9608\u503c（tokens）')).toBeInTheDocument();
+    expect(screen.getByLabelText('\u539f\u6587\u4fdd\u62a4\u8f6e\u6b21')).toBeInTheDocument();
+    expect(screen.getByText(/\u4f30\u7b97\u5386\u53f2 token \u8d85\u8fc7\u8be5\u503c\u65f6\u89e6\u53d1\u6458\u8981/)).toHaveTextContent('\u7559\u7a7a\u5219\u8ddf\u968f\u5f53\u524d\u4e0a\u4e0b\u6587\u538b\u7f29\u7b56\u7565 profile \u9ed8\u8ba4\u503c');
+    expect(screen.getByText(/\u538b\u7f29\u65f6\u6700\u8fd1 N \u4e2a\u7528\u6237\u8f6e\u6b21\u53ca\u5176\u540e\u7684\u56de\u590d\u4fdd\u6301\u539f\u6587/)).toHaveTextContent('\u7559\u7a7a\u5219\u8ddf\u968f\u5f53\u524d\u4e0a\u4e0b\u6587\u538b\u7f29\u7b56\u7565 profile \u9ed8\u8ba4\u503c');
   });
 
   it('renders localized custom webhook body template guidance', () => {
@@ -489,9 +489,9 @@ describe('SettingsField', () => {
       />
     );
 
-    expect(screen.getByLabelText('自定义 Webhook Body 模板')).toBeInTheDocument();
-    expect(screen.getByText(/会先于 Bark、Slack、Discord 等自动 payload 生效/)).toBeInTheDocument();
-    expect(screen.getByText(/裸 \$content \/ \$title 不做 JSON 转义/)).toBeInTheDocument();
+    expect(screen.getByLabelText('\u81ea\u5b9a\u4e49 Webhook Body \u6a21\u677f')).toBeInTheDocument();
+    expect(screen.getByText(/\u4f1a\u5148\u4e8e Bark、Slack、Discord \u7b49\u81ea\u52a8 payload \u751f\u6548/)).toBeInTheDocument();
+    expect(screen.getByText(/\u88f8 \$content \/ \$title \u4e0d\u505a JSON \u8f6c\u4e49/)).toBeInTheDocument();
   });
 
   it('opens detailed field help when help metadata is available', () => {
@@ -517,7 +517,7 @@ describe('SettingsField', () => {
             examples: ['STOCK_LIST=600519,300750,002594'],
             docs: [
               {
-                label: '完整指南',
+                label: '\u5b8c\u6574\u6307\u5357',
                 href: 'https://example.com/full-guide',
               },
             ],
@@ -529,14 +529,14 @@ describe('SettingsField', () => {
       />
     );
 
-    fireEvent.click(screen.getByRole('button', { name: '查看 自选股列表 配置说明' }));
+    fireEvent.click(screen.getByRole('button', { name: '\u67e5\u770b \u81ea\u9009\u80a1\u5217\u8868 \u914d\u7f6e\u8bf4\u660e' }));
 
-    expect(screen.getByRole('dialog', { name: '自选股列表' })).toBeInTheDocument();
+    expect(screen.getByRole('dialog', { name: '\u81ea\u9009\u80a1\u5217\u8868' })).toBeInTheDocument();
     expect(screen.getByText('STOCK_LIST=600519,300750,002594')).toBeInTheDocument();
-    const docLink = screen.getByRole('link', { name: /完整指南/ });
+    const docLink = screen.getByRole('link', { name: /\u5b8c\u6574\u6307\u5357/ });
     expect(docLink).toHaveAttribute('href', 'https://example.com/full-guide');
 
-    const closeButtons = screen.getAllByRole('button', { name: '关闭配置说明' });
+    const closeButtons = screen.getAllByRole('button', { name: '\u5173\u95ed\u914d\u7f6e\u8bf4\u660e' });
     expect(closeButtons[0].tabIndex).toBe(-1);
     const closeButton = closeButtons.find((button) => button.tabIndex !== -1);
     expect(closeButton).toBeDefined();
@@ -549,7 +549,7 @@ describe('SettingsField', () => {
     expect(closeButton).toHaveFocus();
 
     fireEvent.keyDown(document, { key: 'Escape' });
-    expect(screen.queryByRole('dialog', { name: '自选股列表' })).not.toBeInTheDocument();
+    expect(screen.queryByRole('dialog', { name: '\u81ea\u9009\u80a1\u5217\u8868' })).not.toBeInTheDocument();
   });
 
   it('keeps generation channel help user-facing without env key or examples', () => {
@@ -582,16 +582,16 @@ describe('SettingsField', () => {
       />
     );
 
-    fireEvent.click(screen.getByRole('button', { name: '查看 分析生成方式 配置说明' }));
+    fireEvent.click(screen.getByRole('button', { name: '\u67e5\u770b \u5206\u6790\u751f\u6210\u65b9\u5f0f \u914d\u7f6e\u8bf4\u660e' }));
 
-    const dialog = screen.getByRole('dialog', { name: '分析生成方式' });
-    expect(dialog).toHaveTextContent('决定系统用哪种方式生成');
+    const dialog = screen.getByRole('dialog', { name: '\u5206\u6790\u751f\u6210\u65b9\u5f0f' });
+    expect(dialog).toHaveTextContent('\u51b3\u5b9a\u7cfb\u7edf\u7528\u54ea\u79cd\u65b9\u5f0f\u751f\u6210');
     expect(dialog).not.toHaveTextContent('GENERATION_BACKEND');
-    expect(dialog).not.toHaveTextContent('配置样例');
+    expect(dialog).not.toHaveTextContent('\u914d\u7f6e\u6837\u4f8b');
     expect(dialog).not.toHaveTextContent('Phase 1');
-    expect(dialog).toHaveTextContent('本机已安装并登录对应 CLI');
-    expect(dialog).toHaveTextContent('默认模型配置会继续使用现有 API Key');
-    expect(dialog).not.toHaveTextContent('高级说明');
+    expect(dialog).toHaveTextContent('\u672c\u673a\u5df2\u5b89\u88c5\u5e76\u767b\u5f55\u5bf9\u5e94 CLI');
+    expect(dialog).toHaveTextContent('\u9ed8\u8ba4\u6a21\u578b\u914d\u7f6e\u4f1a\u7ee7\u7eed\u4f7f\u7528\u73b0\u6709 API Key');
+    expect(dialog).not.toHaveTextContent('\u9ad8\u7ea7\u8bf4\u660e');
     expect(dialog).not.toHaveTextContent('LiteLLM');
   });
 
@@ -628,15 +628,15 @@ describe('SettingsField', () => {
       />
     );
 
-    fireEvent.click(screen.getByRole('button', { name: '查看 问股生成方式 配置说明' }));
+    fireEvent.click(screen.getByRole('button', { name: '\u67e5\u770b \u95ee\u80a1\u751f\u6210\u65b9\u5f0f \u914d\u7f6e\u8bf4\u660e' }));
 
-    const dialog = screen.getByRole('dialog', { name: '问股生成方式' });
-    expect(dialog).toHaveTextContent('系统会选择当前可用的方式');
-    expect(dialog).toHaveTextContent('如果不确定，选择“自动”即可');
-    expect(dialog).toHaveTextContent('这项设置只影响问股助手');
-    expect(dialog).not.toHaveTextContent('高级说明');
+    const dialog = screen.getByRole('dialog', { name: '\u95ee\u80a1\u751f\u6210\u65b9\u5f0f' });
+    expect(dialog).toHaveTextContent('\u7cfb\u7edf\u4f1a\u9009\u62e9\u5f53\u524d\u53ef\u7528\u7684\u65b9\u5f0f');
+    expect(dialog).toHaveTextContent('\u5982\u679c\u4e0d\u786e\u5b9a，\u9009\u62e9“\u81ea\u52a8”\u5373\u53ef');
+    expect(dialog).toHaveTextContent('\u8fd9\u9879\u8bbe\u7f6e\u53ea\u5f71\u54cd\u95ee\u80a1\u52a9\u624b');
+    expect(dialog).not.toHaveTextContent('\u9ad8\u7ea7\u8bf4\u660e');
     expect(dialog).not.toHaveTextContent('LiteLLM');
-    expect(dialog).not.toHaveTextContent('优先选择当前可用');
+    expect(dialog).not.toHaveTextContent('\u4f18\u5148\u9009\u62e9\u5f53\u524d\u53ef\u7528');
   });
 
   it('uses per-field schema titles even when helpKey is shared by multiple fields', () => {

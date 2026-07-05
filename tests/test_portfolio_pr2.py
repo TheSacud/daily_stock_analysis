@@ -135,13 +135,13 @@ class PortfolioPr2TestCase(unittest.TestCase):
     def _csv_bytes(with_trade_uid: bool = True) -> bytes:
         if with_trade_uid:
             csv_text = (
-                "成交日期,证券代码,买卖标志,成交数量,成交均价,成交编号,手续费,印花税\n"
-                "2026-01-02,600519,买入,10,100,HT-001,1,0\n"
+                "\u6210\u4ea4\u65e5\u671f,\u8bc1\u5238\u4ee3\u7801,\u4e70\u5356\u6807\u5fd7,\u6210\u4ea4\u6570\u91cf,\u6210\u4ea4\u5747\u4ef7,\u6210\u4ea4\u7f16\u53f7,\u624b\u7eed\u8d39,\u5370\u82b1\u7a0e\n"
+                "2026-01-02,600519,\u4e70\u5165,10,100,HT-001,1,0\n"
             )
         else:
             csv_text = (
-                "成交日期,证券代码,买卖标志,成交数量,成交均价,手续费,印花税\n"
-                "2026-01-02,600519,买入,10,100,1,0\n"
+                "\u6210\u4ea4\u65e5\u671f,\u8bc1\u5238\u4ee3\u7801,\u4e70\u5356\u6807\u5fd7,\u6210\u4ea4\u6570\u91cf,\u6210\u4ea4\u5747\u4ef7,\u624b\u7eed\u8d39,\u5370\u82b1\u7a0e\n"
+                "2026-01-02,600519,\u4e70\u5165,10,100,1,0\n"
             )
         return csv_text.encode("utf-8")
 
@@ -183,7 +183,7 @@ class PortfolioPr2TestCase(unittest.TestCase):
 
     def test_import_side_parser_avoids_false_sell_match(self) -> None:
         csv_text = (
-            "成交日期,证券代码,买卖标志,成交数量,成交均价,成交编号\n"
+            "\u6210\u4ea4\u65e5\u671f,\u8bc1\u5238\u4ee3\u7801,\u4e70\u5356\u6807\u5fd7,\u6210\u4ea4\u6570\u91cf,\u6210\u4ea4\u5747\u4ef7,\u6210\u4ea4\u7f16\u53f7\n"
             "2026-01-02,600519,Asset Transfer,10,100,HT-002\n"
         )
         parsed = self.import_service.parse_trade_csv(
@@ -203,8 +203,8 @@ class PortfolioPr2TestCase(unittest.TestCase):
 
     def test_import_preserves_leading_zero_symbol(self) -> None:
         csv_text = (
-            "成交日期,证券代码,买卖标志,成交数量,成交均价,成交编号\n"
-            "2026-01-02,000001,买入,10,100,HT-003\n"
+            "\u6210\u4ea4\u65e5\u671f,\u8bc1\u5238\u4ee3\u7801,\u4e70\u5356\u6807\u5fd7,\u6210\u4ea4\u6570\u91cf,\u6210\u4ea4\u5747\u4ef7,\u6210\u4ea4\u7f16\u53f7\n"
+            "2026-01-02,000001,\u4e70\u5165,10,100,HT-003\n"
         )
         parsed = self.import_service.parse_trade_csv(
             broker="huatai",
@@ -217,9 +217,9 @@ class PortfolioPr2TestCase(unittest.TestCase):
         account = self.service.create_account(name="Main", broker="Demo", market="cn", base_currency="CNY")
         aid = account["id"]
         csv_text = (
-            "成交日期,证券代码,买卖标志,成交数量,成交均价,成交编号,手续费,印花税\n"
-            "2026-01-02,600519,买入,10,100,HT-004,1,0\n"
-            "2026-01-02,600519,买入,10,100,HT-004,1,0\n"
+            "\u6210\u4ea4\u65e5\u671f,\u8bc1\u5238\u4ee3\u7801,\u4e70\u5356\u6807\u5fd7,\u6210\u4ea4\u6570\u91cf,\u6210\u4ea4\u5747\u4ef7,\u6210\u4ea4\u7f16\u53f7,\u624b\u7eed\u8d39,\u5370\u82b1\u7a0e\n"
+            "2026-01-02,600519,\u4e70\u5165,10,100,HT-004,1,0\n"
+            "2026-01-02,600519,\u4e70\u5165,10,100,HT-004,1,0\n"
         )
         parsed = self.import_service.parse_trade_csv(
             broker="huatai",
@@ -239,9 +239,9 @@ class PortfolioPr2TestCase(unittest.TestCase):
         account = self.service.create_account(name="Main", broker="Demo", market="cn", base_currency="CNY")
         aid = account["id"]
         csv_text = (
-            "成交日期,证券代码,买卖标志,成交数量,成交均价,手续费,印花税\n"
-            "2026-01-02,600519,买入,10,100,1,0\n"
-            "2026-01-02,600519,买入,10,100,1,0\n"
+            "\u6210\u4ea4\u65e5\u671f,\u8bc1\u5238\u4ee3\u7801,\u4e70\u5356\u6807\u5fd7,\u6210\u4ea4\u6570\u91cf,\u6210\u4ea4\u5747\u4ef7,\u624b\u7eed\u8d39,\u5370\u82b1\u7a0e\n"
+            "2026-01-02,600519,\u4e70\u5165,10,100,1,0\n"
+            "2026-01-02,600519,\u4e70\u5165,10,100,1,0\n"
         )
         parsed = self.import_service.parse_trade_csv(
             broker="huatai",
@@ -497,7 +497,7 @@ class PortfolioPr2TestCase(unittest.TestCase):
         self.assertTrue(len(sectors) >= 1)
         self.assertEqual(sectors[0]["sector"], "UNCLASSIFIED")
 
-    @patch.object(PortfolioRiskService, "_fetch_belong_boards", return_value=[{"name": "白酒", "type": "行业"}])
+    @patch.object(PortfolioRiskService, "_fetch_belong_boards", return_value=[{"name": "\u767d\u9152", "type": "\u884c\u4e1a"}])
     def test_sector_concentration_cn_board_mapping(self, _mock_fetch) -> None:
         account = self.service.create_account(name="Main", broker="Demo", market="cn", base_currency="CNY")
         aid = account["id"]
@@ -522,7 +522,7 @@ class PortfolioPr2TestCase(unittest.TestCase):
         report = self.risk_service.get_risk_report(account_id=aid, as_of=date(2026, 1, 1), cost_method="fifo")
         sectors = report["sector_concentration"]["top_sectors"]
         self.assertTrue(len(sectors) >= 1)
-        self.assertEqual(sectors[0]["sector"], "白酒")
+        self.assertEqual(sectors[0]["sector"], "\u767d\u9152")
 
     def test_risk_report_aggregates_active_defensive_decision_signals_for_holdings(self) -> None:
         account = self.service.create_account(name="Main", broker="Demo", market="cn", base_currency="CNY")

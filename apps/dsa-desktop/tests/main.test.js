@@ -537,7 +537,7 @@ test('evaluateReleaseUpdate reports update-available when release is newer', (t)
   assert.equal(state.releaseUrl, 'https://github.com/ZhuLinsen/daily_stock_analysis/releases/tag/v3.13.0');
   assert.equal(state.checkedAt, '2026-04-25T01:02:00Z');
   assert.equal(state.publishedAt, '2026-04-25T01:00:00Z');
-  assert.match(state.message, /发现新版本 3\.13\.0/);
+  assert.match(state.message, /\u53d1\u73b0\u65b0\u7248\u672c 3\.13\.0/);
 });
 
 test('evaluateReleaseUpdate reports up-to-date when version is current', (t) => {
@@ -570,7 +570,7 @@ test('evaluateReleaseUpdate reports error when current version is invalid', (t) 
   });
 
   assert.equal(state.status, mainModule.UPDATE_STATUS.ERROR);
-  assert.match(state.message, /不是有效的语义化版本/);
+  assert.match(state.message, /\u4e0d\u662f\u6709\u6548\u7684\u8bed\u4e49\u5316\u7248\u672c/);
 });
 
 test('checkForDesktopUpdates delegates to release fetcher', async (t) => {
@@ -666,7 +666,7 @@ test('auto download prompt falls back to error when install path fails', async (
     },
     quitAndInstall: (...args) => {
       quitAndInstallArgs = args;
-      throw new Error('安装进程启动失败');
+      throw new Error('\u5b89\u88c5\u8fdb\u7a0b\u542f\u52a8\u5931\u8d25');
     },
   };
 
@@ -709,7 +709,7 @@ test('auto download prompt falls back to error when install path fails', async (
   }
 
   assert.equal(state.status, mainModule.UPDATE_STATUS.ERROR);
-  assert.match(state.message, /更新安装失败/);
+  assert.match(state.message, /\u66f4\u65b0\u5b89\u88c5\u5931\u8d25/);
   assert.equal(state.updateMode, mainModule.UPDATE_MODE.AUTO);
   assert.deepEqual(quitAndInstallArgs, [true, true]);
   assert.equal(fakeUpdater.installDirectory, exeDir);
@@ -773,7 +773,7 @@ test('auto update backup copies AlphaSift hotspot detail directories recursively
   fs.mkdirSync(path.dirname(detailFile), { recursive: true });
   fs.mkdirSync(userDataDir, { recursive: true });
   fs.writeFileSync(uninstallPath, '');
-  fs.writeFileSync(detailFile, '{"topic":"AI算力"}\n', 'utf-8');
+  fs.writeFileSync(detailFile, '{"topic":"AI\u7b97\u529b"}\n', 'utf-8');
 
   mainModule.__setMainWindowForTest({
     isDestroyed: () => false,
@@ -790,7 +790,7 @@ test('auto update backup copies AlphaSift hotspot detail directories recursively
   }
 
   assert.deepEqual(quitAndInstallArgs, [true, true]);
-  assert.equal(fs.readFileSync(path.join(backupRoot, detailFileRelativePath), 'utf-8'), '{"topic":"AI算力"}\n');
+  assert.equal(fs.readFileSync(path.join(backupRoot, detailFileRelativePath), 'utf-8'), '{"topic":"AI\u7b97\u529b"}\n');
   assert.ok(JSON.parse(fs.readFileSync(path.join(backupRoot, 'runtime-state.json'), 'utf-8')).files.includes(detailRelativePath));
 
   t.after(() => {
@@ -875,14 +875,14 @@ test('desktop update backup and restore preserve AlphaSift detail directories re
   const userDataDir = path.join(tempRoot, 'userData');
   const backupRoot = path.join(userDataDir, '.dsa-desktop-update-backup');
   const detailRelativePath = path.join('data', 'alphasift', 'hotspot_details');
-  const topicDetailPath = path.join(appDir, detailRelativePath, 'AI算力', 'detail.json');
-  const nestedDetailPath = path.join(appDir, detailRelativePath, 'AI算力', 'events', 'latest.json');
+  const topicDetailPath = path.join(appDir, detailRelativePath, 'AI\u7b97\u529b', 'detail.json');
+  const nestedDetailPath = path.join(appDir, detailRelativePath, 'AI\u7b97\u529b', 'events', 'latest.json');
   let currentVersion = '3.12.0';
 
   fs.mkdirSync(path.dirname(nestedDetailPath), { recursive: true });
   fs.mkdirSync(userDataDir, { recursive: true });
   fs.writeFileSync(path.join(appDir, 'Uninstall Daily Stock Analysis.exe'), '');
-  fs.writeFileSync(topicDetailPath, '{"topic":"AI算力"}\n', 'utf-8');
+  fs.writeFileSync(topicDetailPath, '{"topic":"AI\u7b97\u529b"}\n', 'utf-8');
   fs.writeFileSync(nestedDetailPath, '{"events":1}\n', 'utf-8');
 
   const mainModule = loadMainModule(t, {
@@ -904,8 +904,8 @@ test('desktop update backup and restore preserve AlphaSift detail directories re
   });
 
   mainModule.backupPackagedRuntimeState();
-  assert.equal(fs.readFileSync(path.join(backupRoot, detailRelativePath, 'AI算力', 'detail.json'), 'utf-8'), '{"topic":"AI算力"}\n');
-  assert.equal(fs.readFileSync(path.join(backupRoot, detailRelativePath, 'AI算力', 'events', 'latest.json'), 'utf-8'), '{"events":1}\n');
+  assert.equal(fs.readFileSync(path.join(backupRoot, detailRelativePath, 'AI\u7b97\u529b', 'detail.json'), 'utf-8'), '{"topic":"AI\u7b97\u529b"}\n');
+  assert.equal(fs.readFileSync(path.join(backupRoot, detailRelativePath, 'AI\u7b97\u529b', 'events', 'latest.json'), 'utf-8'), '{"events":1}\n');
   assert.ok(
     JSON.parse(fs.readFileSync(path.join(backupRoot, 'runtime-state.json'), 'utf-8')).files.includes(detailRelativePath)
   );
@@ -916,7 +916,7 @@ test('desktop update backup and restore preserve AlphaSift detail directories re
 
   assert.deepEqual(restoreResult.failed, []);
   assert.ok(restoreResult.restored.includes(detailRelativePath));
-  assert.equal(fs.readFileSync(topicDetailPath, 'utf-8'), '{"topic":"AI算力"}\n');
+  assert.equal(fs.readFileSync(topicDetailPath, 'utf-8'), '{"topic":"AI\u7b97\u529b"}\n');
   assert.equal(fs.readFileSync(nestedDetailPath, 'utf-8'), '{"events":1}\n');
   assert.equal(fs.existsSync(backupRoot), false);
 });
@@ -928,7 +928,7 @@ test('macOS packaged runtime state uses userData and migrates old app bundle fil
   const exePath = path.join(oldAppDir, 'Daily Stock Analysis');
   const oldDbPath = path.join(oldAppDir, 'data', 'stock_analysis.db');
   const oldLogPath = path.join(oldAppDir, 'logs', 'desktop.log');
-  const oldHotspotDetailPath = path.join(oldAppDir, 'data', 'alphasift', 'hotspot_details', 'AI算力', 'detail.json');
+  const oldHotspotDetailPath = path.join(oldAppDir, 'data', 'alphasift', 'hotspot_details', 'AI\u7b97\u529b', 'detail.json');
 
   fs.mkdirSync(path.dirname(oldDbPath), { recursive: true });
   fs.mkdirSync(path.dirname(oldLogPath), { recursive: true });
@@ -938,7 +938,7 @@ test('macOS packaged runtime state uses userData and migrates old app bundle fil
   fs.writeFileSync(path.join(oldAppDir, '.env'), 'OPENAI_API_KEY=old-key\n', 'utf-8');
   fs.writeFileSync(oldDbPath, 'old-db');
   fs.writeFileSync(oldLogPath, 'old-log\n', 'utf-8');
-  fs.writeFileSync(oldHotspotDetailPath, '{"topic":"AI算力"}\n', 'utf-8');
+  fs.writeFileSync(oldHotspotDetailPath, '{"topic":"AI\u7b97\u529b"}\n', 'utf-8');
 
   const mainModule = loadMainModule(t, {
     platform: 'darwin',
@@ -972,8 +972,8 @@ test('macOS packaged runtime state uses userData and migrates old app bundle fil
   assert.equal(fs.readFileSync(path.join(userDataDir, '.env'), 'utf-8'), 'OPENAI_API_KEY=old-key\n');
   assert.equal(fs.readFileSync(path.join(userDataDir, 'data', 'stock_analysis.db'), 'utf-8'), 'old-db');
   assert.equal(
-    fs.readFileSync(path.join(userDataDir, 'data', 'alphasift', 'hotspot_details', 'AI算力', 'detail.json'), 'utf-8'),
-    '{"topic":"AI算力"}\n'
+    fs.readFileSync(path.join(userDataDir, 'data', 'alphasift', 'hotspot_details', 'AI\u7b97\u529b', 'detail.json'), 'utf-8'),
+    '{"topic":"AI\u7b97\u529b"}\n'
   );
   assert.equal(fs.readFileSync(path.join(userDataDir, 'logs', 'desktop.log'), 'utf-8'), 'old-log\n');
 });

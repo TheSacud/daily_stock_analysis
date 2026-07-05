@@ -89,7 +89,7 @@ class AlphaVantageFetcher(BaseFetcher):
 
         df = pd.DataFrame(rows)
         df.index = pd.to_datetime(df['date'])
-        df.index.name = None  # 避免与 _normalize_data 重新添加的 'date' 列冲突
+        df.index.name = None  # \u907f\u514d\u4e0e _normalize_data \u91cd\u65b0\u6dfb\u52a0\u7684 'date' \u5217\u51b2\u7a81
         return df.drop(columns=['date'])
 
     def _normalize_data(self, df: pd.DataFrame, stock_code: str) -> pd.DataFrame:

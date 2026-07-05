@@ -55,27 +55,27 @@ def detect_market(stock_code: Optional[str]) -> str:
 
 _MARKET_ROLES = {
     "cn": {
-        "zh": " A 股",
+        "zh": " A \u80a1",
         "en": "China A-shares",
     },
     "hk": {
-        "zh": "港股",
+        "zh": "HK stock",
         "en": "Hong Kong stock",
     },
     "us": {
-        "zh": "美股",
+        "zh": "US stock",
         "en": "US stock",
     },
     "jp": {
-        "zh": "日股",
+        "zh": "JP stock",
         "en": "Japan stock",
     },
     "kr": {
-        "zh": "韩股",
+        "zh": "KR stock",
         "en": "Korea stock",
     },
     "tw": {
-        "zh": "台股",
+        "zh": "TW stock",
         "en": "Taiwan stock",
     },
 }
@@ -83,8 +83,8 @@ _MARKET_ROLES = {
 _MARKET_GUIDELINES = {
     "cn": {
         "zh": (
-            "- 本次分析对象为 **A 股**（中国沪深交易所上市股票）。\n"
-            "- 请关注 A 股特有的涨跌停机制（±10%/±20%/±30%）、T+1 交易制度及相关政策因素。"
+            "- this runanalyze\u5bf9\u8c61\u4e3a **A \u80a1** (Medium\u56fd\u6caa\u6df1\u4ea4\u6613\u6240\u4e0a\u5e02\u80a1\u7968).\n"
+            "- \u8bf7\u5173\u6ce8 A \u80a1\u7279\u6709\u7684change\u505c\u673a\u5236 (±10%/±20%/±30%)、T+1 \u4ea4\u6613\u5236\u5ea6\u53ca\u76f8\u5173\u653f\u7b56\u56e0\u7d20."
         ),
         "en": (
             "- This analysis covers a **China A-share** (listed on Shanghai/Shenzhen exchanges).\n"
@@ -93,8 +93,8 @@ _MARKET_GUIDELINES = {
     },
     "hk": {
         "zh": (
-            "- 本次分析对象为 **港股**（香港交易所上市股票）。\n"
-            "- 港股无涨跌停限制，支持 T+0 交易，需关注港币汇率、南北向资金流及联交所特有规则。"
+            "- this runanalyze\u5bf9\u8c61\u4e3a **HK stock** (\u9999\u6e2f\u4ea4\u6613\u6240\u4e0a\u5e02\u80a1\u7968).\n"
+            "- HK stock\u65e0change\u505climit; \u652f\u6301 T+0 \u4ea4\u6613; \u9700\u5173\u6ce8\u6e2f\u5e01\u6c47\u7387、\u5357\u5317\u5411\u8d44\u91d1\u6d41\u53ca\u8054\u4ea4\u6240\u7279\u6709\u89c4\u5219."
         ),
         "en": (
             "- This analysis covers a **Hong Kong stock** (listed on HKEX).\n"
@@ -103,8 +103,8 @@ _MARKET_GUIDELINES = {
     },
     "us": {
         "zh": (
-            "- 本次分析对象为 **美股**（美国交易所上市股票）。\n"
-            "- 美股无涨跌停限制（但有熔断机制），支持 T+0 交易和盘前盘后交易，需关注美元汇率、美联储政策及 SEC 监管动态。"
+            "- this runanalyze\u5bf9\u8c61\u4e3a **US stock** (\u7f8e\u56fd\u4ea4\u6613\u6240\u4e0a\u5e02\u80a1\u7968).\n"
+            "- US stock\u65e0change\u505climit (\u4f46\u6709\u7194\u65ad\u673a\u5236); \u652f\u6301 T+0 \u4ea4\u6613\u548c\u76d8\u524d\u76d8\u540e\u4ea4\u6613; \u9700\u5173\u6ce8\u7f8e\u5143\u6c47\u7387、\u7f8e\u8054\u50a8\u653f\u7b56\u53ca SEC \u76d1\u7ba1\u52a8\u6001."
         ),
         "en": (
             "- This analysis covers a **US stock** (listed on NYSE/NASDAQ).\n"
@@ -113,8 +113,8 @@ _MARKET_GUIDELINES = {
     },
     "jp": {
         "zh": (
-            "- 本次分析对象为 **日股**（日本交易所上市股票，Yahoo Finance suffix 如 `.T`）。\n"
-            "- 请按日本市场语境分析，关注日元汇率、日本央行政策、公司治理与行业周期；不要套用 A 股涨跌停、北向资金、龙虎榜、融资融券等 A 股专属概念。"
+            "- this runanalyze\u5bf9\u8c61\u4e3a **JP stock** (\u65e5\u672c\u4ea4\u6613\u6240\u4e0a\u5e02\u80a1\u7968; Yahoo Finance suffix \u5982 `.T`).\n"
+            "- \u8bf7\u6309\u65e5\u672cmarket\u8bed\u5883analyze; \u5173\u6ce8\u65e5\u5143\u6c47\u7387、\u65e5\u672c\u592e\u884c\u653f\u7b56、\u516c\u53f8\u6cbb\u7406\u4e0eindustry\u5468\u671f；\u4e0d\u8981\u5957\u7528 A \u80a1change\u505c、\u5317\u5411\u8d44\u91d1、\u9f99\u864e\u699c、\u878d\u8d44\u878d\u5238\u7b49 A \u80a1\u4e13\u5c5econcept."
         ),
         "en": (
             "- This analysis covers a **Japan stock** (Yahoo Finance suffix such as `.T`).\n"
@@ -123,8 +123,8 @@ _MARKET_GUIDELINES = {
     },
     "kr": {
         "zh": (
-            "- 本次分析对象为 **韩股**（韩国交易所/KOSDAQ 上市股票，必须带 `.KS` / `.KQ` 后缀）。\n"
-            "- 请按韩国市场语境分析，关注韩元汇率、韩国央行政策、半导体/互联网产业周期与韩国交易制度；不要套用 A 股涨跌停、北向资金、龙虎榜、融资融券等 A 股专属概念。"
+            "- this runanalyze\u5bf9\u8c61\u4e3a **KR stock** (\u97e9\u56fd\u4ea4\u6613\u6240/KOSDAQ \u4e0a\u5e02\u80a1\u7968; \u5fc5\u987b\u5e26 `.KS` / `.KQ` \u540e\u7f00).\n"
+            "- \u8bf7\u6309\u97e9\u56fdmarket\u8bed\u5883analyze; \u5173\u6ce8\u97e9\u5143\u6c47\u7387、\u97e9\u56fd\u592e\u884c\u653f\u7b56、\u534a\u5bfc\u4f53/\u4e92\u8054\u7f51\u4ea7\u4e1a\u5468\u671f\u4e0e\u97e9\u56fd\u4ea4\u6613\u5236\u5ea6；\u4e0d\u8981\u5957\u7528 A \u80a1change\u505c、\u5317\u5411\u8d44\u91d1、\u9f99\u864e\u699c、\u878d\u8d44\u878d\u5238\u7b49 A \u80a1\u4e13\u5c5econcept."
         ),
         "en": (
             "- This analysis covers a **Korea stock** (KOSPI/KOSDAQ suffix `.KS` / `.KQ`).\n"
@@ -133,10 +133,10 @@ _MARKET_GUIDELINES = {
     },
     "tw": {
         "zh": (
-            "- 本次分析对象为 **台股**（台湾证券交易所上市 `.TW`，或台湾柜买中心上柜 `.TWO`）。\n"
-            "- 请按台湾市场语境分析，关注新台币（TWD）汇率、台湾央行政策、半导体/电子代工产业链、"
-            "三大法人（外资／投信／自营商）买卖超、融资融券与当冲，以及 TWSE/TPEx ±10% 涨跌停制度；"
-            "不要套用 A 股专属的北向资金、龙虎榜等概念（台股的法人结构与资金流口径与 A 股不同）。"
+            "- this runanalyze\u5bf9\u8c61\u4e3a **TW stock** (\u53f0\u6e7e\u8bc1\u5238\u4ea4\u6613\u6240\u4e0a\u5e02 `.TW`; or\u53f0\u6e7e\u67dc\u4e70Medium\u5fc3\u4e0a\u67dc `.TWO`).\n"
+            "- \u8bf7\u6309\u53f0\u6e7emarket\u8bed\u5883analyze; \u5173\u6ce8\u65b0\u53f0\u5e01 (TWD)\u6c47\u7387、\u53f0\u6e7e\u592e\u884c\u653f\u7b56、\u534a\u5bfc\u4f53/\u7535\u5b50\u4ee3\u5de5\u4ea7\u4e1a\u94fe、"
+            "\u4e09\u5927\u6cd5\u4eba (\u5916\u8d44／\u6295\u4fe1／\u81ea\u8425\u5546)\u4e70\u5356\u8d85、\u878d\u8d44\u878d\u5238\u4e0e\u5f53\u51b2; \u4ee5\u53ca TWSE/TPEx ±10% change\u505c\u5236\u5ea6；"
+            "\u4e0d\u8981\u5957\u7528 A \u80a1\u4e13\u5c5e\u7684\u5317\u5411\u8d44\u91d1、\u9f99\u864e\u699c\u7b49concept (TW stock\u7684\u6cd5\u4eba\u7ed3\u6784\u4e0e\u8d44\u91d1\u6d41\u53e3\u5f84\u4e0e A \u80a1\u4e0d\u540c)."
         ),
         "en": (
             "- This analysis covers a **Taiwan stock** (TWSE-listed `.TW`, or TPEx/OTC `.TWO`).\n"
@@ -157,7 +157,7 @@ def get_market_role(stock_code: Optional[str], lang: str = "zh") -> str:
         lang: 'zh' or 'en'.
 
     Returns:
-        Role string like 'A 股投资分析' or 'US stock investment analysis'.
+        Role string like 'A \u80a1\u6295\u8d44analyze' or 'US stock investment analysis'.
     """
     market = detect_market(stock_code)
     lang_key = "en" if lang in ("en", "ko") else "zh"

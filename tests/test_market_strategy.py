@@ -16,9 +16,9 @@ class TestMarketStrategyBlueprint(unittest.TestCase):
         blueprint = get_market_strategy_blueprint("cn")
         block = blueprint.to_prompt_block()
 
-        self.assertIn("A股市场三段式复盘策略", block)
+        self.assertIn("A\u80a1\u5e02\u573a\u4e09\u6bb5\u5f0f\u590d\u76d8\u7b56\u7565", block)
         self.assertIn("Action Framework", block)
-        self.assertIn("进攻", block)
+        self.assertIn("\u8fdb\u653b", block)
 
     def test_us_blueprint_contains_regime_strategy(self):
         blueprint = get_market_strategy_blueprint("us")
@@ -36,8 +36,8 @@ class TestMarketAnalyzerStrategyPrompt(unittest.TestCase):
         analyzer = MarketAnalyzer(region="cn")
         prompt = analyzer._build_review_prompt(MarketOverview(date="2026-02-24"), [])
 
-        self.assertIn("明日交易计划", prompt)
-        self.assertIn("A股市场三段式复盘策略", prompt)
+        self.assertIn("\u660e\u65e5\u4ea4\u6613\u8ba1\u5212", prompt)
+        self.assertIn("A\u80a1\u5e02\u573a\u4e09\u6bb5\u5f0f\u590d\u76d8\u7b56\u7565", prompt)
 
     def test_us_prompt_contains_strategy_plan_section(self):
         with patch("src.market_analyzer.get_config", return_value=SimpleNamespace(report_language="en")):
@@ -76,15 +76,15 @@ class TestMarketAnalyzerStrategyPrompt(unittest.TestCase):
 
         prompt = analyzer._build_review_prompt(MarketOverview(date="2026-02-24"), [])
 
-        self.assertIn("美股市场", prompt)
+        self.assertIn("\u7f8e\u80a1\u5e02\u573a", prompt)
         self.assertNotIn("US Market Regime Strategy", prompt)
         self.assertNotIn("Strategy Blueprint", prompt)
-        self.assertIn("风险偏好", prompt)
+        self.assertIn("\u98ce\u9669\u504f\u597d", prompt)
 
     def test_jp_kr_prompt_uses_region_aware_chinese_shell(self):
         cases = [
-            ("jp", "日本市场", "日本市场三段式复盘策略"),
-            ("kr", "韩国市场", "韩国市场三段式复盘策略"),
+            ("jp", "\u65e5\u672c\u5e02\u573a", "\u65e5\u672c\u5e02\u573a\u4e09\u6bb5\u5f0f\u590d\u76d8\u7b56\u7565"),
+            ("kr", "\u97e9\u56fd\u5e02\u573a", "\u97e9\u56fd\u5e02\u573a\u4e09\u6bb5\u5f0f\u590d\u76d8\u7b56\u7565"),
         ]
 
         for region, market_scope_name, strategy_title in cases:
@@ -95,16 +95,16 @@ class TestMarketAnalyzerStrategyPrompt(unittest.TestCase):
                 analyzer = MarketAnalyzer(region=region)
                 prompt = analyzer._build_review_prompt(MarketOverview(date="2026-02-24"), [])
 
-            self.assertIn(f"专业的{market_scope_name}分析师", prompt)
-            self.assertIn(f"结构化的{market_scope_name}大盘复盘报告", prompt)
-            self.assertIn(f"## 2026-02-24 {market_scope_name}大盘复盘", prompt)
-            self.assertIn("## 数据边界", prompt)
-            self.assertIn("### 三、消息催化", prompt)
+            self.assertIn(f"\u4e13\u4e1a\u7684{market_scope_name}\u5206\u6790\u5e08", prompt)
+            self.assertIn(f"\u7ed3\u6784\u5316\u7684{market_scope_name}\u5927\u76d8\u590d\u76d8\u62a5\u544a", prompt)
+            self.assertIn(f"## 2026-02-24 {market_scope_name}\u5927\u76d8\u590d\u76d8", prompt)
+            self.assertIn("## \u6570\u636e\u8fb9\u754c", prompt)
+            self.assertIn("### \u4e09、\u6d88\u606f\u50ac\u5316", prompt)
             self.assertIn(strategy_title, prompt)
-            self.assertNotIn("### 三、板块主线", prompt)
-            self.assertNotIn("### 四、资金与情绪", prompt)
-            self.assertNotIn("解读成交额、涨跌停结构、市场宽度", prompt)
-            self.assertNotIn("A/H/美股市场分析师", prompt)
+            self.assertNotIn("### \u4e09、\u677f\u5757\u4e3b\u7ebf", prompt)
+            self.assertNotIn("### \u56db、\u8d44\u91d1\u4e0e\u60c5\u7eea", prompt)
+            self.assertNotIn("\u89e3\u8bfb\u6210\u4ea4\u989d、\u6da8\u8dcc\u505c\u7ed3\u6784、\u5e02\u573a\u5bbd\u5ea6", prompt)
+            self.assertNotIn("A/H/\u7f8e\u80a1\u5e02\u573a\u5206\u6790\u5e08", prompt)
 
     def test_cn_prompt_uses_english_shell_when_report_language_is_en(self):
         with patch("src.market_analyzer.get_config", return_value=SimpleNamespace(report_language="en")):
@@ -115,13 +115,13 @@ class TestMarketAnalyzerStrategyPrompt(unittest.TestCase):
         self.assertIn("# Today's Market Data", prompt)
         self.assertIn("### 1. Market Summary", prompt)
         self.assertIn("A-share Three-Phase Recap Strategy", prompt)
-        self.assertNotIn("### 一、市场总结", prompt)
-        self.assertNotIn("A股市场三段式复盘策略", prompt)
+        self.assertNotIn("### \u4e00、\u5e02\u573a\u603b\u7ed3", prompt)
+        self.assertNotIn("A\u80a1\u5e02\u573a\u4e09\u6bb5\u5f0f\u590d\u76d8\u7b56\u7565", prompt)
 
     def test_jp_kr_strategy_blocks_are_localized_when_report_language_is_en(self):
         cases = [
-            ("jp", "Japan Market Regime Strategy", "Macro & FX", "日本市场三段式复盘策略"),
-            ("kr", "Korea Market Regime Strategy", "Technology Cycle", "韩国市场三段式复盘策略"),
+            ("jp", "Japan Market Regime Strategy", "Macro & FX", "\u65e5\u672c\u5e02\u573a\u4e09\u6bb5\u5f0f\u590d\u76d8\u7b56\u7565"),
+            ("kr", "Korea Market Regime Strategy", "Technology Cycle", "\u97e9\u56fd\u5e02\u573a\u4e09\u6bb5\u5f0f\u590d\u76d8\u7b56\u7565"),
         ]
 
         for region, title, dimension, chinese_title in cases:
@@ -138,15 +138,15 @@ class TestMarketAnalyzerStrategyPrompt(unittest.TestCase):
                 self.assertIn(title, prompt_block)
                 self.assertIn(dimension, prompt_block)
                 self.assertNotIn(chinese_title, prompt_block)
-                self.assertNotIn("只基于可得指数", prompt_block)
+                self.assertNotIn("\u53ea\u57fa\u4e8e\u53ef\u5f97\u6307\u6570", prompt_block)
                 self.assertIn("### 6. Strategy Framework", markdown_block)
                 self.assertIn(dimension, markdown_block)
-                self.assertNotIn("### 六、策略框架", markdown_block)
+                self.assertNotIn("### \u516d、\u7b56\u7565\u6846\u67b6", markdown_block)
 
     def test_jp_kr_review_prompt_roles_are_market_aware(self):
         cases = [
-            ("jp", "Japan market", "日本市场"),
-            ("kr", "Korea market", "韩国市场"),
+            ("jp", "Japan market", "\u65e5\u672c\u5e02\u573a"),
+            ("kr", "Korea market", "\u97e9\u56fd\u5e02\u573a"),
         ]
 
         for region, english_market, chinese_market in cases:
@@ -174,8 +174,8 @@ class TestMarketAnalyzerStrategyPrompt(unittest.TestCase):
 
                 prompt = analyzer._build_review_prompt(MarketOverview(date="2026-02-24"), [])
 
-                self.assertIn(f"你是一位专业的{chinese_market}分析师", prompt)
-                self.assertNotIn("A/H/美股市场分析师", prompt)
+                self.assertIn(f"\u4f60\u662f\u4e00\u4f4d\u4e13\u4e1a\u7684{chinese_market}\u5206\u6790\u5e08", prompt)
+                self.assertNotIn("A/H/\u7f8e\u80a1\u5e02\u573a\u5206\u6790\u5e08", prompt)
 
     def test_market_stats_passes_market_review_purpose(self):
         analyzer = MarketAnalyzer.__new__(MarketAnalyzer)

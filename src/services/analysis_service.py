@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 """
 ===================================
-分析服务层
+analyze\u670d\u52a1\u5c42
 ===================================
 
-职责：
-1. 封装股票分析逻辑
-2. 调用 analyzer 和 pipeline 执行分析
-3. 保存分析结果到数据库
+\u804c\u8d23:
+1. \u5c01\u88c5\u80a1\u7968analyze\u903b\u8f91
+2. \u8c03\u7528 analyzer \u548c pipeline \u6267\u884canalyze
+3. \u4fdd\u5b58analysis result\u5230\u6570\u636elibrary
 """
 
 import logging
@@ -37,16 +37,16 @@ logger = logging.getLogger(__name__)
 
 class AnalysisService:
     """
-    分析服务
-    
-    封装股票分析相关的业务逻辑
+    analyze\u670d\u52a1
+
+    \u5c01\u88c5\u80a1\u7968analyze\u76f8\u5173\u7684\u4e1a\u52a1\u903b\u8f91
     """
-    
+
     def __init__(self):
-        """初始化分析服务"""
+        """\u521d\u59cb\u5316analyze\u670d\u52a1"""
         self.repo = AnalysisRepository()
         self.last_error: Optional[str] = None
-    
+
     def analyze_stock(
         self,
         stock_code: str,
@@ -63,30 +63,30 @@ class AnalysisService:
         report_language: Optional[str] = None,
     ) -> Optional[Dict[str, Any]]:
         """
-        执行股票分析
-        
+        \u6267\u884c\u80a1\u7968analyze
+
         Args:
-            stock_code: 股票代码
-            report_type: 报告类型 (simple/detailed)
-            force_refresh: 是否强制刷新
-            query_id: 查询 ID（可选）
-            send_notification: 是否发送通知（API 触发默认发送）
-            analysis_phase: 请求的分析阶段覆盖（auto/premarket/intraday/postmarket）
-            
+            stock_code: stock code
+            report_type: report type (simple/detailed)
+            force_refresh: \u662f\u5426\u5f3a\u5236\u5237\u65b0
+            query_id: query ID (optional)
+            send_notification: \u662f\u5426send notification (API \u89e6\u53d1default\u53d1\u9001)
+            analysis_phase: request\u7684analyze\u9636\u6bb5\u8986\u76d6 (auto/premarket/intraday/postmarket)
+
         Returns:
-            分析结果字典，包含:
-            - stock_code: 股票代码
-            - stock_name: 股票名称
-            - report: 分析报告
+            analysis result\u5b57\u5178; \u5305\u542b:
+            - stock_code: stock code
+            - stock_name: stock name
+            - report: analyzereport
         """
         try:
             self.last_error = None
-            # 导入分析相关模块
+            # \u5bfc\u5165analyze\u76f8\u5173\u6a21chunks
             from src.config import get_config
             from src.core.pipeline import StockAnalysisPipeline
             from src.enums import ReportType
-            
-            # 生成 query_id
+
+            # \u751f\u6210 query_id
             if query_id is None:
                 query_id = uuid.uuid4().hex
             effective_trace_id = trace_id or query_id
@@ -98,15 +98,15 @@ class AnalysisService:
                     stock_code=stock_code,
                     trigger_source=query_source or "api",
                 )
-            
-            # 获取配置
+
+            # \u83b7\u53d6config
             config = get_config()
             normalized_report_language = normalize_report_language(report_language, default="")
             if normalized_report_language:
                 config = copy.copy(config)
                 config.report_language = normalized_report_language
-            
-            # 创建分析流水线
+
+            # \u521b\u5efaanalyze\u6d41\u6c34\u7ebf
             pipeline = StockAnalysisPipeline(
                 config=config,
                 query_id=query_id,
@@ -117,61 +117,61 @@ class AnalysisService:
                 analysis_phase=analysis_phase,
                 portfolio_context=portfolio_context,
             )
-            
-            # 确定报告类型 (API: simple/detailed/full/brief -> ReportType)
+
+            # \u786e\u5b9areport type (API: simple/detailed/full/brief -> ReportType)
             rt = ReportType.from_str(report_type)
-            
-            # 执行分析
+
+            # \u6267\u884canalyze
             result = pipeline.process_single_stock(
                 code=stock_code,
                 skip_analysis=False,
                 single_stock_notify=send_notification,
                 report_type=rt,
             )
-            
+
             if result is None:
-                logger.warning(f"分析股票 {stock_code} 返回空结果")
-                self.last_error = self.last_error or f"分析股票 {stock_code} 返回空结果"
+                logger.warning(f"analyze stock {stock_code} returned empty result")
+                self.last_error = self.last_error or f"analyze stock {stock_code} returned empty result"
                 return None
 
             if not getattr(result, "success", True):
-                self.last_error = getattr(result, "error_message", None) or f"分析股票 {stock_code} 失败"
-                logger.warning(f"分析股票 {stock_code} 未成功完成: {self.last_error}")
+                self.last_error = getattr(result, "error_message", None) or f"analyze stock {stock_code} failed"
+                logger.warning(f"analyze stock {stock_code} \u672asuccess\u5b8c\u6210: {self.last_error}")
                 return None
-            
-            # 构建响应
+
+            # \u6784\u5efa\u54cd\u5e94
             return self._build_analysis_response(result, query_id, report_type=rt.value)
-            
+
         except Exception as e:
             self.last_error = str(e)
-            logger.error(f"分析股票 {stock_code} 失败: {e}", exc_info=True)
+            logger.error(f"analyze stock {stock_code} failed: {e}", exc_info=True)
             return None
         finally:
             reset_run_diagnostic_context(locals().get("diag_token"))
-    
+
     def _build_analysis_response(
-        self, 
-        result: Any, 
+        self,
+        result: Any,
         query_id: str,
         report_type: str = "detailed",
     ) -> Dict[str, Any]:
         """
-        构建分析响应
-        
+        \u6784\u5efaanalyze\u54cd\u5e94
+
         Args:
-            result: AnalysisResult 对象
-            query_id: 查询 ID
-            report_type: 归一化后的报告类型
-            
+            result: AnalysisResult \u5bf9\u8c61
+            query_id: query ID
+            report_type: \u5f52\u4e00\u5316\u540e\u7684report type
+
         Returns:
-            格式化的响应字典
+            \u683c\u5f0f\u5316\u7684\u54cd\u5e94\u5b57\u5178
         """
-        # 获取狙击点位
+        # \u83b7\u53d6\u72d9\u51fb\u70b9characters
         sniper_points = {}
         if hasattr(result, 'get_sniper_points'):
             sniper_points = result.get_sniper_points() or {}
-        
-        # 计算情绪标签
+
+        # \u8ba1\u7b97\u60c5\u7eea\u6807\u7b7e
         report_language = normalize_report_language(getattr(result, "report_language", "zh"))
         sentiment_label = get_sentiment_label(result.sentiment_score, report_language)
         stock_name = get_localized_stock_name(getattr(result, "name", None), result.code, report_language)
@@ -204,8 +204,8 @@ class AnalysisService:
             query_id=query_id,
             stock_code=result.code,
         )
-        
-        # 构建报告结构
+
+        # \u6784\u5efareport\u7ed3\u6784
         report = {
             "meta": {
                 "query_id": query_id,
@@ -241,7 +241,7 @@ class AnalysisService:
                 "risk_warning": result.risk_warning,
             }
         }
-        
+
         return {
             "query_id": query_id,
             "trace_id": trace_id,

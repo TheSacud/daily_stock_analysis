@@ -124,8 +124,8 @@ class TestFundamentalContext(unittest.TestCase):
                 },
             },
             "belong_boards": [
-                {"name": "Technology", "type": "行业"},
-                {"name": "Consumer Electronics", "type": "概念"},
+                {"name": "Technology", "type": "\u884c\u4e1a"},
+                {"name": "Consumer Electronics", "type": "\u6982\u5ff5"},
             ],
             "source_chain": ["growth:yfinance.info"],
             "errors": [],
@@ -155,8 +155,8 @@ class TestFundamentalContext(unittest.TestCase):
         self.assertEqual(dividend.get("ttm_cash_dividend_per_share"), 1.05)
         self.assertEqual(dividend.get("ttm_dividend_yield_pct"), 0.36)
         self.assertEqual(ctx.get("belong_boards"), [
-            {"name": "Technology", "type": "行业"},
-            {"name": "Consumer Electronics", "type": "概念"},
+            {"name": "Technology", "type": "\u884c\u4e1a"},
+            {"name": "Consumer Electronics", "type": "\u6982\u5ff5"},
         ])
 
     def test_etf_market_downgrades_to_partial_or_not_supported(self) -> None:
@@ -206,17 +206,17 @@ class TestFundamentalContext(unittest.TestCase):
         tushare = _DummyFetcher(
             "TushareFetcher",
             priority=1,
-            rankings=([{"name": "半导体", "change_pct": 1.0}], [{"name": "消费", "change_pct": -1.0}]),
+            rankings=([{"name": "\u534a\u5bfc\u4f53", "change_pct": 1.0}], [{"name": "\u6d88\u8d39", "change_pct": -1.0}]),
         )
         efinance = _DummyFetcher(
             "EfinanceFetcher",
             priority=0,
-            rankings=([{"name": "地产", "change_pct": 2.0}], [{"name": "煤炭", "change_pct": -2.0}]),
+            rankings=([{"name": "\u5730\u4ea7", "change_pct": 2.0}], [{"name": "\u7164\u70ad", "change_pct": -2.0}]),
         )
         manager = DataFetcherManager(fetchers=[efinance, tushare, akshare])
         top, bottom = manager.get_sector_rankings(1)
-        self.assertEqual(top[0]["name"], "地产")
-        self.assertEqual(bottom[0]["name"], "煤炭")
+        self.assertEqual(top[0]["name"], "\u5730\u4ea7")
+        self.assertEqual(bottom[0]["name"], "\u7164\u70ad")
 
     def test_fundamental_context_aggregates_blocks(self) -> None:
         manager = DataFetcherManager(fetchers=[])
@@ -238,7 +238,7 @@ class TestFundamentalContext(unittest.TestCase):
                 patch.object(manager, "get_realtime_quote", return_value=quote), \
                 patch("data_provider.fundamental_adapter.AkshareFundamentalAdapter.get_fundamental_bundle", return_value={
                     "growth": {"revenue_yoy": 10.1, "net_profit_yoy": 8.5},
-                    "earnings": {"forecast_summary": "预增"},
+                    "earnings": {"forecast_summary": "\u9884\u589e"},
                     "institution": {"institution_holding_change": 1.2},
                     "source_chain": ["growth:akshare"],
                     "errors": [],
@@ -520,21 +520,21 @@ class TestFundamentalContext(unittest.TestCase):
         fetcher = _DummyBoardFetcher(
             "EfinanceFetcher",
             priority=0,
-            boards=[{"name": "白酒"}, {"board_name": "消费"}],
+            boards=[{"name": "\u767d\u9152"}, {"board_name": "\u6d88\u8d39"}],
         )
         manager = DataFetcherManager(fetchers=[fetcher])
         boards = manager.get_belong_boards("600519")
         self.assertEqual(len(boards), 2)
-        self.assertEqual(boards[0]["name"], "白酒")
-        self.assertEqual(boards[1]["name"], "消费")
+        self.assertEqual(boards[0]["name"], "\u767d\u9152")
+        self.assertEqual(boards[1]["name"], "\u6d88\u8d39")
 
     def test_get_belong_boards_preserves_cn_code_and_type_fields(self) -> None:
         fetcher = _DummyBoardFetcher(
             "EfinanceFetcher",
             priority=0,
             boards=[
-                {"板块名称": "白酒", "板块代码": "BK0815", "板块类型": "行业"},
-                {"板块": "消费", "代码": "BK0475", "类别": "概念"},
+                {"\u677f\u5757\u540d\u79f0": "\u767d\u9152", "\u677f\u5757\u4ee3\u7801": "BK0815", "\u677f\u5757\u7c7b\u578b": "\u884c\u4e1a"},
+                {"\u677f\u5757": "\u6d88\u8d39", "\u4ee3\u7801": "BK0475", "\u7c7b\u522b": "\u6982\u5ff5"},
             ],
         )
         manager = DataFetcherManager(fetchers=[fetcher])
@@ -542,11 +542,11 @@ class TestFundamentalContext(unittest.TestCase):
         self.assertEqual(len(boards), 2)
         self.assertEqual(
             boards[0],
-            {"name": "白酒", "code": "BK0815", "type": "行业"},
+            {"name": "\u767d\u9152", "code": "BK0815", "type": "\u884c\u4e1a"},
         )
         self.assertEqual(
             boards[1],
-            {"name": "消费", "code": "BK0475", "type": "概念"},
+            {"name": "\u6d88\u8d39", "code": "BK0475", "type": "\u6982\u5ff5"},
         )
 
     def test_get_belong_boards_supports_extended_name_aliases_in_dict_payload(self) -> None:
@@ -554,10 +554,10 @@ class TestFundamentalContext(unittest.TestCase):
             "EfinanceFetcher",
             priority=0,
             boards=[
-                {"所属板块": "新能源"},
-                {"板块名": "半导体"},
-                {"industry": "医药"},
-                {"行业": "算力"},
+                {"\u6240\u5c5e\u677f\u5757": "\u65b0\u80fd\u6e90"},
+                {"\u677f\u5757\u540d": "\u534a\u5bfc\u4f53"},
+                {"industry": "\u533b\u836f"},
+                {"\u884c\u4e1a": "\u7b97\u529b"},
             ],
         )
         manager = DataFetcherManager(fetchers=[fetcher])
@@ -565,19 +565,19 @@ class TestFundamentalContext(unittest.TestCase):
         self.assertEqual(
             boards,
             [
-                {"name": "新能源"},
-                {"name": "半导体"},
-                {"name": "医药"},
-                {"name": "算力"},
+                {"name": "\u65b0\u80fd\u6e90"},
+                {"name": "\u534a\u5bfc\u4f53"},
+                {"name": "\u533b\u836f"},
+                {"name": "\u7b97\u529b"},
             ],
         )
 
     def test_missing_value_helpers_keep_common_null_compatibility(self) -> None:
         for value in (None, np.nan, "", "  ", "null", "NaN", " n/a "):
             self.assertTrue(DataFetcherManager._is_missing_board_value(value))
-        self.assertFalse(DataFetcherManager._is_missing_board_value("白酒"))
+        self.assertFalse(DataFetcherManager._is_missing_board_value("\u767d\u9152"))
         self.assertFalse(DataFetcherManager._has_meaningful_payload(np.array([None, np.nan])))
-        self.assertTrue(DataFetcherManager._has_meaningful_payload(np.array([None, "白酒"])))
+        self.assertTrue(DataFetcherManager._has_meaningful_payload(np.array([None, "\u767d\u9152"])))
 
     def test_missing_value_helpers_log_expected_pd_isna_fallback(self) -> None:
         sentinel = object()

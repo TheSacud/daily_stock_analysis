@@ -189,14 +189,14 @@ CHANNEL_SPECS: Tuple[NotificationChannelSpec, ...] = (
     ),
     NotificationChannelSpec(
         channel="dingtalk_context",
-        display_name="钉钉会话",
+        display_name="DingTalkconversation",
         kind="context",
         minimal_keys=(),
         note="Runtime-only reply channel extracted from source message context.",
     ),
     NotificationChannelSpec(
         channel="feishu_context",
-        display_name="飞书会话",
+        display_name="Feishuconversation",
         kind="context",
         minimal_keys=(),
         note="Runtime-only reply channel extracted from source message context.",
@@ -296,7 +296,7 @@ def _require_pair(
             _issue(
                 severity,
                 "partial_channel_config",
-                f"{channel_name} 已配置 {left_key}，但缺少 {right_key}，该渠道不会启用。",
+                f"{channel_name} \u5df2config {left_key}; \u4f46\u7f3a\u5c11 {right_key}; \u8be5\u6e20\u9053\u4e0d\u4f1a\u542f\u7528.",
                 key=right_key,
             )
         )
@@ -305,7 +305,7 @@ def _require_pair(
             _issue(
                 severity,
                 "partial_channel_config",
-                f"{channel_name} 已配置 {right_key}，但缺少 {left_key}，该渠道不会启用。",
+                f"{channel_name} \u5df2config {right_key}; \u4f46\u7f3a\u5c11 {left_key}; \u8be5\u6e20\u9053\u4e0d\u4f1a\u542f\u7528.",
                 key=left_key,
             )
         )
@@ -321,12 +321,12 @@ def run_notification_diagnostics(config: Config) -> NotificationDiagnosticResult
         _issue(
             "info",
             "context_channels_runtime_only",
-            "钉钉会话和飞书会话属于运行时消息上下文渠道，无法仅靠静态 .env 完整判断。",
+            "DingTalkconversation\u548cFeishuconversation\u5c5e\u4e8e\u8fd0\u884c\u65f6\u6d88\u606f\u4e0a\u4e0b\u6587\u6e20\u9053; \u65e0\u6cd5\u4ec5\u9760\u9759\u6001 .env \u5b8c\u6574\u5224\u65ad.",
         ),
         _issue(
             "info",
             "phase_scope",
-            "通知诊断会检查渠道基线、只读诊断、Web 测试、P3 路由配置、P4 降噪配置和 P6 ntfy/Gotify 渠道。",
+            "\u901a\u77e5\u8bca\u65ad\u4f1a\u68c0check\u6e20\u9053\u57fa\u7ebf、\u53ea\u8bfb\u8bca\u65ad、Web \u6d4b\u8bd5、P3 \u8def\u7531config、P4 \u964d\u566aconfig\u548c P6 ntfy/Gotify \u6e20\u9053.",
         ),
     ]
 
@@ -335,7 +335,7 @@ def run_notification_diagnostics(config: Config) -> NotificationDiagnosticResult
             _issue(
                 "error",
                 "no_channels_configured",
-                "0 个通知渠道已配置；如需发送通知，请至少配置一个渠道的 minimal key。",
+                "0 \u4e2anotification channel\u5df2config；\u5982\u9700send notification; \u8bf7\u81f3\u5c11config\u4e00\u4e2a\u6e20\u9053\u7684 minimal key.",
             )
         )
 
@@ -346,7 +346,7 @@ def run_notification_diagnostics(config: Config) -> NotificationDiagnosticResult
                 _issue(
                     "error",
                     "invalid_ntfy_url",
-                    "NTFY_URL 必须包含 topic path，例如 https://ntfy.sh/my-topic。",
+                    "NTFY_URL \u5fc5\u987b\u5305\u542b topic path; \u4f8b\u5982 https://ntfy.sh/my-topic.",
                     key="NTFY_URL",
                 )
             )
@@ -358,7 +358,7 @@ def run_notification_diagnostics(config: Config) -> NotificationDiagnosticResult
                 _issue(
                     "error",
                     "invalid_gotify_url",
-                    "GOTIFY_URL 必须是 Gotify server base URL，不包含 /message，例如 https://gotify.example。",
+                    "GOTIFY_URL \u5fc5\u987b\u662f Gotify server base URL; \u4e0d\u5305\u542b /message; \u4f8b\u5982 https://gotify.example.",
                     key="GOTIFY_URL",
                 )
             )
@@ -378,7 +378,7 @@ def run_notification_diagnostics(config: Config) -> NotificationDiagnosticResult
         right_attr="email_password",
         left_key="EMAIL_SENDER",
         right_key="EMAIL_PASSWORD",
-        channel_name="邮件",
+        channel_name="Email",
         errors=errors,
     )
     _require_pair(
@@ -427,7 +427,7 @@ def run_notification_diagnostics(config: Config) -> NotificationDiagnosticResult
             _issue(
                 "warning",
                 "advanced_without_minimal",
-                "已配置飞书 Webhook 高级安全项，但缺少 FEISHU_WEBHOOK_URL，飞书 Webhook 渠道不会启用。",
+                "\u5df2configFeishu Webhook High\u7ea7\u5b89\u5168\u9879; \u4f46\u7f3a\u5c11 FEISHU_WEBHOOK_URL; Feishu Webhook \u6e20\u9053\u4e0d\u4f1a\u542f\u7528.",
                 key="FEISHU_WEBHOOK_URL",
             )
         )
@@ -436,7 +436,7 @@ def run_notification_diagnostics(config: Config) -> NotificationDiagnosticResult
             _issue(
                 "warning",
                 "advanced_without_minimal",
-                "已配置 PUSHPLUS_TOPIC，但缺少 PUSHPLUS_TOKEN，PushPlus 渠道不会启用。",
+                "\u5df2config PUSHPLUS_TOPIC; \u4f46\u7f3a\u5c11 PUSHPLUS_TOKEN; PushPlus \u6e20\u9053\u4e0d\u4f1a\u542f\u7528.",
                 key="PUSHPLUS_TOKEN",
             )
         )
@@ -445,7 +445,7 @@ def run_notification_diagnostics(config: Config) -> NotificationDiagnosticResult
             _issue(
                 "warning",
                 "advanced_without_minimal",
-                "已配置 NTFY_TOKEN，但缺少 NTFY_URL，ntfy 渠道不会启用。",
+                "\u5df2config NTFY_TOKEN; \u4f46\u7f3a\u5c11 NTFY_URL; ntfy \u6e20\u9053\u4e0d\u4f1a\u542f\u7528.",
                 key="NTFY_URL",
             )
         )
@@ -457,7 +457,7 @@ def run_notification_diagnostics(config: Config) -> NotificationDiagnosticResult
             _issue(
                 "warning",
                 "advanced_without_minimal",
-                "已配置自定义 Webhook 高级项，但缺少 CUSTOM_WEBHOOK_URLS，自定义 Webhook 渠道不会启用。",
+                "\u5df2config\u81ea\u5b9a\u4e49 Webhook High\u7ea7\u9879; \u4f46\u7f3a\u5c11 CUSTOM_WEBHOOK_URLS; \u81ea\u5b9a\u4e49 Webhook \u6e20\u9053\u4e0d\u4f1a\u542f\u7528.",
                 key="CUSTOM_WEBHOOK_URLS",
             )
         )
@@ -466,7 +466,7 @@ def run_notification_diagnostics(config: Config) -> NotificationDiagnosticResult
             _issue(
                 "warning",
                 "advanced_without_minimal",
-                "已配置 ASTRBOT_TOKEN，但缺少 ASTRBOT_URL，AstrBot 渠道不会启用。",
+                "\u5df2config ASTRBOT_TOKEN; \u4f46\u7f3a\u5c11 ASTRBOT_URL; AstrBot \u6e20\u9053\u4e0d\u4f1a\u542f\u7528.",
                 key="ASTRBOT_URL",
             )
         )
@@ -484,8 +484,8 @@ def run_notification_diagnostics(config: Config) -> NotificationDiagnosticResult
                     "error",
                     "invalid_route_channel",
                     (
-                        f"{route_config['env_key']} 包含未知通知渠道: {', '.join(invalid_channels)}；"
-                        f"允许值: {', '.join(ROUTABLE_NOTIFICATION_CHANNELS)}。"
+                        f"{route_config['env_key']} \u5305\u542bunknownnotification channel: {', '.join(invalid_channels)}；"
+                        f"\u5141\u8bb8\u503c: {', '.join(ROUTABLE_NOTIFICATION_CHANNELS)}."
                     ),
                     key=route_config["env_key"],
                 )
@@ -498,8 +498,8 @@ def run_notification_diagnostics(config: Config) -> NotificationDiagnosticResult
                     "warning",
                     "route_channel_not_configured",
                     (
-                        f"{route_config['env_key']} 路由 {route_type} 指向未启用渠道: "
-                        f"{', '.join(disabled_channels)}；这些渠道不会收到该类型通知。"
+                        f"{route_config['env_key']} \u8def\u7531 {route_type} \u6307\u5411\u672a\u542f\u7528\u6e20\u9053: "
+                        f"{', '.join(disabled_channels)}；\u8fd9\u4e9b\u6e20\u9053\u4e0d\u4f1areceived\u8be5\u7c7b\u578b\u901a\u77e5."
                     ),
                     key=route_config["env_key"],
                 )
@@ -513,7 +513,7 @@ def run_notification_diagnostics(config: Config) -> NotificationDiagnosticResult
                 _issue(
                     "error",
                     "invalid_quiet_hours",
-                    f"NOTIFICATION_QUIET_HOURS 配置无效: {exc}",
+                    f"NOTIFICATION_QUIET_HOURS config\u65e0\u6548: {exc}",
                     key="NOTIFICATION_QUIET_HOURS",
                 )
             )
@@ -526,7 +526,7 @@ def run_notification_diagnostics(config: Config) -> NotificationDiagnosticResult
                 _issue(
                     "error",
                     "invalid_notification_timezone",
-                    f"NOTIFICATION_TIMEZONE 配置无效: {exc}",
+                    f"NOTIFICATION_TIMEZONE config\u65e0\u6548: {exc}",
                     key="NOTIFICATION_TIMEZONE",
                 )
             )
@@ -538,8 +538,8 @@ def run_notification_diagnostics(config: Config) -> NotificationDiagnosticResult
                 "error",
                 "invalid_notification_min_severity",
                 (
-                    "NOTIFICATION_MIN_SEVERITY 配置无效；"
-                    f"允许值: {', '.join(NOTIFICATION_SEVERITIES)}。"
+                    "NOTIFICATION_MIN_SEVERITY config\u65e0\u6548；"
+                    f"\u5141\u8bb8\u503c: {', '.join(NOTIFICATION_SEVERITIES)}."
                 ),
                 key="NOTIFICATION_MIN_SEVERITY",
             )
@@ -551,8 +551,8 @@ def run_notification_diagnostics(config: Config) -> NotificationDiagnosticResult
                 "warning",
                 "reserved_daily_digest",
                 (
-                    "NOTIFICATION_DAILY_DIGEST_ENABLED 当前为预留配置；"
-                    "P4 不会发送每日摘要或持久化摘要内容。"
+                    "NOTIFICATION_DAILY_DIGEST_ENABLED \u5f53\u524d\u4e3a\u9884\u7559config；"
+                    "P4 \u4e0d\u4f1a\u53d1\u9001\u6bcf\u65e5summaryor\u6301\u4e45\u5316summary\u5185\u5bb9."
                 ),
                 key="NOTIFICATION_DAILY_DIGEST_ENABLED",
             )
@@ -568,7 +568,7 @@ def run_notification_diagnostics(config: Config) -> NotificationDiagnosticResult
 
 def _format_issues(title: str, issues: Sequence[NotificationDiagnosticIssue]) -> List[str]:
     if not issues:
-        return [f"{title}: 无"]
+        return [f"{title}: \u65e0"]
     lines = [f"{title}:"]
     for item in issues:
         key_suffix = f" [{item.key}]" if item.key else ""
@@ -580,17 +580,17 @@ def format_notification_diagnostics(result: NotificationDiagnosticResult) -> str
     """Format diagnostics for CLI output without exposing secret values."""
 
     lines = [
-        "通知配置诊断",
-        f"已配置渠道: {len(result.configured_channels)} 个",
+        "\u901a\u77e5config\u8bca\u65ad",
+        f"\u5df2config\u6e20\u9053: {len(result.configured_channels)} \u4e2a",
     ]
     if result.configured_channels:
         channel_names = [
             ChannelDetector.get_channel_name(NotificationChannel(channel))
             for channel in result.configured_channels
         ]
-        lines.append("渠道列表: " + ", ".join(channel_names))
+        lines.append("\u6e20\u9053\u5217\u8868: " + ", ".join(channel_names))
     else:
-        lines.append("渠道列表: (无)")
+        lines.append("\u6e20\u9053\u5217\u8868: (\u65e0)")
 
     lines.append("")
     lines.extend(_format_issues("Errors", result.errors))

@@ -1244,14 +1244,14 @@ class TestLegacyMessageStabilityAudit(unittest.TestCase):
             {
                 "role": "user",
                 "content": (
-                    "# 决策仪表盘分析请求\n\n"
-                    "## 📊 股票基础信息\n"
-                    "| 股票代码 | **600519** |\n"
-                    "| 股票名称 | **贵州茅台** |\n"
-                    "| 分析日期 | 2026-06-19 |\n\n"
-                    "## 📈 技术面数据\n"
-                    "收盘价 1500 元\n\n"
-                    "## 📰 舆情情报\n"
+                    "# \u51b3\u7b56\u4eea\u8868\u76d8\u5206\u6790\u8bf7\u6c42\n\n"
+                    "## 📊 \u80a1\u7968\u57fa\u7840\u4fe1\u606f\n"
+                    "| \u80a1\u7968\u4ee3\u7801 | **600519** |\n"
+                    "| \u80a1\u7968\u540d\u79f0 | **\u8d35\u5dde\u8305\u53f0** |\n"
+                    "| \u5206\u6790\u65e5\u671f | 2026-06-19 |\n\n"
+                    "## 📈 \u6280\u672f\u9762\u6570\u636e\n"
+                    "\u6536\u76d8\u4ef7 1500 \u5143\n\n"
+                    "## 📰 \u8206\u60c5\u60c5\u62a5\n"
                     "IMPORTANT_NEWS_TEXT\n"
                 ),
             },
@@ -1272,9 +1272,9 @@ class TestLegacyMessageStabilityAudit(unittest.TestCase):
             "transport": "litellm",
             "dynamic_markers": [
                 {"marker_name": "stock_code", "message_role": "user", "text": "600519"},
-                {"marker_name": "stock_name", "message_role": "user", "text": "贵州茅台"},
+                {"marker_name": "stock_name", "message_role": "user", "text": "\u8d35\u5dde\u8305\u53f0"},
                 {"marker_name": "analysis_date", "message_role": "user", "text": "2026-06-19"},
-                {"marker_name": "quote", "message_role": "user", "text": "## 📈 技术面数据"},
+                {"marker_name": "quote", "message_role": "user", "text": "## 📈 \u6280\u672f\u9762\u6570\u636e"},
                 {"marker_name": "news_context", "message_role": "user", "text": "IMPORTANT_NEWS_TEXT"},
                 {"marker_name": "raw-header", "message_role": "user", "text": "Authorization: Bearer token"},
             ],
@@ -1316,7 +1316,7 @@ class TestLegacyMessageStabilityAudit(unittest.TestCase):
 
         serialized = json.dumps(usage, ensure_ascii=False, sort_keys=True)
         self.assertNotIn("600519", marker_json)
-        self.assertNotIn("贵州茅台", marker_json)
+        self.assertNotIn("\u8d35\u5dde\u8305\u53f0", marker_json)
         self.assertNotIn("2026-06-19", marker_json)
         self.assertNotIn("IMPORTANT_NEWS_TEXT", marker_json)
         self.assertNotIn("RSI breakout skill raw instructions", serialized)

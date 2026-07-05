@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 """
 ===================================
-大盘复盘命令
+market reviewcommand
 ===================================
 
-执行大盘复盘分析，生成市场概览报告。
+\u6267\u884cmarket reviewanalyze; \u751f\u6210market\u6982\u89c8report.
 """
 
 import logging
@@ -19,16 +19,16 @@ logger = logging.getLogger(__name__)
 
 class MarketCommand(BotCommand):
     """
-    大盘复盘命令
+    market reviewcommand
 
-    执行大盘复盘分析，包括：
-    - 主要指数表现
-    - 板块热点
-    - 市场情绪
-    - 后市展望
+    \u6267\u884cmarket reviewanalyze; \u5305\u62ec:
+    - \u4e3b\u8981index\u8868\u73b0
+    - sector\u70ed\u70b9
+    - market\u60c5\u7eea
+    - \u540e\u5e02\u5c55\u671b
 
-    用法：
-        /market - 执行大盘复盘
+    Usage:
+        /market - \u6267\u884cmarket review
     """
 
     @property
@@ -37,22 +37,22 @@ class MarketCommand(BotCommand):
 
     @property
     def aliases(self) -> List[str]:
-        return ["m", "大盘", "复盘", "行情"]
+        return ["m", "\u5927\u76d8", "\u590d\u76d8", "\u884c\u60c5"]
 
     @property
     def description(self) -> str:
-        return "大盘复盘分析"
+        return "market reviewanalyze"
 
     @property
     def usage(self) -> str:
         return "/market"
 
     def execute(self, message: BotMessage, args: List[str]) -> BotResponse:
-        """执行大盘复盘命令"""
+        """\u6267\u884cmarket reviewcommand"""
         config = self._get_config()
         lock_token = self._try_acquire_market_review_lock(config)
         if lock_token is None:
-            return BotResponse.markdown_response("⚠️ 大盘复盘正在执行中，请稍后再试。")
+            return BotResponse.markdown_response("⚠️ market reviewis already running; please try again later.")
 
         thread = threading.Thread(
             target=self._run_market_review,
@@ -63,22 +63,22 @@ class MarketCommand(BotCommand):
             thread.start()
         except Exception as exc:
             logger.error(
-                "[MarketCommand] 大盘复盘后台线程启动失败: %s",
+                "[MarketCommand] market review\u540e\u53f0\u7ebf\u7a0bstartedfailed: %s",
                 exc,
             )
             self._release_market_review_lock(lock_token)
             return BotResponse.error_response(
-                "大盘复盘启动失败，已释放运行锁；请稍后重试"
+                "market reviewstartedfailed; \u5df2\u91ca\u653e\u8fd0\u884c\u9501；\u8bf7\u7a0d\u540e\u91cd\u8bd5"
             )
 
         return BotResponse.markdown_response(
-            "✅ **大盘复盘任务已启动**\n\n"
-            "正在分析：\n"
-            "• 主要指数表现\n"
-            "• 板块热点分析\n"
-            "• 市场情绪判断\n"
-            "• 后市展望\n\n"
-            "分析完成后将自动推送结果。"
+            "✅ **market reviewtask\u5df2started**\n\n"
+            "\u6b63\u5728analyze: \n"
+            "• \u4e3b\u8981index\u8868\u73b0\n"
+            "• sector\u70ed\u70b9analyze\n"
+            "• market\u60c5\u7eea\u5224\u65ad\n"
+            "• \u540e\u5e02\u5c55\u671b\n\n"
+            "analysis completed\u540e\u5c06\u81ea\u52a8\u63a8\u9001result."
         )
 
     def _get_config(self):
@@ -109,7 +109,7 @@ class MarketCommand(BotCommand):
                 open_markets,
             )
         except Exception as exc:
-            logger.warning("交易日过滤失败，按配置继续执行大盘复盘: %s", exc)
+            logger.warning("\u4ea4\u6613\u65e5\u8fc7\u6ee4failed; \u6309config\u7ee7\u7eed\u6267\u884cmarket review: %s", exc)
             return None
 
     def _run_market_review(
@@ -118,16 +118,16 @@ class MarketCommand(BotCommand):
         config,
         lock_token: Optional[Any],
     ) -> None:
-        """后台执行大盘复盘"""
+        """\u540e\u53f0\u6267\u884cmarket review"""
         try:
             override_region = self._compute_market_review_override_region(config)
             if override_region == "":
                 from src.notification import NotificationService
                 notifier = NotificationService(source_message=message)
-                logger.info("[MarketCommand] 今日相关市场休市，跳过大盘复盘")
+                logger.info("[MarketCommand] \u4eca\u65e5\u76f8\u5173market\u4f11\u5e02; skippingmarket review")
                 if notifier.is_available():
                     notifier.send(
-                        "🎯 大盘复盘\n\n今日相关市场休市，已跳过大盘复盘。",
+                        "🎯 market review\n\n\u4eca\u65e5\u76f8\u5173market\u4f11\u5e02; \u5df2skippingmarket review.",
                         email_send_to_all=True,
                         route_type="report",
                     )
@@ -149,11 +149,11 @@ class MarketCommand(BotCommand):
                 trigger_source="bot",
             )
             if review_report:
-                logger.info("[MarketCommand] 大盘复盘完成并已推送")
+                logger.info("[MarketCommand] market review\u5b8c\u6210\u5e76\u5df2\u63a8\u9001")
             else:
-                logger.warning("[MarketCommand] 大盘复盘返回空结果")
+                logger.warning("[MarketCommand] market reviewreturned empty result")
         except Exception as e:
-            logger.error("[MarketCommand] 大盘复盘失败: %s", e)
+            logger.error("[MarketCommand] market reviewfailed: %s", e)
             logger.exception(e)
         finally:
             self._release_market_review_lock(lock_token)

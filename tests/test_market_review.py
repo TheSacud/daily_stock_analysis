@@ -173,23 +173,23 @@ class MarketReviewLocalizationTestCase(unittest.TestCase):
         notifier = self._make_notifier()
         market_analyzer = MagicMock()
         market_analyzer.run_daily_review_with_snapshot.return_value = SimpleNamespace(
-            report="## 今日大盘\n\n盘面正文。",
+            report="## \u4eca\u65e5\u5927\u76d8\n\n\u76d8\u9762\u6b63\u6587。",
             market_light_snapshot={"region": "cn", "trade_date": "2026-06-03", "score": 60},
             structured_payload={
                 "kind": "market_review",
                 "region": "cn",
                 "language": "zh",
-                "title": "今日大盘",
+                "title": "\u4eca\u65e5\u5927\u76d8",
                 "sections": [
                     {
                         "key": "overview",
-                        "title": "概览",
-                        "markdown": "盘面正文。",
+                        "title": "\u6982\u89c8",
+                        "markdown": "\u76d8\u9762\u6b63\u6587。",
                     }
                 ],
                 "sectors": {
-                    "top": [{"name": "AI算力", "change_pct": 3.25}],
-                    "bottom": [{"name": "煤炭", "change_pct": -1.12}],
+                    "top": [{"name": "AI\u7b97\u529b", "change_pct": 3.25}],
+                    "bottom": [{"name": "\u7164\u70ad", "change_pct": -1.12}],
                 },
             },
         )
@@ -209,10 +209,10 @@ class MarketReviewLocalizationTestCase(unittest.TestCase):
                 merge_notification=True,
             )
 
-        self.assertIn("## 今日大盘", result)
-        self.assertIn("### 板块主线", result)
-        self.assertIn("| 1 | AI算力 | +3.25% |", result)
-        self.assertIn("| 1 | 煤炭 | -1.12% |", result)
+        self.assertIn("## \u4eca\u65e5\u5927\u76d8", result)
+        self.assertIn("### \u677f\u5757\u4e3b\u7ebf", result)
+        self.assertIn("| 1 | AI\u7b97\u529b | +3.25% |", result)
+        self.assertIn("| 1 | \u7164\u70ad | -1.12% |", result)
         notifier.send.assert_not_called()
 
     def test_run_market_review_reraises_generation_backend_config_error(self) -> None:
@@ -342,10 +342,10 @@ class MarketReviewLocalizationTestCase(unittest.TestCase):
                 notifier, send_notification=False, override_region="jp,kr"
             )
 
-        self.assertIn("# 日股大盘复盘\n\nJP body", result)
-        self.assertIn("# 韩股大盘复盘\n\nKR body", result)
-        self.assertNotIn("A股大盘复盘", result)
-        self.assertNotIn("美股大盘复盘", result)
+        self.assertIn("# \u65e5\u80a1\u5927\u76d8\u590d\u76d8\n\nJP body", result)
+        self.assertIn("# \u97e9\u80a1\u5927\u76d8\u590d\u76d8\n\nKR body", result)
+        self.assertNotIn("A\u80a1\u5927\u76d8\u590d\u76d8", result)
+        self.assertNotIn("\u7f8e\u80a1\u5927\u76d8\u590d\u76d8", result)
 
     def test_run_market_review_comma_joined_subset_cn_us(self) -> None:
         """Regression: compute_effective_region("both", {"cn","us"}) -> "cn,us"
@@ -375,9 +375,9 @@ class MarketReviewLocalizationTestCase(unittest.TestCase):
                 notifier, send_notification=False, override_region="cn,us"
             )
 
-        self.assertIn("# A股大盘复盘\n\nCN body", result)
-        self.assertIn("# 美股大盘复盘\n\nUS body", result)
-        self.assertNotIn("港股", result)
+        self.assertIn("# A\u80a1\u5927\u76d8\u590d\u76d8\n\nCN body", result)
+        self.assertIn("# \u7f8e\u80a1\u5927\u76d8\u590d\u76d8\n\nUS body", result)
+        self.assertNotIn("\u6e2f\u80a1", result)
         self.assertNotIn("HK", result)
 
     def test_run_market_review_comma_joined_subset_cn_hk(self) -> None:
@@ -408,9 +408,9 @@ class MarketReviewLocalizationTestCase(unittest.TestCase):
                 notifier, send_notification=False, override_region="cn,hk"
             )
 
-        self.assertIn("# A股大盘复盘\n\nCN body", result)
-        self.assertIn("# 港股大盘复盘\n\nHK body", result)
-        self.assertNotIn("美股", result)
+        self.assertIn("# A\u80a1\u5927\u76d8\u590d\u76d8\n\nCN body", result)
+        self.assertIn("# \u6e2f\u80a1\u5927\u76d8\u590d\u76d8\n\nHK body", result)
+        self.assertNotIn("\u7f8e\u80a1", result)
         self.assertNotIn("US Market", result)
 
     def test_run_market_review_persists_only_current_run_market_light_snapshots(self) -> None:
@@ -469,8 +469,8 @@ class MarketReviewLocalizationTestCase(unittest.TestCase):
                 send_notification=False,
             )
 
-        self.assertIn("# 日股大盘复盘\n\nJP body", result)
-        self.assertIn("# 韩股大盘复盘\n\nKR body", result)
+        self.assertIn("# \u65e5\u80a1\u5927\u76d8\u590d\u76d8\n\nJP body", result)
+        self.assertIn("# \u97e9\u80a1\u5927\u76d8\u590d\u76d8\n\nKR body", result)
         self.assertEqual(persist_history.call_args.kwargs["market_light_snapshots"], {})
         payload = persist_history.call_args.kwargs["market_review_payload"]
         self.assertNotIn("market_light", payload["markets"]["jp"])
@@ -545,160 +545,160 @@ class MarketReviewLocalizationTestCase(unittest.TestCase):
     def test_render_market_review_payload_markdown_does_not_repeat_title(self) -> None:
         markdown = market_review_module._render_market_review_payload_markdown(
             {
-                "title": "2026-06-03 大盘复盘",
+                "title": "2026-06-03 \u5927\u76d8\u590d\u76d8",
                 "sections": [
                     {
                         "key": "daily_review",
-                        "title": "2026-06-03 大盘复盘",
-                        "markdown": "> 今日指数强弱分化。\n\n### 一、盘面总览\n正文",
+                        "title": "2026-06-03 \u5927\u76d8\u590d\u76d8",
+                        "markdown": "> \u4eca\u65e5\u6307\u6570\u5f3a\u5f31\u5206\u5316。\n\n### \u4e00、\u76d8\u9762\u603b\u89c8\n\u6b63\u6587",
                     }
                 ],
             },
-            wrapper_title="🎯 大盘复盘",
+            wrapper_title="🎯 \u5927\u76d8\u590d\u76d8",
         )
 
-        self.assertEqual(markdown.count("2026-06-03 大盘复盘"), 1)
-        self.assertTrue(markdown.startswith("🎯 大盘复盘\n\n## 2026-06-03 大盘复盘"))
+        self.assertEqual(markdown.count("2026-06-03 \u5927\u76d8\u590d\u76d8"), 1)
+        self.assertTrue(markdown.startswith("🎯 \u5927\u76d8\u590d\u76d8\n\n## 2026-06-03 \u5927\u76d8\u590d\u76d8"))
 
     def test_render_market_review_payload_markdown_appends_structured_sector_fallback(self) -> None:
         markdown = market_review_module._render_market_review_payload_markdown(
             {
-                "title": "2026-06-03 大盘复盘",
+                "title": "2026-06-03 \u5927\u76d8\u590d\u76d8",
                 "language": "zh",
                 "sections": [
                     {
                         "key": "overview",
                         "title": "Overview",
-                        "markdown": "> 今日指数强弱分化。",
+                        "markdown": "> \u4eca\u65e5\u6307\u6570\u5f3a\u5f31\u5206\u5316。",
                     }
                 ],
                 "sectors": {
-                    "top": [{"name": "AI算力", "change_pct": 3.25}],
-                    "bottom": [{"name": "煤炭", "change_pct": -1.12}],
+                    "top": [{"name": "AI\u7b97\u529b", "change_pct": 3.25}],
+                    "bottom": [{"name": "\u7164\u70ad", "change_pct": -1.12}],
                 },
             },
-            wrapper_title="🎯 大盘复盘",
+            wrapper_title="🎯 \u5927\u76d8\u590d\u76d8",
         )
 
-        self.assertIn("### 板块主线", markdown)
-        self.assertIn("#### 领涨板块 Top 5", markdown)
-        self.assertIn("| 1 | AI算力 | +3.25% |", markdown)
-        self.assertIn("#### 领跌板块 Top 5", markdown)
-        self.assertIn("| 1 | 煤炭 | -1.12% |", markdown)
+        self.assertIn("### \u677f\u5757\u4e3b\u7ebf", markdown)
+        self.assertIn("#### \u9886\u6da8\u677f\u5757 Top 5", markdown)
+        self.assertIn("| 1 | AI\u7b97\u529b | +3.25% |", markdown)
+        self.assertIn("#### \u9886\u8dcc\u677f\u5757 Top 5", markdown)
+        self.assertIn("| 1 | \u7164\u70ad | -1.12% |", markdown)
 
     def test_render_market_review_payload_markdown_keeps_injected_chinese_sector_block_once(self) -> None:
         markdown = market_review_module._render_market_review_payload_markdown(
             {
-                "title": "2026-06-03 大盘复盘",
+                "title": "2026-06-03 \u5927\u76d8\u590d\u76d8",
                 "language": "zh",
                 "markdown_report": (
-                    "## 2026-06-03 大盘复盘\n\n"
-                    "### 板块表现\n\n"
-                    "#### 行业板块领涨 Top 5\n"
-                    "| 排名 | 行业板块 | 涨跌幅 |\n"
+                    "## 2026-06-03 \u5927\u76d8\u590d\u76d8\n\n"
+                    "### \u677f\u5757\u8868\u73b0\n\n"
+                    "#### \u884c\u4e1a\u677f\u5757\u9886\u6da8 Top 5\n"
+                    "| \u6392\u540d | \u884c\u4e1a\u677f\u5757 | \u6da8\u8dcc\u5e45 |\n"
                     "|------|------|--------|\n"
-                    "| 1 | AI算力 | +3.25% |"
+                    "| 1 | AI\u7b97\u529b | +3.25% |"
                 ),
                 "sectors": {
-                    "top": [{"name": "AI算力", "change_pct": 3.25}],
-                    "bottom": [{"name": "煤炭", "change_pct": -1.12}],
+                    "top": [{"name": "AI\u7b97\u529b", "change_pct": 3.25}],
+                    "bottom": [{"name": "\u7164\u70ad", "change_pct": -1.12}],
                 },
             }
         )
 
-        self.assertEqual(markdown.count("#### 行业板块领涨 Top 5"), 1)
-        self.assertNotIn("### 板块主线", markdown)
-        self.assertNotIn("#### 领涨板块 Top 5", markdown)
-        self.assertNotIn("#### 领跌板块 Top 5", markdown)
+        self.assertEqual(markdown.count("#### \u884c\u4e1a\u677f\u5757\u9886\u6da8 Top 5"), 1)
+        self.assertNotIn("### \u677f\u5757\u4e3b\u7ebf", markdown)
+        self.assertNotIn("#### \u9886\u6da8\u677f\u5757 Top 5", markdown)
+        self.assertNotIn("#### \u9886\u8dcc\u677f\u5757 Top 5", markdown)
 
     def test_render_market_review_payload_markdown_appends_each_market_sector_fallback(self) -> None:
         markdown = market_review_module._render_market_review_payload_markdown(
             {
                 "language": "zh",
                 "markdown_report": (
-                    "## A 股大盘\n\n今日震荡。\n\n"
+                    "## A \u80a1\u5927\u76d8\n\n\u4eca\u65e5\u9707\u8361。\n\n"
                     "---\n\n"
-                    "## 港股大盘\n\n今日反弹。\n\n"
+                    "## \u6e2f\u80a1\u5927\u76d8\n\n\u4eca\u65e5\u53cd\u5f39。\n\n"
                     "---\n\n"
-                    "## 美股大盘\n\n科技走强。"
+                    "## \u7f8e\u80a1\u5927\u76d8\n\n\u79d1\u6280\u8d70\u5f3a。"
                 ),
                 "markets": {
                     "cn": {
-                        "title": "A 股大盘",
+                        "title": "A \u80a1\u5927\u76d8",
                         "language": "zh",
-                        "sectors": {"top": [{"name": "AI算力", "change_pct": 3.25}]},
+                        "sectors": {"top": [{"name": "AI\u7b97\u529b", "change_pct": 3.25}]},
                     },
                     "hk": {
-                        "title": "港股大盘",
+                        "title": "\u6e2f\u80a1\u5927\u76d8",
                         "language": "zh",
-                        "sectors": {"top": [{"name": "科技", "change_pct": 2.18}]},
+                        "sectors": {"top": [{"name": "\u79d1\u6280", "change_pct": 2.18}]},
                     },
                     "us": {
-                        "title": "美股大盘",
+                        "title": "\u7f8e\u80a1\u5927\u76d8",
                         "language": "zh",
-                        "sectors": {"top": [{"name": "半导体", "change_pct": 1.86}]},
+                        "sectors": {"top": [{"name": "\u534a\u5bfc\u4f53", "change_pct": 1.86}]},
                     },
                 },
             }
         )
 
-        self.assertIn("### A 股大盘 / 板块主线", markdown)
-        self.assertIn("| 1 | AI算力 | +3.25% |", markdown)
-        self.assertIn("### 港股大盘 / 板块主线", markdown)
-        self.assertIn("| 1 | 科技 | +2.18% |", markdown)
-        self.assertIn("### 美股大盘 / 板块主线", markdown)
-        self.assertIn("| 1 | 半导体 | +1.86% |", markdown)
-        self.assertLess(markdown.index("### A 股大盘 / 板块主线"), markdown.index("## 港股大盘"))
-        self.assertLess(markdown.index("### 港股大盘 / 板块主线"), markdown.index("## 美股大盘"))
+        self.assertIn("### A \u80a1\u5927\u76d8 / \u677f\u5757\u4e3b\u7ebf", markdown)
+        self.assertIn("| 1 | AI\u7b97\u529b | +3.25% |", markdown)
+        self.assertIn("### \u6e2f\u80a1\u5927\u76d8 / \u677f\u5757\u4e3b\u7ebf", markdown)
+        self.assertIn("| 1 | \u79d1\u6280 | +2.18% |", markdown)
+        self.assertIn("### \u7f8e\u80a1\u5927\u76d8 / \u677f\u5757\u4e3b\u7ebf", markdown)
+        self.assertIn("| 1 | \u534a\u5bfc\u4f53 | +1.86% |", markdown)
+        self.assertLess(markdown.index("### A \u80a1\u5927\u76d8 / \u677f\u5757\u4e3b\u7ebf"), markdown.index("## \u6e2f\u80a1\u5927\u76d8"))
+        self.assertLess(markdown.index("### \u6e2f\u80a1\u5927\u76d8 / \u677f\u5757\u4e3b\u7ebf"), markdown.index("## \u7f8e\u80a1\u5927\u76d8"))
 
     def test_render_market_review_payload_markdown_checks_duplicate_titles_by_market_wrapper(self) -> None:
-        duplicate_title = "2026-06-03 大盘复盘"
+        duplicate_title = "2026-06-03 \u5927\u76d8\u590d\u76d8"
         markdown = market_review_module._render_market_review_payload_markdown(
             {
                 "language": "zh",
                 "markdown_report": (
-                    "# A股大盘复盘\n\n"
+                    "# A\u80a1\u5927\u76d8\u590d\u76d8\n\n"
                     f"## {duplicate_title}\n\n"
-                    "### 板块表现\n\n"
-                    "#### 行业板块领涨 Top 5\n"
-                    "| 排名 | 行业板块 | 涨跌幅 |\n"
+                    "### \u677f\u5757\u8868\u73b0\n\n"
+                    "#### \u884c\u4e1a\u677f\u5757\u9886\u6da8 Top 5\n"
+                    "| \u6392\u540d | \u884c\u4e1a\u677f\u5757 | \u6da8\u8dcc\u5e45 |\n"
                     "|------|------|--------|\n"
-                    "| 1 | AI算力 | +3.25% |\n\n"
+                    "| 1 | AI\u7b97\u529b | +3.25% |\n\n"
                     "---\n\n"
-                    "> 以下为下一市场大盘复盘\n\n"
-                    "# 港股大盘复盘\n\n"
+                    "> \u4ee5\u4e0b\u4e3a\u4e0b\u4e00\u5e02\u573a\u5927\u76d8\u590d\u76d8\n\n"
+                    "# \u6e2f\u80a1\u5927\u76d8\u590d\u76d8\n\n"
                     f"## {duplicate_title}\n\n"
-                    "港股正文。\n\n"
+                    "\u6e2f\u80a1\u6b63\u6587。\n\n"
                     "---\n\n"
-                    "> 以下为下一市场大盘复盘\n\n"
-                    "# 美股大盘复盘\n\n"
+                    "> \u4ee5\u4e0b\u4e3a\u4e0b\u4e00\u5e02\u573a\u5927\u76d8\u590d\u76d8\n\n"
+                    "# \u7f8e\u80a1\u5927\u76d8\u590d\u76d8\n\n"
                     f"## {duplicate_title}\n\n"
-                    "美股正文。"
+                    "\u7f8e\u80a1\u6b63\u6587。"
                 ),
                 "markets": {
                     "cn": {
                         "title": duplicate_title,
                         "language": "zh",
-                        "sectors": {"top": [{"name": "AI算力", "change_pct": 3.25}]},
+                        "sectors": {"top": [{"name": "AI\u7b97\u529b", "change_pct": 3.25}]},
                     },
                     "hk": {
                         "title": duplicate_title,
                         "language": "zh",
-                        "sectors": {"top": [{"name": "科技", "change_pct": 2.18}]},
+                        "sectors": {"top": [{"name": "\u79d1\u6280", "change_pct": 2.18}]},
                     },
                     "us": {
                         "title": duplicate_title,
                         "language": "zh",
-                        "sectors": {"top": [{"name": "半导体", "change_pct": 1.86}]},
+                        "sectors": {"top": [{"name": "\u534a\u5bfc\u4f53", "change_pct": 1.86}]},
                     },
                 },
             }
         )
 
-        self.assertEqual(markdown.count("#### 行业板块领涨 Top 5"), 1)
-        self.assertEqual(markdown.count(f"### {duplicate_title} / 板块主线"), 2)
-        self.assertIn("| 1 | 科技 | +2.18% |", markdown)
-        self.assertIn("| 1 | 半导体 | +1.86% |", markdown)
+        self.assertEqual(markdown.count("#### \u884c\u4e1a\u677f\u5757\u9886\u6da8 Top 5"), 1)
+        self.assertEqual(markdown.count(f"### {duplicate_title} / \u677f\u5757\u4e3b\u7ebf"), 2)
+        self.assertIn("| 1 | \u79d1\u6280 | +2.18% |", markdown)
+        self.assertIn("| 1 | \u534a\u5bfc\u4f53 | +1.86% |", markdown)
 
     def test_render_market_review_payload_markdown_preserves_segment_boundaries_after_fallback(self) -> None:
         markdown = market_review_module._render_market_review_payload_markdown(
@@ -746,8 +746,8 @@ class MarketReviewLocalizationTestCase(unittest.TestCase):
             DatabaseManager.reset_instance()
             try:
                 saved = market_review_module._persist_market_review_history(
-                    review_report="## 今日大盘\n\n复盘正文",
-                    markdown_report="# 🎯 大盘复盘\n\n## 今日大盘\n\n复盘正文",
+                    review_report="## \u4eca\u65e5\u5927\u76d8\n\n\u590d\u76d8\u6b63\u6587",
+                    markdown_report="# 🎯 \u5927\u76d8\u590d\u76d8\n\n## \u4eca\u65e5\u5927\u76d8\n\n\u590d\u76d8\u6b63\u6587",
                     region="cn",
                     config=SimpleNamespace(report_language="zh"),
                     query_id="market-task-001",
@@ -757,8 +757,8 @@ class MarketReviewLocalizationTestCase(unittest.TestCase):
                             "trade_date": "2026-03-06",
                             "status": "red",
                             "score": 30,
-                            "label": "偏防守",
-                            "temperature_label": "偏弱",
+                            "label": "\u504f\u9632\u5b88",
+                            "temperature_label": "\u504f\u5f31",
                             "reasons": ["test"],
                             "guidance": "test",
                             "dimensions": {
@@ -773,7 +773,7 @@ class MarketReviewLocalizationTestCase(unittest.TestCase):
                         "version": 1,
                         "kind": "market_review",
                         "region": "cn",
-                        "sections": [{"title": "今日大盘", "markdown": "复盘正文"}],
+                        "sections": [{"title": "\u4eca\u65e5\u5927\u76d8", "markdown": "\u590d\u76d8\u6b63\u6587"}],
                     },
                 )
 
@@ -786,10 +786,10 @@ class MarketReviewLocalizationTestCase(unittest.TestCase):
                     self.assertIsNotNone(row)
                     self.assertEqual(row.id, saved)
                     self.assertEqual(row.code, market_review_module.MARKET_REVIEW_HISTORY_CODE)
-                    self.assertEqual(row.name, "大盘复盘")
+                    self.assertEqual(row.name, "\u5927\u76d8\u590d\u76d8")
                     self.assertEqual(row.report_type, market_review_module.MARKET_REVIEW_REPORT_TYPE)
-                    self.assertEqual(row.news_content, "## 今日大盘\n\n复盘正文")
-                    self.assertIn("# 🎯 大盘复盘", row.raw_result)
+                    self.assertEqual(row.news_content, "## \u4eca\u65e5\u5927\u76d8\n\n\u590d\u76d8\u6b63\u6587")
+                    self.assertIn("# 🎯 \u5927\u76d8\u590d\u76d8", row.raw_result)
                     self.assertIn('"market_light_snapshots"', row.context_snapshot)
                     self.assertIn('"market_review_payload"', row.context_snapshot)
                     self.assertIn('"trade_date": "2026-03-06"', row.context_snapshot)
@@ -813,7 +813,7 @@ class MarketReviewLocalizationTestCase(unittest.TestCase):
             notifier = self._make_notifier()
             market_analyzer = MagicMock()
             market_analyzer.run_daily_review_with_snapshot.return_value = SimpleNamespace(
-                report="## 今日大盘\n\n复盘正文",
+                report="## \u4eca\u65e5\u5927\u76d8\n\n\u590d\u76d8\u6b63\u6587",
                 market_light_snapshot={"region": "cn", "trade_date": "2026-03-06", "score": 60},
             )
             token = activate_run_diagnostic_context(
@@ -833,7 +833,7 @@ class MarketReviewLocalizationTestCase(unittest.TestCase):
                         trigger_source="api",
                     )
 
-                self.assertEqual(result, "## 今日大盘\n\n复盘正文")
+                self.assertEqual(result, "## \u4eca\u65e5\u5927\u76d8\n\n\u590d\u76d8\u6b63\u6587")
                 db = DatabaseManager.get_instance()
                 with db.get_session() as session:
                     row = session.query(AnalysisHistory).filter(
@@ -862,7 +862,7 @@ class MarketReviewLocalizationTestCase(unittest.TestCase):
             notifier = self._make_notifier()
             market_analyzer = MagicMock()
             market_analyzer.run_daily_review_with_snapshot.return_value = SimpleNamespace(
-                report="## 今日大盘\n\n复盘正文",
+                report="## \u4eca\u65e5\u5927\u76d8\n\n\u590d\u76d8\u6b63\u6587",
                 market_light_snapshot={"region": "cn", "trade_date": "2026-03-06", "score": 60},
             )
             token = activate_run_diagnostic_context(
@@ -880,7 +880,7 @@ class MarketReviewLocalizationTestCase(unittest.TestCase):
                         trigger_source="cli",
                     )
 
-                self.assertEqual(result, "## 今日大盘\n\n复盘正文")
+                self.assertEqual(result, "## \u4eca\u65e5\u5927\u76d8\n\n\u590d\u76d8\u6b63\u6587")
                 db = DatabaseManager.get_instance()
                 with db.get_session() as session:
                     rows = session.query(AnalysisHistory).all()

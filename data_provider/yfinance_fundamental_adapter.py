@@ -11,7 +11,7 @@ without changing downstream consumers. Adds HK/US-specific fields:
   yfinance commonly reports ``financialCurrency=CNY`` while trades settle in
   HKD, so this differs from the dividend currency below.
 - ``earnings.dividend.currency`` — trading / dividend currency from
-  ``info.currency`` (e.g. HKD for 0700.HK). Used to suffix 港元/美元/元 for
+  ``info.currency`` (e.g. HKD for 0700.HK). Used to suffix \u6e2f\u5143/\u7f8e\u5143/\u5143 for
   per-share cash dividends and to scope the TTM yield denominator.
 - ``earnings.dividend.ttm_dividend_yield_pct`` — computed as
   ``ttm_cash_dividend_per_share / latest_price * 100``, both sides in the
@@ -19,7 +19,7 @@ without changing downstream consumers. Adds HK/US-specific fields:
   ``info.dividendYield`` is only used as a last-resort fallback and is
   passed through as-is (current yfinance reports it in percent units).
 - ``belong_boards`` — derived from ``info.sector`` + ``info.industry``; the CN
-  pipeline derives it from AkShare 板块名单, this is the HK/US analogue.
+  pipeline derives it from AkShare sector\u540d\u5355, this is the HK/US analogue.
 
 This adapter intentionally treats every yfinance call as best-effort and never
 raises to caller. Partial data is allowed; downstream `_infer_block_status` will
@@ -357,10 +357,10 @@ class YfinanceFundamentalAdapter:
         belong_boards: List[Dict[str, Any]] = []
         sector_name = str(info.get("sector") or info.get("sectorDisp") or "").strip()
         if sector_name:
-            belong_boards.append({"name": sector_name, "type": "行业"})
+            belong_boards.append({"name": sector_name, "type": "industry"})
         industry_name = str(info.get("industry") or info.get("industryDisp") or "").strip()
         if industry_name and industry_name != sector_name:
-            belong_boards.append({"name": industry_name, "type": "概念"})
+            belong_boards.append({"name": industry_name, "type": "concept"})
         if belong_boards:
             result["belong_boards"] = belong_boards
             result["source_chain"].append("belong_boards:yfinance.info")

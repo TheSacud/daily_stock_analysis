@@ -1,31 +1,31 @@
 ts_code,symbol,name,enname,aliases
-005930.KS,005930.KS,三星电子,Samsung Electronics Co. Ltd.,Samsung|Samsung Electronics|三星|삼성전자
-000660.KS,000660.KS,SK海力士,SK hynix Inc.,SK Hynix|海力士|하이닉스
-373220.KS,373220.KS,LG新能源,LG Energy Solution Ltd.,LG Energy Solution|LGES|LG新能源
-005380.KS,005380.KS,现代汽车,Hyundai Motor Company,Hyundai|Hyundai Motor|现代|현대차
+005930.KS,005930.KS,\u4e09\u661f\u7535\u5b50,Samsung Electronics Co. Ltd.,Samsung|Samsung Electronics|\u4e09\u661f|삼성전자
+000660.KS,000660.KS,SK\u6d77\u529b\u58eb,SK hynix Inc.,SK Hynix|\u6d77\u529b\u58eb|하이닉스
+373220.KS,373220.KS,LG\u65b0\u80fd\u6e90,LG Energy Solution Ltd.,LG Energy Solution|LGES|LG\u65b0\u80fd\u6e90
+005380.KS,005380.KS,\u73b0\u4ee3\u6c7d\u8f66,Hyundai Motor Company,Hyundai|Hyundai Motor|\u73b0\u4ee3|현대차
 035420.KS,035420.KS,NAVER,NAVER Corporation,Naver|NAVER|네이버
-051910.KS,051910.KS,LG化学,LG Chem Ltd.,LG Chem|LG化学
-006400.KS,006400.KS,三星SDI,Samsung SDI Co. Ltd.,Samsung SDI|三星SDI
-035720.KQ,035720.KQ,Kakao,Kakao Corp.,Kakao|可可|카카오
+051910.KS,051910.KS,LG\u5316\u5b66,LG Chem Ltd.,LG Chem|LG\u5316\u5b66
+006400.KS,006400.KS,\u4e09\u661fSDI,Samsung SDI Co. Ltd.,Samsung SDI|\u4e09\u661fSDI
+035720.KQ,035720.KQ,Kakao,Kakao Corp.,Kakao|\u53ef\u53ef|카카오
 247540.KQ,247540.KQ,Ecopro BM,Ecopro BM Co. Ltd.,Ecopro BM|ECOPRO BM|에코프로비엠
-091990.KQ,091990.KQ,赛尔群医疗,Celltrion Healthcare Co. Ltd.,Celltrion Healthcare|Celltrion|셀트리온헬스케어
-000270.KS,000270.KS,起亚,Kia Corporation,Kia|起亚|기아
-068270.KS,068270.KS,赛尔群,Celltrion Inc.,Celltrion|셀트리온
-105560.KS,105560.KS,KB金融集团,KB Financial Group Inc.,KB Financial|KB금융
-055550.KS,055550.KS,新韩金融集团,Shinhan Financial Group Co. Ltd.,Shinhan Financial|신한지주
-012330.KS,012330.KS,现代摩比斯,Hyundai Mobis Co. Ltd.,Hyundai Mobis|现代Mobis|현대모비스
-028260.KS,028260.KS,三星物产,Samsung C&T Corporation,Samsung C&T|三星物产|삼성물산
-032830.KS,032830.KS,三星生命保险,Samsung Life Insurance Co. Ltd.,Samsung Life|三星生命|삼성생명
-066570.KS,066570.KS,LG电子,LG Electronics Inc.,LG Electronics|LG전자
+091990.KQ,091990.KQ,\u8d5b\u5c14\u7fa4\u533b\u7597,Celltrion Healthcare Co. Ltd.,Celltrion Healthcare|Celltrion|셀트리온헬스케어
+000270.KS,000270.KS,\u8d77\u4e9a,Kia Corporation,Kia|\u8d77\u4e9a|기아
+068270.KS,068270.KS,\u8d5b\u5c14\u7fa4,Celltrion Inc.,Celltrion|셀트리온
+105560.KS,105560.KS,KB\u91d1\u878d\u96c6\u56e2,KB Financial Group Inc.,KB Financial|KB금융
+055550.KS,055550.KS,\u65b0\u97e9\u91d1\u878d\u96c6\u56e2,Shinhan Financial Group Co. Ltd.,Shinhan Financial|신한지주
+012330.KS,012330.KS,\u73b0\u4ee3\u6469\u6bd4\u65af,Hyundai Mobis Co. Ltd.,Hyundai Mobis|\u73b0\u4ee3Mobis|현대모비스
+028260.KS,028260.KS,\u4e09\u661f\u7269\u4ea7,Samsung C&T Corporation,Samsung C&T|\u4e09\u661f\u7269\u4ea7|삼성물산
+032830.KS,032830.KS,\u4e09\u661f\u751f\u547d\u4fdd\u9669,Samsung Life Insurance Co. Ltd.,Samsung Life|\u4e09\u661f\u751f\u547d|삼성생명
+066570.KS,066570.KS,LG\u7535\u5b50,LG Electronics Inc.,LG Electronics|LG전자
 096770.KS,096770.KS,SK Innovation,SK Innovation Co. Ltd.,SK Innovation|SK이노베이션
-003550.KS,003550.KS,LG,LG Corp.,LG|LG集团
-034730.KS,034730.KS,SK,SK Inc.,SK|SK控股
+003550.KS,003550.KS,LG,LG Corp.,LG|LG\u96c6\u56e2
+034730.KS,034730.KS,SK,SK Inc.,SK|SK\u63a7\u80a1
 017670.KS,017670.KS,SK Telecom,SK Telecom Co. Ltd.,SK Telecom|SKT|SK텔레콤
 086790.KS,086790.KS,Hana Financial,Hana Financial Group,Hana|하나금융지주
-033780.KS,033780.KS,KT&G,KT&G Corporation,KT&G|韩国烟草
-009150.KS,009150.KS,三星电机,Samsung Electro-Mechanics Co. Ltd.,Samsung Electro-Mechanics|三星电机|삼성전기
-010130.KS,010130.KS,高丽亚铅,Korea Zinc Co. Ltd.,Korea Zinc|고려아연
-018260.KS,018260.KS,三星SDS,Samsung SDS Co. Ltd.,Samsung SDS|삼성에스디에스
-011200.KS,011200.KS,HMM,HMM Co. Ltd.,HMM|现代商船
-090430.KS,090430.KS,爱茉莉太平洋,Amorepacific Corporation,Amorepacific|아모레퍼시픽
+033780.KS,033780.KS,KT&G,KT&G Corporation,KT&G|\u97e9\u56fd\u70df\u8349
+009150.KS,009150.KS,\u4e09\u661f\u7535\u673a,Samsung Electro-Mechanics Co. Ltd.,Samsung Electro-Mechanics|\u4e09\u661f\u7535\u673a|삼성전기
+010130.KS,010130.KS,\u9ad8\u4e3d\u4e9a\u94c5,Korea Zinc Co. Ltd.,Korea Zinc|고려아연
+018260.KS,018260.KS,\u4e09\u661fSDS,Samsung SDS Co. Ltd.,Samsung SDS|삼성에스디에스
+011200.KS,011200.KS,HMM,HMM Co. Ltd.,HMM|\u73b0\u4ee3\u5546\u8239
+090430.KS,090430.KS,\u7231\u8309\u8389\u592a\u5e73\u6d0b,Amorepacific Corporation,Amorepacific|아모레퍼시픽
 086520.KQ,086520.KQ,Ecopro,Ecopro Co. Ltd.,Ecopro|에코프로

@@ -1,25 +1,25 @@
 # -*- coding: utf-8 -*-
 """
 ===================================
-平台适配器模块
+\u5e73\u53f0\u9002\u914d\u5668\u6a21chunks
 ===================================
 
-包含各平台的 Webhook 处理和消息解析逻辑。
+\u5305\u542b\u5404\u5e73\u53f0\u7684 Webhook \u5904\u7406\u548c\u6d88\u606f\u89e3\u6790\u903b\u8f91.
 
-支持两种接入模式：
-1. Webhook 模式：需要公网 IP，配置回调 URL
-2. Stream 模式：无需公网 IP，通过 WebSocket 长连接（钉钉、飞书支持）
+\u652f\u6301\u4e24\u79cd\u63a5\u5165mode:
+1. Webhook mode: \u9700\u8981\u516c\u7f51 IP; config\u56de\u8c03 URL
+2. Stream mode: \u65e0\u9700\u516c\u7f51 IP; \u901a\u8fc7 WebSocket \u957f\u8fde\u63a5 (DingTalk、Feishu\u652f\u6301)
 """
 
 from bot.platforms.base import BotPlatform
 from bot.platforms.dingtalk import DingtalkPlatform
 
-# 所有可用平台（Webhook 模式）
+# \u6240\u6709\u53ef\u7528\u5e73\u53f0 (Webhook mode)
 ALL_PLATFORMS = {
     'dingtalk': DingtalkPlatform,
 }
 
-# 钉钉 Stream 模式（可选）
+# DingTalk Stream mode (optional)
 try:
     from bot.platforms.dingtalk_stream import (
         DingtalkStreamClient,
@@ -35,7 +35,7 @@ except ImportError:
     get_dingtalk_stream_client = lambda: None
     start_dingtalk_stream_background = lambda: False
 
-# 飞书 Stream 模式（可选）
+# Feishu Stream mode (optional)
 try:
     from bot.platforms.feishu_stream import (
         FeishuStreamClient,
@@ -57,13 +57,13 @@ __all__ = [
     'BotPlatform',
     'DingtalkPlatform',
     'ALL_PLATFORMS',
-    # 钉钉 Stream 模式
+    # DingTalk Stream mode
     'DingtalkStreamClient',
     'DingtalkStreamHandler',
     'get_dingtalk_stream_client',
     'start_dingtalk_stream_background',
     'DINGTALK_STREAM_AVAILABLE',
-    # 飞书 Stream 模式
+    # Feishu Stream mode
     'FeishuStreamClient',
     'FeishuStreamHandler',
     'FeishuReplyClient',

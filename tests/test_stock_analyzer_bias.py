@@ -88,40 +88,40 @@ class StockAnalyzerBiasTestCase(unittest.TestCase):
 
     @patch("src.stock_analyzer.get_config")
     def test_bias_negative_pullback(self, mock_get_config: MagicMock) -> None:
-        """bias=-2% should yield '回踩买点'."""
+        """bias=-2% should yield '\u56de\u8e29\u4e70\u70b9'."""
         mock_get_config.return_value.bias_threshold = 5.0
         result = _make_result(
             trend_status=TrendStatus.BULL,
             bias_ma5=-2.0,
         )
         self.analyzer._generate_signal(result)
-        self._assert_contains(result.signal_reasons, "回踩买点")
+        self._assert_contains(result.signal_reasons, "\u56de\u8e29\u4e70\u70b9")
 
     @patch("src.stock_analyzer.get_config")
     def test_bias_close_to_ma5(self, mock_get_config: MagicMock) -> None:
-        """bias=1.5% should yield '介入好时机'."""
+        """bias=1.5% should yield '\u4ecb\u5165\u597d\u65f6\u673a'."""
         mock_get_config.return_value.bias_threshold = 5.0
         result = _make_result(
             trend_status=TrendStatus.BULL,
             bias_ma5=1.5,
         )
         self.analyzer._generate_signal(result)
-        self._assert_contains(result.signal_reasons, "介入好时机")
+        self._assert_contains(result.signal_reasons, "\u4ecb\u5165\u597d\u65f6\u673a")
 
     @patch("src.stock_analyzer.get_config")
     def test_bias_slightly_high(self, mock_get_config: MagicMock) -> None:
-        """bias=4% (< base_threshold=5%) should yield '可小仓介入'."""
+        """bias=4% (< base_threshold=5%) should yield '\u53ef\u5c0f\u4ed3\u4ecb\u5165'."""
         mock_get_config.return_value.bias_threshold = 5.0
         result = _make_result(
             trend_status=TrendStatus.BULL,
             bias_ma5=4.0,
         )
         self.analyzer._generate_signal(result)
-        self._assert_contains(result.signal_reasons, "可小仓介入")
+        self._assert_contains(result.signal_reasons, "\u53ef\u5c0f\u4ed3\u4ecb\u5165")
 
     @patch("src.stock_analyzer.get_config")
     def test_strong_trend_relaxed_threshold(self, mock_get_config: MagicMock) -> None:
-        """STRONG_BULL + trend_strength=75 + bias=6% -> '可轻仓追踪' (effective=7.5%)."""
+        """STRONG_BULL + trend_strength=75 + bias=6% -> '\u53ef\u8f7b\u4ed3\u8ffd\u8e2a' (effective=7.5%)."""
         mock_get_config.return_value.bias_threshold = 5.0
         result = _make_result(
             trend_status=TrendStatus.STRONG_BULL,
@@ -129,23 +129,23 @@ class StockAnalyzerBiasTestCase(unittest.TestCase):
             bias_ma5=6.0,
         )
         self.analyzer._generate_signal(result)
-        self._assert_contains(result.signal_reasons, "可轻仓追踪")
-        self._assert_not_contains(result.risk_factors, "严禁追高")
+        self._assert_contains(result.signal_reasons, "\u53ef\u8f7b\u4ed3\u8ffd\u8e2a")
+        self._assert_not_contains(result.risk_factors, "\u4e25\u7981\u8ffd\u9ad8")
 
     @patch("src.stock_analyzer.get_config")
     def test_non_strong_trend_strict_threshold(self, mock_get_config: MagicMock) -> None:
-        """BULL + bias=6% -> '严禁追高!'."""
+        """BULL + bias=6% -> '\u4e25\u7981\u8ffd\u9ad8!'."""
         mock_get_config.return_value.bias_threshold = 5.0
         result = _make_result(
             trend_status=TrendStatus.BULL,
             bias_ma5=6.0,
         )
         self.analyzer._generate_signal(result)
-        self._assert_contains(result.risk_factors, "严禁追高")
+        self._assert_contains(result.risk_factors, "\u4e25\u7981\u8ffd\u9ad8")
 
     @patch("src.stock_analyzer.get_config")
     def test_strong_trend_exceed_effective(self, mock_get_config: MagicMock) -> None:
-        """STRONG_BULL + trend_strength=80 + bias=10% -> '严禁追高!' (exceeds 7.5%)."""
+        """STRONG_BULL + trend_strength=80 + bias=10% -> '\u4e25\u7981\u8ffd\u9ad8!' (exceeds 7.5%)."""
         mock_get_config.return_value.bias_threshold = 5.0
         result = _make_result(
             trend_status=TrendStatus.STRONG_BULL,
@@ -153,11 +153,11 @@ class StockAnalyzerBiasTestCase(unittest.TestCase):
             bias_ma5=10.0,
         )
         self.analyzer._generate_signal(result)
-        self._assert_contains(result.risk_factors, "严禁追高")
+        self._assert_contains(result.risk_factors, "\u4e25\u7981\u8ffd\u9ad8")
 
     @patch("src.stock_analyzer.get_config")
     def test_boundary_at_base_threshold(self, mock_get_config: MagicMock) -> None:
-        """bias=5.0% (exact base_threshold) -> '可小仓介入' (bias < base_threshold is False)."""
+        """bias=5.0% (exact base_threshold) -> '\u53ef\u5c0f\u4ed3\u4ecb\u5165' (bias < base_threshold is False)."""
         mock_get_config.return_value.bias_threshold = 5.0
         result = _make_result(
             trend_status=TrendStatus.BULL,
@@ -168,7 +168,7 @@ class StockAnalyzerBiasTestCase(unittest.TestCase):
         # bias < 2 is False, bias < base_threshold is False (5 < 5)
         # bias > effective_threshold: 5 > 5 False
         # bias > base_threshold and is_strong_trend: 5 > 5 False
-        # else: 5 > 5 False, so we'd get to the else branch with "严禁追高"
+        # else: 5 > 5 False, so we'd get to the else branch with "\u4e25\u7981\u8ffd\u9ad8"
         # Actually: bias < 2 -> False, bias < base_threshold (5 < 5) -> False
         # bias > effective_threshold (5 > 5) -> False
         # bias > base_threshold and is_strong_trend -> False
@@ -176,9 +176,9 @@ class StockAnalyzerBiasTestCase(unittest.TestCase):
         # Let me re-read: elif bias < base_threshold -> 5 < 5 is False
         # elif bias > effective_threshold -> 5 > 5 is False
         # elif bias > base_threshold and is_strong_trend -> 5 > 5 is False
-        # else: risks.append 严禁追高 - so we get 严禁追高
+        # else: risks.append \u4e25\u7981\u8ffd\u9ad8 - so we get \u4e25\u7981\u8ffd\u9ad8
         # Because 5.0 is not < 5.0, not > 5.0 when effective=base=5. So we hit the else.
-        self._assert_contains(result.risk_factors, "严禁追高")
+        self._assert_contains(result.risk_factors, "\u4e25\u7981\u8ffd\u9ad8")
 
     @patch("src.stock_analyzer.get_config")
     def test_signal_thresholds_follow_canonical_score_scale(self, mock_get_config: MagicMock) -> None:

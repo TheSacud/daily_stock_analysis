@@ -13,27 +13,27 @@ from src.schemas.decision_action import DecisionAction
 
 
 class BacktestRunRequest(BaseModel):
-    code: Optional[str] = Field(None, description="仅回测指定股票")
-    force: bool = Field(False, description="强制重新计算")
-    eval_window_days: Optional[int] = Field(None, ge=1, le=120, description="评估窗口（交易日数）")
-    min_age_days: Optional[int] = Field(None, ge=0, le=365, description="分析记录最小天龄（0=不限）")
-    analysis_date_from: Optional[date] = Field(None, description="分析日期起始（含）")
-    analysis_date_to: Optional[date] = Field(None, description="分析日期结束（含）")
-    limit: int = Field(200, ge=1, le=2000, description="最多处理的分析记录数")
+    code: Optional[str] = Field(None, description="\u4ec5backtest\u6307\u5b9a\u80a1\u7968")
+    force: bool = Field(False, description="\u5f3a\u5236\u91cd\u65b0\u8ba1\u7b97")
+    eval_window_days: Optional[int] = Field(None, ge=1, le=120, description="\u8bc4\u4f30\u7a97\u53e3 (\u4ea4\u6613\u65e5\u6570)")
+    min_age_days: Optional[int] = Field(None, ge=0, le=365, description="analyze\u8bb0\u5f55\u6700\u5c0f\u5929\u9f84 (0=\u4e0d\u9650)")
+    analysis_date_from: Optional[date] = Field(None, description="analyzedate\u8d77\u59cb (\u542b)")
+    analysis_date_to: Optional[date] = Field(None, description="analyzedate\u7ed3\u675f (\u542b)")
+    limit: int = Field(200, ge=1, le=2000, description="\u6700\u591a\u5904\u7406\u7684analyze\u8bb0\u5f55\u6570")
 
 
 class BacktestRunResponse(BaseModel):
-    processed: int = Field(..., description="候选记录数")
-    saved: int = Field(..., description="写入回测结果数")
-    completed: int = Field(..., description="完成回测数")
-    insufficient: int = Field(..., description="数据不足数")
-    errors: int = Field(..., description="错误数")
+    processed: int = Field(..., description="\u5019\u9009\u8bb0\u5f55\u6570")
+    saved: int = Field(..., description="\u5199\u5165backtestresult\u6570")
+    completed: int = Field(..., description="\u5b8c\u6210backtest\u6570")
+    insufficient: int = Field(..., description="\u6570\u636e\u4e0d\u8db3\u6570")
+    errors: int = Field(..., description="error\u6570")
     applied_eval_window_days: Optional[int] = Field(
         ...,
-        description="实际生效的评估窗口（交易日数）",
+        description="\u5b9e\u9645\u751f\u6548\u7684\u8bc4\u4f30\u7a97\u53e3 (\u4ea4\u6613\u65e5\u6570)",
     )
-    message: Optional[str] = Field(None, description="空结果或降级时的诊断说明")
-    diagnostics: Dict[str, Any] = Field(default_factory=dict, description="回测筛选与诊断信息")
+    message: Optional[str] = Field(None, description="\u7a7aresultor\u964d\u7ea7\u65f6\u7684\u8bca\u65ad\u8bf4\u660e")
+    diagnostics: Dict[str, Any] = Field(default_factory=dict, description="backtest\u7b5b\u9009\u4e0e\u8bca\u65adinfo")
 
 
 class BacktestResultItem(BaseModel):

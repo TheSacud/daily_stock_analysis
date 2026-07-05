@@ -282,16 +282,16 @@ class AgentSkillsEndpointTestCase(unittest.TestCase):
             list_skills=lambda: [
                 SimpleNamespace(
                     name="bull_trend",
-                    display_name="多头趋势",
-                    description="趋势跟随",
+                    display_name="\u591a\u5934\u8d8b\u52bf",
+                    description="\u8d8b\u52bf\u8ddf\u968f",
                     user_invocable=True,
                     default_priority=20,
                     default_active=True,
                 ),
                 SimpleNamespace(
                     name="chan_theory",
-                    display_name="缠论",
-                    description="结构分析",
+                    display_name="\u7f20\u8bba",
+                    description="\u7ed3\u6784\u5206\u6790",
                     user_invocable=True,
                     default_priority=40,
                     default_active=False,
@@ -314,8 +314,8 @@ class AgentSkillsEndpointTestCase(unittest.TestCase):
             list_skills=lambda: [
                 SimpleNamespace(
                     name="bull_trend",
-                    display_name="多头趋势",
-                    description="趋势跟随",
+                    display_name="\u591a\u5934\u8d8b\u52bf",
+                    description="\u8d8b\u52bf\u8ddf\u968f",
                     user_invocable=True,
                     default_priority=20,
                     default_active=True,
@@ -336,8 +336,8 @@ class AgentSkillsEndpointTestCase(unittest.TestCase):
             [
                 {
                     "id": "bull_trend",
-                    "name": "多头趋势",
-                    "description": "趋势跟随",
+                    "name": "\u591a\u5934\u8d8b\u52bf",
+                    "description": "\u8d8b\u52bf\u8ddf\u968f",
                 }
             ],
         )

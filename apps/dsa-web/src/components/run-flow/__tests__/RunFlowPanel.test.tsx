@@ -22,7 +22,7 @@ const snapshot: RunFlowSnapshot = {
   taskId: 'task-1',
   traceId: 'trace-1',
   stockCode: '600519',
-  stockName: '贵州茅台',
+  stockName: '\u8d35\u5dde\u8305\u53f0',
   status: 'degraded',
   generatedAt: '2026-06-08T08:00:00Z',
   summary: {
@@ -34,31 +34,31 @@ const snapshot: RunFlowSnapshot = {
     eventCount: 3,
   },
   lanes: [
-    { id: 'entry', label: '入口', order: 1 },
-    { id: 'data_source', label: '数据来源', order: 2 },
-    { id: 'analysis', label: '分析引擎', order: 3 },
-    { id: 'artifact', label: '产物', order: 4 },
+    { id: 'entry', label: '\u5165\u53e3', order: 1 },
+    { id: 'data_source', label: '\u6570\u636e\u6765\u6e90', order: 2 },
+    { id: 'analysis', label: '\u5206\u6790\u5f15\u64ce', order: 3 },
+    { id: 'artifact', label: '\u4ea7\u7269', order: 4 },
   ],
   nodes: [
     {
       id: 'request',
       lane: 'entry',
       kind: 'entry',
-      label: '用户请求',
+      label: '\u7528\u6237\u8bf7\u6c42',
       status: 'success',
-      message: '任务请求已创建',
+      message: '\u4efb\u52a1\u8bf7\u6c42\u5df2\u521b\u5efa',
     },
     {
       id: 'news',
       lane: 'data_source',
       kind: 'data_source',
-      label: '新闻舆情',
+      label: '\u65b0\u95fb\u8206\u60c5',
       provider: 'AkShare',
       status: 'fallback',
       durationMs: 1200,
       attempts: 2,
       recordCount: 8,
-      message: '主数据源失败后降级成功',
+      message: '\u4e3b\u6570\u636e\u6e90\u5931\u8d25\u540e\u964d\u7ea7\u6210\u529f',
       metadata: {
         fallbackFrom: 'Tushare',
         fallbackTo: 'AkShare',
@@ -68,7 +68,7 @@ const snapshot: RunFlowSnapshot = {
       id: 'llm',
       lane: 'analysis',
       kind: 'model',
-      label: 'LLM 生成',
+      label: 'LLM \u751f\u6210',
       provider: 'DeepSeek',
       status: 'success',
       durationMs: 1800,
@@ -81,7 +81,7 @@ const snapshot: RunFlowSnapshot = {
       to: 'news',
       kind: 'control',
       status: 'success',
-      label: '调度',
+      label: '\u8c03\u5ea6',
     },
     {
       id: 'news-llm',
@@ -89,7 +89,7 @@ const snapshot: RunFlowSnapshot = {
       to: 'llm',
       kind: 'fallback',
       status: 'fallback',
-      label: '降级输入',
+      label: '\u964d\u7ea7\u8f93\u5165',
     },
   ],
   events: [
@@ -99,7 +99,7 @@ const snapshot: RunFlowSnapshot = {
       severity: 'info',
       type: 'task_created',
       nodeId: 'request',
-      title: '任务创建',
+      title: '\u4efb\u52a1\u521b\u5efa',
     },
     {
       id: 'evt-2',
@@ -107,8 +107,8 @@ const snapshot: RunFlowSnapshot = {
       severity: 'warning',
       type: 'provider_fallback',
       nodeId: 'news',
-      title: '新闻数据源降级',
-      message: '重试后切换数据源',
+      title: '\u65b0\u95fb\u6570\u636e\u6e90\u964d\u7ea7',
+      message: '\u91cd\u8bd5\u540e\u5207\u6362\u6570\u636e\u6e90',
     },
   ],
 };
@@ -120,14 +120,14 @@ const providerAttemptSnapshot: RunFlowSnapshot = {
       id: 'task_queue',
       lane: 'entry',
       kind: 'queue',
-      label: '任务队列',
+      label: '\u4efb\u52a1\u961f\u5217',
       status: 'success',
     },
     {
       id: 'provider_news_search_tavily_1',
       lane: 'data_source',
       kind: 'data_source',
-      label: '新闻舆情 · Tavily',
+      label: '\u65b0\u95fb\u8206\u60c5 · Tavily',
       provider: 'Tavily',
       status: 'failed',
       durationMs: 1200,
@@ -137,7 +137,7 @@ const providerAttemptSnapshot: RunFlowSnapshot = {
       id: 'provider_news_search_searxng_2',
       lane: 'data_source',
       kind: 'data_source',
-      label: '新闻舆情 · SearXNG',
+      label: '\u65b0\u95fb\u8206\u60c5 · SearXNG',
       provider: 'SearXNG',
       status: 'success',
       durationMs: 800,
@@ -182,7 +182,7 @@ const providerAttemptSnapshot: RunFlowSnapshot = {
       severity: 'warning',
       type: 'provider_run',
       nodeId: 'provider_news_search_tavily_1',
-      title: '新闻舆情失败',
+      title: '\u65b0\u95fb\u8206\u60c5\u5931\u8d25',
     },
   ],
 };
@@ -195,7 +195,7 @@ const contextBlockSnapshot: RunFlowSnapshot = {
       id: 'context_block_news',
       lane: 'data_source',
       kind: 'data_source',
-      label: '新闻',
+      label: '\u65b0\u95fb',
       status: 'success',
       recordCount: 6,
       metadata: { block_key: 'news' },
@@ -204,7 +204,7 @@ const contextBlockSnapshot: RunFlowSnapshot = {
       id: 'context_block_fundamental',
       lane: 'data_source',
       kind: 'data_source',
-      label: '基本面',
+      label: '\u57fa\u672c\u9762',
       status: 'degraded',
       metadata: { block_key: 'fundamental' },
     },
@@ -246,21 +246,21 @@ describe('RunFlowPanel', () => {
     render(<RunFlowPanel source={{ type: 'task', taskId: 'task-1' }} />);
 
     expect(screen.getByTestId('run-flow-panel-loading')).toBeInTheDocument();
-    expect(screen.getByText('正在加载运行流')).toBeInTheDocument();
+    expect(screen.getByText('\u6b63\u5728\u52a0\u8f7d\u8fd0\u884c\u6d41')).toBeInTheDocument();
   });
 
   it('renders an error state and reload action when the request fails', async () => {
     vi.mocked(analysisApi.getTaskFlow).mockRejectedValue({
       response: {
         status: 404,
-        data: { message: '运行流不存在' },
+        data: { message: '\u8fd0\u884c\u6d41\u4e0d\u5b58\u5728' },
       },
     });
 
     render(<RunFlowPanel source={{ type: 'task', taskId: 'missing-task' }} />);
 
     expect(await screen.findByTestId('run-flow-panel-error')).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: '重新加载' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: '\u91cd\u65b0\u52a0\u8f7d' })).toBeInTheDocument();
   });
 
   it('renders an empty snapshot state when there are no nodes or events', async () => {
@@ -274,29 +274,29 @@ describe('RunFlowPanel', () => {
 
     render(<RunFlowPanel source={{ type: 'history', recordId: 1 }} />);
 
-    expect(await screen.findByText('暂无运行流细节')).toBeInTheDocument();
+    expect(await screen.findByText('\u6682\u65e0\u8fd0\u884c\u6d41\u7ec6\u8282')).toBeInTheDocument();
     expect(historyApi.getRecordFlow).toHaveBeenCalledWith(1);
   });
 
   it('renders a successful graph, event stream, and selectable node details', async () => {
     vi.mocked(analysisApi.getTaskFlow).mockResolvedValue(snapshot);
 
-    render(<RunFlowPanel source={{ type: 'task', taskId: 'task-1' }} title="贵州茅台运行流" />);
+    render(<RunFlowPanel source={{ type: 'task', taskId: 'task-1' }} title="\u8d35\u5dde\u8305\u53f0\u8fd0\u884c\u6d41" />);
 
     expect(await screen.findByTestId('run-flow-panel')).toBeInTheDocument();
-    expect(screen.getByText('贵州茅台运行流')).toBeInTheDocument();
+    expect(screen.getByText('\u8d35\u5dde\u8305\u53f0\u8fd0\u884c\u6d41')).toBeInTheDocument();
     expect(screen.getByTestId('run-flow-layout')).toHaveClass('xl:grid-cols-[minmax(0,1fr)_19.25rem]');
     expect(screen.getByTestId('run-flow-events-column')).toHaveClass('xl:max-h-[calc(100vh-18rem)]');
     expect(screen.getByTestId('run-flow-graph')).toBeInTheDocument();
     expect(screen.getByTestId('run-flow-events')).toBeInTheDocument();
-    expect(await screen.findByTestId('run-flow-node-details')).toHaveTextContent('新闻舆情');
+    expect(await screen.findByTestId('run-flow-node-details')).toHaveTextContent('\u65b0\u95fb\u8206\u60c5');
 
-    fireEvent.click(screen.getByRole('button', { name: 'LLM 生成 节点，状态 成功' }));
+    fireEvent.click(screen.getByRole('button', { name: 'LLM \u751f\u6210 \u8282\u70b9，\u72b6\u6001 \u6210\u529f' }));
 
-    expect(screen.getByTestId('run-flow-node-details')).toHaveTextContent('LLM 生成');
+    expect(screen.getByTestId('run-flow-node-details')).toHaveTextContent('LLM \u751f\u6210');
     expect(screen.getByTestId('run-flow-node-details')).toHaveTextContent('DeepSeek');
 
-    fireEvent.click(screen.getByRole('button', { name: '新闻舆情 节点，状态 降级回退' }));
+    fireEvent.click(screen.getByRole('button', { name: '\u65b0\u95fb\u8206\u60c5 \u8282\u70b9，\u72b6\u6001 \u964d\u7ea7\u56de\u9000' }));
 
     expect(screen.getByTestId('run-flow-node-details')).toHaveTextContent('fallbackFrom');
     expect(screen.getByTestId('run-flow-node-details')).toHaveTextContent('Tushare');
@@ -313,7 +313,7 @@ describe('RunFlowPanel', () => {
           id: 'artifact',
           lane: 'artifact',
           kind: 'artifact',
-          label: '保存报告',
+          label: '\u4fdd\u5b58\u62a5\u544a',
           status: 'success',
         },
       ],
@@ -325,16 +325,16 @@ describe('RunFlowPanel', () => {
           to: 'artifact',
           kind: 'data',
           status: 'success',
-          label: '保存',
+          label: '\u4fdd\u5b58',
         },
       ],
     });
 
     render(<RunFlowPanel source={{ type: 'task', taskId: 'task-1' }} />);
 
-    expect(await screen.findByTestId('run-flow-node-details')).toHaveTextContent('新闻舆情');
-    expect(screen.getByText('保存')).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: '新闻舆情 节点，状态 降级回退' })).toHaveAttribute('aria-pressed', 'false');
+    expect(await screen.findByTestId('run-flow-node-details')).toHaveTextContent('\u65b0\u95fb\u8206\u60c5');
+    expect(screen.getByText('\u4fdd\u5b58')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: '\u65b0\u95fb\u8206\u60c5 \u8282\u70b9，\u72b6\u6001 \u964d\u7ea7\u56de\u9000' })).toHaveAttribute('aria-pressed', 'false');
   });
 
   it('expands provider attempt groups from node details', async () => {
@@ -344,12 +344,12 @@ describe('RunFlowPanel', () => {
 
     expect(await screen.findByTestId('run-flow-node-topology_data_news_search')).toBeInTheDocument();
     expect(screen.queryByTestId('run-flow-node-provider_news_search_tavily_1')).not.toBeInTheDocument();
-    expect(await screen.findByTestId('run-flow-node-details')).toHaveTextContent('运行尝试');
+    expect(await screen.findByTestId('run-flow-node-details')).toHaveTextContent('\u8fd0\u884c\u5c1d\u8bd5');
 
-    fireEvent.click(screen.getByRole('button', { name: '展开尝试' }));
+    fireEvent.click(screen.getByRole('button', { name: '\u5c55\u5f00\u5c1d\u8bd5' }));
 
     expect(await screen.findByTestId('run-flow-node-provider_news_search_tavily_1')).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: '收起尝试' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: '\u6536\u8d77\u5c1d\u8bd5' })).toBeInTheDocument();
   });
 
   it('renders TickFlow realtime fallback attempts through generic provider groups', async () => {
@@ -367,7 +367,7 @@ describe('RunFlowPanel', () => {
           id: 'provider_realtime_quote_tickflowfetcher_1',
           lane: 'data_source',
           kind: 'data_source',
-          label: '实时行情 · TickFlowFetcher',
+          label: '\u5b9e\u65f6\u884c\u60c5 · TickFlowFetcher',
           provider: 'TickFlowFetcher',
           status: 'failed',
           durationMs: 892,
@@ -377,7 +377,7 @@ describe('RunFlowPanel', () => {
           id: 'provider_realtime_quote_aksharefetcher_2',
           lane: 'data_source',
           kind: 'data_source',
-          label: '实时行情 · AkshareFetcher',
+          label: '\u5b9e\u65f6\u884c\u60c5 · AkshareFetcher',
           provider: 'AkshareFetcher',
           status: 'success',
           durationMs: 8700,
@@ -445,7 +445,7 @@ describe('RunFlowPanel', () => {
 
     const details = await screen.findByTestId('run-flow-node-details');
 
-    expect(details).toHaveTextContent('运行尝试');
+    expect(details).toHaveTextContent('\u8fd0\u884c\u5c1d\u8bd5');
     expect(details).not.toHaveTextContent('data_type');
     expect(details).not.toHaveTextContent('provider_chain');
     expect(details).not.toHaveTextContent('success_count');
@@ -462,9 +462,9 @@ describe('RunFlowPanel', () => {
     const details = await screen.findByTestId('run-flow-node-details');
 
     expect(details).toHaveTextContent('ContextPack');
-    expect(details).toHaveTextContent('上下文输入');
-    expect(details).toHaveTextContent('新闻');
-    expect(details).toHaveTextContent('基本面');
+    expect(details).toHaveTextContent('\u4e0a\u4e0b\u6587\u8f93\u5165');
+    expect(details).toHaveTextContent('\u65b0\u95fb');
+    expect(details).toHaveTextContent('\u57fa\u672c\u9762');
     expect(details).not.toHaveTextContent('context_status_counts');
   });
 

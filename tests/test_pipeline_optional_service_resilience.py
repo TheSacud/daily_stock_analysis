@@ -51,12 +51,12 @@ def test_search_service_init_failure_logs_traceback_and_failure_state(caplog):
     assert pipeline.search_service is None
 
     init_failure_records = [
-        record for record in caplog.records if "搜索服务初始化失败，将以无搜索模式运行" in record.message
+        record for record in caplog.records if "\u641c\u7d22\u670d\u52a1\u521d\u59cb\u5316\u5931\u8d25，\u5c06\u4ee5\u65e0\u641c\u7d22\u6a21\u5f0f\u8fd0\u884c" in record.message
     ]
     assert len(init_failure_records) == 1
     assert init_failure_records[0].exc_info is not None
-    assert "搜索服务未启用（初始化失败或依赖缺失）" in caplog.text
-    assert "搜索服务未启用（未配置搜索能力）" not in caplog.text
+    assert "\u641c\u7d22\u670d\u52a1\u672a\u542f\u7528（\u521d\u59cb\u5316\u5931\u8d25\u6216\u4f9d\u8d56\u7f3a\u5931）" in caplog.text
+    assert "\u641c\u7d22\u670d\u52a1\u672a\u542f\u7528（\u672a\u914d\u7f6e\u641c\u7d22\u80fd\u529b）" not in caplog.text
 
 
 def test_social_sentiment_init_failure_logs_traceback(caplog):
@@ -72,7 +72,7 @@ def test_social_sentiment_init_failure_logs_traceback(caplog):
     assert pipeline.social_sentiment_service is None
 
     init_failure_records = [
-        record for record in caplog.records if "社交舆情服务初始化失败，将跳过舆情分析" in record.message
+        record for record in caplog.records if "\u793e\u4ea4\u8206\u60c5\u670d\u52a1\u521d\u59cb\u5316\u5931\u8d25，\u5c06\u8df3\u8fc7\u8206\u60c5\u5206\u6790" in record.message
     ]
     assert len(init_failure_records) == 1
     assert init_failure_records[0].exc_info is not None

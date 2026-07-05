@@ -17,13 +17,13 @@ const overview: AnalysisContextPackOverview = {
   createdAt: '2026-04-10T08:30:00+00:00',
   subject: {
     code: '600519',
-    stockName: '贵州茅台',
+    stockName: '\u8d35\u5dde\u8305\u53f0',
     market: 'cn',
   },
   blocks: [
     {
       key: 'quote',
-      label: '行情',
+      label: '\u884c\u60c5',
       status: 'available',
       source: 'mock_quote',
       warnings: [],
@@ -31,7 +31,7 @@ const overview: AnalysisContextPackOverview = {
     },
     {
       key: 'news',
-      label: '新闻',
+      label: '\u65b0\u95fb',
       status: 'missing',
       source: null,
       warnings: ['news_provider_timeout'],
@@ -39,7 +39,7 @@ const overview: AnalysisContextPackOverview = {
     },
     {
       key: 'fundamentals',
-      label: '基本面',
+      label: '\u57fa\u672c\u9762',
       status: 'fetch_failed',
       source: 'fundamental_pipeline',
       warnings: [],
@@ -86,28 +86,28 @@ describe('AnalysisContextSummary', () => {
 
     const panel = screen.getByTestId('analysis-context-summary');
     expect(panel).not.toHaveAttribute('open');
-    expect(within(panel).getAllByText('输入数据块')[0]).toBeVisible();
-    expect(screen.getAllByText('可用 1')[0]).toBeVisible();
-    expect(screen.getAllByText('缺失 1')[0]).toBeVisible();
-    expect(screen.getAllByText('抓取失败 1')[0]).toBeVisible();
-    expect(screen.getAllByText('质量分 82/100 可用')[0]).toBeVisible();
-    expect(screen.getByText('触发来源: api')).toBeVisible();
-    expect(screen.getByText('来源: mock_quote')).not.toBeVisible();
+    expect(within(panel).getAllByText('\u8f93\u5165\u6570\u636e\u5757')[0]).toBeVisible();
+    expect(screen.getAllByText('\u53ef\u7528 1')[0]).toBeVisible();
+    expect(screen.getAllByText('\u7f3a\u5931 1')[0]).toBeVisible();
+    expect(screen.getAllByText('\u6293\u53d6\u5931\u8d25 1')[0]).toBeVisible();
+    expect(screen.getAllByText('\u8d28\u91cf\u5206 82/100 \u53ef\u7528')[0]).toBeVisible();
+    expect(screen.getByText('\u89e6\u53d1\u6765\u6e90: api')).toBeVisible();
+    expect(screen.getByText('\u6765\u6e90: mock_quote')).not.toBeVisible();
 
-    fireEvent.click(within(panel).getAllByText('输入数据块')[0]);
+    fireEvent.click(within(panel).getAllByText('\u8f93\u5165\u6570\u636e\u5757')[0]);
 
     expect(panel).toHaveAttribute('open');
-    expect(screen.getByText('行情')).toBeInTheDocument();
-    expect(screen.getByText('来源: mock_quote')).toBeVisible();
-    expect(screen.getByText('告警:')).toBeInTheDocument();
+    expect(screen.getByText('\u884c\u60c5')).toBeInTheDocument();
+    expect(screen.getByText('\u6765\u6e90: mock_quote')).toBeVisible();
+    expect(screen.getByText('\u544a\u8b66:')).toBeInTheDocument();
     expect(screen.getByText(/intraday_realtime_overlay/)).toBeInTheDocument();
-    expect(screen.getByText('数据限制:')).toBeInTheDocument();
-    expect(screen.getByText(/基本面：抓取失败/)).toBeInTheDocument();
+    expect(screen.getByText('\u6570\u636e\u9650\u5236:')).toBeInTheDocument();
+    expect(screen.getByText(/\u57fa\u672c\u9762：\u6293\u53d6\u5931\u8d25/)).toBeInTheDocument();
     expect(screen.getByText(/news_provider_timeout/)).toBeInTheDocument();
-    expect(screen.getByText(/未进入分析输入 \(news_context_missing\)/)).toBeInTheDocument();
+    expect(screen.getByText(/\u672a\u8fdb\u5165\u5206\u6790\u8f93\u5165 \(news_context_missing\)/)).toBeInTheDocument();
     expect(screen.getByText(/fundamental_pipeline_failed/)).toBeInTheDocument();
-    expect(screen.getAllByText('新闻结果数: 3').some((item) => item.textContent === '新闻结果数: 3')).toBe(true);
-    expect(screen.getAllByText('本次分析输入')[0]).toBeVisible();
+    expect(screen.getAllByText('\u65b0\u95fb\u7ed3\u679c\u6570: 3').some((item) => item.textContent === '\u65b0\u95fb\u7ed3\u679c\u6570: 3')).toBe(true);
+    expect(screen.getAllByText('\u672c\u6b21\u5206\u6790\u8f93\u5165')[0]).toBeVisible();
   });
 
   it('localizes the collapsed summary for english reports', () => {
@@ -135,7 +135,7 @@ describe('AnalysisContextSummary', () => {
       blocks: [
         {
           key: 'quote',
-          label: '行情',
+          label: '\u884c\u60c5',
           status: 'fallback',
           source: 'cached_quote',
           warnings: ['quote_fallback'],
@@ -143,7 +143,7 @@ describe('AnalysisContextSummary', () => {
         },
         {
           key: 'fundamental',
-          label: '基本面',
+          label: '\u57fa\u672c\u9762',
           status: 'stale',
           source: 'fundamental_cache',
           warnings: ['stale_fundamental'],
@@ -166,10 +166,10 @@ describe('AnalysisContextSummary', () => {
 
     const panel = screen.getByTestId('analysis-context-summary');
     expect(panel).not.toHaveAttribute('open');
-    expect(within(panel).getByText('可用 0')).toBeVisible();
-    expect(within(panel).getByText('缺失 0')).toBeVisible();
-    expect(within(panel).getAllByText('降级 1')[0]).toBeVisible();
-    expect(within(panel).getAllByText('过期 1')[0]).toBeVisible();
+    expect(within(panel).getByText('\u53ef\u7528 0')).toBeVisible();
+    expect(within(panel).getByText('\u7f3a\u5931 0')).toBeVisible();
+    expect(within(panel).getAllByText('\u964d\u7ea7 1')[0]).toBeVisible();
+    expect(within(panel).getAllByText('\u8fc7\u671f 1')[0]).toBeVisible();
   });
 
   it('does not render without an overview', () => {
@@ -181,7 +181,7 @@ describe('AnalysisContextSummary', () => {
     const unsafeOverview = {
       ...overview,
       value: 'raw trend payload',
-      content: '完整新闻正文不应出现',
+      content: '\u5b8c\u6574\u65b0\u95fb\u6b63\u6587\u4e0d\u5e94\u51fa\u73b0',
       apiKey: 'secret-key',
       blocks: [
         {
@@ -198,10 +198,10 @@ describe('AnalysisContextSummary', () => {
 
     render(<AnalysisContextSummary overview={unsafeOverview} />);
 
-    fireEvent.click(screen.getAllByText('输入数据块')[0]);
+    fireEvent.click(screen.getAllByText('\u8f93\u5165\u6570\u636e\u5757')[0]);
 
     expect(screen.queryByText('raw trend payload')).not.toBeInTheDocument();
-    expect(screen.queryByText('完整新闻正文不应出现')).not.toBeInTheDocument();
+    expect(screen.queryByText('\u5b8c\u6574\u65b0\u95fb\u6b63\u6587\u4e0d\u5e94\u51fa\u73b0')).not.toBeInTheDocument();
     expect(screen.queryByText('secret-key')).not.toBeInTheDocument();
   });
 });
@@ -222,7 +222,7 @@ describe('ReportSummary analysis context placement', () => {
         id: 1,
         queryId: 'q1',
         stockCode: '600519',
-        stockName: '贵州茅台',
+        stockName: '\u8d35\u5dde\u8305\u53f0',
         reportType: 'detailed',
         reportLanguage: 'zh',
         createdAt: '2026-04-10T12:00:00',
@@ -244,8 +244,8 @@ describe('ReportSummary analysis context placement', () => {
       },
       summary: {
         analysisSummary: 'summary',
-        operationAdvice: '持有',
-        trendPrediction: '震荡',
+        operationAdvice: '\u6301\u6709',
+        trendPrediction: '\u9707\u8361',
         sentimentScore: 70,
       },
       strategy: {
@@ -258,12 +258,12 @@ describe('ReportSummary analysis context placement', () => {
     const result: AnalysisResult = {
       queryId: 'q1',
       stockCode: '600519',
-      stockName: '贵州茅台',
+      stockName: '\u8d35\u5dde\u8305\u53f0',
       report,
       diagnosticSummary: {
         status: 'normal',
-        statusLabel: '正常',
-        reason: '运行正常',
+        statusLabel: '\u6b63\u5e38',
+        reason: '\u8fd0\u884c\u6b63\u5e38',
         components: {},
         copyText: '',
       },
@@ -273,25 +273,25 @@ describe('ReportSummary analysis context placement', () => {
     render(<ReportSummary data={result} />);
 
     await waitFor(() => {
-      expect(screen.getByText('暂无相关资讯')).toBeInTheDocument();
+      expect(screen.getByText('\u6682\u65e0\u76f8\u5173\u8d44\u8baf')).toBeInTheDocument();
     });
 
-    expect(screen.getByText('市场阶段: CN · 盘中')).toBeInTheDocument();
-    expect(screen.getByText('日线未完成')).toBeInTheDocument();
-    expect(screen.getAllByText('质量分 82/100 可用')[0]).toBeInTheDocument();
+    expect(screen.getByText('\u5e02\u573a\u9636\u6bb5: CN · \u76d8\u4e2d')).toBeInTheDocument();
+    expect(screen.getByText('\u65e5\u7ebf\u672a\u5b8c\u6210')).toBeInTheDocument();
+    expect(screen.getAllByText('\u8d28\u91cf\u5206 82/100 \u53ef\u7528')[0]).toBeInTheDocument();
 
-    const strategy = screen.getByText('狙击点位');
-    const news = screen.getByText('相关资讯');
+    const strategy = screen.getByText('\u72d9\u51fb\u70b9\u4f4d');
+    const news = screen.getByText('\u76f8\u5173\u8d44\u8baf');
     const diagnostics = screen.getByTestId('run-diagnostics');
     const contextSummary = screen.getByTestId('analysis-context-summary');
     expect(contextSummary).not.toHaveAttribute('open');
     expect(diagnostics).not.toHaveAttribute('open');
-    const traceability = screen.getByText('数据追溯');
+    const traceability = screen.getByText('\u6570\u636e\u8ffd\u6eaf');
 
     expect(strategy.compareDocumentPosition(news) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
     expect(news.compareDocumentPosition(contextSummary) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
     expect(contextSummary.compareDocumentPosition(diagnostics) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
     expect(diagnostics.compareDocumentPosition(traceability) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
-    expect(screen.queryByText('AI 建议 / 决策信号')).not.toBeInTheDocument();
+    expect(screen.queryByText('AI \u5efa\u8bae / \u51b3\u7b56\u4fe1\u53f7')).not.toBeInTheDocument();
   });
 });

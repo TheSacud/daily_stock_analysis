@@ -9,22 +9,22 @@ describe('RunFlowNodeDetails', () => {
       id: 'task_queue',
       lane: 'entry',
       kind: 'queue',
-      label: '任务队列',
+      label: '\u4efb\u52a1\u961f\u5217',
       status: 'success',
       startedAt: '2026-06-08T22:14:25',
-      message: '任务进入运行队列',
+      message: '\u4efb\u52a1\u8fdb\u5165\u8fd0\u884c\u961f\u5217',
     };
 
     render(<RunFlowNodeDetails node={node} />);
 
-    expect(screen.getByText('任务队列')).toBeInTheDocument();
-    expect(screen.getByText('类型')).toBeInTheDocument();
-    expect(screen.getByText('队列')).toBeInTheDocument();
-    expect(screen.getByText('开始时间')).toBeInTheDocument();
-    expect(screen.queryByText('提供方')).not.toBeInTheDocument();
-    expect(screen.queryByText('耗时')).not.toBeInTheDocument();
-    expect(screen.queryByText('尝试次数')).not.toBeInTheDocument();
-    expect(screen.queryByText('记录数')).not.toBeInTheDocument();
+    expect(screen.getByText('\u4efb\u52a1\u961f\u5217')).toBeInTheDocument();
+    expect(screen.getByText('\u7c7b\u578b')).toBeInTheDocument();
+    expect(screen.getByText('\u961f\u5217')).toBeInTheDocument();
+    expect(screen.getByText('\u5f00\u59cb\u65f6\u95f4')).toBeInTheDocument();
+    expect(screen.queryByText('\u63d0\u4f9b\u65b9')).not.toBeInTheDocument();
+    expect(screen.queryByText('\u8017\u65f6')).not.toBeInTheDocument();
+    expect(screen.queryByText('\u5c1d\u8bd5\u6b21\u6570')).not.toBeInTheDocument();
+    expect(screen.queryByText('\u8bb0\u5f55\u6570')).not.toBeInTheDocument();
   });
 
   it('renders ContextPack quality metadata as structured details instead of raw JSON', () => {
@@ -63,18 +63,18 @@ describe('RunFlowNodeDetails', () => {
 
     render(<RunFlowNodeDetails node={node} />);
 
-    expect(screen.getByText('上下文质量')).toBeInTheDocument();
-    expect(screen.getByText('综合评分')).toBeInTheDocument();
+    expect(screen.getByText('\u4e0a\u4e0b\u6587\u8d28\u91cf')).toBeInTheDocument();
+    expect(screen.getByText('\u7efc\u5408\u8bc4\u5206')).toBeInTheDocument();
     expect(screen.getByText('91')).toBeInTheDocument();
-    expect(screen.getByText('数据块评分')).toBeInTheDocument();
+    expect(screen.getByText('\u6570\u636e\u5757\u8bc4\u5206')).toBeInTheDocument();
     expect(screen.getByText('news')).toBeInTheDocument();
     expect(screen.getByText('35')).toBeInTheDocument();
-    expect(screen.getByText('版本')).toBeInTheDocument();
+    expect(screen.getByText('\u7248\u672c')).toBeInTheDocument();
     expect(screen.getByText('1.0')).toBeInTheDocument();
-    expect(screen.queryByText('提供方')).not.toBeInTheDocument();
-    expect(screen.queryByText('耗时')).not.toBeInTheDocument();
-    expect(screen.queryByText('尝试次数')).not.toBeInTheDocument();
-    expect(screen.queryByText('记录数')).not.toBeInTheDocument();
+    expect(screen.queryByText('\u63d0\u4f9b\u65b9')).not.toBeInTheDocument();
+    expect(screen.queryByText('\u8017\u65f6')).not.toBeInTheDocument();
+    expect(screen.queryByText('\u5c1d\u8bd5\u6b21\u6570')).not.toBeInTheDocument();
+    expect(screen.queryByText('\u8bb0\u5f55\u6570')).not.toBeInTheDocument();
     expect(screen.queryByText('counts')).not.toBeInTheDocument();
     expect(screen.queryByText('dataQuality')).not.toBeInTheDocument();
     expect(screen.queryByText('context_status_counts')).not.toBeInTheDocument();
@@ -86,7 +86,7 @@ describe('RunFlowNodeDetails', () => {
       id: 'topology_data_realtime_quote',
       lane: 'data_source',
       kind: 'data_source',
-      label: '实时行情',
+      label: '\u5b9e\u65f6\u884c\u60c5',
       provider: 'TushareFetcher -> AkshareFetcher',
       status: 'fallback',
       durationMs: 750,
@@ -96,13 +96,13 @@ describe('RunFlowNodeDetails', () => {
 
     render(<RunFlowNodeDetails node={node} />);
 
-    expect(screen.getByText('提供方')).toBeInTheDocument();
+    expect(screen.getByText('\u63d0\u4f9b\u65b9')).toBeInTheDocument();
     expect(screen.getByText('TushareFetcher -> AkshareFetcher')).toBeInTheDocument();
-    expect(screen.getByText('耗时')).toBeInTheDocument();
+    expect(screen.getByText('\u8017\u65f6')).toBeInTheDocument();
     expect(screen.getByText('750 ms')).toBeInTheDocument();
-    expect(screen.getByText('尝试次数')).toBeInTheDocument();
+    expect(screen.getByText('\u5c1d\u8bd5\u6b21\u6570')).toBeInTheDocument();
     expect(screen.getByText('2')).toBeInTheDocument();
-    expect(screen.getByText('记录数')).toBeInTheDocument();
+    expect(screen.getByText('\u8bb0\u5f55\u6570')).toBeInTheDocument();
     expect(screen.getByText('39')).toBeInTheDocument();
   });
 });

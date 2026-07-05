@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 """
 ===================================
-钉钉平台适配器
+DingTalk\u5e73\u53f0\u9002\u914d\u5668
 ===================================
 
-处理钉钉机器人的 Webhook 回调。
+\u5904\u7406DingTalk\u673a\u5668\u4eba\u7684 Webhook \u56de\u8c03.
 
-钉钉机器人文档：
+DingTalk\u673a\u5668\u4ebadocs:
 https://open.dingtalk.com/document/robots/robot-overview
 """
 
@@ -27,61 +27,61 @@ logger = logging.getLogger(__name__)
 
 class DingtalkPlatform(BotPlatform):
     """
-    钉钉平台适配器
-    
-    支持：
-    - 企业内部机器人回调
-    - 群机器人 Outgoing 回调
-    - 消息签名验证
-    
-    配置要求：
-    - DINGTALK_APP_KEY: 应用 AppKey
-    - DINGTALK_APP_SECRET: 应用 AppSecret（用于签名验证）
+    DingTalk\u5e73\u53f0\u9002\u914d\u5668
+
+    \u652f\u6301:
+    - \u4f01\u4e1a\u5185\u90e8\u673a\u5668\u4eba\u56de\u8c03
+    - \u7fa4\u673a\u5668\u4eba Outgoing \u56de\u8c03
+    - \u6d88\u606f\u7b7e\u540d\u9a8c\u8bc1
+
+    config\u8981\u6c42:
+    - DINGTALK_APP_KEY: \u5e94\u7528 AppKey
+    - DINGTALK_APP_SECRET: \u5e94\u7528 AppSecret (\u7528\u4e8e\u7b7e\u540d\u9a8c\u8bc1)
     """
-    
+
     def __init__(self):
         from src.config import get_config
         config = get_config()
-        
+
         self._app_key = getattr(config, 'dingtalk_app_key', None)
         self._app_secret = getattr(config, 'dingtalk_app_secret', None)
-    
+
     @property
     def platform_name(self) -> str:
         return "dingtalk"
-    
+
     def verify_request(self, headers: Dict[str, str], body: bytes) -> bool:
         """
-        验证钉钉请求签名
-        
-        钉钉签名算法：
-        1. 获取 timestamp 和 sign
-        2. 计算：base64(hmac_sha256(timestamp + "\n" + app_secret))
-        3. 比对签名
+        \u9a8c\u8bc1DingTalkrequest\u7b7e\u540d
+
+        DingTalk\u7b7e\u540d\u7b97\u6cd5:
+        1. \u83b7\u53d6 timestamp \u548c sign
+        2. \u8ba1\u7b97: base64(hmac_sha256(timestamp + "\n" + app_secret))
+        3. \u6bd4\u5bf9\u7b7e\u540d
         """
         if not self._app_secret:
-            logger.warning("[DingTalk] 未配置 app_secret，跳过签名验证")
+            logger.warning("[DingTalk] app_secret not configured; skipping signature verification")
             return True
-        
+
         timestamp = headers.get('timestamp', '')
         sign = headers.get('sign', '')
-        
+
         if not timestamp or not sign:
-            logger.warning("[DingTalk] 缺少签名参数")
-            return True  # 可能是不需要签名的请求
-        
-        # 验证时间戳（1小时内有效）
+            logger.warning("[DingTalk] \u7f3a\u5c11\u7b7e\u540dparameter")
+            return True  # \u53ef\u80fd\u662f\u4e0d\u9700\u8981\u7b7e\u540d\u7684request
+
+        # \u9a8c\u8bc1\u65f6\u95f4\u6233 (1\u5c0f\u65f6\u5185\u6709\u6548)
         try:
             request_time = int(timestamp)
             current_time = int(time.time() * 1000)
             if abs(current_time - request_time) > 3600 * 1000:
-                logger.warning("[DingTalk] 时间戳过期")
+                logger.warning("[DingTalk] timestamp expired")
                 return False
         except ValueError:
-            logger.warning("[DingTalk] 无效的时间戳")
+            logger.warning("[DingTalk] invalid timestamp")
             return False
-        
-        # 计算签名
+
+        # \u8ba1\u7b97\u7b7e\u540d
         string_to_sign = f"{timestamp}\n{self._app_secret}"
         hmac_code = hmac.new(
             self._app_secret.encode('utf-8'),
@@ -89,34 +89,34 @@ class DingtalkPlatform(BotPlatform):
             digestmod=hashlib.sha256
         ).digest()
         expected_sign = base64.b64encode(hmac_code).decode('utf-8')
-        
+
         if sign != expected_sign:
-            logger.warning(f"[DingTalk] 签名验证失败")
+            logger.warning(f"[DingTalk] signature verification failed")
             return False
-        
+
         return True
-    
+
     def handle_challenge(self, data: Dict[str, Any]) -> Optional[WebhookResponse]:
-        """钉钉不需要 URL 验证"""
+        """DingTalk\u4e0d\u9700\u8981 URL \u9a8c\u8bc1"""
         return None
-    
+
     def parse_message(self, data: Dict[str, Any]) -> Optional[BotMessage]:
         """
-        解析钉钉消息
-        
-        钉钉 Outgoing 机器人消息格式：
+        \u89e3\u6790DingTalk\u6d88\u606f
+
+        DingTalk Outgoing \u673a\u5668\u4eba\u6d88\u606f\u683c\u5f0f:
         {
             "msgtype": "text",
             "text": {
-                "content": "@机器人 /analyze 600519"
+                "content": "@\u673a\u5668\u4eba /analyze 600519"
             },
             "msgId": "xxx",
             "createAt": "1234567890",
-            "conversationType": "2",  # 1=单聊, 2=群聊
+            "conversationType": "2",  # 1=\u5355\u804a, 2=\u7fa4\u804a
             "conversationId": "xxx",
-            "conversationTitle": "群名",
+            "conversationTitle": "\u7fa4\u540d",
             "senderId": "xxx",
-            "senderNick": "用户昵称",
+            "senderNick": "user\u6635\u79f0",
             "senderCorpId": "xxx",
             "senderStaffId": "xxx",
             "chatbotUserId": "xxx",
@@ -126,24 +126,24 @@ class DingtalkPlatform(BotPlatform):
             "sessionWebhookExpiredTime": 1234567890
         }
         """
-        # 检查消息类型
+        # \u68c0check\u6d88\u606f\u7c7b\u578b
         msg_type = data.get('msgtype', '')
         if msg_type != 'text':
-            logger.debug(f"[DingTalk] 忽略非文本消息: {msg_type}")
+            logger.debug(f"[DingTalk] ignored non-text message: {msg_type}")
             return None
-        
-        # 获取消息内容
+
+        # \u83b7\u53d6\u6d88\u606f\u5185\u5bb9
         text_content = data.get('text', {})
         raw_content = text_content.get('content', '')
-        
-        # 提取命令（去除 @机器人）
+
+        # \u63d0\u53d6command (\u53bb\u9664 @\u673a\u5668\u4eba)
         content = self._extract_command(raw_content)
-        
-        # 检查是否 @了机器人
+
+        # \u68c0check\u662f\u5426 @\u4e86\u673a\u5668\u4eba
         at_users = data.get('atUsers', [])
         mentioned = len(at_users) > 0
-        
-        # 会话类型
+
+        # conversation\u7c7b\u578b
         conversation_type = data.get('conversationType', '')
         if conversation_type == '1':
             chat_type = ChatType.PRIVATE
@@ -151,17 +151,17 @@ class DingtalkPlatform(BotPlatform):
             chat_type = ChatType.GROUP
         else:
             chat_type = ChatType.UNKNOWN
-        
-        # 创建时间
+
+        # \u521b\u5efa\u65f6\u95f4
         create_at = data.get('createAt', '')
         try:
             timestamp = datetime.fromtimestamp(int(create_at) / 1000)
         except (ValueError, TypeError):
             timestamp = datetime.now()
-        
-        # 保存 session webhook 用于回复
+
+        # \u4fdd\u5b58 session webhook \u7528\u4e8e\u56de\u590d
         session_webhook = data.get('sessionWebhook', '')
-        
+
         return BotMessage(
             platform=self.platform_name,
             message_id=data.get('msgId', ''),
@@ -179,31 +179,31 @@ class DingtalkPlatform(BotPlatform):
                 '_session_webhook': session_webhook,
             },
         )
-    
+
     def _extract_command(self, text: str) -> str:
         """
-        提取命令内容（去除 @机器人）
-        
-        钉钉的 @用户 格式通常是 @昵称 后跟空格
+        \u63d0\u53d6command\u5185\u5bb9 (\u53bb\u9664 @\u673a\u5668\u4eba)
+
+        DingTalk\u7684 @user \u683c\u5f0f\u901a\u5e38\u662f @\u6635\u79f0 \u540e\u8ddf\u7a7a\u683c
         """
-        # 简单处理：移除开头的 @xxx 部分
+        # \u7b80\u5355\u5904\u7406: \u79fb\u9664\u5f00\u5934\u7684 @xxx \u90e8\u5206
         import re
-        # 匹配开头的 @xxx（中英文都可能）
+        # \u5339\u914d\u5f00\u5934\u7684 @xxx (Medium\u82f1\u6587\u90fd\u53ef\u80fd)
         text = re.sub(r'^@[\S]+\s*', '', text.strip())
         return text.strip()
-    
+
     def format_response(
-        self, 
-        response: BotResponse, 
+        self,
+        response: BotResponse,
         message: BotMessage
     ) -> WebhookResponse:
         """
-        格式化钉钉响应
-        
-        钉钉 Outgoing 机器人可以直接在响应中返回消息。
-        也可以使用 sessionWebhook 异步发送。
-        
-        响应格式：
+        \u683c\u5f0f\u5316DingTalk\u54cd\u5e94
+
+        DingTalk Outgoing \u673a\u5668\u4eba\u53ef\u4ee5\u76f4\u63a5\u5728\u54cd\u5e94Medium\u8fd4\u56de\u6d88\u606f.
+        \u4e5f\u53ef\u4ee5\u4f7f\u7528 sessionWebhook \u5f02\u6b65\u53d1\u9001.
+
+        \u54cd\u5e94\u683c\u5f0f:
         {
             "msgtype": "text" | "markdown",
             "text": {"content": "xxx"},
@@ -213,13 +213,13 @@ class DingtalkPlatform(BotPlatform):
         """
         if not response.text:
             return WebhookResponse.success()
-        
-        # 构建响应
+
+        # \u6784\u5efa\u54cd\u5e94
         if response.markdown:
             body = {
                 "msgtype": "markdown",
                 "markdown": {
-                    "title": "股票分析助手",
+                    "title": "\u80a1\u7968analyze\u52a9\u624b",
                     "text": response.text,
                 }
             }
@@ -230,48 +230,48 @@ class DingtalkPlatform(BotPlatform):
                     "content": response.text,
                 }
             }
-        
-        # @发送者
+
+        # @\u53d1\u9001\u8005
         if response.at_user and message.user_id:
             body["at"] = {
                 "atUserIds": [message.user_id],
                 "isAtAll": False,
             }
-        
+
         return WebhookResponse.success(body)
-    
+
     def send_by_session_webhook(
-        self, 
-        session_webhook: str, 
+        self,
+        session_webhook: str,
         response: BotResponse,
         message: BotMessage
     ) -> bool:
         """
-        通过 sessionWebhook 发送消息
-        
-        适用于需要异步发送或多条消息的场景。
-        
+        \u901a\u8fc7 sessionWebhook \u53d1\u9001\u6d88\u606f
+
+        \u9002\u7528\u4e8e\u9700\u8981\u5f02\u6b65\u53d1\u9001or\u591a\u6761\u6d88\u606f\u7684\u573a\u666f.
+
         Args:
-            session_webhook: 钉钉提供的会话 Webhook URL
-            response: 响应对象
-            message: 原始消息对象
-            
+            session_webhook: DingTalk\u63d0\u4f9b\u7684conversation Webhook URL
+            response: \u54cd\u5e94\u5bf9\u8c61
+            message: \u539f\u59cb\u6d88\u606f\u5bf9\u8c61
+
         Returns:
-            是否发送成功
+            \u662f\u5426send succeeded
         """
         if not session_webhook:
-            logger.warning("[DingTalk] 没有可用的 sessionWebhook")
+            logger.warning("[DingTalk] no available sessionWebhook")
             return False
-        
+
         import requests
-        
+
         try:
-            # 构建消息
+            # \u6784\u5efa\u6d88\u606f
             if response.markdown:
                 payload = {
                     "msgtype": "markdown",
                     "markdown": {
-                        "title": "股票分析助手",
+                        "title": "\u80a1\u7968analyze\u52a9\u624b",
                         "text": response.text,
                     }
                 }
@@ -282,33 +282,33 @@ class DingtalkPlatform(BotPlatform):
                         "content": response.text,
                     }
                 }
-            
-            # @发送者
+
+            # @\u53d1\u9001\u8005
             if response.at_user and message.user_id:
                 payload["at"] = {
                     "atUserIds": [message.user_id],
                     "isAtAll": False,
                 }
-            
-            # 发送请求
+
+            # \u53d1\u9001request
             resp = requests.post(
                 session_webhook,
                 json=payload,
                 timeout=10
             )
-            
+
             if resp.status_code == 200:
                 result = resp.json()
                 if result.get('errcode') == 0:
-                    logger.info("[DingTalk] sessionWebhook 发送成功")
+                    logger.info("[DingTalk] sessionWebhook send succeeded")
                     return True
                 else:
-                    logger.error(f"[DingTalk] sessionWebhook 发送失败: {result}")
+                    logger.error(f"[DingTalk] sessionWebhook send failed: {result}")
                     return False
             else:
-                logger.error(f"[DingTalk] sessionWebhook 请求失败: {resp.status_code}")
+                logger.error(f"[DingTalk] sessionWebhook requestfailed: {resp.status_code}")
                 return False
-                
+
         except Exception as e:
-            logger.error(f"[DingTalk] sessionWebhook 发送异常: {e}")
+            logger.error(f"[DingTalk] sessionWebhook send exception: {e}")
             return False

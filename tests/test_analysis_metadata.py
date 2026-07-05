@@ -129,13 +129,13 @@ class TestSelectionSourcePatternEdgeCases:
         pattern = re.compile(SELECTION_SOURCE_PATTERN)
 
         # Chinese characters should fail
-        assert pattern.fullmatch("手动输入") is None
-        assert pattern.fullmatch("自动补全") is None
-        assert pattern.fullmatch("图片识别") is None
+        assert pattern.fullmatch("\u624b\u52a8\u8f93\u5165") is None
+        assert pattern.fullmatch("\u81ea\u52a8\u8865\u5168") is None
+        assert pattern.fullmatch("\u56fe\u7247\u8bc6\u522b") is None
 
         # Mixed characters should fail
-        assert pattern.fullmatch("manual输入") is None
-        assert pattern.fullmatch("autocomplete识别") is None
+        assert pattern.fullmatch("manual\u8f93\u5165") is None
+        assert pattern.fullmatch("autocomplete\u8bc6\u522b") is None
 
 
 class TestSelectionSourceIntegration:
@@ -282,11 +282,11 @@ class TestSelectionSourceDocumentation:
             "manual": [
                 "User directly inputs 600519 in input box",
                 "User directly inputs AAPL in input box",
-                "User directly inputs 贵州茅台 in input box",
+                "User directly inputs \u8d35\u5dde\u8305\u53f0 in input box",
             ],
             "autocomplete": [
-                "User inputs '茅台', selects '贵州茅台' from dropdown",
-                "User inputs 'gzmt', selects '贵州茅台' from dropdown",
+                "User inputs '\u8305\u53f0', selects '\u8d35\u5dde\u8305\u53f0' from dropdown",
+                "User inputs 'gzmt', selects '\u8d35\u5dde\u8305\u53f0' from dropdown",
                 "User inputs '6005', selects '600519.SH' from dropdown",
             ],
             "import": [

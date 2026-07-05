@@ -1,16 +1,16 @@
 # -*- coding: utf-8 -*-
 """
 ===================================
-交易日历模块 (Issue #373 / Issue #1386 P0)
+\u4ea4\u6613\u65e5\u5386\u6a21chunks (Issue #373 / Issue #1386 P0)
 ===================================
 
-职责：
-1. 按市场（A股/港股/美股/日股/韩股/台股）判断当日是否为交易日
-2. 按市场时区取“今日”日期，避免服务器 UTC 导致日期错误
-3. 支持 per-stock 过滤：只分析当日开市市场的股票
-4. 提供 regular-session 市场阶段推断基线，不改变现有分析入口行为
+\u804c\u8d23:
+1. \u6309market (A-share/HK stock/US stock/JP stock/KR stock/TW stock)\u5224\u65ad\u5f53\u65e5\u662f\u5426\u4e3a\u4ea4\u6613\u65e5
+2. \u6309market\u65f6\u533a\u53d6“\u4eca\u65e5”date; \u907f\u514d\u670d\u52a1\u5668 UTC \u5bfc\u81f4dateerror
+3. \u652f\u6301 per-stock \u8fc7\u6ee4: \u53eaanalyze\u5f53\u65e5\u5f00\u5e02market\u7684\u80a1\u7968
+4. \u63d0\u4f9b regular-session market\u9636\u6bb5\u63a8\u65ad\u57fa\u7ebf; \u4e0d\u6539\u53d8\u73b0\u6709analyze\u5165\u53e3\u884c\u4e3a
 
-依赖：exchange-calendars（可选，交易日判断不可用时 fail-open，阶段推断不可用时 unknown）
+\u4f9d\u8d56: exchange-calendars (optional; \u4ea4\u6613\u65e5\u5224\u65adunavailable\u65f6 fail-open; \u9636\u6bb5\u63a8\u65adunavailable\u65f6 unknown)
 """
 
 import logging

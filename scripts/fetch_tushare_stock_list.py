@@ -1,26 +1,26 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Tushare 股票列表获取脚本
+Tushare \u80a1\u7968\u5217\u8868\u83b7\u53d6\u811a\u672c
 
-从 Tushare Pro 获取 A股、港股、美股列表信息，保存为 CSV 文件
+\u4ece Tushare Pro \u83b7\u53d6 A\u80a1、\u6e2f\u80a1、\u7f8e\u80a1\u5217\u8868\u4fe1\u606f，\u4fdd\u5b58\u4e3a CSV \u6587\u4ef6
 
-使用方法：
+\u4f7f\u7528\u65b9\u6cd5：
     python3 scripts/fetch_tushare_stock_list.py
     python3 scripts/fetch_tushare_stock_list.py --a-rk
 
-环境要求：
-    - 需要在 .env 中配置 TUSHARE_TOKEN
-    - 需要安装 tushare: pip install tushare
-    - 账号积分要求：
-        * A股/港股：2000积分
-        * 美股：120积分试用，5000积分正式权限
+\u73af\u5883\u8981\u6c42：
+    - \u9700\u8981\u5728 .env \u4e2d\u914d\u7f6e TUSHARE_TOKEN
+    - \u9700\u8981\u5b89\u88c5 tushare: pip install tushare
+    - \u8d26\u53f7\u79ef\u5206\u8981\u6c42：
+        * A\u80a1/\u6e2f\u80a1：2000\u79ef\u5206
+        * \u7f8e\u80a1：120\u79ef\u5206\u8bd5\u7528，5000\u79ef\u5206\u6b63\u5f0f\u6743\u9650
 
-输出文件：
-    - data/stock_list_a.csv      A股列表（--a-rk 时会覆盖为修正后名称）
-    - data/stock_list_hk.csv     港股列表
-    - data/stock_list_us.csv     美股列表
-    - data/README_stock_list.md  数据说明文档
+\u8f93\u51fa\u6587\u4ef6：
+    - data/stock_list_a.csv      A\u80a1\u5217\u8868（--a-rk \u65f6\u4f1a\u8986\u76d6\u4e3a\u4fee\u6b63\u540e\u540d\u79f0）
+    - data/stock_list_hk.csv     \u6e2f\u80a1\u5217\u8868
+    - data/stock_list_us.csv     \u7f8e\u80a1\u5217\u8868
+    - data/README_stock_list.md  \u6570\u636e\u8bf4\u660e\u6587\u6863
 """
 
 import argparse
@@ -36,25 +36,25 @@ from typing import Optional, List, Dict
 import pandas as pd
 from dotenv import load_dotenv
 
-# 添加项目根目录到路径
+# \u6dfb\u52a0\u9879\u76ee\u6839\u76ee\u5f55\u5230\u8def\u5f84
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 try:
     import tushare as ts
 except ImportError:
-    print("[错误] 未安装 tushare 库")
-    print("请执行: pip install tushare")
+    print("[\u9519\u8bef] \u672a\u5b89\u88c5 tushare \u5e93")
+    print("\u8bf7\u6267\u884c: pip install tushare")
     sys.exit(1)
 
 
-# 配置
+# \u914d\u7f6e
 load_dotenv()
 
 TUSHARE_TOKEN = os.getenv('TUSHARE_TOKEN')
 OUTPUT_DIR = Path(__file__).parent.parent / "data"
-PAGE_SIZE = 5000  # 美股每页读取数量（API 最大6000，设置5000留余量）
-SLEEP_MIN = 5     # 最小睡眠时间（秒）
-SLEEP_MAX = 10    # 最大睡眠时间（秒）
+PAGE_SIZE = 5000  # \u7f8e\u80a1\u6bcf\u9875\u8bfb\u53d6\u6570\u91cf（API \u6700\u59276000，\u8bbe\u7f6e5000\u7559\u4f59\u91cf）
+SLEEP_MIN = 5     # \u6700\u5c0f\u7761\u7720\u65f6\u95f4（\u79d2）
+SLEEP_MAX = 10    # \u6700\u5927\u7761\u7720\u65f6\u95f4（\u79d2）
 A_RK_BATCH_SIZE = 200
 A_RK_FIELDS = "ts_code,name,close,pre_close,trade_time"
 A_RK_NAME_PREFIX_RE = re.compile(r"^(XD|XR|DR|N|C)")
@@ -62,86 +62,86 @@ A_RK_NAME_PREFIX_RE = re.compile(r"^(XD|XR|DR|N|C)")
 
 def get_tushare_api() -> Optional[ts.pro_api]:
     """
-    获取 Tushare API 实例
+    \u83b7\u53d6 Tushare API \u5b9e\u4f8b
 
     Returns:
-        Tushare API 实例，失败返回 None
+        Tushare API \u5b9e\u4f8b，\u5931\u8d25\u8fd4\u56de None
     """
     if not TUSHARE_TOKEN:
-        print("[错误] 未找到 TUSHARE_TOKEN")
-        print("请在 .env 文件中配置: TUSHARE_TOKEN=你的token")
+        print("[\u9519\u8bef] \u672a\u627e\u5230 TUSHARE_TOKEN")
+        print("\u8bf7\u5728 .env \u6587\u4ef6\u4e2d\u914d\u7f6e: TUSHARE_TOKEN=\u4f60\u7684token")
         return None
 
     try:
         api = ts.pro_api(TUSHARE_TOKEN)
-        # 测试连接
+        # \u6d4b\u8bd5\u8fde\u63a5
         api.trade_cal(exchange='SSE', start_date='20240101', end_date='20240101')
-        print("✓ Tushare API 连接成功")
+        print("✓ Tushare API \u8fde\u63a5\u6210\u529f")
         return api
     except Exception as e:
-        print(f"[错误] Tushare API 连接失败: {e}")
-        print("请检查：")
-        print("  1. TUSHARE_TOKEN 是否正确")
-        print("  2. 账号积分是否足够（A股/港股需要2000积分）")
+        print(f"[\u9519\u8bef] Tushare API \u8fde\u63a5\u5931\u8d25: {e}")
+        print("\u8bf7\u68c0\u67e5：")
+        print("  1. TUSHARE_TOKEN \u662f\u5426\u6b63\u786e")
+        print("  2. \u8d26\u53f7\u79ef\u5206\u662f\u5426\u8db3\u591f（A\u80a1/\u6e2f\u80a1\u9700\u89812000\u79ef\u5206）")
         return None
 
 
 def random_sleep(min_seconds: int = SLEEP_MIN, max_seconds: int = SLEEP_MAX):
     """
-    随机睡眠，避免频繁请求
+    \u968f\u673a\u7761\u7720，\u907f\u514d\u9891\u7e41\u8bf7\u6c42
 
     Args:
-        min_seconds: 最小睡眠时间
-        max_seconds: 最大睡眠时间
+        min_seconds: \u6700\u5c0f\u7761\u7720\u65f6\u95f4
+        max_seconds: \u6700\u5927\u7761\u7720\u65f6\u95f4
     """
     sleep_time = random.uniform(min_seconds, max_seconds)
-    print(f"  ⏱  休息 {sleep_time:.1f} 秒...")
+    print(f"  ⏱  \u4f11\u606f {sleep_time:.1f} \u79d2...")
     time.sleep(sleep_time)
 
 
 def fetch_a_stock_list(api: ts.pro_api) -> Optional[pd.DataFrame]:
     """
-    获取 A股列表
+    \u83b7\u53d6 A\u80a1\u5217\u8868
 
-    接口：stock_basic
-    限量：单次最多6000行（覆盖全市场A股）
+    \u63a5\u53e3：stock_basic
+    \u9650\u91cf：\u5355\u6b21\u6700\u591a6000\u884c（\u8986\u76d6\u5168\u5e02\u573aA\u80a1）
 
     Args:
-        api: Tushare API 实例
+        api: Tushare API \u5b9e\u4f8b
 
     Returns:
-        A股数据 DataFrame，失败返回 None
+        A\u80a1\u6570\u636e DataFrame，\u5931\u8d25\u8fd4\u56de None
     """
-    print("\n[1/3] 正在获取 A股列表...")
+    print("\n[1/3] \u6b63\u5728\u83b7\u53d6 A\u80a1\u5217\u8868...")
 
     try:
-        # 获取所有正常上市的股票
+        # \u83b7\u53d6\u6240\u6709\u6b63\u5e38\u4e0a\u5e02\u7684\u80a1\u7968
         df = api.stock_basic(
-            exchange='',        # 空：全部交易所
-            list_status='L',    # L: 上市, D: 退市, P: 暂停上市
+            exchange='',        # \u7a7a：\u5168\u90e8\u4ea4\u6613\u6240
+            list_status='L',    # L: \u4e0a\u5e02, D: \u9000\u5e02, P: \u6682\u505c\u4e0a\u5e02
             fields='ts_code,symbol,name,area,industry,fullname,enname,cnspell,market,exchange,curr_type,list_status,list_date,delist_date,is_hs,act_name,act_ent_type'
         )
 
         if df is not None and len(df) > 0:
-            print(f"✓ A股列表获取成功，共 {len(df)} 只股票")
-            print("  - 交易所分布：")
+            print(f"✓ A\u80a1\u5217\u8868\u83b7\u53d6\u6210\u529f，\u5171 {len(df)} \u53ea\u80a1\u7968")
+            print("  - \u4ea4\u6613\u6240\u5206\u5e03：")
             for exchange, count in df['exchange'].value_counts().items():
-                print(f"    {exchange}: {count} 只")
+                print(f"    {exchange}: {count} \u53ea")
             return df
         else:
-            print("[错误] A股数据为空")
+            print("[\u9519\u8bef] A\u80a1\u6570\u636e\u4e3a\u7a7a")
             return None
 
     except Exception as e:
-        print(f"[错误] 获取 A股列表失败: {e}")
+        print(f"[\u9519\u8bef] \u83b7\u53d6 A\u80a1\u5217\u8868\u5931\u8d25: {e}")
         return None
 
 
 def should_fix_a_stock_name(name: str) -> bool:
     """
-    判断 A 股名称是否属于需要修正的状态名。
+    \u5224\u65ad A \u80a1\u540d\u79f0\u662f\u5426\u5c5e\u4e8e\u9700\u8981\u4fee\u6b63\u7684\u72b6\u6001\u540d。
 
-    主要覆盖新股、除权除息等前缀：
+    \u4e3b\u8981\u8986\u76d6\u65b0\u80a1、\u9664\u6743\u9664\u606f\u7b49\u524d\u7f00：
     XD / XR / DR / N / C
     """
     if name is None:
@@ -155,20 +155,20 @@ def should_fix_a_stock_name(name: str) -> bool:
 
 
 def chunk_list(items: List[str], chunk_size: int) -> List[List[str]]:
-    """将列表按固定大小切片。"""
+    """\u5c06\u5217\u8868\u6309\u56fa\u5b9a\u5927\u5c0f\u5207\u7247。"""
     return [items[i:i + chunk_size] for i in range(0, len(items), chunk_size)]
 
 
 def fetch_rt_k_names(api: ts.pro_api, ts_codes: List[str]) -> Dict[str, str]:
     """
-    批量获取 rt_k 返回的股票名称。
+    \u6279\u91cf\u83b7\u53d6 rt_k \u8fd4\u56de\u7684\u80a1\u7968\u540d\u79f0。
 
-    参考官方文档：
+    \u53c2\u8003\u5b98\u65b9\u6587\u6863：
     https://tushare.pro/wctapi/documents/372.md
 
-    rt_k 是 A 股实时日线接口，支持按股票代码和股票代码通配符提取
-    实时日 K 线行情。本脚本只把它用作名称回填的辅助来源，修正
-    stock_basic 中返回的短期交易状态前缀名称。
+    rt_k \u662f A \u80a1\u5b9e\u65f6\u65e5\u7ebf\u63a5\u53e3，\u652f\u6301\u6309\u80a1\u7968\u4ee3\u7801\u548c\u80a1\u7968\u4ee3\u7801\u901a\u914d\u7b26\u63d0\u53d6
+    \u5b9e\u65f6\u65e5 K \u7ebf\u884c\u60c5。\u672c\u811a\u672c\u53ea\u628a\u5b83\u7528\u4f5c\u540d\u79f0\u56de\u586b\u7684\u8f85\u52a9\u6765\u6e90，\u4fee\u6b63
+    stock_basic \u4e2d\u8fd4\u56de\u7684\u77ed\u671f\u4ea4\u6613\u72b6\u6001\u524d\u7f00\u540d\u79f0。
     """
     if not ts_codes:
         return {}
@@ -176,20 +176,20 @@ def fetch_rt_k_names(api: ts.pro_api, ts_codes: List[str]) -> Dict[str, str]:
     name_map: Dict[str, str] = {}
     batches = chunk_list(ts_codes, A_RK_BATCH_SIZE)
 
-    print(f"\n[rt_k] 待修正股票数：{len(ts_codes)}，分 {len(batches)} 批获取...")
+    print(f"\n[rt_k] \u5f85\u4fee\u6b63\u80a1\u7968\u6570：{len(ts_codes)}，\u5206 {len(batches)} \u6279\u83b7\u53d6...")
 
     for index, batch in enumerate(batches, start=1):
         ts_code_param = ",".join(batch)
-        print(f"  [rt_k] 第 {index}/{len(batches)} 批：{len(batch)} 只股票")
+        print(f"  [rt_k] \u7b2c {index}/{len(batches)} \u6279：{len(batch)} \u53ea\u80a1\u7968")
 
         try:
             df = api.rt_k(ts_code=ts_code_param, fields=A_RK_FIELDS)
         except Exception as e:
-            print(f"  [警告] rt_k 批次 {index} 获取失败: {e}")
+            print(f"  [\u8b66\u544a] rt_k \u6279\u6b21 {index} \u83b7\u53d6\u5931\u8d25: {e}")
             continue
 
         if df is None or len(df) == 0:
-            print(f"  [警告] rt_k 批次 {index} 无返回数据")
+            print(f"  [\u8b66\u544a] rt_k \u6279\u6b21 {index} \u65e0\u8fd4\u56de\u6570\u636e")
             continue
 
         for _, row in df.iterrows():
@@ -207,37 +207,37 @@ def fetch_rt_k_names(api: ts.pro_api, ts_codes: List[str]) -> Dict[str, str]:
         if index < len(batches):
             random_sleep(1, 2)
 
-    print(f"[rt_k] 成功获取 {len(name_map)} 条名称映射")
+    print(f"[rt_k] \u6210\u529f\u83b7\u53d6 {len(name_map)} \u6761\u540d\u79f0\u6620\u5c04")
     return name_map
 
 
 def fix_a_stock_names_with_rt_k(api: ts.pro_api, df: pd.DataFrame) -> pd.DataFrame:
     """
-    使用 rt_k 修正 A 股名称。
+    \u4f7f\u7528 rt_k \u4fee\u6b63 A \u80a1\u540d\u79f0。
 
-    仅对名称带有 XD / XR / DR / N / C 前缀的股票进行校正。
+    \u4ec5\u5bf9\u540d\u79f0\u5e26\u6709 XD / XR / DR / N / C \u524d\u7f00\u7684\u80a1\u7968\u8fdb\u884c\u6821\u6b63。
     """
     if df is None or len(df) == 0:
         return df
 
     if "name" not in df.columns or "ts_code" not in df.columns:
-        print("[警告] A股数据缺少 ts_code/name 列，跳过 rt_k 名称修正")
+        print("[\u8b66\u544a] A\u80a1\u6570\u636e\u7f3a\u5c11 ts_code/name \u5217，\u8df3\u8fc7 rt_k \u540d\u79f0\u4fee\u6b63")
         return df
 
     fix_mask = df["name"].astype(str).map(should_fix_a_stock_name)
     fix_df = df.loc[fix_mask, ["ts_code", "name"]].copy()
 
     if fix_df.empty:
-        print("[rt_k] 未发现需要修正的 A 股名称")
+        print("[rt_k] \u672a\u53d1\u73b0\u9700\u8981\u4fee\u6b63\u7684 A \u80a1\u540d\u79f0")
         return df
 
     ts_codes = fix_df["ts_code"].astype(str).tolist()
-    print(f"[rt_k] 发现 {len(ts_codes)} 只待修正 A 股：")
+    print(f"[rt_k] \u53d1\u73b0 {len(ts_codes)} \u53ea\u5f85\u4fee\u6b63 A \u80a1：")
     print("  " + ", ".join(ts_codes[:20]) + (" ..." if len(ts_codes) > 20 else ""))
 
     name_map = fetch_rt_k_names(api, ts_codes)
     if not name_map:
-        print("[警告] rt_k 未返回可用名称，保留原始 A 股名称")
+        print("[\u8b66\u544a] rt_k \u672a\u8fd4\u56de\u53ef\u7528\u540d\u79f0，\u4fdd\u7559\u539f\u59cb A \u80a1\u540d\u79f0")
         return df
 
     fixed_df = df.copy()
@@ -255,57 +255,57 @@ def fix_a_stock_names_with_rt_k(api: ts.pro_api, df: pd.DataFrame) -> pd.DataFra
             fixed_count += 1
             print(f"  ✓ {code}: {old_name} -> {new_name}")
 
-    print(f"[rt_k] A 股名称修正完成，共修正 {fixed_count} 只股票")
+    print(f"[rt_k] A \u80a1\u540d\u79f0\u4fee\u6b63\u5b8c\u6210，\u5171\u4fee\u6b63 {fixed_count} \u53ea\u80a1\u7968")
     return fixed_df
 
 
 def fetch_hk_stock_list(api: ts.pro_api) -> Optional[pd.DataFrame]:
     """
-    获取港股列表
+    \u83b7\u53d6\u6e2f\u80a1\u5217\u8868
 
-    接口：hk_basic
-    限量：单次可提取全部在交易的港股
+    \u63a5\u53e3：hk_basic
+    \u9650\u91cf：\u5355\u6b21\u53ef\u63d0\u53d6\u5168\u90e8\u5728\u4ea4\u6613\u7684\u6e2f\u80a1
 
     Args:
-        api: Tushare API 实例
+        api: Tushare API \u5b9e\u4f8b
 
     Returns:
-        港股数据 DataFrame，失败返回 None
+        \u6e2f\u80a1\u6570\u636e DataFrame，\u5931\u8d25\u8fd4\u56de None
     """
-    print("\n[2/3] 正在获取港股列表...")
+    print("\n[2/3] \u6b63\u5728\u83b7\u53d6\u6e2f\u80a1\u5217\u8868...")
 
     try:
-        # 获取所有正常上市的港股
+        # \u83b7\u53d6\u6240\u6709\u6b63\u5e38\u4e0a\u5e02\u7684\u6e2f\u80a1
         df = api.hk_basic(
-            list_status='L'    # L: 上市, D: 退市
+            list_status='L'    # L: \u4e0a\u5e02, D: \u9000\u5e02
         )
 
         if df is not None and len(df) > 0:
-            print(f"✓ 港股列表获取成功，共 {len(df)} 只股票")
+            print(f"✓ \u6e2f\u80a1\u5217\u8868\u83b7\u53d6\u6210\u529f，\u5171 {len(df)} \u53ea\u80a1\u7968")
             return df
         else:
-            print("[错误] 港股数据为空")
+            print("[\u9519\u8bef] \u6e2f\u80a1\u6570\u636e\u4e3a\u7a7a")
             return None
 
     except Exception as e:
-        print(f"[错误] 获取港股列表失败: {e}")
+        print(f"[\u9519\u8bef] \u83b7\u53d6\u6e2f\u80a1\u5217\u8868\u5931\u8d25: {e}")
         return None
 
 
 def fetch_us_stock_list(api: ts.pro_api) -> Optional[pd.DataFrame]:
     """
-    获取美股列表（分页读取）
+    \u83b7\u53d6\u7f8e\u80a1\u5217\u8868（\u5206\u9875\u8bfb\u53d6）
 
-    接口：us_basic
-    限量：单次最大6000，需要分页提取
+    \u63a5\u53e3：us_basic
+    \u9650\u91cf：\u5355\u6b21\u6700\u59276000，\u9700\u8981\u5206\u9875\u63d0\u53d6
 
     Args:
-        api: Tushare API 实例
+        api: Tushare API \u5b9e\u4f8b
 
     Returns:
-        美股数据 DataFrame，失败返回 None
+        \u7f8e\u80a1\u6570\u636e DataFrame，\u5931\u8d25\u8fd4\u56de None
     """
-    print("\n[3/3] 正在获取美股列表（分页读取）...")
+    print("\n[3/3] \u6b63\u5728\u83b7\u53d6\u7f8e\u80a1\u5217\u8868（\u5206\u9875\u8bfb\u53d6）...")
 
     all_data = []
     offset = 0
@@ -313,7 +313,7 @@ def fetch_us_stock_list(api: ts.pro_api) -> Optional[pd.DataFrame]:
 
     try:
         while True:
-            print(f"  第 {page} 页（offset={offset}）...")
+            print(f"  \u7b2c {page} \u9875（offset={offset}）...")
 
             df = api.us_basic(
                 offset=offset,
@@ -321,56 +321,56 @@ def fetch_us_stock_list(api: ts.pro_api) -> Optional[pd.DataFrame]:
             )
 
             if df is None or len(df) == 0:
-                print(f"  ✓ 第 {page} 页无数据，读取完成")
+                print(f"  ✓ \u7b2c {page} \u9875\u65e0\u6570\u636e，\u8bfb\u53d6\u5b8c\u6210")
                 break
 
             all_data.append(df)
-            print(f"  ✓ 第 {page} 页获取 {len(df)} 只股票")
+            print(f"  ✓ \u7b2c {page} \u9875\u83b7\u53d6 {len(df)} \u53ea\u80a1\u7968")
 
-            # 如果返回数据少于页大小，说明已经到最后一页
+            # \u5982\u679c\u8fd4\u56de\u6570\u636e\u5c11\u4e8e\u9875\u5927\u5c0f，\u8bf4\u660e\u5df2\u7ecf\u5230\u6700\u540e\u4e00\u9875
             if len(df) < PAGE_SIZE:
                 break
 
             offset += PAGE_SIZE
             page += 1
 
-            # 随机休息（最后一页不需要休息）
+            # \u968f\u673a\u4f11\u606f（\u6700\u540e\u4e00\u9875\u4e0d\u9700\u8981\u4f11\u606f）
             random_sleep()
 
         if all_data:
             result_df = pd.concat(all_data, ignore_index=True)
-            print(f"✓ 美股列表获取成功，共 {len(result_df)} 只股票（{page} 页）")
+            print(f"✓ \u7f8e\u80a1\u5217\u8868\u83b7\u53d6\u6210\u529f，\u5171 {len(result_df)} \u53ea\u80a1\u7968（{page} \u9875）")
 
-            # 按分类统计
+            # \u6309\u5206\u7c7b\u7edf\u8ba1
             if 'classify' in result_df.columns:
-                print("  - 分类分布：")
+                print("  - \u5206\u7c7b\u5206\u5e03：")
                 for classify, count in result_df['classify'].value_counts().items():
-                    print(f"    {classify}: {count} 只")
+                    print(f"    {classify}: {count} \u53ea")
 
             return result_df
         else:
-            print("[错误] 美股数据为空")
+            print("[\u9519\u8bef] \u7f8e\u80a1\u6570\u636e\u4e3a\u7a7a")
             return None
 
     except Exception as e:
-        print(f"[错误] 获取美股列表失败: {e}")
+        print(f"[\u9519\u8bef] \u83b7\u53d6\u7f8e\u80a1\u5217\u8868\u5931\u8d25: {e}")
         return None
 
 
 def save_to_csv(df: pd.DataFrame, filename: str, market_name: str) -> bool:
     """
-    保存数据到 CSV 文件
+    \u4fdd\u5b58\u6570\u636e\u5230 CSV \u6587\u4ef6
 
     Args:
-        df: 数据 DataFrame
-        filename: 文件名
-        market_name: 市场名称（用于日志）
+        df: \u6570\u636e DataFrame
+        filename: \u6587\u4ef6\u540d
+        market_name: \u5e02\u573a\u540d\u79f0（\u7528\u4e8e\u65e5\u5fd7）
 
     Returns:
-        是否保存成功
+        \u662f\u5426\u4fdd\u5b58\u6210\u529f
     """
     if df is None or len(df) == 0:
-        print(f"[跳过] {market_name} 数据为空，不保存文件")
+        print(f"[\u8df3\u8fc7] {market_name} \u6570\u636e\u4e3a\u7a7a，\u4e0d\u4fdd\u5b58\u6587\u4ef6")
         return False
 
     try:
@@ -380,11 +380,11 @@ def save_to_csv(df: pd.DataFrame, filename: str, market_name: str) -> bool:
         df.to_csv(output_path, index=False, encoding='utf-8-sig')
 
         file_size = output_path.stat().st_size / 1024  # KB
-        print(f"✓ {market_name} 数据已保存：{output_path} ({file_size:.2f} KB)")
+        print(f"✓ {market_name} \u6570\u636e\u5df2\u4fdd\u5b58：{output_path} ({file_size:.2f} KB)")
         return True
 
     except Exception as e:
-        print(f"[错误] 保存 {market_name} 数据失败: {e}")
+        print(f"[\u9519\u8bef] \u4fdd\u5b58 {market_name} \u6570\u636e\u5931\u8d25: {e}")
         return False
 
 
@@ -393,273 +393,273 @@ def generate_data_documentation(
     hk_df: Optional[pd.DataFrame],
     us_df: Optional[pd.DataFrame],
     a_filename: str = "stock_list_a.csv",
-    a_title: str = "A股列表"
+    a_title: str = "A\u80a1\u5217\u8868"
 ):
     """
-    生成数据说明文档
+    \u751f\u6210\u6570\u636e\u8bf4\u660e\u6587\u6863
 
     Args:
-        a_df: A股数据
-        hk_df: 港股数据
-        us_df: 美股数据
+        a_df: A\u80a1\u6570\u636e
+        hk_df: \u6e2f\u80a1\u6570\u636e
+        us_df: \u7f8e\u80a1\u6570\u636e
     """
     doc_path = OUTPUT_DIR / "README_stock_list.md"
 
-    content = f"""# Tushare 股票列表数据说明
+    content = f"""# Tushare \u80a1\u7968\u5217\u8868\u6570\u636e\u8bf4\u660e
 
-> 数据来源：[Tushare Pro](https://tushare.pro)
-> 生成时间：{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+> \u6570\u636e\u6765\u6e90：[Tushare Pro](https://tushare.pro)
+> \u751f\u6210\u65f6\u95f4：{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
 
-## 文件说明
+## \u6587\u4ef6\u8bf4\u660e
 
-| 文件 | 说明 | 记录数 |
+| \u6587\u4ef6 | \u8bf4\u660e | \u8bb0\u5f55\u6570 |
 |------|------|--------|
 | `{a_filename}` | {a_title} | {len(a_df) if a_df is not None else 0} |
-| `stock_list_hk.csv` | 港股列表 | {len(hk_df) if hk_df is not None else 0} |
-| `stock_list_us.csv` | 美股列表 | {len(us_df) if us_df is not None else 0} |
+| `stock_list_hk.csv` | \u6e2f\u80a1\u5217\u8868 | {len(hk_df) if hk_df is not None else 0} |
+| `stock_list_us.csv` | \u7f8e\u80a1\u5217\u8868 | {len(us_df) if us_df is not None else 0} |
 
 ---
 
-## A股数据（{a_filename}）
+## A\u80a1\u6570\u636e（{a_filename}）
 
-### 数据接口
-- **接口名称**：`stock_basic`
-- **数据权限**：2000积分起，每分钟请求50次
-- **数据限量**：单次最多6000行（覆盖全市场A股）
+### \u6570\u636e\u63a5\u53e3
+- **\u63a5\u53e3\u540d\u79f0**：`stock_basic`
+- **\u6570\u636e\u6743\u9650**：2000\u79ef\u5206\u8d77，\u6bcf\u5206\u949f\u8bf7\u6c4250\u6b21
+- **\u6570\u636e\u9650\u91cf**：\u5355\u6b21\u6700\u591a6000\u884c（\u8986\u76d6\u5168\u5e02\u573aA\u80a1）
 
-### 字段说明
+### \u5b57\u6bb5\u8bf4\u660e
 
-| 字段名 | 类型 | 说明 | 示例 |
+| \u5b57\u6bb5\u540d | \u7c7b\u578b | \u8bf4\u660e | \u793a\u4f8b |
 |--------|------|------|------|
-| ts_code | str | TS代码 | 000001.SZ |
-| symbol | str | 股票代码 | 000001 |
-| name | str | 股票名称 | 平安银行 |
-| area | str | 地域 | 深圳 |
-| industry | str | 所属行业 | 银行 |
-| fullname | str | 股票全称 | 平安银行股份有限公司 |
-| enname | str | 英文全称 | Ping An Bank Co., Ltd. |
-| cnspell | str | 拼音缩写 | PAYH |
-| market | str | 市场类型 | 主板/创业板/科创板/CDR |
-| exchange | str | 交易所代码 | SSE上交所/SZSE深交所/BSE北交所 |
-| curr_type | str | 交易货币 | CNY |
-| list_status | str | 上市状态 | L上市/D退市/P暂停上市 |
-| list_date | str | 上市日期 | 19910403 |
-| delist_date | str | 退市日期 | - |
-| is_hs | str | 是否沪深港通标的 | N否/H沪股通/S深股通 |
-| act_name | str | 实控人名称 | - |
-| act_ent_type | str | 实控人企业性质 | - |
+| ts_code | str | TS\u4ee3\u7801 | 000001.SZ |
+| symbol | str | \u80a1\u7968\u4ee3\u7801 | 000001 |
+| name | str | \u80a1\u7968\u540d\u79f0 | \u5e73\u5b89\u94f6\u884c |
+| area | str | \u5730\u57df | \u6df1\u5733 |
+| industry | str | \u6240\u5c5e\u884c\u4e1a | \u94f6\u884c |
+| fullname | str | \u80a1\u7968\u5168\u79f0 | \u5e73\u5b89\u94f6\u884c\u80a1\u4efd\u6709\u9650\u516c\u53f8 |
+| enname | str | \u82f1\u6587\u5168\u79f0 | Ping An Bank Co., Ltd. |
+| cnspell | str | \u62fc\u97f3\u7f29\u5199 | PAYH |
+| market | str | \u5e02\u573a\u7c7b\u578b | \u4e3b\u677f/\u521b\u4e1a\u677f/\u79d1\u521b\u677f/CDR |
+| exchange | str | \u4ea4\u6613\u6240\u4ee3\u7801 | SSE\u4e0a\u4ea4\u6240/SZSE\u6df1\u4ea4\u6240/BSE\u5317\u4ea4\u6240 |
+| curr_type | str | \u4ea4\u6613\u8d27\u5e01 | CNY |
+| list_status | str | \u4e0a\u5e02\u72b6\u6001 | L\u4e0a\u5e02/D\u9000\u5e02/P\u6682\u505c\u4e0a\u5e02 |
+| list_date | str | \u4e0a\u5e02\u65e5\u671f | 19910403 |
+| delist_date | str | \u9000\u5e02\u65e5\u671f | - |
+| is_hs | str | \u662f\u5426\u6caa\u6df1\u6e2f\u901a\u6807\u7684 | N\u5426/H\u6caa\u80a1\u901a/S\u6df1\u80a1\u901a |
+| act_name | str | \u5b9e\u63a7\u4eba\u540d\u79f0 | - |
+| act_ent_type | str | \u5b9e\u63a7\u4eba\u4f01\u4e1a\u6027\u8d28 | - |
 
-### 数据样例
+### \u6570\u636e\u6837\u4f8b
 ```csv
 ts_code,symbol,name,area,industry,fullname,enname,cnspell,market,exchange,curr_type,list_status,list_date,delist_date,is_hs,act_name,act_ent_type
-000001.SZ,000001,平安银行,深圳,银行,平安银行股份有限公司,Ping An Bank Co., Ltd.,PAYH,主板,SZSE,CNY,L,19910403,,S,,
-000002.SZ,000002,万科A,深圳,全国地产,万科企业股份有限公司,China Vanke Co., Ltd.,ZKA,主板,SZSE,CNY,L,19910129,,S,,
+000001.SZ,000001,\u5e73\u5b89\u94f6\u884c,\u6df1\u5733,\u94f6\u884c,\u5e73\u5b89\u94f6\u884c\u80a1\u4efd\u6709\u9650\u516c\u53f8,Ping An Bank Co., Ltd.,PAYH,\u4e3b\u677f,SZSE,CNY,L,19910403,,S,,
+000002.SZ,000002,\u4e07\u79d1A,\u6df1\u5733,\u5168\u56fd\u5730\u4ea7,\u4e07\u79d1\u4f01\u4e1a\u80a1\u4efd\u6709\u9650\u516c\u53f8,China Vanke Co., Ltd.,ZKA,\u4e3b\u677f,SZSE,CNY,L,19910129,,S,,
 ```
 
 ---
 
-## 港股数据（stock_list_hk.csv）
+## \u6e2f\u80a1\u6570\u636e（stock_list_hk.csv）
 
-### 数据接口
-- **接口名称**：`hk_basic`
-- **数据权限**：用户需要至少2000积分才可以调取
-- **数据限量**：单次可提取全部在交易的港股列表数据
+### \u6570\u636e\u63a5\u53e3
+- **\u63a5\u53e3\u540d\u79f0**：`hk_basic`
+- **\u6570\u636e\u6743\u9650**：\u7528\u6237\u9700\u8981\u81f3\u5c112000\u79ef\u5206\u624d\u53ef\u4ee5\u8c03\u53d6
+- **\u6570\u636e\u9650\u91cf**：\u5355\u6b21\u53ef\u63d0\u53d6\u5168\u90e8\u5728\u4ea4\u6613\u7684\u6e2f\u80a1\u5217\u8868\u6570\u636e
 
-### 字段说明
+### \u5b57\u6bb5\u8bf4\u660e
 
-| 字段名 | 类型 | 说明 | 示例 |
+| \u5b57\u6bb5\u540d | \u7c7b\u578b | \u8bf4\u660e | \u793a\u4f8b |
 |--------|------|------|------|
-| ts_code | str | TS代码 | 00001.HK |
-| name | str | 股票简称 | 长和 |
-| fullname | str | 公司全称 | 长江和记实业有限公司 |
-| enname | str | 英文名称 | CK Hutchison Holdings Ltd. |
-| cn_spell | str | 拼音 | ZH |
-| market | str | 市场类别 | 主板/创业板 |
-| list_status | str | 上市状态 | L上市/D退市/P暂停上市 |
-| list_date | str | 上市日期 | 19720731 |
-| delist_date | str | 退市日期 | - |
-| trade_unit | float | 交易单位 | 1000 |
-| isin | str | ISIN代码 | KYG217651051 |
-| curr_type | str | 货币代码 | HKD |
+| ts_code | str | TS\u4ee3\u7801 | 00001.HK |
+| name | str | \u80a1\u7968\u7b80\u79f0 | \u957f\u548c |
+| fullname | str | \u516c\u53f8\u5168\u79f0 | \u957f\u6c5f\u548c\u8bb0\u5b9e\u4e1a\u6709\u9650\u516c\u53f8 |
+| enname | str | \u82f1\u6587\u540d\u79f0 | CK Hutchison Holdings Ltd. |
+| cn_spell | str | \u62fc\u97f3 | ZH |
+| market | str | \u5e02\u573a\u7c7b\u522b | \u4e3b\u677f/\u521b\u4e1a\u677f |
+| list_status | str | \u4e0a\u5e02\u72b6\u6001 | L\u4e0a\u5e02/D\u9000\u5e02/P\u6682\u505c\u4e0a\u5e02 |
+| list_date | str | \u4e0a\u5e02\u65e5\u671f | 19720731 |
+| delist_date | str | \u9000\u5e02\u65e5\u671f | - |
+| trade_unit | float | \u4ea4\u6613\u5355\u4f4d | 1000 |
+| isin | str | ISIN\u4ee3\u7801 | KYG217651051 |
+| curr_type | str | \u8d27\u5e01\u4ee3\u7801 | HKD |
 
-### 数据样例
+### \u6570\u636e\u6837\u4f8b
 ```csv
 ts_code,name,fullname,enname,cn_spell,market,list_status,list_date,delist_date,trade_unit,isin,curr_type
-00001.HK,长和,长江和记实业有限公司,CK Hutchison Holdings Ltd.,ZH,主板,L,19720731,,1000,KYG217651051,HKD
-00002.HK,中电控股,中华电力有限公司,CLP Holdings Ltd.,ZDKG,主板,L,19860125,,1000,HK0002007356,HKD
+00001.HK,\u957f\u548c,\u957f\u6c5f\u548c\u8bb0\u5b9e\u4e1a\u6709\u9650\u516c\u53f8,CK Hutchison Holdings Ltd.,ZH,\u4e3b\u677f,L,19720731,,1000,KYG217651051,HKD
+00002.HK,\u4e2d\u7535\u63a7\u80a1,\u4e2d\u534e\u7535\u529b\u6709\u9650\u516c\u53f8,CLP Holdings Ltd.,ZDKG,\u4e3b\u677f,L,19860125,,1000,HK0002007356,HKD
 ```
 
 ---
 
-## 美股数据（stock_list_us.csv）
+## \u7f8e\u80a1\u6570\u636e（stock_list_us.csv）
 
-### 数据接口
-- **接口名称**：`us_basic`
-- **数据权限**：120积分可以试用，5000积分有正式权限
-- **数据限量**：单次最大6000，可分页提取
+### \u6570\u636e\u63a5\u53e3
+- **\u63a5\u53e3\u540d\u79f0**：`us_basic`
+- **\u6570\u636e\u6743\u9650**：120\u79ef\u5206\u53ef\u4ee5\u8bd5\u7528，5000\u79ef\u5206\u6709\u6b63\u5f0f\u6743\u9650
+- **\u6570\u636e\u9650\u91cf**：\u5355\u6b21\u6700\u59276000，\u53ef\u5206\u9875\u63d0\u53d6
 
-### 字段说明
+### \u5b57\u6bb5\u8bf4\u660e
 
-| 字段名 | 类型 | 说明 | 示例 |
+| \u5b57\u6bb5\u540d | \u7c7b\u578b | \u8bf4\u660e | \u793a\u4f8b |
 |--------|------|------|------|
-| ts_code | str | 美股代码 | AAPL |
-| name | str | 中文名称 | 苹果 |
-| enname | str | 英文名称 | Apple Inc. |
-| classify | str | 分类 | ADR/GDR/EQT |
-| list_date | str | 上市日期 | 19801212 |
-| delist_date | str | 退市日期 | - |
+| ts_code | str | \u7f8e\u80a1\u4ee3\u7801 | AAPL |
+| name | str | \u4e2d\u6587\u540d\u79f0 | \u82f9\u679c |
+| enname | str | \u82f1\u6587\u540d\u79f0 | Apple Inc. |
+| classify | str | \u5206\u7c7b | ADR/GDR/EQT |
+| list_date | str | \u4e0a\u5e02\u65e5\u671f | 19801212 |
+| delist_date | str | \u9000\u5e02\u65e5\u671f | - |
 
-### 分类说明
-- **ADR**：美国存托凭证（American Depositary Receipt）
-- **GDR**：全球存托凭证（Global Depositary Receipt）
-- **EQT**：普通股（Equity）
+### \u5206\u7c7b\u8bf4\u660e
+- **ADR**：\u7f8e\u56fd\u5b58\u6258\u51ed\u8bc1（American Depositary Receipt）
+- **GDR**：\u5168\u7403\u5b58\u6258\u51ed\u8bc1（Global Depositary Receipt）
+- **EQT**：\u666e\u901a\u80a1（Equity）
 
-### 数据样例
+### \u6570\u636e\u6837\u4f8b
 ```csv
 ts_code,name,enname,classify,list_date,delist_date
-AAPL,苹果,Apple Inc.,EQT,19801212,
-TSLA,特斯拉,Tesla Inc.,EQT,20100629,
-BABA,阿里巴巴,Alibaba Group Holding Ltd.,ADR,20140919,
+AAPL,\u82f9\u679c,Apple Inc.,EQT,19801212,
+TSLA,\u7279\u65af\u62c9,Tesla Inc.,EQT,20100629,
+BABA,\u963f\u91cc\u5df4\u5df4,Alibaba Group Holding Ltd.,ADR,20140919,
 ```
 
 ---
 
-## 使用说明
+## \u4f7f\u7528\u8bf4\u660e
 
-### 读取数据
+### \u8bfb\u53d6\u6570\u636e
 
 ```python
 import pandas as pd
 
-# 读取 A股数据
+# \u8bfb\u53d6 A\u80a1\u6570\u636e
 a_stocks = pd.read_csv('data/{a_filename}')
 
-# 读取港股数据
+# \u8bfb\u53d6\u6e2f\u80a1\u6570\u636e
 hk_stocks = pd.read_csv('data/stock_list_hk.csv')
 
-# 读取美股数据
+# \u8bfb\u53d6\u7f8e\u80a1\u6570\u636e
 us_stocks = pd.read_csv('data/stock_list_us.csv')
 ```
 
-### 代码格式说明
+### \u4ee3\u7801\u683c\u5f0f\u8bf4\u660e
 
-**A股代码格式**：
-- 沪市：`600000.SH`（主板）、`688xxx.SH`（科创板）、`900xxx.SH`（B股）
-- 深市：`000001.SZ`（主板）、`300xxx.SZ`（创业板）、`200xxx.SZ`（B股）
-- 北交所：`8xxxxx.BJ`、`4xxxxx.BJ`、`920xxx.BJ`
+**A\u80a1\u4ee3\u7801\u683c\u5f0f**：
+- \u6caa\u5e02：`600000.SH`（\u4e3b\u677f）、`688xxx.SH`（\u79d1\u521b\u677f）、`900xxx.SH`（B\u80a1）
+- \u6df1\u5e02：`000001.SZ`（\u4e3b\u677f）、`300xxx.SZ`（\u521b\u4e1a\u677f）、`200xxx.SZ`（B\u80a1）
+- \u5317\u4ea4\u6240：`8xxxxx.BJ`、`4xxxxx.BJ`、`920xxx.BJ`
 
-**港股代码格式**：
-- 格式：`xxxxx.HK`（5位数字 + .HK）
-- 示例：`00700.HK`（腾讯控股）
+**\u6e2f\u80a1\u4ee3\u7801\u683c\u5f0f**：
+- \u683c\u5f0f：`xxxxx.HK`（5\u4f4d\u6570\u5b57 + .HK）
+- \u793a\u4f8b：`00700.HK`（\u817e\u8baf\u63a7\u80a1）
 
-**美股代码格式**：
-- 格式：代码字母（无后缀）
-- 示例：`AAPL`（苹果）、`TSLA`（特斯拉）
-
----
-
-## 注意事项
-
-1. **数据更新**：建议定期更新数据（如每月一次）
-2. **积分要求**：
-   - A股/港股：需要2000积分
-   - 美股：120积分试用，5000积分正式权限
-3. **请求限制**：注意 API 的每分钟请求次数限制
-4. **数据完整性**：本数据仅包含基础信息，如需更多数据请参考 Tushare 官方文档
+**\u7f8e\u80a1\u4ee3\u7801\u683c\u5f0f**：
+- \u683c\u5f0f：\u4ee3\u7801\u5b57\u6bcd（\u65e0\u540e\u7f00）
+- \u793a\u4f8b：`AAPL`（\u82f9\u679c）、`TSLA`（\u7279\u65af\u62c9）
 
 ---
 
-## 相关链接
+## \u6ce8\u610f\u4e8b\u9879
 
-- [Tushare 官网](https://tushare.pro)
-- [Tushare 文档](https://tushare.pro/document/2)
-- [积分获取办法](https://tushare.pro/document/1)
-- [API 数据调试](https://tushare.pro/document/2)
+1. **\u6570\u636e\u66f4\u65b0**：\u5efa\u8bae\u5b9a\u671f\u66f4\u65b0\u6570\u636e（\u5982\u6bcf\u6708\u4e00\u6b21）
+2. **\u79ef\u5206\u8981\u6c42**：
+   - A\u80a1/\u6e2f\u80a1：\u9700\u89812000\u79ef\u5206
+   - \u7f8e\u80a1：120\u79ef\u5206\u8bd5\u7528，5000\u79ef\u5206\u6b63\u5f0f\u6743\u9650
+3. **\u8bf7\u6c42\u9650\u5236**：\u6ce8\u610f API \u7684\u6bcf\u5206\u949f\u8bf7\u6c42\u6b21\u6570\u9650\u5236
+4. **\u6570\u636e\u5b8c\u6574\u6027**：\u672c\u6570\u636e\u4ec5\u5305\u542b\u57fa\u7840\u4fe1\u606f，\u5982\u9700\u66f4\u591a\u6570\u636e\u8bf7\u53c2\u8003 Tushare \u5b98\u65b9\u6587\u6863
+
+---
+
+## \u76f8\u5173\u94fe\u63a5
+
+- [Tushare \u5b98\u7f51](https://tushare.pro)
+- [Tushare \u6587\u6863](https://tushare.pro/document/2)
+- [\u79ef\u5206\u83b7\u53d6\u529e\u6cd5](https://tushare.pro/document/1)
+- [API \u6570\u636e\u8c03\u8bd5](https://tushare.pro/document/2)
 """
 
     try:
         with open(doc_path, 'w', encoding='utf-8') as f:
             f.write(content)
-        print(f"✓ 数据说明文档已生成：{doc_path}")
+        print(f"✓ \u6570\u636e\u8bf4\u660e\u6587\u6863\u5df2\u751f\u6210：{doc_path}")
     except Exception as e:
-        print(f"[错误] 生成说明文档失败: {e}")
+        print(f"[\u9519\u8bef] \u751f\u6210\u8bf4\u660e\u6587\u6863\u5931\u8d25: {e}")
 
 
 def build_arg_parser() -> argparse.ArgumentParser:
-    """构建命令行参数。"""
-    parser = argparse.ArgumentParser(description="Tushare 股票列表获取工具")
+    """\u6784\u5efa\u547d\u4ee4\u884c\u53c2\u6570。"""
+    parser = argparse.ArgumentParser(description="Tushare \u80a1\u7968\u5217\u8868\u83b7\u53d6\u5de5\u5177")
     parser.add_argument(
         "--a-rk",
         action="store_true",
-        help="使用 rt_k 修正 A 股中带 XD/XR/DR/N/C 前缀的名称，并覆盖输出到 stock_list_a.csv",
+        help="\u4f7f\u7528 rt_k \u4fee\u6b63 A \u80a1\u4e2d\u5e26 XD/XR/DR/N/C \u524d\u7f00\u7684\u540d\u79f0，\u5e76\u8986\u76d6\u8f93\u51fa\u5230 stock_list_a.csv",
     )
     return parser
 
 
 def main(argv: Optional[List[str]] = None):
-    """主函数"""
+    """\u4e3b\u51fd\u6570"""
     parser = build_arg_parser()
     args = parser.parse_args(argv)
 
     print("=" * 60)
-    print("Tushare 股票列表获取工具")
+    print("Tushare \u80a1\u7968\u5217\u8868\u83b7\u53d6\u5de5\u5177")
     print("=" * 60)
-    print(f"[信息] A股名称修正模式：{'开启' if args.a_rk else '关闭'}")
+    print(f"[\u4fe1\u606f] A\u80a1\u540d\u79f0\u4fee\u6b63\u6a21\u5f0f：{'\u5f00\u542f' if args.a_rk else '\u5173\u95ed'}")
 
-    # 1. 获取 API 实例
+    # 1. \u83b7\u53d6 API \u5b9e\u4f8b
     api = get_tushare_api()
     if not api:
         return 1
 
-    # 2. 获取 A股数据
+    # 2. \u83b7\u53d6 A\u80a1\u6570\u636e
     a_df = fetch_a_stock_list(api)
     if a_df is not None:
         a_filename = 'stock_list_a.csv'
-        a_title = 'A股列表'
-        a_market_name = 'A股'
+        a_title = 'A\u80a1\u5217\u8868'
+        a_market_name = 'A\u80a1'
 
         if args.a_rk:
             a_df = fix_a_stock_names_with_rt_k(api, a_df)
-            a_title = 'A股列表（修正后）'
+            a_title = 'A\u80a1\u5217\u8868（\u4fee\u6b63\u540e）'
 
         save_to_csv(a_df, a_filename, a_market_name)
 
-    # 3. 获取港股数据
-    random_sleep()  # 休息后再获取港股
+    # 3. \u83b7\u53d6\u6e2f\u80a1\u6570\u636e
+    random_sleep()  # \u4f11\u606f\u540e\u518d\u83b7\u53d6\u6e2f\u80a1
     hk_df = fetch_hk_stock_list(api)
     if hk_df is not None:
-        save_to_csv(hk_df, 'stock_list_hk.csv', '港股')
+        save_to_csv(hk_df, 'stock_list_hk.csv', '\u6e2f\u80a1')
 
-    # 4. 获取美股数据（分页）
-    random_sleep()  # 休息后再获取美股
+    # 4. \u83b7\u53d6\u7f8e\u80a1\u6570\u636e（\u5206\u9875）
+    random_sleep()  # \u4f11\u606f\u540e\u518d\u83b7\u53d6\u7f8e\u80a1
     us_df = fetch_us_stock_list(api)
     if us_df is not None:
-        save_to_csv(us_df, 'stock_list_us.csv', '美股')
+        save_to_csv(us_df, 'stock_list_us.csv', '\u7f8e\u80a1')
 
-    # 5. 生成数据说明文档
-    print("\n正在生成数据说明文档...")
+    # 5. \u751f\u6210\u6570\u636e\u8bf4\u660e\u6587\u6863
+    print("\n\u6b63\u5728\u751f\u6210\u6570\u636e\u8bf4\u660e\u6587\u6863...")
     a_filename = 'stock_list_a.csv'
-    a_title = 'A股列表（修正后）' if args.a_rk else 'A股列表'
+    a_title = 'A\u80a1\u5217\u8868（\u4fee\u6b63\u540e）' if args.a_rk else 'A\u80a1\u5217\u8868'
     generate_data_documentation(a_df, hk_df, us_df, a_filename=a_filename, a_title=a_title)
 
-    # 6. 总结
+    # 6. \u603b\u7ed3
     print("\n" + "=" * 60)
-    print("任务完成！")
+    print("\u4efb\u52a1\u5b8c\u6210！")
     print("=" * 60)
 
     total_count = 0
     if a_df is not None:
         total_count += len(a_df)
-        print(f"  ✓ A股：{len(a_df)} 只")
+        print(f"  ✓ A\u80a1：{len(a_df)} \u53ea")
     if hk_df is not None:
         total_count += len(hk_df)
-        print(f"  ✓ 港股：{len(hk_df)} 只")
+        print(f"  ✓ \u6e2f\u80a1：{len(hk_df)} \u53ea")
     if us_df is not None:
         total_count += len(us_df)
-        print(f"  ✓ 美股：{len(us_df)} 只")
+        print(f"  ✓ \u7f8e\u80a1：{len(us_df)} \u53ea")
 
-    print(f"\n总计：{total_count} 只股票")
-    print(f"输出目录：{OUTPUT_DIR}")
+    print(f"\n\u603b\u8ba1：{total_count} \u53ea\u80a1\u7968")
+    print(f"\u8f93\u51fa\u76ee\u5f55：{OUTPUT_DIR}")
 
     return 0
 
@@ -668,10 +668,10 @@ if __name__ == "__main__":
     try:
         sys.exit(main())
     except KeyboardInterrupt:
-        print("\n\n[中断] 用户取消操作")
+        print("\n\n[\u4e2d\u65ad] \u7528\u6237\u53d6\u6d88\u64cd\u4f5c")
         sys.exit(1)
     except Exception as e:
-        print(f"\n[错误] 未预期的异常: {e}")
+        print(f"\n[\u9519\u8bef] \u672a\u9884\u671f\u7684\u5f02\u5e38: {e}")
         import traceback
         traceback.print_exc()
         sys.exit(1)

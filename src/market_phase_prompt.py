@@ -7,13 +7,13 @@ from typing import Any, Dict, List, Optional
 
 
 _PHASE_LABELS_ZH = {
-    "premarket": "盘前",
-    "intraday": "盘中",
-    "lunch_break": "午间休市",
-    "closing_auction": "临近收盘",
-    "postmarket": "盘后",
-    "non_trading": "非交易日",
-    "unknown": "未知阶段",
+    "premarket": "\u76d8\u524d",
+    "intraday": "\u76d8Medium",
+    "lunch_break": "\u5348\u95f4\u4f11\u5e02",
+    "closing_auction": "\u4e34\u8fd1\u6536\u76d8",
+    "postmarket": "\u76d8\u540e",
+    "non_trading": "\u975e\u4ea4\u6613\u65e5",
+    "unknown": "unknown\u9636\u6bb5",
 }
 
 _PHASE_LABELS_EN = {
@@ -29,9 +29,9 @@ _PHASE_LABELS_EN = {
 _KNOWN_PHASES = set(_PHASE_LABELS_ZH)
 
 _WARNING_LABELS_ZH = {
-    "unknown_market": "未知市场",
-    "calendar_unavailable": "交易日历不可用",
-    "calendar_error": "交易日历异常",
+    "unknown_market": "unknownmarket",
+    "calendar_unavailable": "\u4ea4\u6613\u65e5\u5386unavailable",
+    "calendar_error": "\u4ea4\u6613\u65e5\u5386\u5f02\u5e38",
 }
 
 _WARNING_LABELS_EN = {
@@ -69,13 +69,13 @@ def format_market_phase_prompt_section(
 
 def _format_zh(ctx: Dict[str, Any], phase: str) -> str:
     label = _PHASE_LABELS_ZH[phase]
-    lines = ["", "## 市场阶段上下文", f"- 当前市场阶段：{label}"]
+    lines = ["", "## market\u9636\u6bb5\u4e0a\u4e0b\u6587", f"- \u5f53\u524dmarket\u9636\u6bb5: {label}"]
     lines.extend(_metadata_lines_zh(ctx))
-    lines.append(f"- 阶段约束：{_phase_rule_zh(ctx, phase)}")
+    lines.append(f"- \u9636\u6bb5\u7ea6\u675f: {_phase_rule_zh(ctx, phase)}")
 
     warning_text = _warning_text(ctx.get("warnings"), lang="zh")
     if warning_text:
-        lines.append(f"- 降级说明：{warning_text}，请保持保守表述。")
+        lines.append(f"- \u964d\u7ea7\u8bf4\u660e: {warning_text}; \u8bf7\u4fdd\u6301\u4fdd\u5b88\u8868\u8ff0.")
 
     return "\n".join(lines) + "\n"
 
@@ -102,15 +102,15 @@ def _metadata_lines_zh(ctx: Dict[str, Any]) -> List[str]:
     minutes_to_close = _int_like(ctx.get("minutes_to_close"))
 
     if market:
-        items.append(f"- 市场：{market}")
+        items.append(f"- market: {market}")
     if market_time:
-        items.append(f"- 市场本地时间：{market_time}")
+        items.append(f"- market\u672c\u5730\u65f6\u95f4: {market_time}")
     if effective_date:
-        items.append(f"- 最新可复用完整日线日期：{effective_date}")
+        items.append(f"- \u6700\u65b0\u53ef\u590d\u7528\u5b8c\u6574daily datadate: {effective_date}")
     if minutes_to_open is not None:
-        items.append(f"- 距常规开盘约 {minutes_to_open} 分钟。")
+        items.append(f"- \u8ddd\u5e38\u89c4\u5f00\u76d8\u7ea6 {minutes_to_open} \u5206\u949f.")
     if minutes_to_close is not None:
-        items.append(f"- 距常规收盘约 {minutes_to_close} 分钟。")
+        items.append(f"- \u8ddd\u5e38\u89c4\u6536\u76d8\u7ea6 {minutes_to_close} \u5206\u949f.")
     return items
 
 
@@ -137,27 +137,27 @@ def _metadata_lines_en(ctx: Dict[str, Any]) -> List[str]:
 
 def _phase_rule_zh(ctx: Dict[str, Any], phase: str) -> str:
     effective_date = _string_value(ctx.get("effective_daily_bar_date"))
-    date_hint = f"（{effective_date}）" if effective_date else ""
+    date_hint = f" ({effective_date})" if effective_date else ""
 
     if phase == "premarket":
         return (
-            f"当前尚未开盘，不得描述“今日走势已经发生”；只能基于上一完整交易日{date_hint}"
-            "和盘前信息生成开盘计划、观察价位与风险预案。"
+            f"\u5f53\u524d\u5c1a\u672a\u5f00\u76d8; \u4e0d\u5f97\u63cf\u8ff0“\u4eca\u65e5\u8d70\u52bf\u5df2\u7ecf\u53d1\u751f”；\u53ea\u80fd\u57fa\u4e8e\u4e0a\u4e00\u5b8c\u6574\u4ea4\u6613\u65e5{date_hint}"
+            "\u548c\u76d8\u524dinfo\u751f\u6210\u5f00\u76d8\u8ba1\u5212、\u89c2\u5bdf\u4ef7characters\u4e0e\u98ce\u9669\u9884\u6848."
         )
     if phase in {"intraday", "lunch_break", "closing_auction"}:
-        base = "当前不是盘后复盘，应聚焦当前盘中状态、观察条件与下一次检查点。"
+        base = "\u5f53\u524d\u4e0d\u662f\u76d8\u540e\u590d\u76d8; \u5e94\u805a\u7126\u5f53\u524d\u76d8Mediumstatus、\u89c2\u5bdf\u6761\u4ef6\u4e0e\u4e0b\u4e00\u6b21\u68c0check\u70b9."
         if ctx.get("is_partial_bar") is True:
-            base += " 今日最后一根日线可能尚未完成，不得当作完整日线复盘。"
+            base += " \u4eca\u65e5\u6700\u540e\u4e00\u6839daily data\u53ef\u80fd\u5c1a\u672a\u5b8c\u6210; \u4e0d\u5f97\u5f53\u4f5c\u5b8c\u6574daily data\u590d\u76d8."
         if phase == "lunch_break":
-            base += " 午间休市期间应说明后续复盘仍需下午交易确认。"
+            base += " \u5348\u95f4\u4f11\u5e02\u671f\u95f4\u5e94\u8bf4\u660e\u540e\u7eed\u590d\u76d8\u4ecd\u9700\u4e0b\u5348\u4ea4\u6613\u786e\u8ba4."
         if phase == "closing_auction":
-            base += " 临近收盘时应更偏向收盘前风险控制和是否隔夜持仓。"
+            base += " \u4e34\u8fd1\u6536\u76d8\u65f6\u5e94\u66f4Slightly \u5411\u6536\u76d8\u524d\u98ce\u9669\u63a7\u5236\u548c\u662f\u5426\u9694\u591c\u6301\u4ed3."
         return base
     if phase == "postmarket":
-        return "常规交易时段已结束，可以保留完整交易日复盘语义。"
+        return "\u5e38\u89c4\u4ea4\u6613\u65f6\u6bb5\u5df2\u7ed3\u675f; \u53ef\u4ee5\u4fdd\u7559\u5b8c\u6574\u4ea4\u6613\u65e5\u590d\u76d8\u8bed\u4e49."
     if phase == "non_trading":
-        return f"当前不是交易日或属于强制运行，只能基于上一完整交易日{date_hint}和已知事件分析，不得伪造今日盘中走势。"
-    return "当前市场阶段不可可靠推断，不要补全不存在的盘中或盘前事实，结论需保持保守。"
+        return f"\u5f53\u524d\u4e0d\u662f\u4ea4\u6613\u65e5or\u5c5e\u4e8e\u5f3a\u5236\u8fd0\u884c; \u53ea\u80fd\u57fa\u4e8e\u4e0a\u4e00\u5b8c\u6574\u4ea4\u6613\u65e5{date_hint}\u548c\u5df2\u77e5\u4e8b\u4ef6analyze; \u4e0d\u5f97\u4f2a\u9020\u4eca\u65e5\u76d8Medium\u8d70\u52bf."
+    return "\u5f53\u524dmarket\u9636\u6bb5\u4e0d\u53ef\u53ef\u9760\u63a8\u65ad; \u4e0d\u8981\u8865\u5168does not exist\u7684\u76d8Mediumor\u76d8\u524d\u4e8b\u5b9e; \u7ed3\u8bba\u9700\u4fdd\u6301\u4fdd\u5b88."
 
 
 def _phase_rule_en(ctx: Dict[str, Any], phase: str) -> str:

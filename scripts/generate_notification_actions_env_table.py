@@ -29,7 +29,7 @@ WORKFLOW_PATH = ROOT_DIR / ".github/workflows/00-daily-analysis.yml"
 DOCS_PATH = ROOT_DIR / "docs/notifications.md"
 TABLE_START = "<!-- notification-actions-env-table:start -->"
 TABLE_END = "<!-- notification-actions-env-table:end -->"
-ANALYZE_STEP_NAME = "执行股票分析"
+ANALYZE_STEP_NAME = "\u6267\u884c\u80a1\u7968\u5206\u6790"
 
 
 @dataclass(frozen=True)

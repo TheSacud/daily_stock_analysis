@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 """
 ===================================
-API v1 路由聚合
+API v1 \u8def\u7531\u805a\u5408
 ===================================
 
-职责：
-1. 聚合 v1 版本的所有 endpoint 路由
-2. 统一添加 /api/v1 前缀
+\u804c\u8d23:
+1. \u805a\u5408 v1 \u7248\u672c\u7684\u6240\u6709 endpoint \u8def\u7531
+2. \u7edf\u4e00\u6dfb\u52a0 /api/v1 prefix
 """
 
 from fastapi import APIRouter
@@ -28,8 +28,8 @@ from api.v1.endpoints import (
     usage,
 )
 
-# 创建 v1 版本主路由。
-# /api/v1 前缀在 api.app 挂载，避免新版 FastAPI 误判子路由 "" 为 empty path。
+# \u521b\u5efa v1 \u7248\u672c\u4e3b\u8def\u7531.
+# /api/v1 prefix\u5728 api.app \u6302\u8f7d; \u907f\u514d\u65b0\u7248 FastAPI \u8bef\u5224\u5b50\u8def\u7531 "" \u4e3a empty path.
 router = APIRouter()
 
 router.include_router(

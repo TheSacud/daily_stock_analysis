@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 """
 ===================================
-股票数据相关模型
+\u80a1\u7968\u6570\u636e\u76f8\u5173\u6a21\u578b
 ===================================
 
-职责：
-1. 定义股票实时行情模型
-2. 定义历史 K 线数据模型
+\u804c\u8d23:
+1. \u5b9a\u4e49\u80a1\u7968realtime quote\u6a21\u578b
+2. \u5b9a\u4e49history K \u7ebf\u6570\u636e\u6a21\u578b
 """
 
 from typing import Optional, List
@@ -15,25 +15,25 @@ from pydantic import BaseModel, ConfigDict, Field
 
 
 class StockQuote(BaseModel):
-    """股票实时行情"""
-    
-    stock_code: str = Field(..., description="股票代码")
-    stock_name: Optional[str] = Field(None, description="股票名称")
-    current_price: float = Field(..., description="当前价格")
-    change: Optional[float] = Field(None, description="涨跌额")
-    change_percent: Optional[float] = Field(None, description="涨跌幅 (%)")
-    open: Optional[float] = Field(None, description="开盘价")
-    high: Optional[float] = Field(None, description="最高价")
-    low: Optional[float] = Field(None, description="最低价")
-    prev_close: Optional[float] = Field(None, description="昨收价")
-    volume: Optional[float] = Field(None, description="成交量（股）")
-    amount: Optional[float] = Field(None, description="成交额（元）")
-    update_time: Optional[str] = Field(None, description="更新时间")
-    
+    """\u80a1\u7968realtime quote"""
+
+    stock_code: str = Field(..., description="stock code")
+    stock_name: Optional[str] = Field(None, description="stock name")
+    current_price: float = Field(..., description="\u5f53\u524dprice")
+    change: Optional[float] = Field(None, description="change\u989d")
+    change_percent: Optional[float] = Field(None, description="change\u5e45 (%)")
+    open: Optional[float] = Field(None, description="\u5f00\u76d8\u4ef7")
+    high: Optional[float] = Field(None, description="\u6700High\u4ef7")
+    low: Optional[float] = Field(None, description="\u6700Low\u4ef7")
+    prev_close: Optional[float] = Field(None, description="\u6628\u6536\u4ef7")
+    volume: Optional[float] = Field(None, description="volume (\u80a1)")
+    amount: Optional[float] = Field(None, description="amount (\u5143)")
+    update_time: Optional[str] = Field(None, description="\u66f4\u65b0\u65f6\u95f4")
+
     model_config = ConfigDict(json_schema_extra={
         "example": {
             "stock_code": "600519",
-            "stock_name": "贵州茅台",
+            "stock_name": "\u8d35\u5dde\u8305\u53f0",
             "current_price": 1800.00,
             "change": 15.00,
             "change_percent": 0.84,
@@ -49,17 +49,17 @@ class StockQuote(BaseModel):
 
 
 class KLineData(BaseModel):
-    """K 线数据点"""
-    
-    date: str = Field(..., description="日期")
-    open: float = Field(..., description="开盘价")
-    high: float = Field(..., description="最高价")
-    low: float = Field(..., description="最低价")
-    close: float = Field(..., description="收盘价")
-    volume: Optional[float] = Field(None, description="成交量")
-    amount: Optional[float] = Field(None, description="成交额")
-    change_percent: Optional[float] = Field(None, description="涨跌幅 (%)")
-    
+    """K \u7ebf\u6570\u636e\u70b9"""
+
+    date: str = Field(..., description="date")
+    open: float = Field(..., description="\u5f00\u76d8\u4ef7")
+    high: float = Field(..., description="\u6700High\u4ef7")
+    low: float = Field(..., description="\u6700Low\u4ef7")
+    close: float = Field(..., description="\u6536\u76d8\u4ef7")
+    volume: Optional[float] = Field(None, description="volume")
+    amount: Optional[float] = Field(None, description="amount")
+    change_percent: Optional[float] = Field(None, description="change\u5e45 (%)")
+
     model_config = ConfigDict(json_schema_extra={
         "example": {
             "date": "2024-01-01",
@@ -75,33 +75,33 @@ class KLineData(BaseModel):
 
 
 class ExtractItem(BaseModel):
-    """单条提取结果（代码、名称、置信度）"""
+    """\u5355\u6761\u63d0\u53d6result (code、name、\u7f6e\u4fe1\u5ea6)"""
 
-    code: Optional[str] = Field(None, description="股票代码，None 表示解析失败")
-    name: Optional[str] = Field(None, description="股票名称（如有）")
-    confidence: str = Field("medium", description="置信度：high/medium/low")
+    code: Optional[str] = Field(None, description="stock code; None \u8868\u793aparse failed")
+    name: Optional[str] = Field(None, description="stock name (\u5982\u6709)")
+    confidence: str = Field("medium", description="\u7f6e\u4fe1\u5ea6: high/medium/low")
 
 
 class ExtractFromImageResponse(BaseModel):
-    """图片股票代码提取响应"""
+    """\u56fe\u7247stock code\u63d0\u53d6\u54cd\u5e94"""
 
-    codes: List[str] = Field(..., description="提取的股票代码（已去重，向后兼容）")
-    items: List[ExtractItem] = Field(default_factory=list, description="提取结果明细（代码+名称+置信度）")
-    raw_text: Optional[str] = Field(None, description="原始 LLM 响应（调试用）")
+    codes: List[str] = Field(..., description="\u63d0\u53d6\u7684stock code (\u5df2\u53bb\u91cd; \u5411\u540e\u517c\u5bb9)")
+    items: List[ExtractItem] = Field(default_factory=list, description="\u63d0\u53d6result\u660e\u7ec6 (code+name+\u7f6e\u4fe1\u5ea6)")
+    raw_text: Optional[str] = Field(None, description="\u539f\u59cb LLM \u54cd\u5e94 (\u8c03\u8bd5\u7528)")
 
 
 class StockHistoryResponse(BaseModel):
-    """股票历史行情响应"""
-    
-    stock_code: str = Field(..., description="股票代码")
-    stock_name: Optional[str] = Field(None, description="股票名称")
-    period: str = Field(..., description="K 线周期")
-    data: List[KLineData] = Field(default_factory=list, description="K 线数据列表")
-    
+    """\u80a1\u7968history\u884c\u60c5\u54cd\u5e94"""
+
+    stock_code: str = Field(..., description="stock code")
+    stock_name: Optional[str] = Field(None, description="stock name")
+    period: str = Field(..., description="K \u7ebf\u5468\u671f")
+    data: List[KLineData] = Field(default_factory=list, description="K \u7ebf\u6570\u636e\u5217\u8868")
+
     model_config = ConfigDict(json_schema_extra={
         "example": {
             "stock_code": "600519",
-            "stock_name": "贵州茅台",
+            "stock_name": "\u8d35\u5dde\u8305\u53f0",
             "period": "daily",
             "data": []
         }

@@ -11,10 +11,10 @@ function renderDialog(overrides: Partial<React.ComponentProps<typeof ConfirmDial
     <UiLanguageProvider>
       <ConfirmDialog
         isOpen
-        title="确认操作"
-        message="确认继续吗？"
-        confirmText="确定"
-        cancelText="取消"
+        title="\u786e\u8ba4\u64cd\u4f5c"
+        message="\u786e\u8ba4\u7ee7\u7eed\u5417？"
+        confirmText="\u786e\u5b9a"
+        cancelText="\u53d6\u6d88"
         onConfirm={onConfirm}
         onCancel={onCancel}
         {...overrides}
@@ -31,12 +31,12 @@ describe('ConfirmDialog', () => {
       cancelDisabled: true,
     });
 
-    fireEvent.click(screen.getByRole('button', { name: '确定' }));
-    fireEvent.click(screen.getByRole('button', { name: '取消' }));
+    fireEvent.click(screen.getByRole('button', { name: '\u786e\u5b9a' }));
+    fireEvent.click(screen.getByRole('button', { name: '\u53d6\u6d88' }));
     fireEvent.click(document.body.lastElementChild as HTMLElement);
 
-    expect(screen.getByRole('button', { name: '确定' })).toBeDisabled();
-    expect(screen.getByRole('button', { name: '取消' })).toBeDisabled();
+    expect(screen.getByRole('button', { name: '\u786e\u5b9a' })).toBeDisabled();
+    expect(screen.getByRole('button', { name: '\u53d6\u6d88' })).toBeDisabled();
     expect(onConfirm).not.toHaveBeenCalled();
     expect(onCancel).not.toHaveBeenCalled();
   });
@@ -44,8 +44,8 @@ describe('ConfirmDialog', () => {
   it('keeps the default confirm and cancel behavior when not disabled', () => {
     const { onConfirm, onCancel } = renderDialog();
 
-    fireEvent.click(screen.getByRole('button', { name: '确定' }));
-    fireEvent.click(screen.getByRole('button', { name: '取消' }));
+    fireEvent.click(screen.getByRole('button', { name: '\u786e\u5b9a' }));
+    fireEvent.click(screen.getByRole('button', { name: '\u53d6\u6d88' }));
 
     expect(onConfirm).toHaveBeenCalledTimes(1);
     expect(onCancel).toHaveBeenCalledTimes(1);

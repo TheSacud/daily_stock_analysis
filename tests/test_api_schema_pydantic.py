@@ -83,7 +83,7 @@ def test_schema_examples_remain_in_openapi_schema() -> None:
         "postmarket",
     ]
     assert history_schema["example"]["stock_code"] == "600519"
-    assert quote_schema["example"]["stock_name"] == "贵州茅台"
+    assert quote_schema["example"]["stock_name"] == "\u8d35\u5dde\u8305\u53f0"
 
 
 def test_analyze_request_supports_legacy_strategies_dict_input() -> None:
@@ -148,7 +148,7 @@ def test_decision_signal_static_api_spec_matches_runtime_paths() -> None:
 
     assert static_spec["openapi"] == runtime_spec["openapi"]
     assert static_spec["info"]["description"] == runtime_spec["info"]["description"]
-    assert "暂无认证要求" not in static_spec["info"]["description"]
+    assert "\u6682\u65e0\u8ba4\u8bc1\u8981\u6c42" not in static_spec["info"]["description"]
     assert "ADMIN_AUTH_ENABLED=true" in static_spec["info"]["description"]
     for path in DECISION_SIGNAL_PATHS:
         assert static_spec["paths"][path] == runtime_spec["paths"][path]

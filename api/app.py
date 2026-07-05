@@ -1,16 +1,16 @@
 # -*- coding: utf-8 -*-
 """
 ===================================
-FastAPI 应用工厂模块
+FastAPI \u5e94\u7528\u5de5\u5382\u6a21chunks
 ===================================
 
-职责：
-1. 创建和配置 FastAPI 应用实例
-2. 配置 CORS 中间件
-3. 注册路由和异常处理器
-4. 托管前端静态文件（生产模式）
+\u804c\u8d23:
+1. \u521b\u5efa\u548cconfig FastAPI \u5e94\u7528\u5b9e\u4f8b
+2. config CORS Medium\u95f4\u4ef6
+3. \u6ce8\u518c\u8def\u7531\u548c\u5f02\u5e38\u5904\u7406\u5668
+4. \u6258\u7ba1\u524d\u7aef\u9759\u6001\u6587\u4ef6 (\u751f\u4ea7mode)
 
-使用方式：
+\u4f7f\u7528\u65b9\u5f0f:
     from api.app import create_app
     app = create_app()
 """
@@ -296,60 +296,60 @@ async def app_lifespan(app: FastAPI):
 
 def create_app(static_dir: Optional[Path] = None) -> FastAPI:
     """
-    创建并配置 FastAPI 应用实例
-    
+    \u521b\u5efa\u5e76config FastAPI \u5e94\u7528\u5b9e\u4f8b
+
     Args:
-        static_dir: 静态文件目录路径（可选，默认为项目根目录下的 static）
-        
+        static_dir: \u9759\u6001\u6587\u4ef6\u76ee\u5f55\u8def\u5f84 (optional; default\u4e3a\u9879\u76ee\u6839\u76ee\u5f55\u4e0b\u7684 static)
+
     Returns:
-        配置完成的 FastAPI 应用实例
+        config\u5b8c\u6210\u7684 FastAPI \u5e94\u7528\u5b9e\u4f8b
     """
-    # 默认静态文件目录
+    # default\u9759\u6001\u6587\u4ef6\u76ee\u5f55
     _register_frontend_asset_mime_types()
 
     if static_dir is None:
         static_dir = Path(__file__).parent.parent / "static"
-    
-    # 创建 FastAPI 实例
+
+    # \u521b\u5efa FastAPI \u5b9e\u4f8b
     app = FastAPI(
         title="Daily Stock Analysis API",
         description=(
-            "A股/港股/美股自选股智能分析系统 API\n\n"
-            "## 功能模块\n"
-            "- 股票分析：触发 AI 智能分析\n"
-            "- 历史记录：查询历史分析报告\n"
-            "- 股票数据：获取行情数据\n\n"
-            "## 认证方式\n"
-            "支持可选管理员认证：ADMIN_AUTH_ENABLED=true 时，除登录、状态、健康检查和 "
-            "OpenAPI 文档外，/api/v1/* 需要有效管理员会话 Cookie；关闭时不强制认证。"
+            "A-share/HK stock/US stockwatchlist\u667a\u80fdanalyze\u7cfb\u7edf API\n\n"
+            "## \u529f\u80fd\u6a21chunks\n"
+            "- \u80a1\u7968analyze: \u89e6\u53d1 AI \u667a\u80fdanalyze\n"
+            "- history records: queryhistoryanalyzereport\n"
+            "- \u80a1\u7968\u6570\u636e: \u83b7\u53d6\u884c\u60c5\u6570\u636e\n\n"
+            "## \u8ba4\u8bc1\u65b9\u5f0f\n"
+            "\u652f\u6301optional\u7ba1\u7406\u5458\u8ba4\u8bc1: ADMIN_AUTH_ENABLED=true \u65f6; \u9664\u767b\u5f55、status、\u5065\u5eb7\u68c0check\u548c "
+            "OpenAPI docs\u5916; /api/v1/* \u9700\u8981\u6709\u6548\u7ba1\u7406\u5458conversation Cookie；\u5173\u95ed\u65f6\u4e0d\u5f3a\u5236\u8ba4\u8bc1."
         ),
         version="1.0.0",
         lifespan=app_lifespan,
     )
-    
+
     # ============================================================
-    # CORS 配置
+    # CORS config
     # ============================================================
-    
+
     allowed_origins = [
         "http://localhost:5173",
         "http://127.0.0.1:5173",
         "http://localhost:3000",
         "http://127.0.0.1:3000",
     ]
-    
-    # 从环境变量添加额外的允许来源
+
+    # \u4ece\u73af\u5883\u53d8\u91cf\u6dfb\u52a0\u989d\u5916\u7684\u5141\u8bb8source
     extra_origins = os.environ.get("CORS_ORIGINS", "")
     if extra_origins:
         allowed_origins.extend([o.strip() for o in extra_origins.split(",") if o.strip()])
-    
-    # 允许所有来源（开发/演示用）
+
+    # \u5141\u8bb8\u6240\u6709source (\u5f00\u53d1/\u6f14\u793a\u7528)
     allow_all_origins = os.environ.get("CORS_ALLOW_ALL", "").lower() == "true"
     allow_credentials = not allow_all_origins
     if allow_all_origins:
         _warn_if_open_cors_without_auth()
         allowed_origins = ["*"]
-    
+
     app.add_middleware(
         CORSMiddleware,
         allow_origins=allowed_origins,
@@ -359,20 +359,20 @@ def create_app(static_dir: Optional[Path] = None) -> FastAPI:
     )
 
     add_auth_middleware(app)
-    
+
     # ============================================================
-    # 注册路由
+    # \u6ce8\u518c\u8def\u7531
     # ============================================================
-    
+
     app.include_router(api_v1_router, prefix="/api/v1")
     add_error_handlers(app)
-    
+
     # ============================================================
-    # 根路由和健康检查
+    # \u6839\u8def\u7531\u548c\u5065\u5eb7\u68c0check
     # ============================================================
-    
+
     has_frontend = static_dir.exists() and (static_dir / "index.html").exists()
-    
+
     if has_frontend:
         # Surface bundle inconsistencies as soon as the app starts so that
         # blank-page reports (#1064 / #1065 / #1050) can be diagnosed from
@@ -381,7 +381,7 @@ def create_app(static_dir: Optional[Path] = None) -> FastAPI:
 
         @app.get("/", include_in_schema=False)
         async def root():
-            """根路由 - 返回前端页面"""
+            """\u6839\u8def\u7531 - \u8fd4\u56de\u524d\u7aef\u9875\u9762"""
             return _frontend_index_response(static_dir)
     else:
         _FRONTEND_NOT_BUILT_HTML = """<!DOCTYPE html>
@@ -413,25 +413,25 @@ def create_app(static_dir: Optional[Path] = None) -> FastAPI:
 
         @app.get("/", include_in_schema=False)
         async def root():
-            """根路由 - 前端未构建时返回引导页面"""
+            """\u6839\u8def\u7531 - \u524d\u7aef\u672a\u6784\u5efa\u65f6\u8fd4\u56de\u5f15\u5bfc\u9875\u9762"""
             return HTMLResponse(content=_FRONTEND_NOT_BUILT_HTML)
-    
+
     @app.get(
         "/health",
         response_model=HealthResponse,
         tags=["Health"],
-        summary="健康检查",
-        description="用于负载均衡器或监控系统检查服务状态"
+        summary="\u5065\u5eb7\u68c0check",
+        description="\u7528\u4e8e\u8d1f\u8f7d\u5747\u8861\u5668or\u76d1\u63a7\u7cfb\u7edf\u68c0check\u670d\u52a1status"
     )
     @app.get(
         "/api/health",
         response_model=HealthResponse,
         tags=["Health"],
-        summary="健康检查",
-        description="用于负载均衡器或监控系统检查服务状态"
+        summary="\u5065\u5eb7\u68c0check",
+        description="\u7528\u4e8e\u8d1f\u8f7d\u5747\u8861\u5668or\u76d1\u63a7\u7cfb\u7edf\u68c0check\u670d\u52a1status"
     )
     async def health_check() -> HealthResponse:
-        """健康检查接口"""
+        """\u5065\u5eb7\u68c0check\u63a5\u53e3"""
         return HealthResponse(
             status="ok",
             timestamp=datetime.now().isoformat()
@@ -478,11 +478,11 @@ def create_app(static_dir: Optional[Path] = None) -> FastAPI:
             media_type="application/json",
             headers=_STOCK_INDEX_HEADERS,
         )
-    
+
     # ============================================================
-    # 静态文件托管（前端 SPA）
+    # \u9759\u6001\u6587\u4ef6\u6258\u7ba1 (\u524d\u7aef SPA)
     # ============================================================
-    
+
     if has_frontend:
         # Serve `/assets/*` explicitly so that misses return a plain-text
         # 404 with the correct Content-Type instead of the default JSON
@@ -516,10 +516,10 @@ def create_app(static_dir: Optional[Path] = None) -> FastAPI:
                 media_type=_missing_asset_media_type(asset_path),
             )
 
-        # SPA 路由回退
+        # SPA \u8def\u7531\u56de\u9000
         @app.get("/{full_path:path}", include_in_schema=False)
         async def serve_spa(request: Request, full_path: str):
-            """SPA 路由回退 - 非 API 路由返回 index.html"""
+            """SPA \u8def\u7531\u56de\u9000 - \u975e API \u8def\u7531\u8fd4\u56de index.html"""
             if full_path == "api" or full_path.startswith("api/"):
                 return JSONResponse(
                     status_code=404,
@@ -541,9 +541,9 @@ def create_app(static_dir: Optional[Path] = None) -> FastAPI:
                 return FileResponse(file_path, media_type=content_type)
 
             return _frontend_index_response(static_dir)
-    
+
     return app
 
 
-# 默认应用实例（供 uvicorn 直接使用）
+# default\u5e94\u7528\u5b9e\u4f8b (\u4f9b uvicorn \u76f4\u63a5\u4f7f\u7528)
 app = create_app()

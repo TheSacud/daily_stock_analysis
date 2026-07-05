@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 """
-Email 发送提醒服务
+Email \u53d1\u9001\u63d0\u9192\u670d\u52a1
 
-职责：
-1. 通过 SMTP 发送 Email 消息
+\u804c\u8d23:
+1. \u901a\u8fc7 SMTP \u53d1\u9001 Email \u6d88\u606f
 """
 import logging
 from typing import Optional, List
@@ -23,12 +23,12 @@ from src.formatters import markdown_to_html_document
 logger = logging.getLogger(__name__)
 
 
-# SMTP 服务器配置（自动识别）
+# SMTP \u670d\u52a1\u5668config (\u81ea\u52a8\u8bc6\u522b)
 SMTP_CONFIGS = {
-    # QQ邮箱
+    # QQ\u90ae\u7bb1
     "qq.com": {"server": "smtp.qq.com", "port": 465, "ssl": True},
     "foxmail.com": {"server": "smtp.qq.com", "port": 465, "ssl": True},
-    # 网易邮箱
+    # \u7f51\u6613\u90ae\u7bb1
     "163.com": {"server": "smtp.163.com", "port": 465, "ssl": True},
     "126.com": {"server": "smtp.126.com", "port": 465, "ssl": True},
     # Gmail
@@ -37,38 +37,38 @@ SMTP_CONFIGS = {
     "outlook.com": {"server": "smtp-mail.outlook.com", "port": 587, "ssl": False},
     "hotmail.com": {"server": "smtp-mail.outlook.com", "port": 587, "ssl": False},
     "live.com": {"server": "smtp-mail.outlook.com", "port": 587, "ssl": False},
-    # 新浪
+    # \u65b0\u6d6a
     "sina.com": {"server": "smtp.sina.com", "port": 465, "ssl": True},
-    # 搜狐
+    # \u641c\u72d0
     "sohu.com": {"server": "smtp.sohu.com", "port": 465, "ssl": True},
-    # 阿里云
+    # \u963f\u91cc\u4e91
     "aliyun.com": {"server": "smtp.aliyun.com", "port": 465, "ssl": True},
-    # 139邮箱
+    # 139\u90ae\u7bb1
     "139.com": {"server": "smtp.139.com", "port": 465, "ssl": True},
 }
 
 
 class EmailSender:
-    
+
     def __init__(self, config: Config):
         """
-        初始化 Email 配置
+        \u521d\u59cb\u5316 Email config
 
         Args:
-            config: 配置对象
+            config: config\u5bf9\u8c61
         """
         self._email_config = {
             'sender': config.email_sender,
-            'sender_name': getattr(config, 'email_sender_name', 'daily_stock_analysis股票分析助手'),
+            'sender_name': getattr(config, 'email_sender_name', 'daily_stock_analysis\u80a1\u7968analyze\u52a9\u624b'),
             'password': config.email_password,
             'receivers': config.email_receivers or ([config.email_sender] if config.email_sender else []),
         }
         self._stock_email_groups = getattr(config, 'stock_email_groups', None) or []
-        
+
     def _is_email_configured(self) -> bool:
-        """检查邮件配置是否完整（只需邮箱和授权码）"""
+        """\u68c0checkEmailconfig\u662f\u5426\u5b8c\u6574 (\u53ea\u9700\u90ae\u7bb1\u548c\u6388\u6743\u7801)"""
         return bool(self._email_config['sender'] and self._email_config['password'])
-    
+
     def get_receivers_for_stocks(self, stock_codes: List[str]) -> List[str]:
         """
         Look up email receivers for given stock codes based on stock_email_groups.
@@ -111,7 +111,7 @@ class EmailSender:
 
     def _format_sender_address(self, sender: str) -> str:
         """Encode display name safely so non-ASCII sender names work across SMTP providers."""
-        sender_name = self._email_config.get('sender_name') or '股票分析助手'
+        sender_name = self._email_config.get('sender_name') or '\u80a1\u7968analyze\u52a9\u624b'
         return formataddr((str(Header(str(sender_name), 'utf-8')), sender))
 
     @staticmethod
@@ -130,7 +130,7 @@ class EmailSender:
                 server.close()
             except Exception:
                 pass
-    
+
     def send_to_email(
         self,
         content: str,
@@ -140,85 +140,85 @@ class EmailSender:
         timeout_seconds: Optional[float] = None,
     ) -> bool:
         """
-        通过 SMTP 发送邮件（自动识别 SMTP 服务器）
-        
+        \u901a\u8fc7 SMTP \u53d1\u9001Email (\u81ea\u52a8\u8bc6\u522b SMTP \u670d\u52a1\u5668)
+
         Args:
-            content: 邮件内容（支持 Markdown，会转换为 HTML）
-            subject: 邮件主题（可选，默认自动生成）
-            receivers: 收件人列表（可选，默认使用配置的 receivers）
-            
+            content: Email\u5185\u5bb9 (\u652f\u6301 Markdown; \u4f1a\u8f6c\u6362\u4e3a HTML)
+            subject: Email\u4e3b\u9898 (optional; default\u81ea\u52a8\u751f\u6210)
+            receivers: \u6536\u4ef6\u4eba\u5217\u8868 (optional; default\u4f7f\u7528config\u7684 receivers)
+
         Returns:
-            是否发送成功
+            \u662f\u5426send succeeded
         """
         if not self._is_email_configured():
-            logger.warning("邮件配置不完整，跳过推送")
+            logger.warning("Emailconfig\u4e0d\u5b8c\u6574; skipping\u63a8\u9001")
             return False
-        
+
         sender = self._email_config['sender']
         password = self._email_config['password']
         receivers = receivers or self._email_config['receivers']
         server: Optional[smtplib.SMTP] = None
-        
+
         try:
-            # 生成主题
+            # \u751f\u6210\u4e3b\u9898
             if subject is None:
                 date_str = datetime.now().strftime('%Y-%m-%d')
-                subject = f"📈 股票智能分析报告 - {date_str}"
-            
-            # 将 Markdown 转换为简单 HTML
+                subject = f"📈 \u80a1\u7968\u667a\u80fdanalyzereport - {date_str}"
+
+            # \u5c06 Markdown \u8f6c\u6362\u4e3a\u7b80\u5355 HTML
             html_content = markdown_to_html_document(content)
-            
-            # 构建邮件
+
+            # \u6784\u5efaEmail
             msg = MIMEMultipart('alternative')
             msg['Subject'] = Header(subject, 'utf-8')
             msg['From'] = self._format_sender_address(sender)
             msg['To'] = ', '.join(receivers)
-            
-            # 添加纯文本和 HTML 两个版本
+
+            # \u6dfb\u52a0\u7eaf\u6587\u672c\u548c HTML \u4e24\u4e2a\u7248\u672c
             text_part = MIMEText(content, 'plain', 'utf-8')
             html_part = MIMEText(html_content, 'html', 'utf-8')
             msg.attach(text_part)
             msg.attach(html_part)
-            
-            # 自动识别 SMTP 配置
+
+            # \u81ea\u52a8\u8bc6\u522b SMTP config
             domain = sender.split('@')[-1].lower()
             smtp_config = SMTP_CONFIGS.get(domain)
-            
+
             if smtp_config:
                 smtp_server = smtp_config['server']
                 smtp_port = smtp_config['port']
                 use_ssl = smtp_config['ssl']
-                logger.info(f"自动识别邮箱类型: {domain} -> {smtp_server}:{smtp_port}")
+                logger.info(f"\u81ea\u52a8\u8bc6\u522b\u90ae\u7bb1\u7c7b\u578b: {domain} -> {smtp_server}:{smtp_port}")
             else:
-                # 未知邮箱，尝试通用配置
+                # unknown\u90ae\u7bb1; \u5c1d\u8bd5\u901a\u7528config
                 smtp_server = f"smtp.{domain}"
                 smtp_port = 465
                 use_ssl = True
-                logger.warning(f"未知邮箱类型 {domain}，尝试通用配置: {smtp_server}:{smtp_port}")
-            
-            # 根据配置选择连接方式
+                logger.warning(f"unknown\u90ae\u7bb1\u7c7b\u578b {domain}; \u5c1d\u8bd5\u901a\u7528config: {smtp_server}:{smtp_port}")
+
+            # \u6839\u636econfig\u9009\u62e9\u8fde\u63a5\u65b9\u5f0f
             if use_ssl:
-                # SSL 连接（端口 465）
+                # SSL \u8fde\u63a5 (\u7aef\u53e3 465)
                 server = smtplib.SMTP_SSL(smtp_server, smtp_port, timeout=timeout_seconds or 30)
             else:
-                # TLS 连接（端口 587）
+                # TLS \u8fde\u63a5 (\u7aef\u53e3 587)
                 server = smtplib.SMTP(smtp_server, smtp_port, timeout=timeout_seconds or 30)
                 server.starttls()
-            
+
             server.login(sender, password)
             server.send_message(msg)
-            
-            logger.info(f"邮件发送成功，收件人: {receivers}")
+
+            logger.info(f"Emailsend succeeded; \u6536\u4ef6\u4eba: {receivers}")
             return True
-            
+
         except smtplib.SMTPAuthenticationError:
-            logger.error("邮件发送失败：认证错误，请检查邮箱和授权码是否正确")
+            logger.error("Emailsend failed: \u8ba4\u8bc1error; \u8bf7\u68c0check\u90ae\u7bb1\u548c\u6388\u6743\u7801\u662f\u5426\u6b63\u786e")
             return False
         except smtplib.SMTPConnectError as e:
-            logger.error(f"邮件发送失败：无法连接 SMTP 服务器 - {e}")
+            logger.error(f"Emailsend failed: \u65e0\u6cd5\u8fde\u63a5 SMTP \u670d\u52a1\u5668 - {e}")
             return False
         except Exception as e:
-            logger.error(f"发送邮件失败: {e}")
+            logger.error(f"\u53d1\u9001Emailfailed: {e}")
             return False
         finally:
             self._close_server(server)
@@ -235,17 +235,17 @@ class EmailSender:
         server: Optional[smtplib.SMTP] = None
         try:
             date_str = datetime.now().strftime('%Y-%m-%d')
-            subject = f"📈 股票智能分析报告 - {date_str}"
+            subject = f"📈 \u80a1\u7968\u667a\u80fdanalyzereport - {date_str}"
             msg = MIMEMultipart('related')
             msg['Subject'] = Header(subject, 'utf-8')
             msg['From'] = self._format_sender_address(sender)
             msg['To'] = ', '.join(receivers)
 
             alt = MIMEMultipart('alternative')
-            alt.attach(MIMEText('报告已生成，详见下方图片。', 'plain', 'utf-8'))
+            alt.attach(MIMEText('report\u5df2\u751f\u6210; \u8be6\u89c1\u4e0b\u65b9\u56fe\u7247.', 'plain', 'utf-8'))
             html_body = (
-                '<p>报告已生成，详见下方图片（点击可查看大图）：</p>'
-                '<p><img src="cid:report-image" alt="股票分析报告" style="max-width:100%%;" /></p>'
+                '<p>report\u5df2\u751f\u6210; \u8be6\u89c1\u4e0b\u65b9\u56fe\u7247 (\u70b9\u51fb\u53efcheck\u770b\u5927\u56fe): </p>'
+                '<p><img src="cid:report-image" alt="\u80a1\u7968analyzereport" style="max-width:100%%;" /></p>'
             )
             alt.attach(MIMEText(html_body, 'html', 'utf-8'))
             msg.attach(alt)
@@ -271,10 +271,10 @@ class EmailSender:
                 server.starttls()
             server.login(sender, password)
             server.send_message(msg)
-            logger.info("邮件（内联图片）发送成功，收件人: %s", receivers)
+            logger.info("Email (\u5185\u8054\u56fe\u7247)send succeeded; \u6536\u4ef6\u4eba: %s", receivers)
             return True
         except Exception as e:
-            logger.error("邮件（内联图片）发送失败: %s", e)
+            logger.error("Email (\u5185\u8054\u56fe\u7247)send failed: %s", e)
             return False
         finally:
             self._close_server(server)

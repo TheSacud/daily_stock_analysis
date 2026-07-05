@@ -34,10 +34,10 @@ def test_prepare_webui_frontend_assets_reuses_prebuilt_static_without_source(tmp
     with caplog.at_level(logging.INFO):
         assert webui_frontend.prepare_webui_frontend_assets() is True
 
-    assert "检测到可直接复用的前端静态产物" in caplog.text
-    assert "未找到前端项目，无法自动构建" not in caplog.text
-    assert "未检测到 npm，无法自动构建前端" not in caplog.text
-    assert "assets/ 目录不存在或无 CSS/JS 文件" not in caplog.text
+    assert "\u68c0\u6d4b\u5230\u53ef\u76f4\u63a5\u590d\u7528\u7684\u524d\u7aef\u9759\u6001\u4ea7\u7269" in caplog.text
+    assert "\u672a\u627e\u5230\u524d\u7aef\u9879\u76ee，\u65e0\u6cd5\u81ea\u52a8\u6784\u5efa" not in caplog.text
+    assert "\u672a\u68c0\u6d4b\u5230 npm，\u65e0\u6cd5\u81ea\u52a8\u6784\u5efa\u524d\u7aef" not in caplog.text
+    assert "assets/ \u76ee\u5f55\u4e0d\u5b58\u5728\u6216\u65e0 CSS/JS \u6587\u4ef6" not in caplog.text
 
 
 def test_prepare_webui_frontend_assets_fails_without_static_or_source(tmp_path, monkeypatch, caplog):
@@ -49,11 +49,11 @@ def test_prepare_webui_frontend_assets_fails_without_static_or_source(tmp_path, 
     with caplog.at_level(logging.WARNING):
         assert webui_frontend.prepare_webui_frontend_assets() is False
 
-    assert "未找到前端项目，无法自动构建" in caplog.text
+    assert "\u672a\u627e\u5230\u524d\u7aef\u9879\u76ee，\u65e0\u6cd5\u81ea\u52a8\u6784\u5efa" in caplog.text
 
 
 def test_prepare_webui_frontend_assets_warns_when_assets_missing(tmp_path, monkeypatch, caplog):
-    """index.html 存在但 static/assets/ 缺失时应发出 WebUI 显示异常警告（Issue #944）。"""
+    """index.html \u5b58\u5728\u4f46 static/assets/ \u7f3a\u5931\u65f6\u5e94\u53d1\u51fa WebUI \u663e\u793a\u5f02\u5e38\u8b66\u544a（Issue #944）。"""
     repo_root = _prepare_fake_repo(tmp_path, monkeypatch)
     static_index = repo_root / "static" / "index.html"
     static_index.parent.mkdir(parents=True)
@@ -68,12 +68,12 @@ def test_prepare_webui_frontend_assets_warns_when_assets_missing(tmp_path, monke
         result = webui_frontend.prepare_webui_frontend_assets()
 
     assert result is True  # function still returns True (index.html present)
-    assert "目录不存在或无 CSS/JS 文件" in caplog.text
-    assert "WebUI 将因缺少样式与脚本而显示异常" in caplog.text
+    assert "\u76ee\u5f55\u4e0d\u5b58\u5728\u6216\u65e0 CSS/JS \u6587\u4ef6" in caplog.text
+    assert "WebUI \u5c06\u56e0\u7f3a\u5c11\u6837\u5f0f\u4e0e\u811a\u672c\u800c\u663e\u793a\u5f02\u5e38" in caplog.text
 
 
 def test_prepare_webui_frontend_assets_auto_build_disabled_warns_when_assets_missing(tmp_path, monkeypatch, caplog):
-    """WEBUI_AUTO_BUILD=false 且 assets 缺失时也应发出警告。"""
+    """WEBUI_AUTO_BUILD=false \u4e14 assets \u7f3a\u5931\u65f6\u4e5f\u5e94\u53d1\u51fa\u8b66\u544a。"""
     repo_root = _prepare_fake_repo(tmp_path, monkeypatch)
     static_index = repo_root / "static" / "index.html"
     static_index.parent.mkdir(parents=True)
@@ -87,7 +87,7 @@ def test_prepare_webui_frontend_assets_auto_build_disabled_warns_when_assets_mis
         result = webui_frontend.prepare_webui_frontend_assets()
 
     assert result is True  # index.html present, still returns True
-    assert "目录不存在或无 CSS/JS 文件" in caplog.text
+    assert "\u76ee\u5f55\u4e0d\u5b58\u5728\u6216\u65e0 CSS/JS \u6587\u4ef6" in caplog.text
 
 
 def test_has_static_assets_returns_false_for_missing_dir(tmp_path):

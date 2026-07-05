@@ -7,7 +7,7 @@ import { getRequestedPhaseLabel } from '../../utils/marketPhase';
 import { useUiLanguage } from '../../contexts/UiLanguageContext';
 
 /**
- * 任务项组件属性
+ * Task item component props
  */
 interface TaskItemProps {
   task: TaskInfo;
@@ -15,7 +15,7 @@ interface TaskItemProps {
 }
 
 /**
- * 单个任务项
+ * Single task item
  */
 const TaskItem: React.FC<TaskItemProps> = ({ task, onOpenRunFlow }) => {
   const { language, t } = useUiLanguage();
@@ -145,24 +145,24 @@ const TaskItem: React.FC<TaskItemProps> = ({ task, onOpenRunFlow }) => {
 };
 
 /**
- * 任务面板属性
+ * Task panel props
  */
 interface TaskPanelProps {
-  /** 任务列表 */
+  /** Task list */
   tasks: TaskInfo[];
-  /** 是否显示 */
+  /** Whether to show the panel */
   visible?: boolean;
-  /** 标题 */
+  /** Title */
   title?: string;
-  /** 自定义类名 */
+  /** Custom class name */
   className?: string;
-  /** 打开运行流面板 */
+  /** Open run-flow panel */
   onOpenRunFlow?: (task: TaskInfo) => void;
 }
 
 /**
- * 任务面板组件
- * 显示进行中的分析任务列表
+ * Task panel component
+ * Shows in-progress analysis tasks
  */
 export const TaskPanel: React.FC<TaskPanelProps> = ({
   tasks,
@@ -172,12 +172,12 @@ export const TaskPanel: React.FC<TaskPanelProps> = ({
   onOpenRunFlow,
 }) => {
   const { t } = useUiLanguage();
-  // 筛选活跃任务（pending / processing / cancel requested）
+  // Filter active tasks (pending / processing / cancel requested)
   const activeTasks = tasks.filter(
     (t) => t.status === 'pending' || t.status === 'processing' || t.status === 'cancel_requested'
   );
 
-  // 无任务或不可见时不渲染
+  // Render nothing when there are no tasks or the panel is hidden
   if (!visible || activeTasks.length === 0) {
     return null;
   }
@@ -204,13 +204,13 @@ export const TaskPanel: React.FC<TaskPanelProps> = ({
             <div className="flex items-center gap-2 text-xs text-muted-text">
               {processingCount > 0 && (
                 <span className="flex items-center gap-1">
-                  <StatusDot tone="info" pulse className="h-1.5 w-1.5" aria-label="进行中任务" />
+                  <StatusDot tone="info" pulse className="h-1.5 w-1.5" aria-label="Running task" />
                   {t('taskPanel.processingTasks', { count: processingCount })}
                 </span>
               )}
               {pendingCount > 0 ? (
                 <span className="flex items-center gap-1">
-                  <StatusDot tone="neutral" className="h-1.5 w-1.5" aria-label="等待中任务" />
+                  <StatusDot tone="neutral" className="h-1.5 w-1.5" aria-label="Pending task" />
                   {t('taskPanel.pendingTasks', { count: pendingCount })}
                 </span>
               ) : null}

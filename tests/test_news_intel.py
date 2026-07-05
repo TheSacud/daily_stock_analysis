@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 """
 ===================================
-A股自选股智能分析系统 - 新闻情报存储单元测试
+A\u80a1\u81ea\u9009\u80a1\u667a\u80fd\u5206\u6790\u7cfb\u7edf - \u65b0\u95fb\u60c5\u62a5\u5b58\u50a8\u5355\u5143\u6d4b\u8bd5
 ===================================
 
-职责：
-1. 验证新闻情报的保存与去重逻辑
-2. 验证无 URL 情况下的兜底去重键
+\u804c\u8d23：
+1. \u9a8c\u8bc1\u65b0\u95fb\u60c5\u62a5\u7684\u4fdd\u5b58\u4e0e\u53bb\u91cd\u903b\u8f91
+2. \u9a8c\u8bc1\u65e0 URL \u60c5\u51b5\u4e0b\u7684\u515c\u5e95\u53bb\u91cd\u952e
 """
 
 import os
@@ -25,38 +25,38 @@ from src.search_service import SearchResponse, SearchResult
 
 
 class NewsIntelStorageTestCase(unittest.TestCase):
-    """新闻情报存储测试"""
+    """\u65b0\u95fb\u60c5\u62a5\u5b58\u50a8\u6d4b\u8bd5"""
 
     def setUp(self) -> None:
-        """为每个用例初始化独立数据库"""
+        """\u4e3a\u6bcf\u4e2a\u7528\u4f8b\u521d\u59cb\u5316\u72ec\u7acb\u6570\u636e\u5e93"""
         self._temp_dir = tempfile.TemporaryDirectory()
         self._db_path = os.path.join(self._temp_dir.name, "test_news_intel.db")
         os.environ["DATABASE_PATH"] = self._db_path
 
-        # 重置配置与数据库单例，确保使用临时库
+        # \u91cd\u7f6e\u914d\u7f6e\u4e0e\u6570\u636e\u5e93\u5355\u4f8b，\u786e\u4fdd\u4f7f\u7528\u4e34\u65f6\u5e93
         Config._instance = None
         DatabaseManager.reset_instance()
         self.db = DatabaseManager.get_instance()
 
     def tearDown(self) -> None:
-        """清理资源"""
+        """\u6e05\u7406\u8d44\u6e90"""
         DatabaseManager.reset_instance()
         self._temp_dir.cleanup()
 
     def _build_response(self, results) -> SearchResponse:
-        """构造 SearchResponse 快捷函数"""
+        """\u6784\u9020 SearchResponse \u5feb\u6377\u51fd\u6570"""
         return SearchResponse(
-            query="贵州茅台 最新消息",
+            query="\u8d35\u5dde\u8305\u53f0 \u6700\u65b0\u6d88\u606f",
             results=results,
             provider="Bocha",
             success=True,
         )
 
     def test_save_news_intel_with_url_dedup(self) -> None:
-        """相同 URL 去重，仅保留一条记录"""
+        """\u76f8\u540c URL \u53bb\u91cd，\u4ec5\u4fdd\u7559\u4e00\u6761\u8bb0\u5f55"""
         result = SearchResult(
-            title="茅台发布新产品",
-            snippet="公司发布新品...",
+            title="\u8305\u53f0\u53d1\u5e03\u65b0\u4ea7\u54c1",
+            snippet="\u516c\u53f8\u53d1\u5e03\u65b0\u54c1...",
             url="https://news.example.com/a",
             source="example.com",
             published_date="2025-01-02"
@@ -68,7 +68,7 @@ class NewsIntelStorageTestCase(unittest.TestCase):
             "query_source": "bot",
             "requester_platform": "feishu",
             "requester_user_id": "u_123",
-            "requester_user_name": "测试用户",
+            "requester_user_name": "\u6d4b\u8bd5\u7528\u6237",
             "requester_chat_id": "c_456",
             "requester_message_id": "m_789",
             "requester_query": "/analyze 600519",
@@ -76,7 +76,7 @@ class NewsIntelStorageTestCase(unittest.TestCase):
 
         saved_first = self.db.save_news_intel(
             code="600519",
-            name="贵州茅台",
+            name="\u8d35\u5dde\u8305\u53f0",
             dimension="latest_news",
             query=response.query,
             response=response,
@@ -84,7 +84,7 @@ class NewsIntelStorageTestCase(unittest.TestCase):
         )
         saved_second = self.db.save_news_intel(
             code="600519",
-            name="贵州茅台",
+            name="\u8d35\u5dde\u8305\u53f0",
             dimension="latest_news",
             query=response.query,
             response=response,
@@ -99,15 +99,15 @@ class NewsIntelStorageTestCase(unittest.TestCase):
             row = session.query(NewsIntel).first()
         self.assertEqual(total, 1)
         if row is None:
-            self.fail("未找到保存的新闻记录")
+            self.fail("\u672a\u627e\u5230\u4fdd\u5b58\u7684\u65b0\u95fb\u8bb0\u5f55")
         self.assertEqual(row.query_id, "task_001")
-        self.assertEqual(row.requester_user_name, "测试用户")
+        self.assertEqual(row.requester_user_name, "\u6d4b\u8bd5\u7528\u6237")
 
     def test_save_news_intel_without_url_fallback_key(self) -> None:
-        """无 URL 时使用兜底键去重"""
+        """\u65e0 URL \u65f6\u4f7f\u7528\u515c\u5e95\u952e\u53bb\u91cd"""
         result = SearchResult(
-            title="茅台业绩预告",
-            snippet="业绩大幅增长...",
+            title="\u8305\u53f0\u4e1a\u7ee9\u9884\u544a",
+            snippet="\u4e1a\u7ee9\u5927\u5e45\u589e\u957f...",
             url="",
             source="example.com",
             published_date="2025-01-03"
@@ -116,14 +116,14 @@ class NewsIntelStorageTestCase(unittest.TestCase):
 
         saved_first = self.db.save_news_intel(
             code="600519",
-            name="贵州茅台",
+            name="\u8d35\u5dde\u8305\u53f0",
             dimension="earnings",
             query=response.query,
             response=response
         )
         saved_second = self.db.save_news_intel(
             code="600519",
-            name="贵州茅台",
+            name="\u8d35\u5dde\u8305\u53f0",
             dimension="earnings",
             query=response.query,
             response=response
@@ -135,15 +135,15 @@ class NewsIntelStorageTestCase(unittest.TestCase):
         with self.db.get_session() as session:
             row = session.query(NewsIntel).first()
             if row is None:
-                self.fail("未找到保存的新闻记录")
+                self.fail("\u672a\u627e\u5230\u4fdd\u5b58\u7684\u65b0\u95fb\u8bb0\u5f55")
             self.assertTrue(row.url.startswith("no-url:"))
 
     def test_get_recent_news(self) -> None:
-        """可按时间范围查询最新新闻"""
+        """\u53ef\u6309\u65f6\u95f4\u8303\u56f4\u67e5\u8be2\u6700\u65b0\u65b0\u95fb"""
         now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         result = SearchResult(
-            title="茅台股价震荡",
-            snippet="盘中波动较大...",
+            title="\u8305\u53f0\u80a1\u4ef7\u9707\u8361",
+            snippet="\u76d8\u4e2d\u6ce2\u52a8\u8f83\u5927...",
             url="https://news.example.com/b",
             source="example.com",
             published_date=now
@@ -152,7 +152,7 @@ class NewsIntelStorageTestCase(unittest.TestCase):
 
         self.db.save_news_intel(
             code="600519",
-            name="贵州茅台",
+            name="\u8d35\u5dde\u8305\u53f0",
             dimension="market_analysis",
             query=response.query,
             response=response
@@ -160,12 +160,12 @@ class NewsIntelStorageTestCase(unittest.TestCase):
 
         recent_news = self.db.get_recent_news(code="600519", days=7, limit=10)
         self.assertEqual(len(recent_news), 1)
-        self.assertEqual(recent_news[0].title, "茅台股价震荡")
+        self.assertEqual(recent_news[0].title, "\u8305\u53f0\u80a1\u4ef7\u9707\u8361")
 
     def test_save_news_intel_retries_on_sqlite_locked_execute(self) -> None:
         result = SearchResult(
-            title="茅台锁竞争重试",
-            snippet="模拟 SQLite locked...",
+            title="\u8305\u53f0\u9501\u7ade\u4e89\u91cd\u8bd5",
+            snippet="\u6a21\u62df SQLite locked...",
             url="https://news.example.com/retry",
             source="example.com",
             published_date="2025-01-05",
@@ -185,7 +185,7 @@ class NewsIntelStorageTestCase(unittest.TestCase):
                 with patch("src.storage.time.sleep") as mock_sleep:
                     saved_count = self.db.save_news_intel(
                         code="600519",
-                        name="贵州茅台",
+                        name="\u8d35\u5dde\u8305\u53f0",
                         dimension="latest_news",
                         query=response.query,
                         response=response,

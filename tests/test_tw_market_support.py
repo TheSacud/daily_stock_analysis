@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Regression tests for Taiwan (台股) suffix-only market support.
+"""Regression tests for Taiwan (\u53f0\u80a1) suffix-only market support.
 
 Mirrors tests/test_jp_kr_market_support.py (Issue #1718). Taiwan stocks use the
 Yahoo Finance suffix forms ``NNNN.TW`` (TWSE-listed) and ``NNNN.TWO`` (TPEx/OTC),
@@ -77,14 +77,14 @@ def test_normalize_and_detect_tw_suffix_codes() -> None:
 def test_market_guidelines_for_tw_keep_taiwan_context() -> None:
     tw_guidelines = get_market_guidelines("2330.TW")
 
-    assert "台股" in tw_guidelines
+    assert "\u53f0\u80a1" in tw_guidelines
     # Taiwan keeps its own positive framing (±10% limit + three institutional
     # groups); do NOT copy the JP/KR "no A-share price-limit board" wording.
-    assert "三大法人" in tw_guidelines
-    assert ("±10%" in tw_guidelines) or ("涨跌停" in tw_guidelines)
+    assert "\u4e09\u5927\u6cd5\u4eba" in tw_guidelines
+    assert ("±10%" in tw_guidelines) or ("\u6da8\u8dcc\u505c" in tw_guidelines)
     # Only China A-share-specific concepts are excluded.
-    assert "北向资金" in tw_guidelines
-    assert "龙虎榜" in tw_guidelines
+    assert "\u5317\u5411\u8d44\u91d1" in tw_guidelines
+    assert "\u9f99\u864e\u699c" in tw_guidelines
 
 
 def test_yfinance_keeps_tw_suffix_codes_and_indices() -> None:
@@ -105,8 +105,8 @@ def test_yfinance_keeps_tw_suffix_codes_and_indices() -> None:
     tw_indices = fetcher.get_main_indices("tw") or []
 
     assert {item["code"] for item in tw_indices} == {"TWII", "TWOII"}
-    assert ("^TWII", "台湾加权指数", "TWII") in captured
-    assert ("^TWOII", "台湾柜买指数", "TWOII") in captured
+    assert ("^TWII", "\u53f0\u6e7e\u52a0\u6743\u6307\u6570", "TWII") in captured
+    assert ("^TWOII", "\u53f0\u6e7e\u67dc\u4e70\u6307\u6570", "TWOII") in captured
 
 
 def test_data_fetcher_manager_routes_tw_daily_only_to_yfinance() -> None:

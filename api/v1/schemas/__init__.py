@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 """
 ===================================
-API v1 Schemas 模块初始化
+API v1 Schemas \u6a21chunks\u521d\u59cb\u5316
 ===================================
 
-职责：
-1. 导出所有 Pydantic 模型
+\u804c\u8d23:
+1. \u5bfc\u51fa\u6240\u6709 Pydantic \u6a21\u578b
 """
 
 from api.v1.schemas.common import (

@@ -46,7 +46,7 @@ def _add_signal(
     with db.session_scope() as session:
         row = DecisionSignalRecord(
             stock_code=code,
-            stock_name="贵州茅台",
+            stock_name="\u8d35\u5dde\u8305\u53f0",
             market=market,
             source_type="analysis",
             source_report_id=1001,

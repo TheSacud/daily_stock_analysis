@@ -72,7 +72,7 @@ class TestBotCommandAsync(unittest.IsolatedAsyncioTestCase):
 
 class TestCommandDispatcherAsync(unittest.IsolatedAsyncioTestCase):
     def test_nl_prefilter_matches_bse_codes(self):
-        self.assertIsNotNone(CommandDispatcher._NL_PREFILTER.search("帮我分析430001"))
+        self.assertIsNotNone(CommandDispatcher._NL_PREFILTER.search("\u5e2e\u6211\u5206\u6790430001"))
 
     def test_nl_prefilter_accepts_bare_lowercase_us_ticker(self):
         self.assertTrue(CommandDispatcher._passes_nl_prefilter("tsla"))
@@ -107,7 +107,7 @@ class TestCommandDispatcherAsync(unittest.IsolatedAsyncioTestCase):
                 adapter = MagicMock()
                 adapter.call_text.return_value = fake_response
                 adapter_cls.return_value = adapter
-                result = await CommandDispatcher._parse_intent_via_llm("分析600519", config)
+                result = await CommandDispatcher._parse_intent_via_llm("\u5206\u6790600519", config)
 
         self.assertEqual(result["intent"], "analysis")
         self.assertEqual(result["codes"], ["600519"])
@@ -131,9 +131,9 @@ class TestCommandDispatcherAsync(unittest.IsolatedAsyncioTestCase):
             with patch.object(dispatcher, "_parse_intent_via_llm", new=AsyncMock(return_value={
                 "intent": "analysis",
                 "codes": ["600519"],
-                "strategy": "缠论",
+                "strategy": "\u7f20\u8bba",
             })):
-                result = await dispatcher._try_nl_routing(_make_message("帮我分析600519", mentioned=True))
+                result = await dispatcher._try_nl_routing(_make_message("\u5e2e\u6211\u5206\u6790600519", mentioned=True))
 
         self.assertIsNotNone(result)
         self.assertEqual(result.text, "ask-ok")
@@ -165,7 +165,7 @@ class TestCommandDispatcherAsync(unittest.IsolatedAsyncioTestCase):
                         "strategy": None,
                     }),
                 ):
-                    result = await dispatcher._try_nl_routing(_make_message("帮我分析茅台", mentioned=True))
+                    result = await dispatcher._try_nl_routing(_make_message("\u5e2e\u6211\u5206\u6790\u8305\u53f0", mentioned=True))
 
         self.assertIsNotNone(result)
         self.assertEqual(result.text, "ask-ok")
@@ -293,7 +293,7 @@ class TestHistoryCommandCompatibility(unittest.TestCase):
         with patch("src.storage.get_db", return_value=db):
             response = command.execute(message, ["clear"])
 
-        self.assertIn("1 条消息", response.text)
+        self.assertIn("1 \u6761\u6d88\u606f", response.text)
         db.delete_conversation_session.assert_called_once_with("feishu_u1:group-1:chat")
 
 

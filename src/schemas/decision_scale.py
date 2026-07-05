@@ -17,29 +17,29 @@ class DecisionScaleBand:
     signal_key: str
     action: str
     decision_type: str
-    label_zh: str
-    description_zh: str
+    label: str
+    description: str
 
 
 CANONICAL_DECISION_SCALE: tuple[DecisionScaleBand, ...] = (
-    DecisionScaleBand(80, 100, "strong_buy", "buy", "buy", "强烈买入", "高胜率机会，可执行买入/加仓计划"),
-    DecisionScaleBand(60, 79, "buy", "buy", "buy", "买入", "偏积极机会，允许少量待确认项"),
-    DecisionScaleBand(40, 59, "watch", "watch", "hold", "观望", "信号分歧或确认不足，等待触发条件"),
-    DecisionScaleBand(20, 39, "reduce", "reduce", "sell", "减仓", "风险明显抬升，优先降低暴露"),
-    DecisionScaleBand(0, 19, "sell", "sell", "sell", "卖出", "趋势或风险显著恶化，优先退出"),
+    DecisionScaleBand(80, 100, "strong_buy", "buy", "buy", "Strong Buy", "High-probability opportunity; buying/adding plan can be executed"),
+    DecisionScaleBand(60, 79, "buy", "buy", "buy", "Buy", "Positive opportunity with a small number of items allowed to remain unconfirmed"),
+    DecisionScaleBand(40, 59, "watch", "watch", "hold", "Watch", "Signals are mixed or insufficiently confirmed; wait for trigger conditions"),
+    DecisionScaleBand(20, 39, "reduce", "reduce", "sell", "Reduce", "Risk has clearly risen; prioritize reducing exposure"),
+    DecisionScaleBand(0, 19, "sell", "sell", "sell", "Sell", "Trend or risk has materially deteriorated; prioritize exit"),
 )
 
 
-CANONICAL_DECISION_SCALE_PROMPT_ZH = """## Canonical 评分与动作口径
+CANONICAL_DECISION_SCALE_PROMPT_ZH = """## Canonical Score and Action Scale
 
-- `sentiment_score`、`operation_advice`、三态 `decision_type` 与八态 `action` 必须按同一口径表达。
-- 80-100：强烈买入，`action=buy`，`decision_type=buy`。
-- 60-79：买入，`action=buy`，`decision_type=buy`。
-- 40-59：观望，`action=watch`，`decision_type=hold`。
-- 20-39：减仓，`action=reduce`，`decision_type=sell`。
-- 0-19：卖出，`action=sell`，`decision_type=sell`。
-- `decision_type` 只保留 `buy|hold|sell` 兼容统计；更细建议必须写入 `action`。
-- 若 score >= 60 但最终 `action` 是 `hold/watch`，或 score < 40 但最终 `action` 是 `hold/watch`，必须在 `guardrail_reason` 或 `dashboard.decision_stability.reason` 中说明降级原因。"""
+- `sentiment_score`, `operation_advice`, three-state `decision_type`, and eight-state `action` must use the same scale.
+- 80-100: Strong Buy, `action=buy`, `decision_type=buy`.
+- 60-79: Buy, `action=buy`, `decision_type=buy`.
+- 40-59: Watch, `action=watch`, `decision_type=hold`.
+- 20-39: Reduce, `action=reduce`, `decision_type=sell`.
+- 0-19: Sell, `action=sell`, `decision_type=sell`.
+- `decision_type` remains limited to `buy|hold|sell` for compatibility with statistics; finer recommendations must be written to `action`.
+- If score >= 60 but final `action` is `hold/watch`, or score < 40 but final `action` is `hold/watch`, explain the downgrade in `guardrail_reason` or `dashboard.decision_stability.reason`."""
 
 
 def normalize_score(value: Any) -> Optional[int]:

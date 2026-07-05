@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 """
 ===================================
-命令分发器
+command\u5206\u53d1\u5668
 ===================================
 
-负责解析命令、匹配处理器、分发执行。
+\u8d1f\u8d23\u89e3\u6790command、\u5339\u914d\u5904\u7406\u5668、\u5206\u53d1\u6267\u884c.
 """
 
 import asyncio
@@ -23,16 +23,16 @@ logger = logging.getLogger(__name__)
 
 class RateLimiter:
     """
-    简单的频率限制器
+    \u7b80\u5355\u7684\u9891\u7387limit\u5668
 
-    基于滑动窗口算法，限制每个用户的请求频率。
+    \u57fa\u4e8e\u6ed1\u52a8\u7a97\u53e3\u7b97\u6cd5; limit\u6bcf\u4e2auser\u7684request\u9891\u7387.
     """
 
     def __init__(self, max_requests: int = 10, window_seconds: int = 60):
         """
         Args:
-            max_requests: 窗口内最大请求数
-            window_seconds: 窗口时间（秒）
+            max_requests: \u7a97\u53e3\u5185\u6700\u5927request\u6570
+            window_seconds: \u7a97\u53e3\u65f6\u95f4 (\u79d2)
         """
         self.max_requests = max_requests
         self.window_seconds = window_seconds
@@ -40,37 +40,37 @@ class RateLimiter:
 
     def is_allowed(self, user_id: str) -> bool:
         """
-        检查用户是否允许请求
+        \u68c0checkuser\u662f\u5426\u5141\u8bb8request
 
         Args:
-            user_id: 用户标识
+            user_id: user\u6807\u8bc6
 
         Returns:
-            是否允许
+            \u662f\u5426\u5141\u8bb8
         """
         now = time.time()
         window_start = now - self.window_seconds
 
-        # 清理过期记录
+        # \u6e05\u7406\u8fc7\u671f\u8bb0\u5f55
         self._requests[user_id] = [
             t for t in self._requests[user_id]
             if t > window_start
         ]
 
-        # 检查是否超限
+        # \u68c0check\u662f\u5426\u8d85\u9650
         if len(self._requests[user_id]) >= self.max_requests:
             return False
 
-        # 记录本次请求
+        # \u8bb0\u5f55this runrequest
         self._requests[user_id].append(now)
         return True
 
     def get_remaining(self, user_id: str) -> int:
-        """获取剩余可用请求数"""
+        """\u83b7\u53d6\u5269\u4f59\u53ef\u7528request\u6570"""
         now = time.time()
         window_start = now - self.window_seconds
 
-        # 清理过期记录
+        # \u6e05\u7406\u8fc7\u671f\u8bb0\u5f55
         self._requests[user_id] = [
             t for t in self._requests[user_id]
             if t > window_start
@@ -81,15 +81,15 @@ class RateLimiter:
 
 class CommandDispatcher:
     """
-    命令分发器
+    command\u5206\u53d1\u5668
 
-    职责：
-    1. 注册和管理命令处理器
-    2. 解析消息中的命令和参数
-    3. 分发命令到对应处理器
-    4. 处理未知命令和错误
+    \u804c\u8d23:
+    1. \u6ce8\u518c\u548c\u7ba1\u7406command\u5904\u7406\u5668
+    2. \u89e3\u6790\u6d88\u606fMedium\u7684command\u548cparameter
+    3. \u5206\u53d1command\u5230\u5bf9\u5e94\u5904\u7406\u5668
+    4. \u5904\u7406unknowncommand\u548cerror
 
-    使用示例：
+    \u4f7f\u7528\u793a\u4f8b:
         dispatcher = CommandDispatcher()
         dispatcher.register(AnalyzeCommand())
         dispatcher.register(HelpCommand())
@@ -106,10 +106,10 @@ class CommandDispatcher:
     ):
         """
         Args:
-            command_prefix: 命令前缀，默认 "/"
-            rate_limit_requests: 频率限制：窗口内最大请求数
-            rate_limit_window: 频率限制：窗口时间（秒）
-            admin_users: 管理员用户 ID 列表
+            command_prefix: commandprefix; default "/"
+            rate_limit_requests: \u9891\u7387limit: \u7a97\u53e3\u5185\u6700\u5927request\u6570
+            rate_limit_window: \u9891\u7387limit: \u7a97\u53e3\u65f6\u95f4 (\u79d2)
+            admin_users: \u7ba1\u7406\u5458user ID \u5217\u8868
         """
         self.command_prefix = command_prefix
         self.admin_users = set(admin_users or [])
@@ -118,50 +118,50 @@ class CommandDispatcher:
         self._aliases: Dict[str, str] = {}
         self._rate_limiter = RateLimiter(rate_limit_requests, rate_limit_window)
 
-        # 回调函数：获取帮助命令的命令列表
+        # \u56de\u8c03\u51fd\u6570: \u83b7\u53d6helpcommand\u7684command\u5217\u8868
         self._help_command_getter: Optional[Callable] = None
 
     def register(self, command: BotCommand) -> None:
         """
-        注册命令
+        registered command
 
         Args:
-            command: 命令实例
+            command: command\u5b9e\u4f8b
         """
         name = command.name.lower()
 
         if name in self._commands:
-            logger.warning(f"[Dispatcher] 命令 '{name}' 已存在，将被覆盖")
+            logger.warning(f"[Dispatcher] command '{name}' already exists; will be overwritten")
 
         self._commands[name] = command
-        logger.debug(f"[Dispatcher] 注册命令: {name}")
+        logger.debug(f"[Dispatcher] registered command: {name}")
 
-        # 注册别名
+        # \u6ce8\u518calias
         for alias in command.aliases:
             alias_lower = alias.lower()
             if alias_lower in self._aliases:
-                logger.warning(f"[Dispatcher] 别名 '{alias_lower}' 已存在，将被覆盖")
+                logger.warning(f"[Dispatcher] alias '{alias_lower}' already exists; will be overwritten")
             self._aliases[alias_lower] = name
-            logger.debug(f"[Dispatcher] 注册别名: {alias_lower} -> {name}")
+            logger.debug(f"[Dispatcher] \u6ce8\u518calias: {alias_lower} -> {name}")
 
     def register_class(self, command_class: Type[BotCommand]) -> None:
         """
-        注册命令类（自动实例化）
+        registered command\u7c7b (\u81ea\u52a8\u5b9e\u4f8b\u5316)
 
         Args:
-            command_class: 命令类
+            command_class: command\u7c7b
         """
         self.register(command_class())
 
     def unregister(self, name: str) -> bool:
         """
-        注销命令
+        unregistered command
 
         Args:
-            name: 命令名称
+            name: commandname
 
         Returns:
-            是否成功注销
+            \u662f\u5426success\u6ce8\u9500
         """
         name = name.lower()
 
@@ -170,32 +170,32 @@ class CommandDispatcher:
 
         command = self._commands.pop(name)
 
-        # 移除别名
+        # \u79fb\u9664alias
         for alias in command.aliases:
             self._aliases.pop(alias.lower(), None)
 
-        logger.debug(f"[Dispatcher] 注销命令: {name}")
+        logger.debug(f"[Dispatcher] unregistered command: {name}")
         return True
 
     def get_command(self, name: str) -> Optional[BotCommand]:
         """
-        获取命令
+        \u83b7\u53d6command
 
-        支持命令名和别名查询。
+        \u652f\u6301command\u540d\u548caliasquery.
 
         Args:
-            name: 命令名或别名
+            name: command\u540doralias
 
         Returns:
-            命令实例，或 None
+            command\u5b9e\u4f8b; or None
         """
         name = name.lower()
 
-        # 先查命令名
+        # \u5148checkcommand\u540d
         if name in self._commands:
             return self._commands[name]
 
-        # 再查别名
+        # \u518dcheckalias
         if name in self._aliases:
             return self._commands.get(self._aliases[name])
 
@@ -203,13 +203,13 @@ class CommandDispatcher:
 
     def list_commands(self, include_hidden: bool = False) -> List[BotCommand]:
         """
-        列出所有命令
+        \u5217\u51fa\u6240\u6709command
 
         Args:
-            include_hidden: 是否包含隐藏命令
+            include_hidden: \u662f\u5426\u5305\u542b\u9690\u85cfcommand
 
         Returns:
-            命令列表
+            command\u5217\u8868
         """
         commands = list(self._commands.values())
 
@@ -219,21 +219,21 @@ class CommandDispatcher:
         return sorted(commands, key=lambda c: c.name)
 
     def is_admin(self, user_id: str) -> bool:
-        """检查用户是否是管理员"""
+        """\u68c0checkuser\u662f\u5426\u662f\u7ba1\u7406\u5458"""
         return user_id in self.admin_users
 
     def add_admin(self, user_id: str) -> None:
-        """添加管理员"""
+        """\u6dfb\u52a0\u7ba1\u7406\u5458"""
         self.admin_users.add(user_id)
 
     def remove_admin(self, user_id: str) -> None:
-        """移除管理员"""
+        """\u79fb\u9664\u7ba1\u7406\u5458"""
         self.admin_users.discard(user_id)
 
     def dispatch(self, message: BotMessage) -> BotResponse:
-        """同步分发消息。
+        """\u540c\u6b65\u5206\u53d1\u6d88\u606f.
 
-        保持现有同步调用方兼容，实际逻辑委托给 `dispatch_async()`。
+        \u4fdd\u6301\u73b0\u6709\u540c\u6b65\u8c03\u7528\u65b9\u517c\u5bb9; \u5b9e\u9645\u903b\u8f91\u59d4\u6258\u7ed9 `dispatch_async()`.
         """
         try:
             asyncio.get_running_loop()
@@ -256,36 +256,36 @@ class CommandDispatcher:
         if "error" in error_holder:
             raise error_holder["error"]
 
-        return result_holder.get("response", BotResponse.error_response("命令执行失败"))
+        return result_holder.get("response", BotResponse.error_response("command execution failed"))
 
     def _prepare_dispatch(self, message: BotMessage) -> tuple[Optional[str], List[str], Optional[BotCommand], Optional[BotResponse]]:
         """Run shared dispatch pre-checks for sync/async entrypoints."""
         if not self._rate_limiter.is_allowed(message.user_id):
             remaining_time = self._rate_limiter.window_seconds
             return None, [], None, BotResponse.error_response(
-                f"请求过于频繁，请 {remaining_time} 秒后再试"
+                f"request\u8fc7\u4e8e\u9891\u7e41; \u8bf7 {remaining_time} \u79d2\u540e\u518d\u8bd5"
             )
 
         cmd_name, args = message.get_command_and_args(self.command_prefix)
         if cmd_name is None:
             return None, args, None, None
 
-        logger.info(f"[Dispatcher] 收到命令: {cmd_name}, 参数: {args}, 用户: {message.user_name}")
+        logger.info(f"[Dispatcher] receivedcommand: {cmd_name}, parameter: {args}, user: {message.user_name}")
 
         command = self.get_command(cmd_name)
         if command is None:
             return cmd_name, args, None, BotResponse.error_response(
-                f"未知命令: {cmd_name}\n"
-                f"发送 `{self.command_prefix}help` 查看可用命令。"
+                f"unknowncommand: {cmd_name}\n"
+                f"\u53d1\u9001 `{self.command_prefix}help` check\u770b\u53ef\u7528command."
             )
 
         if command.admin_only and not self.is_admin(message.user_id):
-            return cmd_name, args, None, BotResponse.error_response("此命令需要管理员权限")
+            return cmd_name, args, None, BotResponse.error_response("this command requires administrator permissions")
 
         error_msg = command.validate_args(args)
         if error_msg:
             return cmd_name, args, None, BotResponse.error_response(
-                f"{error_msg}\n用法: `{command.usage}`"
+                f"{error_msg}\nUsage: `{command.usage}`"
             )
 
         return cmd_name, args, command, None
@@ -302,32 +302,32 @@ class CommandDispatcher:
                 return nl_result
             if message.mentioned:
                 return BotResponse.text_response(
-                    "你好！我是股票分析助手。\n"
-                    f"发送 `{self.command_prefix}help` 查看可用命令。"
+                    "\u4f60\u597d！\u6211\u662f\u80a1\u7968analyze\u52a9\u624b.\n"
+                    f"\u53d1\u9001 `{self.command_prefix}help` check\u770b\u53ef\u7528command."
                 )
             return BotResponse.text_response("")
 
         if command is None:
-            return BotResponse.error_response("命令执行失败")
+            return BotResponse.error_response("command execution failed")
 
         try:
             response = command.execute(message, args)
-            logger.info(f"[Dispatcher] 命令 {cmd_name} 执行成功")
+            logger.info(f"[Dispatcher] command {cmd_name} executed successfully")
             return response
         except Exception as e:
-            logger.error(f"[Dispatcher] 命令 {cmd_name} 执行失败: {e}")
+            logger.error(f"[Dispatcher] command {cmd_name} execution failed: {e}")
             logger.exception(e)
-            return BotResponse.error_response(f"命令执行失败: {str(e)[:100]}")
+            return BotResponse.error_response(f"command execution failed: {str(e)[:100]}")
 
     async def dispatch_async(self, message: BotMessage) -> BotResponse:
         """
-        异步分发消息到对应命令
+        \u5f02\u6b65\u5206\u53d1\u6d88\u606f\u5230\u5bf9\u5e94command
 
         Args:
-            message: 消息对象
+            message: \u6d88\u606f\u5bf9\u8c61
 
         Returns:
-            响应对象
+            \u54cd\u5e94\u5bf9\u8c61
         """
         cmd_name, args, command, early_response = self._prepare_dispatch(message)
         if early_response is not None:
@@ -341,33 +341,33 @@ class CommandDispatcher:
             # No NL match — check if @mentioned for a help hint
             if message.mentioned:
                 return BotResponse.text_response(
-                    "你好！我是股票分析助手。\n"
-                    f"发送 `{self.command_prefix}help` 查看可用命令。"
+                    "\u4f60\u597d！\u6211\u662f\u80a1\u7968analyze\u52a9\u624b.\n"
+                    f"\u53d1\u9001 `{self.command_prefix}help` check\u770b\u53ef\u7528command."
                 )
-            # 非命令消息，不处理
+            # \u975ecommand\u6d88\u606f; \u4e0d\u5904\u7406
             return BotResponse.text_response("")
 
         if command is None:
-            return BotResponse.error_response("命令执行失败")
+            return BotResponse.error_response("command execution failed")
 
-        # 6. 执行命令
+        # 6. \u6267\u884ccommand
         try:
             response = await command.execute_async(message, args)
-            logger.info(f"[Dispatcher] 命令 {cmd_name} 执行成功")
+            logger.info(f"[Dispatcher] command {cmd_name} executed successfully")
             return response
         except Exception as e:
-            logger.error(f"[Dispatcher] 命令 {cmd_name} 执行失败: {e}")
+            logger.error(f"[Dispatcher] command {cmd_name} execution failed: {e}")
             logger.exception(e)
-            return BotResponse.error_response(f"命令执行失败: {str(e)[:100]}")
+            return BotResponse.error_response(f"command execution failed: {str(e)[:100]}")
 
     def set_help_command_getter(self, getter: Callable) -> None:
         """
-        设置帮助命令的命令列表获取器
+        \u8bbe\u7f6ehelpcommand\u7684command\u5217\u8868\u83b7\u53d6\u5668
 
-        用于让 HelpCommand 获取命令列表。
+        \u7528\u4e8e\u8ba9 HelpCommand \u83b7\u53d6command\u5217\u8868.
 
         Args:
-            getter: 回调函数，返回命令列表
+            getter: \u56de\u8c03\u51fd\u6570; \u8fd4\u56decommand\u5217\u8868
         """
         self._help_command_getter = getter
 
@@ -389,25 +389,25 @@ Return a JSON object (and NOTHING else) with these fields:
 - "codes": a list of stock codes mentioned (may be empty).
   Format: A-share 6-digit ("600519"), HK with prefix ("hk00700"), US ticker uppercase ("AAPL").
 - "strategy": strategy/technique name if the user specified one, else null.
-  e.g. "缠论", "MACD", "趋势跟踪", "chan_theory", etc.
+  e.g. "\u7f20\u8bba", "MACD", "\u8d8b\u52bf\u8ddf\u8e2a", "chan_theory", etc.
 
 Examples:
-User: "帮我分析一下600519和000858"
+User: "\u5e2e\u6211analyze\u4e00\u4e0b600519\u548c000858"
 {"intent":"analysis","codes":["600519","000858"],"strategy":null}
 
-User: "用缠论看看AAPL"
-{"intent":"analysis","codes":["AAPL"],"strategy":"缠论"}
+User: "\u7528\u7f20\u8bba\u770b\u770bAAPL"
+{"intent":"analysis","codes":["AAPL"],"strategy":"\u7f20\u8bba"}
 
-User: "今天大盘怎么样"
+User: "\u4eca\u5929\u5927\u76d8\u600e\u4e48\u6837"
 {"intent":"chat","codes":[],"strategy":null}
 
-User: "明天天气如何"
+User: "\u660e\u5929\u5929\u6c14\u5982\u4f55"
 {"intent":"none","codes":[],"strategy":null}
 
 User: "600519"
 {"intent":"analysis","codes":["600519"],"strategy":null}
 
-User: "帮我分析茅台"
+User: "\u5e2e\u6211analyze\u8305\u53f0"
 {"intent":"analysis","codes":[],"strategy":null}
 
 User: "analyze TSLA and NVDA using trend strategy"
@@ -424,19 +424,19 @@ User: "analyze TSLA and NVDA using trend strategy"
         r'(?:[036]\d{5}|(?:43|83|87|88|92)\d{4})'  # A-share / BSE 6-digit codes
         r'|(?:hk|HK)\d{5}'                    # HK code
         r'|(?<![a-zA-Z])[A-Z]{2,5}(?![a-zA-Z])'  # US ticker — UPPERCASE only, no IGNORECASE
-        r'|分析|看看|查一?下|研究|诊断|怎么样|走势|趋势'
-        r'|能买|可以买|涨还是跌|怎么看|能追|建议|目标价'
-        r'|支撑|压力|阻力|止损|买点|卖点|技术面|基本面|筹码'
+        r'|analyze|\u770b\u770b|check\u4e00?\u4e0b|\u7814\u7a76|\u8bca\u65ad|\u600e\u4e48\u6837|\u8d70\u52bf|\u8d8b\u52bf'
+        r'|\u80fd\u4e70|\u53ef\u4ee5\u4e70|\u6da8\u8fd8\u662f\u8dcc|\u600e\u4e48\u770b|\u80fd\u8ffd|\u5efa\u8bae|\u76ee\u6807\u4ef7'
+        r'|\u652f\u6491|\u538b\u529b|\u963b\u529b|\u6b62\u635f|\u4e70\u70b9|\u5356\u70b9|\u6280\u672f\u9762|fundamentals|\u7b79\u7801'
         r'|(?i:analyz|stock|buy|sell|trend|backtest|strateg)',
     )
 
     _NL_NAME_CLEANUP_PATTERNS = (
-        r'[，,。.!！?？:：;；`\'"“”‘’（）()\[\]{}<>]+',
+        r'[; ,..!！?？:: ;；`\'"“”‘’ ()()\[\]{}<>]+',
         r'(?i:\b(?:please|analy[sz]e|analysis|research|check|look\s+at|stock|ticker|trend|price)\b)',
-        r'(?:帮我|帮忙|麻烦|请|想请你|我想|想|用|按照|基于|关于|对)\s*',
-        r'(?:分析|看看|研究|诊断|查一?下|聊聊|说说|问问|评估)\s*',
-        r'(?:最近|近期|当前|今天|这只|这个|个股|股票)\s*',
-        r'(?:走势|情况|表现|如何|怎么样|怎么看|可以吗|能买吗|值不值得买|技术面|基本面|策略)\s*',
+        r'(?:\u5e2e\u6211|\u5e2e\u5fd9|\u9ebb\u70e6|\u8bf7|\u60f3\u8bf7\u4f60|\u6211\u60f3|\u60f3|\u7528|\u6309\u7167|\u57fa\u4e8e|\u5173\u4e8e|\u5bf9)\s*',
+        r'(?:analyze|\u770b\u770b|\u7814\u7a76|\u8bca\u65ad|check\u4e00?\u4e0b|\u804a\u804a|\u8bf4\u8bf4|askask|\u8bc4\u4f30)\s*',
+        r'(?:\u6700\u8fd1|\u8fd1\u671f|\u5f53\u524d|\u4eca\u5929|\u8fd9\u53ea|\u8fd9\u4e2a|individual stocks|\u80a1\u7968)\s*',
+        r'(?:\u8d70\u52bf|\u60c5\u51b5|\u8868\u73b0|\u5982\u4f55|\u600e\u4e48\u6837|\u600e\u4e48\u770b|\u53ef\u4ee5\u5417|\u80fd\u4e70\u5417|\u503c\u4e0d\u503c\u5f97\u4e70|\u6280\u672f\u9762|fundamentals|strategy)\s*',
         r'\s+',
     )
 
@@ -687,13 +687,13 @@ User: "analyze TSLA and NVDA using trend strategy"
             cleaned = stripped
             for pattern in cls._NL_NAME_CLEANUP_PATTERNS:
                 cleaned = re.sub(pattern, " ", cleaned)
-            cleaned = cleaned.strip(" 的").strip()
+            cleaned = cleaned.strip(" \u7684").strip()
             if cleaned and cleaned not in candidates:
                 candidates.append(cleaned)
 
             for source in list(candidates):
                 for token in re.findall(r'[A-Za-z][A-Za-z0-9\.]{0,9}|[\u4e00-\u9fff]{2,12}', source):
-                    normalized = token.strip(" 的").strip()
+                    normalized = token.strip(" \u7684").strip()
                     if normalized and normalized not in candidates:
                         candidates.append(normalized)
 
@@ -728,15 +728,15 @@ User: "analyze TSLA and NVDA using trend strategy"
         return None
 
 
-# 全局分发器实例
+# \u5168\u5c40\u5206\u53d1\u5668\u5b9e\u4f8b
 _dispatcher: Optional[CommandDispatcher] = None
 
 
 def get_dispatcher() -> CommandDispatcher:
     """
-    获取全局分发器实例
+    \u83b7\u53d6\u5168\u5c40\u5206\u53d1\u5668\u5b9e\u4f8b
 
-    使用单例模式，首次调用时自动初始化并注册所有命令。
+    \u4f7f\u7528\u5355\u4f8bmode; \u9996\u6b21\u8c03\u7528\u65f6\u81ea\u52a8\u521d\u59cb\u5316\u5e76\u6ce8\u518c\u6240\u6709command.
     """
     global _dispatcher
 
@@ -745,7 +745,7 @@ def get_dispatcher() -> CommandDispatcher:
 
         config = get_config()
 
-        # 创建分发器
+        # \u521b\u5efa\u5206\u53d1\u5668
         _dispatcher = CommandDispatcher(
             command_prefix=getattr(config, 'bot_command_prefix', '/'),
             rate_limit_requests=getattr(config, 'bot_rate_limit_requests', 10),
@@ -753,17 +753,17 @@ def get_dispatcher() -> CommandDispatcher:
             admin_users=getattr(config, 'bot_admin_users', []),
         )
 
-        # 自动注册所有命令
+        # \u81ea\u52a8\u6ce8\u518c\u6240\u6709command
         from bot.commands import ALL_COMMANDS
         for command_class in ALL_COMMANDS:
             _dispatcher.register_class(command_class)
 
-        logger.info(f"[Dispatcher] 初始化完成，已注册 {len(_dispatcher._commands)} 个命令")
+        logger.info(f"[Dispatcher] initialization complete; registered {len(_dispatcher._commands)} \u4e2acommand")
 
     return _dispatcher
 
 
 def reset_dispatcher() -> None:
-    """重置全局分发器（主要用于测试）"""
+    """\u91cd\u7f6e\u5168\u5c40\u5206\u53d1\u5668 (\u4e3b\u8981\u7528\u4e8e\u6d4b\u8bd5)"""
     global _dispatcher
     _dispatcher = None

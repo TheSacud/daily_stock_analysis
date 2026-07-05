@@ -23,39 +23,39 @@ LEGACY_STRATEGY_AGENT_PREFIX = "strategy_"
 SKILL_CONSENSUS_AGENT_NAME = "skill_consensus"
 LEGACY_STRATEGY_CONSENSUS_AGENT_NAME = "strategy_consensus"
 
-CORE_TRADING_SKILL_POLICY_ZH = """## 默认技能基线（必须严格遵守）
+CORE_TRADING_SKILL_POLICY_ZH = """## default\u6280\u80fd\u57fa\u7ebf (\u5fc5\u987b\u4e25\u683c\u9075\u5b88)
 
-当前激活的 skills 可以补充细化分析视角，但默认风险控制和交易节奏必须遵守以下基线。
+\u5f53\u524d\u6fc0\u6d3b\u7684 skills \u53ef\u4ee5\u8865\u5145\u7ec6\u5316analyze\u89c6\u89d2; \u4f46default\u98ce\u9669\u63a7\u5236\u548c\u4ea4\u6613\u8282\u594f\u5fc5\u987b\u9075\u5b88\u4ee5\u4e0b\u57fa\u7ebf.
 
-### 1. 严进策略（不追高）
-- **绝对不追高**：当股价偏离 MA5 超过 5% 时，坚决不买入
-- 乖离率 < 2%：最佳买点区间
-- 乖离率 2-5%：可小仓介入
-- 乖离率 > 5%：严禁追高！直接判定为"观望"
+### 1. \u4e25\u8fdbstrategy (\u4e0d\u8ffdHigh)
+- **\u7edd\u5bf9\u4e0d\u8ffdHigh**: \u5f53\u80a1\u4ef7Slightly \u79bb MA5 \u8d85\u8fc7 5% \u65f6; \u575a\u51b3\u4e0d\u4e70\u5165
+- \u4e56\u79bb\u7387 < 2%: \u6700\u4f73\u4e70\u70b9\u533a\u95f4
+- \u4e56\u79bb\u7387 2-5%: \u53ef\u5c0f\u4ed3\u4ecb\u5165
+- \u4e56\u79bb\u7387 > 5%: \u4e25\u7981\u8ffdHigh！\u76f4\u63a5\u5224\u5b9a\u4e3a"Watch"
 
-### 2. 趋势交易（顺势而为）
-- **多头排列必须条件**：MA5 > MA10 > MA20
-- 只做多头排列的股票，空头排列坚决不碰
-- 均线发散上行优于均线粘合
+### 2. \u8d8b\u52bf\u4ea4\u6613 (\u987a\u52bf\u800c\u4e3a)
+- **\u591a\u5934\u6392\u5217\u5fc5\u987b\u6761\u4ef6**: MA5 > MA10 > MA20
+- \u53ea\u505a\u591a\u5934\u6392\u5217\u7684\u80a1\u7968; \u7a7a\u5934\u6392\u5217\u575a\u51b3\u4e0d\u78b0
+- \u5747\u7ebf\u53d1\u6563\u4e0a\u884c\u4f18\u4e8e\u5747\u7ebf\u7c98\u5408
 
-### 3. 效率优先（筹码结构）
-- 关注筹码集中度：90%集中度 < 15% 表示筹码集中
-- 获利比例分析：70-90% 获利盘时需警惕获利回吐
-- 平均成本与现价关系：现价高于平均成本 5-15% 为健康
+### 3. \u6548\u7387\u4f18\u5148 (\u7b79\u7801\u7ed3\u6784)
+- \u5173\u6ce8\u7b79\u7801\u96c6Medium\u5ea6: 90%\u96c6Medium\u5ea6 < 15% \u8868\u793a\u7b79\u7801\u96c6Medium
+- \u83b7\u5229\u6bd4\u4f8banalyze: 70-90% \u83b7\u5229\u76d8\u65f6\u9700\u8b66\u60d5\u83b7\u5229\u56de\u5410
+- \u5e73\u5747\u6210\u672c\u4e0e\u73b0\u4ef7\u5173\u7cfb: \u73b0\u4ef7High\u4e8e\u5e73\u5747\u6210\u672c 5-15% \u4e3a\u5065\u5eb7
 
-### 4. 买点偏好（回踩支撑）
-- **最佳买点**：缩量回踩 MA5 获得支撑
-- **次优买点**：回踩 MA10 获得支撑
-- **观望情况**：跌破 MA20 时观望
+### 4. \u4e70\u70b9Slightly \u597d (\u56de\u8e29\u652f\u6491)
+- **\u6700\u4f73\u4e70\u70b9**: \u7f29\u91cf\u56de\u8e29 MA5 \u83b7\u5f97\u652f\u6491
+- **\u6b21\u4f18\u4e70\u70b9**: \u56de\u8e29 MA10 \u83b7\u5f97\u652f\u6491
+- **Watch\u60c5\u51b5**: \u8dcc\u7834 MA20 \u65f6Watch
 
-### 5. 风险排查重点
-- 减持公告、业绩预亏、监管处罚、行业政策利空、大额解禁
+### 5. \u98ce\u9669\u6392check\u91cd\u70b9
+- \u51cf\u6301\u516c\u544a、\u4e1a\u7ee9\u9884\u4e8f、\u76d1\u7ba1\u5904\u7f5a、industry\u653f\u7b56\u5229\u7a7a、\u5927\u989d\u89e3\u7981
 
-### 6. 估值关注（PE/PB）
-- PE 明显偏高时需在风险点中说明
+### 6. \u4f30\u503c\u5173\u6ce8 (PE/PB)
+- PE \u660e\u663eSlightly High\u65f6\u9700\u5728\u98ce\u9669\u70b9Medium\u8bf4\u660e
 
-### 7. 强势趋势股放宽
-- 强势趋势股可适当放宽乖离率要求，轻仓追踪但需设止损
+### 7. \u5f3a\u52bf\u8d8b\u52bf\u80a1\u653e\u5bbd
+- \u5f3a\u52bf\u8d8b\u52bf\u80a1\u53ef\u9002\u5f53\u653e\u5bbd\u4e56\u79bb\u7387\u8981\u6c42; \u8f7b\u4ed3\u8ffd\u8e2a\u4f46\u9700\u8bbe\u6b62\u635f
 """
 
 TECHNICAL_SKILL_RULES_EN = """## Default Skill Baseline

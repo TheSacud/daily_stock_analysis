@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 """
-Issue #234 盘中实时技术指标的单元测试。
+Issue #234 \u76d8\u4e2d\u5b9e\u65f6\u6280\u672f\u6307\u6807\u7684\u5355\u5143\u6d4b\u8bd5。
 
-覆盖范围：
-- _augment_historical_with_realtime：追加/更新逻辑和防护条件
-- _compute_ma_status：均线排列文案
-- _enhance_context：使用 realtime + trend_result 覆盖 today
+\u8986\u76d6\u8303\u56f4：
+- _augment_historical_with_realtime：\u8ffd\u52a0/\u66f4\u65b0\u903b\u8f91\u548c\u9632\u62a4\u6761\u4ef6
+- _compute_ma_status：\u5747\u7ebf\u6392\u5217\u6587\u6848
+- _enhance_context：\u4f7f\u7528 realtime + trend_result \u8986\u76d6 today
 """
 
 import os
@@ -35,7 +35,7 @@ def _make_realtime_quote(
 ) -> UnifiedRealtimeQuote:
     return UnifiedRealtimeQuote(
         code="600519",
-        name="贵州茅台",
+        name="\u8d35\u5dde\u8305\u53f0",
         source=RealtimeSource.TENCENT,
         price=price,
         open_price=open_price,
@@ -49,7 +49,7 @@ def _make_realtime_quote(
 
 
 def _make_historical_df(days: int = 25, last_date: date = None) -> pd.DataFrame:
-    """构造历史 OHLCV DataFrame。"""
+    """\u6784\u9020\u5386\u53f2 OHLCV DataFrame。"""
     if last_date is None:
         last_date = date.today() - timedelta(days=1)
     dates = [last_date - timedelta(days=i) for i in range(days - 1, -1, -1)]
@@ -76,7 +76,7 @@ def _make_historical_df(days: int = 25, last_date: date = None) -> pd.DataFrame:
 
 
 class TestAugmentHistoricalWithRealtime(unittest.TestCase):
-    """_augment_historical_with_realtime 的测试。"""
+    """_augment_historical_with_realtime \u7684\u6d4b\u8bd5。"""
 
     def setUp(self) -> None:
         self._db_path = os.path.join(
@@ -125,8 +125,8 @@ class TestAugmentHistoricalWithRealtime(unittest.TestCase):
         self, _mock_market, _mock_open, mock_now
     ) -> None:
         today = date.today()
-        # 固定市场时钟为 UTC 当日，使 pipeline 的 market_today 等于 date.today()，
-        # 不受 get_market_now 通常使用的市场时区影响（例如 CST=UTC+8）。
+        # \u56fa\u5b9a\u5e02\u573a\u65f6\u949f\u4e3a UTC \u5f53\u65e5，\u4f7f pipeline \u7684 market_today \u7b49\u4e8e date.today()，
+        # \u4e0d\u53d7 get_market_now \u901a\u5e38\u4f7f\u7528\u7684\u5e02\u573a\u65f6\u533a\u5f71\u54cd（\u4f8b\u5982 CST=UTC+8）。
         mock_now.return_value = datetime(
             today.year, today.month, today.day, 10, 0, tzinfo=timezone.utc
         )
@@ -145,8 +145,8 @@ class TestAugmentHistoricalWithRealtime(unittest.TestCase):
         self, _mock_market, _mock_open, mock_now
     ) -> None:
         today = date.today()
-        # 固定市场时钟为当日，使 last_date >= market_today，从而更新最后一行而不是追加。
-        # 这可以避免 CI 在 CST 收盘后运行时出现日期边界偏移。
+        # \u56fa\u5b9a\u5e02\u573a\u65f6\u949f\u4e3a\u5f53\u65e5，\u4f7f last_date >= market_today，\u4ece\u800c\u66f4\u65b0\u6700\u540e\u4e00\u884c\u800c\u4e0d\u662f\u8ffd\u52a0。
+        # \u8fd9\u53ef\u4ee5\u907f\u514d CI \u5728 CST \u6536\u76d8\u540e\u8fd0\u884c\u65f6\u51fa\u73b0\u65e5\u671f\u8fb9\u754c\u504f\u79fb。
         mock_now.return_value = datetime(
             today.year, today.month, today.day, 10, 0, tzinfo=timezone.utc
         )
@@ -159,23 +159,23 @@ class TestAugmentHistoricalWithRealtime(unittest.TestCase):
 
 
 class TestComputeMaStatus(unittest.TestCase):
-    """_compute_ma_status 的测试。"""
+    """_compute_ma_status \u7684\u6d4b\u8bd5。"""
 
     def test_bullish_alignment(self) -> None:
         status = StockAnalysisPipeline._compute_ma_status(11, 10, 9.5, 9)
-        self.assertIn("多头", status)
+        self.assertIn("\u591a\u5934", status)
 
     def test_bearish_alignment(self) -> None:
         status = StockAnalysisPipeline._compute_ma_status(8, 9, 9.5, 10)
-        self.assertIn("空头", status)
+        self.assertIn("\u7a7a\u5934", status)
 
     def test_consolidation(self) -> None:
         status = StockAnalysisPipeline._compute_ma_status(10, 10, 10, 10)
-        self.assertIn("震荡", status)
+        self.assertIn("\u9707\u8361", status)
 
 
 class TestEnhanceContextRealtimeOverride(unittest.TestCase):
-    """_enhance_context 使用实时行情和趋势结果覆盖 today 的测试。"""
+    """_enhance_context \u4f7f\u7528\u5b9e\u65f6\u884c\u60c5\u548c\u8d8b\u52bf\u7ed3\u679c\u8986\u76d6 today \u7684\u6d4b\u8bd5。"""
 
     def setUp(self) -> None:
         self._db_path = os.path.join(
@@ -194,8 +194,8 @@ class TestEnhanceContextRealtimeOverride(unittest.TestCase):
         self, _mock_market, mock_now
     ) -> None:
         today = date.today()
-        # 固定市场时钟，使 _enhance_context 设置 enhanced['date'] == date.today().isoformat()，
-        # 不受 get_market_now 通常使用的市场时区影响（例如 CST=UTC+8）。
+        # \u56fa\u5b9a\u5e02\u573a\u65f6\u949f，\u4f7f _enhance_context \u8bbe\u7f6e enhanced['date'] == date.today().isoformat()，
+        # \u4e0d\u53d7 get_market_now \u901a\u5e38\u4f7f\u7528\u7684\u5e02\u573a\u65f6\u533a\u5f71\u54cd（\u4f8b\u5982 CST=UTC+8）。
         mock_now.return_value = datetime(
             today.year, today.month, today.day, 10, 0, tzinfo=timezone.utc
         )
@@ -214,13 +214,13 @@ class TestEnhanceContextRealtimeOverride(unittest.TestCase):
             ma20=14.9,
         )
         enhanced = self.pipeline._enhance_context(
-            context, quote, None, trend, "贵州茅台"
+            context, quote, None, trend, "\u8d35\u5dde\u8305\u53f0"
         )
         self.assertEqual(enhanced["today"]["close"], 15.72)
         self.assertEqual(enhanced["today"]["ma5"], 15.5)
         self.assertEqual(enhanced["today"]["ma10"], 15.2)
         self.assertEqual(enhanced["today"]["ma20"], 14.9)
-        self.assertIn("多头", enhanced["ma_status"])
+        self.assertIn("\u591a\u5934", enhanced["ma_status"])
         self.assertEqual(enhanced["date"], today.isoformat())
         self.assertEqual(enhanced["today"]["date"], today.isoformat())
         self.assertEqual(enhanced["today"]["data_source"], "realtime:tencent")
@@ -251,7 +251,7 @@ class TestEnhanceContextRealtimeOverride(unittest.TestCase):
         }
         quote = UnifiedRealtimeQuote(
             code="688691",
-            name="灿芯股份",
+            name="\u707f\u82af\u80a1\u4efd",
             source=RealtimeSource.TENCENT,
             price=122.70,
             open_price=120.09,
@@ -270,7 +270,7 @@ class TestEnhanceContextRealtimeOverride(unittest.TestCase):
         )
 
         enhanced = self.pipeline._enhance_context(
-            context, quote, None, trend, "灿芯股份"
+            context, quote, None, trend, "\u707f\u82af\u80a1\u4efd"
         )
 
         self.assertEqual(enhanced["today"]["volume"], 10931723)
@@ -323,7 +323,7 @@ class TestEnhanceContextRealtimeOverride(unittest.TestCase):
             quote,
             None,
             trend,
-            "贵州茅台",
+            "\u8d35\u5dde\u8305\u53f0",
             market_phase_context={"is_partial_bar": True},
         )
 
@@ -376,7 +376,7 @@ class TestEnhanceContextRealtimeOverride(unittest.TestCase):
         )
 
         enhanced = self.pipeline._enhance_context(
-            context, quote, None, trend, "贵州茅台"
+            context, quote, None, trend, "\u8d35\u5dde\u8305\u53f0"
         )
 
         self.assertNotIn("amount", enhanced["today"])
@@ -388,7 +388,7 @@ class TestEnhanceContextRealtimeOverride(unittest.TestCase):
     def test_enhance_context_injects_runtime_news_window_days(self) -> None:
         context = {"code": "600519", "today": {"close": 15.0}}
         enhanced = self.pipeline._enhance_context(
-            context, None, None, None, "贵州茅台"
+            context, None, None, None, "\u8d35\u5dde\u8305\u53f0"
         )
         self.assertEqual(
             enhanced["news_window_days"],
@@ -399,7 +399,7 @@ class TestEnhanceContextRealtimeOverride(unittest.TestCase):
         context = {"code": "600519", "today": {"close": 15.0}}
         quote = _make_realtime_quote(price=15.72)
         enhanced = self.pipeline._enhance_context(
-            context, quote, None, None, "贵州茅台"
+            context, quote, None, None, "\u8d35\u5dde\u8305\u53f0"
         )
         self.assertEqual(enhanced["today"]["close"], 15.0)
 
@@ -407,17 +407,17 @@ class TestEnhanceContextRealtimeOverride(unittest.TestCase):
         context = {"code": "600519", "today": {"close": 15.0}}
         trend = TrendAnalysisResult(code="600519", ma5=15.0, ma10=14.8, ma20=14.5)
         enhanced = self.pipeline._enhance_context(
-            context, None, None, trend, "贵州茅台"
+            context, None, None, trend, "\u8d35\u5dde\u8305\u53f0"
         )
         self.assertEqual(enhanced["today"]["close"], 15.0)
 
     def test_today_not_overridden_when_trend_ma_zero(self) -> None:
-        """StockTrendAnalyzer 因数据不足提前返回 ma5=0.0 时，不应覆盖 today。"""
+        """StockTrendAnalyzer \u56e0\u6570\u636e\u4e0d\u8db3\u63d0\u524d\u8fd4\u56de ma5=0.0 \u65f6，\u4e0d\u5e94\u8986\u76d6 today。"""
         context = {"code": "600519", "today": {"close": 15.0, "ma5": 14.8}}
         quote = _make_realtime_quote(price=15.72)
-        trend = TrendAnalysisResult(code="600519")  # 默认 ma5=ma10=ma20=0.0
+        trend = TrendAnalysisResult(code="600519")  # \u9ed8\u8ba4 ma5=ma10=ma20=0.0
         enhanced = self.pipeline._enhance_context(
-            context, quote, None, trend, "贵州茅台"
+            context, quote, None, trend, "\u8d35\u5dde\u8305\u53f0"
         )
         self.assertEqual(enhanced["today"]["close"], 15.0)
         self.assertEqual(enhanced["today"]["ma5"], 14.8)

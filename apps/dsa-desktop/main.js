@@ -230,7 +230,7 @@ function evaluateReleaseUpdate({ currentVersion, release, checkedAt = new Date()
       status: UPDATE_STATUS.ERROR,
       currentVersion: normalizedCurrentVersion,
       checkedAt,
-      message: '当前桌面端版本不是有效的语义化版本，无法检查更新。',
+      message: '\u5f53\u524d\u684c\u9762\u7aef\u7248\u672c\u4e0d\u662f\u6709\u6548\u7684\u8bed\u4e49\u5316\u7248\u672c，\u65e0\u6cd5\u68c0\u67e5\u66f4\u65b0。',
     });
   }
 
@@ -240,7 +240,7 @@ function evaluateReleaseUpdate({ currentVersion, release, checkedAt = new Date()
       status: UPDATE_STATUS.ERROR,
       currentVersion: normalizedCurrentVersion,
       checkedAt,
-      message: 'GitHub Release 未返回可识别的语义化版本标签。',
+      message: 'GitHub Release \u672a\u8fd4\u56de\u53ef\u8bc6\u522b\u7684\u8bed\u4e49\u5316\u7248\u672c\u6807\u7b7e。',
     });
   }
 
@@ -254,7 +254,7 @@ function evaluateReleaseUpdate({ currentVersion, release, checkedAt = new Date()
       checkedAt,
       releaseName: releaseMetadata.releaseName,
       tagName: releaseMetadata.tagName,
-      message: '版本比较失败，无法判断是否存在可用更新。',
+      message: '\u7248\u672c\u6bd4\u8f83\u5931\u8d25，\u65e0\u6cd5\u5224\u65ad\u662f\u5426\u5b58\u5728\u53ef\u7528\u66f4\u65b0。',
     });
   }
 
@@ -268,7 +268,7 @@ function evaluateReleaseUpdate({ currentVersion, release, checkedAt = new Date()
       publishedAt: releaseMetadata.publishedAt,
       releaseName: releaseMetadata.releaseName,
       tagName: releaseMetadata.tagName,
-      message: `发现新版本 ${releaseMetadata.version}，可前往 GitHub Releases 下载更新。`,
+      message: `\u53d1\u73b0\u65b0\u7248\u672c ${releaseMetadata.version}，\u53ef\u524d\u5f80 GitHub Releases \u4e0b\u8f7d\u66f4\u65b0。`,
     });
   }
 
@@ -281,7 +281,7 @@ function evaluateReleaseUpdate({ currentVersion, release, checkedAt = new Date()
     publishedAt: releaseMetadata.publishedAt,
     releaseName: releaseMetadata.releaseName,
     tagName: releaseMetadata.tagName,
-    message: '当前桌面端已是最新版本。',
+    message: '\u5f53\u524d\u684c\u9762\u7aef\u5df2\u662f\u6700\u65b0\u7248\u672c。',
   });
 }
 
@@ -910,11 +910,11 @@ function ensureDirectory(dirPath) {
 function initLogging() {
   const appDir = resolveAppDir();
   logFilePath = path.join(appDir, 'logs', 'desktop.log');
-  
-  // 确保日志目录存在
+
+  // \u786e\u4fdd\u65e5\u5fd7\u76ee\u5f55\u5b58\u5728
   const logDir = path.dirname(logFilePath);
   ensureDirectory(logDir);
-  
+
   logLine('Desktop app starting');
 }
 
@@ -941,7 +941,7 @@ function decodeBackendOutput(data, decoder) {
 
   let decoded = decoder.decode(data, { stream: true });
 
-  // Windows 控制台 / 子进程有时仍会吐出本地代码页字节，优先在明显乱码时回退到 GBK。
+  // Windows \u63a7\u5236\u53f0 / \u5b50\u8fdb\u7a0b\u6709\u65f6\u4ecd\u4f1a\u5410\u51fa\u672c\u5730\u4ee3\u7801\u9875\u5b57\u8282，\u4f18\u5148\u5728\u660e\u663e\u4e71\u7801\u65f6\u56de\u9000\u5230 GBK。
   if (isWindows && decoded.includes('\uFFFD')) {
     try {
       decoded = new TextDecoder('gbk', { fatal: false }).decode(data, { stream: true });
@@ -1445,15 +1445,15 @@ async function maybePromptDesktopUpdate(state) {
   }
 
   lastNotifiedUpdateVersion = state.latestVersion;
-  const currentVersion = state.currentVersion || resolveDesktopVersion() || '当前版本';
+  const currentVersion = state.currentVersion || resolveDesktopVersion() || '\u5f53\u524d\u7248\u672c';
   const result = await dialog.showMessageBox(mainWindow, {
     type: 'info',
-    buttons: ['稍后', '前往下载'],
+    buttons: ['\u7a0d\u540e', '\u524d\u5f80\u4e0b\u8f7d'],
     defaultId: 1,
     cancelId: 0,
-    title: '发现新版本',
-    message: `检测到桌面端新版本 ${state.latestVersion}`,
-    detail: `当前版本 ${currentVersion}。新版本将跳转到 GitHub Releases 下载页，不会静默下载或自动安装。`,
+    title: '\u53d1\u73b0\u65b0\u7248\u672c',
+    message: `\u68c0\u6d4b\u5230\u684c\u9762\u7aef\u65b0\u7248\u672c ${state.latestVersion}`,
+    detail: `\u5f53\u524d\u7248\u672c ${currentVersion}。\u65b0\u7248\u672c\u5c06\u8df3\u8f6c\u5230 GitHub Releases \u4e0b\u8f7d\u9875，\u4e0d\u4f1a\u9759\u9ed8\u4e0b\u8f7d\u6216\u81ea\u52a8\u5b89\u88c5。`,
     noLink: true,
   });
 
@@ -1465,10 +1465,10 @@ async function maybePromptDesktopUpdate(state) {
 async function installDownloadedUpdate() {
   const updater = getElectronAutoUpdater();
   if (!updater) {
-    throw new Error('当前运行模式不支持自动安装更新。');
+    throw new Error('\u5f53\u524d\u8fd0\u884c\u6a21\u5f0f\u4e0d\u652f\u6301\u81ea\u52a8\u5b89\u88c5\u66f4\u65b0。');
   }
   if (desktopUpdateState?.status !== UPDATE_STATUS.UPDATE_DOWNLOADED) {
-    throw new Error('更新尚未下载完成，无法自动安装。');
+    throw new Error('\u66f4\u65b0\u5c1a\u672a\u4e0b\u8f7d\u5b8c\u6210，\u65e0\u6cd5\u81ea\u52a8\u5b89\u88c5。');
   }
 
   setDesktopUpdateState({
@@ -1476,7 +1476,7 @@ async function installDownloadedUpdate() {
     updateMode: UPDATE_MODE.AUTO,
     latestVersion: desktopUpdateState?.latestVersion || '',
     releaseUrl: desktopUpdateState?.releaseUrl || RELEASES_PAGE_URL,
-    message: '正在重启并安装更新...',
+    message: '\u6b63\u5728\u91cd\u542f\u5e76\u5b89\u88c5\u66f4\u65b0...',
   });
   let backupRoot = null;
   try {
@@ -1498,7 +1498,7 @@ async function installDownloadedUpdate() {
             latestVersion: desktopUpdateState?.latestVersion || '',
             releaseUrl: desktopUpdateState?.releaseUrl || RELEASES_PAGE_URL,
             checkedAt: new Date().toISOString(),
-            message: `更新安装准备失败：${error instanceof Error ? error.message : String(error)}`,
+            message: `\u66f4\u65b0\u5b89\u88c5\u51c6\u5907\u5931\u8d25：${error instanceof Error ? error.message : String(error)}`,
           });
           throw error;
         }
@@ -1533,12 +1533,12 @@ async function maybePromptInstallDownloadedUpdate(state) {
   lastPromptedInstallVersion = state.latestVersion;
   const result = await dialog.showMessageBox(mainWindow, {
     type: 'info',
-    buttons: ['稍后', '立即重启安装'],
+    buttons: ['\u7a0d\u540e', '\u7acb\u5373\u91cd\u542f\u5b89\u88c5'],
     defaultId: 1,
     cancelId: 0,
-    title: '更新已下载',
-    message: `桌面端新版本 ${state.latestVersion} 已下载`,
-    detail: '重启应用后会自动完成安装。未保存的设置草稿请先保存。',
+    title: '\u66f4\u65b0\u5df2\u4e0b\u8f7d',
+    message: `\u684c\u9762\u7aef\u65b0\u7248\u672c ${state.latestVersion} \u5df2\u4e0b\u8f7d`,
+    detail: '\u91cd\u542f\u5e94\u7528\u540e\u4f1a\u81ea\u52a8\u5b8c\u6210\u5b89\u88c5。\u672a\u4fdd\u5b58\u7684\u8bbe\u7f6e\u8349\u7a3f\u8bf7\u5148\u4fdd\u5b58。',
     noLink: true,
   });
 
@@ -1555,7 +1555,7 @@ async function maybePromptInstallDownloadedUpdate(state) {
         latestVersion: state.latestVersion || desktopUpdateState?.latestVersion || '',
         releaseUrl: state.releaseUrl || desktopUpdateState?.releaseUrl || RELEASES_PAGE_URL,
         checkedAt: new Date().toISOString(),
-        message: `更新安装失败：${message}。可先保存草稿并前往下载页，或稍后重试。`,
+        message: `\u66f4\u65b0\u5b89\u88c5\u5931\u8d25：${message}。\u53ef\u5148\u4fdd\u5b58\u8349\u7a3f\u5e76\u524d\u5f80\u4e0b\u8f7d\u9875，\u6216\u7a0d\u540e\u91cd\u8bd5。`,
       });
     }
   }
@@ -1582,14 +1582,14 @@ function configureElectronAutoUpdater() {
       status: UPDATE_STATUS.CHECKING,
       updateMode: UPDATE_MODE.AUTO,
       currentVersion: resolveDesktopVersion(),
-      message: '正在检查桌面端更新...',
+      message: '\u6b63\u5728\u68c0\u67e5\u684c\u9762\u7aef\u66f4\u65b0...',
     });
   });
 
   updater.on('update-available', (info = {}) => {
-    const latestVersion = resolveUpdaterLatestVersion(info) || '最新版本';
+    const latestVersion = resolveUpdaterLatestVersion(info) || '\u6700\u65b0\u7248\u672c';
     const nextState = buildElectronUpdaterState(UPDATE_STATUS.UPDATE_AVAILABLE, info, {
-      message: `发现新版本 ${latestVersion}，正在后台下载更新...`,
+      message: `\u53d1\u73b0\u65b0\u7248\u672c ${latestVersion}，\u6b63\u5728\u540e\u53f0\u4e0b\u8f7d\u66f4\u65b0...`,
     });
     setDesktopUpdateState(nextState);
     logLine(`[update] auto update available latest=${nextState.latestVersion || 'unknown'}`);
@@ -1597,7 +1597,7 @@ function configureElectronAutoUpdater() {
 
   updater.on('update-not-available', (info = {}) => {
     const nextState = buildElectronUpdaterState(UPDATE_STATUS.UP_TO_DATE, info, {
-      message: '当前桌面端已是最新版本。',
+      message: '\u5f53\u524d\u684c\u9762\u7aef\u5df2\u662f\u6700\u65b0\u7248\u672c。',
     });
     setDesktopUpdateState(nextState);
     logLine(`[update] auto update not available current=${nextState.currentVersion || 'unknown'}`);
@@ -1615,8 +1615,8 @@ function configureElectronAutoUpdater() {
       totalBytes: progress.total,
       message:
         percent === null
-          ? '正在下载桌面端更新...'
-          : `正在下载桌面端更新（${percent.toFixed(percent % 1 === 0 ? 0 : 1)}%）...`,
+          ? '\u6b63\u5728\u4e0b\u8f7d\u684c\u9762\u7aef\u66f4\u65b0...'
+          : `\u6b63\u5728\u4e0b\u8f7d\u684c\u9762\u7aef\u66f4\u65b0（${percent.toFixed(percent % 1 === 0 ? 0 : 1)}%）...`,
     });
     logLine(`[update] download progress percent=${nextState.downloadPercent ?? 'unknown'}`);
   });
@@ -1627,8 +1627,8 @@ function configureElectronAutoUpdater() {
       latestVersion,
       downloadPercent: 100,
       message: latestVersion
-        ? `新版本 ${latestVersion} 已下载，可重启应用完成安装。`
-        : '新版本已下载，可重启应用完成安装。',
+        ? `\u65b0\u7248\u672c ${latestVersion} \u5df2\u4e0b\u8f7d，\u53ef\u91cd\u542f\u5e94\u7528\u5b8c\u6210\u5b89\u88c5。`
+        : '\u65b0\u7248\u672c\u5df2\u4e0b\u8f7d，\u53ef\u91cd\u542f\u5e94\u7528\u5b8c\u6210\u5b89\u88c5。',
     });
     setDesktopUpdateState(nextState);
     logLine(`[update] downloaded latest=${nextState.latestVersion || 'unknown'}`);
@@ -1645,7 +1645,7 @@ function configureElectronAutoUpdater() {
       latestVersion: desktopUpdateState?.latestVersion || '',
       releaseUrl: desktopUpdateState?.releaseUrl || RELEASES_PAGE_URL,
       checkedAt: new Date().toISOString(),
-      message: `自动更新失败：${message}`,
+      message: `\u81ea\u52a8\u66f4\u65b0\u5931\u8d25：${message}`,
     });
   });
 
@@ -1656,7 +1656,7 @@ function configureElectronAutoUpdater() {
 async function performElectronUpdaterCheck({ manual = false } = {}) {
   const updater = configureElectronAutoUpdater();
   if (!updater) {
-    throw new Error('当前平台不支持自动安装更新。');
+    throw new Error('\u5f53\u524d\u5e73\u53f0\u4e0d\u652f\u6301\u81ea\u52a8\u5b89\u88c5\u66f4\u65b0。');
   }
   if (electronUpdateCheckInFlight) {
     return desktopUpdateState;
@@ -1667,7 +1667,7 @@ async function performElectronUpdaterCheck({ manual = false } = {}) {
     status: UPDATE_STATUS.CHECKING,
     updateMode: UPDATE_MODE.AUTO,
     currentVersion: resolveDesktopVersion(),
-    message: manual ? '正在检查桌面端更新...' : '正在后台检查桌面端更新...',
+    message: manual ? '\u6b63\u5728\u68c0\u67e5\u684c\u9762\u7aef\u66f4\u65b0...' : '\u6b63\u5728\u540e\u53f0\u68c0\u67e5\u684c\u9762\u7aef\u66f4\u65b0...',
   });
 
   try {
@@ -1681,7 +1681,7 @@ async function performElectronUpdaterCheck({ manual = false } = {}) {
       updateMode: UPDATE_MODE.AUTO,
       currentVersion: resolveDesktopVersion(),
       checkedAt: new Date().toISOString(),
-      message: manual ? `检查更新失败：${message}` : '',
+      message: manual ? `\u68c0\u67e5\u66f4\u65b0\u5931\u8d25：${message}` : '',
     });
     return nextState;
   } finally {
@@ -1698,7 +1698,7 @@ async function performDesktopUpdateCheck({ manual = false, notify = false } = {}
   setDesktopUpdateState({
     status: UPDATE_STATUS.CHECKING,
     currentVersion,
-    message: manual ? '正在检查桌面端更新...' : '正在后台检查桌面端更新...',
+    message: manual ? '\u6b63\u5728\u68c0\u67e5\u684c\u9762\u7aef\u66f4\u65b0...' : '\u6b63\u5728\u540e\u53f0\u68c0\u67e5\u684c\u9762\u7aef\u66f4\u65b0...',
   });
 
   try {
@@ -1720,7 +1720,7 @@ async function performDesktopUpdateCheck({ manual = false, notify = false } = {}
         status: UPDATE_STATUS.ERROR,
         currentVersion,
         checkedAt: new Date().toISOString(),
-        message: `检查更新失败：${message}`,
+        message: `\u68c0\u67e5\u66f4\u65b0\u5931\u8d25：${message}`,
       });
     }
 
@@ -1759,7 +1759,7 @@ async function createWindow() {
     ? restoreResult.failed.join('；')
     : '';
   const restoreErrorMessage = restoreFailed
-    ? `上次更新安装未完成或恢复运行时文件失败，已保留备份目录 ${restoreResult.backupRoot}，请确认后手动恢复并重启应用。明细：${restoreIssueDetails}`
+    ? `\u4e0a\u6b21\u66f4\u65b0\u5b89\u88c5\u672a\u5b8c\u6210\u6216\u6062\u590d\u8fd0\u884c\u65f6\u6587\u4ef6\u5931\u8d25，\u5df2\u4fdd\u7559\u5907\u4efd\u76ee\u5f55 ${restoreResult.backupRoot}，\u8bf7\u786e\u8ba4\u540e\u624b\u52a8\u6062\u590d\u5e76\u91cd\u542f\u5e94\u7528。\u660e\u7ec6：${restoreIssueDetails}`
     : '';
   setDesktopUpdateState({
     status: restoreFailed ? UPDATE_STATUS.ERROR : UPDATE_STATUS.IDLE,

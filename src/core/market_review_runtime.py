@@ -1,7 +1,7 @@
 """Reusable market review runtime assembly helpers.
 
 Centralize the analyzer/search/notification construction so API, CLI and Bot
-entrypoints share one initialization path for 大盘复盘.
+entrypoints share one initialization path for market review.
 """
 
 from __future__ import annotations
@@ -114,15 +114,15 @@ def build_market_review_runtime(
         analyzer = GeminiAnalyzer(config=config)
         backend_error = _get_analyzer_generation_backend_config_error(analyzer)
         if backend_error is not None:
-            logger.error("AI 分析器生成后端配置错误: %s", backend_error)
+            logger.error("AI analyze\u5668\u751f\u6210\u540e\u7aefconfigerror: %s", backend_error)
         elif not analyzer.is_available():
-            logger.warning("AI 分析器初始化后不可用，请检查 LLM 配置")
+            logger.warning("AI analyze\u5668\u521d\u59cb\u5316\u540eunavailable; \u8bf7\u68c0check LLM config")
             analyzer = None
     else:
         backend_error = _get_config_generation_backend_error(config)
         if backend_error is not None:
-            logger.error("AI 分析器生成后端配置错误: %s", backend_error)
+            logger.error("AI analyze\u5668\u751f\u6210\u540e\u7aefconfigerror: %s", backend_error)
         else:
-            logger.warning("未检测到 LLM 模型配置，将仅使用模板生成报告")
+            logger.warning("\u672a\u68c0\u6d4b\u5230 LLM \u6a21\u578bconfig; \u5c06\u4ec5\u4f7f\u7528\u6a21\u677f\u751f\u6210report")
 
     return notifier, analyzer, search_service

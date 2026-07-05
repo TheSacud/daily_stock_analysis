@@ -1,19 +1,19 @@
 """
-端到端测试：signal_attribution 完整契约收敛测试。
+\u7aef\u5230\u7aef\u6d4b\u8bd5：signal_attribution \u5b8c\u6574\u5951\u7ea6\u6536\u655b\u6d4b\u8bd5。
 
-验证以下路径：
-1. LLM raw JSON → _parse_response() → AnalysisResult.dashboard (归一化生效)
-2. AnalysisResult.dashboard → notification (展示正确)
-3. AnalysisResult.dashboard → Jinja2 template (渲染正确)
-4. AnalysisResult.dashboard → HistoryService markdown (渲染正确)
-5. check_content_integrity() (契约检查)
+\u9a8c\u8bc1\u4ee5\u4e0b\u8def\u5f84：
+1. LLM raw JSON → _parse_response() → AnalysisResult.dashboard (\u5f52\u4e00\u5316\u751f\u6548)
+2. AnalysisResult.dashboard → notification (\u5c55\u793a\u6b63\u786e)
+3. AnalysisResult.dashboard → Jinja2 template (\u6e32\u67d3\u6b63\u786e)
+4. AnalysisResult.dashboard → HistoryService markdown (\u6e32\u67d3\u6b63\u786e)
+5. check_content_integrity() (\u5951\u7ea6\u68c0\u67e5)
 """
 import sys
 import os
 import pytest
 import json
 
-# 添加 src 到 path
+# \u6dfb\u52a0 src \u5230 path
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'src'))
 
 from src.analyzer import AnalysisResult, check_content_integrity
@@ -23,102 +23,102 @@ from src.services.report_renderer import render
 
 
 class TestSignalAttributionE2E:
-    """端到端测试：验证 signal_attribution 在所有路径中正确工作"""
+    """\u7aef\u5230\u7aef\u6d4b\u8bd5：\u9a8c\u8bc1 signal_attribution \u5728\u6240\u6709\u8def\u5f84\u4e2d\u6b63\u786e\u5de5\u4f5c"""
 
     def _make_dashboard_with_signal_attr(self, signal_attr):
-        """创建包含 signal_attribution 的 dashboard dict"""
+        """\u521b\u5efa\u5305\u542b signal_attribution \u7684 dashboard dict"""
         return {
             "core_conclusion": {
-                "one_sentence": "测试结论",
+                "one_sentence": "\u6d4b\u8bd5\u7ed3\u8bba",
                 "signal": "buy",
-                "confidence": "中",
+                "confidence": "\u4e2d",
             },
             "intelligence": {
-                "risk_alerts": ["测试风险"],
+                "risk_alerts": ["\u6d4b\u8bd5\u98ce\u9669"],
             },
             "signal_attribution": signal_attr,
         }
 
     def _make_result(self, dashboard):
-        """创建 AnalysisResult"""
+        """\u521b\u5efa AnalysisResult"""
         return AnalysisResult(
             code="600519",
-            name="测试股票",
+            name="\u6d4b\u8bd5\u80a1\u7968",
             sentiment_score=50,
-            trend_prediction="震荡",
-            operation_advice="持有",
+            trend_prediction="\u9707\u8361",
+            operation_advice="\u6301\u6709",
             decision_type="hold",
-            confidence_level="中",
+            confidence_level="\u4e2d",
             dashboard=dashboard,
-            analysis_summary="测试摘要",
+            analysis_summary="\u6d4b\u8bd5\u6458\u8981",
         )
 
-    # ========== 测试 1: _parse_response() 归一化 ==========
+    # ========== \u6d4b\u8bd5 1: _parse_response() \u5f52\u4e00\u5316 ==========
     def test_normalize_called_in_parse_response(self):
         """
-        测试 _parse_response() 中归一化函数被调用。
+        \u6d4b\u8bd5 _parse_response() \u4e2d\u5f52\u4e00\u5316\u51fd\u6570\u88ab\u8c03\u7528。
 
-        验证：
-        1. 输入贡献度为字符串 "30%" → 归一化后变为 int 30
-        2. 输入贡献度之和不为 100 → 归一化后变为之和=100
+        \u9a8c\u8bc1：
+        1. \u8f93\u5165\u8d21\u732e\u5ea6\u4e3a\u5b57\u7b26\u4e32 "30%" → \u5f52\u4e00\u5316\u540e\u53d8\u4e3a int 30
+        2. \u8f93\u5165\u8d21\u732e\u5ea6\u4e4b\u548c\u4e0d\u4e3a 100 → \u5f52\u4e00\u5316\u540e\u53d8\u4e3a\u4e4b\u548c=100
         """
         from src.analyzer import GeminiAnalyzer
 
-        # 创建 analyzer 实例
+        # \u521b\u5efa analyzer \u5b9e\u4f8b
         analyzer = GeminiAnalyzer.__new__(GeminiAnalyzer)
 
-        # 模拟 LLM 返回的 JSON（贡献度为字符串，总和≠100）
+        # \u6a21\u62df LLM \u8fd4\u56de\u7684 JSON（\u8d21\u732e\u5ea6\u4e3a\u5b57\u7b26\u4e32，\u603b\u548c≠100）
         response_text = json.dumps({
             "sentiment_score": 50,
-            "trend_prediction": "震荡",
-            "operation_advice": "持有",
+            "trend_prediction": "\u9707\u8361",
+            "operation_advice": "\u6301\u6709",
             "decision_type": "hold",
-            "confidence_level": "中",
-            "analysis_summary": "测试",
+            "confidence_level": "\u4e2d",
+            "analysis_summary": "\u6d4b\u8bd5",
             "dashboard": {
-                "core_conclusion": {"one_sentence": "测试", "signal": "hold", "confidence": "中"},
+                "core_conclusion": {"one_sentence": "\u6d4b\u8bd5", "signal": "hold", "confidence": "\u4e2d"},
                 "intelligence": {"risk_alerts": []},
                 "signal_attribution": {
                     "technical_indicators": "30%",
                     "news_sentiment": 20,
                     "fundamentals": 30,
-                    "market_conditions": 10,  # 总和=90，且有一个是字符串
-                    "strongest_bullish_signal": "测试看涨",
-                    "strongest_bearish_signal": "测试看空",
+                    "market_conditions": 10,  # \u603b\u548c=90，\u4e14\u6709\u4e00\u4e2a\u662f\u5b57\u7b26\u4e32
+                    "strongest_bullish_signal": "\u6d4b\u8bd5\u770b\u6da8",
+                    "strongest_bearish_signal": "\u6d4b\u8bd5\u770b\u7a7a",
                 },
             },
         })
 
-        # 调用 _parse_response()
-        result = analyzer._parse_response(response_text, "600519", "测试")
+        # \u8c03\u7528 _parse_response()
+        result = analyzer._parse_response(response_text, "600519", "\u6d4b\u8bd5")
 
-        # 验证归一化已执行
+        # \u9a8c\u8bc1\u5f52\u4e00\u5316\u5df2\u6267\u884c
         dash = result.dashboard
-        assert isinstance(dash, dict), "dashboard 应该是 dict"
+        assert isinstance(dash, dict), "dashboard \u5e94\u8be5\u662f dict"
 
         signal_attr = dash.get("signal_attribution")
-        assert signal_attr is not None, "signal_attribution 应该存在"
+        assert signal_attr is not None, "signal_attribution \u5e94\u8be5\u5b58\u5728"
 
-        # 验证字符串已转为 int
-        assert isinstance(signal_attr.get("technical_indicators"), int), "technical_indicators 应该是 int"
+        # \u9a8c\u8bc1\u5b57\u7b26\u4e32\u5df2\u8f6c\u4e3a int
+        assert isinstance(signal_attr.get("technical_indicators"), int), "technical_indicators \u5e94\u8be5\u662f int"
 
-        # 验证总和=100
+        # \u9a8c\u8bc1\u603b\u548c=100
         total = sum([
             signal_attr.get("technical_indicators", 0),
             signal_attr.get("news_sentiment", 0),
             signal_attr.get("fundamentals", 0),
             signal_attr.get("market_conditions", 0),
         ])
-        assert total == 100, f"贡献度之和应该=100，实际={total}"
+        assert total == 100, f"\u8d21\u732e\u5ea6\u4e4b\u548c\u5e94\u8be5=100，\u5b9e\u9645={total}"
 
-    # ========== 测试 2: notification 渲染 ==========
+    # ========== \u6d4b\u8bd5 2: notification \u6e32\u67d3 ==========
     def test_notification_renders_signal_attribution(self):
         """
-        测试 notification.py 中 generate_dashboard_report() 正确渲染 signal_attribution。
+        \u6d4b\u8bd5 notification.py \u4e2d generate_dashboard_report() \u6b63\u786e\u6e32\u67d3 signal_attribution。
 
-        验证：
-        1. signal_attribution 存在时，通知中包含"信号归因"段落
-        2. 四个贡献度都正确显示
+        \u9a8c\u8bc1：
+        1. signal_attribution \u5b58\u5728\u65f6，\u901a\u77e5\u4e2d\u5305\u542b"\u4fe1\u53f7\u5f52\u56e0"\u6bb5\u843d
+        2. \u56db\u4e2a\u8d21\u732e\u5ea6\u90fd\u6b63\u786e\u663e\u793a
         """
         from src.notification import NotificationService
 
@@ -127,39 +127,39 @@ class TestSignalAttributionE2E:
             "news_sentiment": 25,
             "fundamentals": 20,
             "market_conditions": 20,
-            "strongest_bullish_signal": "MACD金叉",
-            "strongest_bearish_signal": "成交量萎缩",
+            "strongest_bullish_signal": "MACD\u91d1\u53c9",
+            "strongest_bearish_signal": "\u6210\u4ea4\u91cf\u840e\u7f29",
         }
         dashboard = self._make_dashboard_with_signal_attr(signal_attr)
         result = self._make_result(dashboard)
 
-        # 调用 generate_dashboard_report()
+        # \u8c03\u7528 generate_dashboard_report()
         notification = NotificationService()
         report = notification.generate_dashboard_report([result], [dashboard])
 
-        # 验证包含信号归因段落
-        assert "信号归因" in report or "Signal Attribution" in report, "通知应包含信号归因段落"
-        assert "35%" in report, "通知应显示 technical_indicators=35%"
-        assert "25%" in report, "通知应显示 news_sentiment=25%"
-        assert "20%" in report, "通知应显示 fundamentals=20%"
-        assert "20%" in report, "通知应显示 market_conditions=20%"
-        assert "MACD金叉" in report, "通知应显示 strongest_bullish_signal"
+        # \u9a8c\u8bc1\u5305\u542b\u4fe1\u53f7\u5f52\u56e0\u6bb5\u843d
+        assert "\u4fe1\u53f7\u5f52\u56e0" in report or "Signal Attribution" in report, "\u901a\u77e5\u5e94\u5305\u542b\u4fe1\u53f7\u5f52\u56e0\u6bb5\u843d"
+        assert "35%" in report, "\u901a\u77e5\u5e94\u663e\u793a technical_indicators=35%"
+        assert "25%" in report, "\u901a\u77e5\u5e94\u663e\u793a news_sentiment=25%"
+        assert "20%" in report, "\u901a\u77e5\u5e94\u663e\u793a fundamentals=20%"
+        assert "20%" in report, "\u901a\u77e5\u5e94\u663e\u793a market_conditions=20%"
+        assert "MACD\u91d1\u53c9" in report, "\u901a\u77e5\u5e94\u663e\u793a strongest_bullish_signal"
 
-    # ========== 测试 3: Jinja2 模板渲染 ==========
+    # ========== \u6d4b\u8bd5 3: Jinja2 \u6a21\u677f\u6e32\u67d3 ==========
     def test_jinja2_template_renders_signal_attribution(self):
         """
-        测试 templates/report_markdown.j2 正确渲染 signal_attribution。
+        \u6d4b\u8bd5 templates/report_markdown.j2 \u6b63\u786e\u6e32\u67d3 signal_attribution。
 
-        验证：
-        1. signal_attribution 存在时，模板输出中包含归因权重
-        2. 四个贡献度都正确显示
+        \u9a8c\u8bc1：
+        1. signal_attribution \u5b58\u5728\u65f6，\u6a21\u677f\u8f93\u51fa\u4e2d\u5305\u542b\u5f52\u56e0\u6743\u91cd
+        2. \u56db\u4e2a\u8d21\u732e\u5ea6\u90fd\u6b63\u786e\u663e\u793a
         """
         signal_attr = {
             "technical_indicators": 35,
             "news_sentiment": 25,
             "fundamentals": 20,
             "market_conditions": 20,
-            "strongest_bullish_signal": "MACD金叉",
+            "strongest_bullish_signal": "MACD\u91d1\u53c9",
         }
         result = self._make_result(self._make_dashboard_with_signal_attr(signal_attr))
 
@@ -167,7 +167,7 @@ class TestSignalAttributionE2E:
 
         assert out is not None
         assert "35%" in out
-        assert "MACD金叉" in out
+        assert "MACD\u91d1\u53c9" in out
 
     def test_parse_dashboard_json_normalizes_nested_dashboard_payload(self):
         """Agent JSON can return a full report object with nested dashboard."""
@@ -207,7 +207,7 @@ class TestSignalAttributionE2E:
             "news_sentiment": None,
             "fundamentals": None,
             "market_conditions": 0,
-            "strongest_bullish_signal": "MACD金叉",
+            "strongest_bullish_signal": "MACD\u91d1\u53c9",
         })
         result = self._make_result(dashboard)
         notification = NotificationService()
@@ -254,7 +254,7 @@ class TestSignalAttributionE2E:
 
         for output in [dashboard_report, single_report, history_report, template_report]:
             assert output is not None
-            assert "信号归因" not in output
+            assert "\u4fe1\u53f7\u5f52\u56e0" not in output
             assert "Signal Attribution" not in output
 
     def test_non_finite_signal_attribution_is_hidden_across_real_paths(self):
@@ -275,20 +275,20 @@ class TestSignalAttributionE2E:
 
         response_text = json.dumps({
             "sentiment_score": 50,
-            "trend_prediction": "震荡",
-            "operation_advice": "持有",
+            "trend_prediction": "\u9707\u8361",
+            "operation_advice": "\u6301\u6709",
             "decision_type": "hold",
-            "confidence_level": "中",
-            "analysis_summary": "测试",
+            "confidence_level": "\u4e2d",
+            "analysis_summary": "\u6d4b\u8bd5",
             "dashboard": {
-                "core_conclusion": {"one_sentence": "测试", "signal": "hold", "confidence": "中"},
+                "core_conclusion": {"one_sentence": "\u6d4b\u8bd5", "signal": "hold", "confidence": "\u4e2d"},
                 "intelligence": {"risk_alerts": []},
                 "signal_attribution": non_finite_signal_attr(),
             },
         })
 
         analyzer = GeminiAnalyzer.__new__(GeminiAnalyzer)
-        result = analyzer._parse_response(response_text, "600519", "测试")
+        result = analyzer._parse_response(response_text, "600519", "\u6d4b\u8bd5")
         dashboard = result.dashboard
         signal_attr = dashboard["signal_attribution"]
 
@@ -318,19 +318,19 @@ class TestSignalAttributionE2E:
 
         for output in [dashboard_report, single_report, history_report, template_report]:
             assert output is not None
-            assert "信号归因" not in output
+            assert "\u4fe1\u53f7\u5f52\u56e0" not in output
             assert "Signal Attribution" not in output
             assert "NaN" not in output
             assert "Infinity" not in output
 
-    # ========== 测试 4: HistoryService markdown 渲染 ==========
+    # ========== \u6d4b\u8bd5 4: HistoryService markdown \u6e32\u67d3 ==========
     def test_history_service_renders_signal_attribution(self):
         """
-        测试 HistoryService._generate_single_stock_markdown() 正确渲染 signal_attribution。
+        \u6d4b\u8bd5 HistoryService._generate_single_stock_markdown() \u6b63\u786e\u6e32\u67d3 signal_attribution。
 
-        验证：
-        1. signal_attribution 存在时，markdown 中包含"信号归因分析"段落
-        2. 四个贡献度都正确显示
+        \u9a8c\u8bc1：
+        1. signal_attribution \u5b58\u5728\u65f6，markdown \u4e2d\u5305\u542b"\u4fe1\u53f7\u5f52\u56e0\u5206\u6790"\u6bb5\u843d
+        2. \u56db\u4e2a\u8d21\u732e\u5ea6\u90fd\u6b63\u786e\u663e\u793a
         """
         from src.services.history_service import HistoryService
 
@@ -339,36 +339,36 @@ class TestSignalAttributionE2E:
             "news_sentiment": 25,
             "fundamentals": 20,
             "market_conditions": 20,
-            "strongest_bullish_signal": "MACD金叉",
-            "strongest_bearish_signal": "成交量萎缩",
+            "strongest_bullish_signal": "MACD\u91d1\u53c9",
+            "strongest_bearish_signal": "\u6210\u4ea4\u91cf\u840e\u7f29",
         }
         dashboard = self._make_dashboard_with_signal_attr(signal_attr)
         result = self._make_result(dashboard)
 
-        # 创建 mock record
+        # \u521b\u5efa mock record
         class MockRecord:
             created_at = None
 
-        # 调用 _generate_single_stock_markdown()
+        # \u8c03\u7528 _generate_single_stock_markdown()
         history_service = HistoryService.__new__(HistoryService)
         markdown = history_service._generate_single_stock_markdown(result, MockRecord())
 
-        # 验证包含信号归因段落
-        assert "信号归因" in markdown or "Signal Attribution" in markdown, "Markdown 应包含信号归因段落"
-        assert "35%" in markdown, "Markdown 应显示 technical_indicators=35%"
-        assert "MACD金叉" in markdown, "Markdown 应显示 strongest_bullish_signal"
+        # \u9a8c\u8bc1\u5305\u542b\u4fe1\u53f7\u5f52\u56e0\u6bb5\u843d
+        assert "\u4fe1\u53f7\u5f52\u56e0" in markdown or "Signal Attribution" in markdown, "Markdown \u5e94\u5305\u542b\u4fe1\u53f7\u5f52\u56e0\u6bb5\u843d"
+        assert "35%" in markdown, "Markdown \u5e94\u663e\u793a technical_indicators=35%"
+        assert "MACD\u91d1\u53c9" in markdown, "Markdown \u5e94\u663e\u793a strongest_bullish_signal"
 
-    # ========== 测试 5: check_content_integrity() optional 契约 ==========
+    # ========== \u6d4b\u8bd5 5: check_content_integrity() optional \u5951\u7ea6 ==========
     def test_check_content_integrity_treats_signal_attribution_as_optional(self):
         """
-        测试 check_content_integrity() 将 signal_attribution 作为可选展示字段。
+        \u6d4b\u8bd5 check_content_integrity() \u5c06 signal_attribution \u4f5c\u4e3a\u53ef\u9009\u5c55\u793a\u5b57\u6bb5。
 
-        验证：
-        1. signal_attribution 存在时，不添加到 missing
-        2. signal_attribution 缺失时，不添加到 missing
-        3. signal_attribution 贡献度缺失时，不添加到 missing
+        \u9a8c\u8bc1：
+        1. signal_attribution \u5b58\u5728\u65f6，\u4e0d\u6dfb\u52a0\u5230 missing
+        2. signal_attribution \u7f3a\u5931\u65f6，\u4e0d\u6dfb\u52a0\u5230 missing
+        3. signal_attribution \u8d21\u732e\u5ea6\u7f3a\u5931\u65f6，\u4e0d\u6dfb\u52a0\u5230 missing
         """
-        # 情况 1: signal_attribution 完整
+        # \u60c5\u51b5 1: signal_attribution \u5b8c\u6574
         signal_attr = {
             "technical_indicators": 35,
             "news_sentiment": 25,
@@ -380,9 +380,9 @@ class TestSignalAttributionE2E:
 
         passed, missing = check_content_integrity(result)
         signal_attr_missing = [m for m in missing if "signal_attribution" in m]
-        assert len(signal_attr_missing) == 0, f"signal_attribution 完整时不应出现在 missing 中，实际: {signal_attr_missing}"
+        assert len(signal_attr_missing) == 0, f"signal_attribution \u5b8c\u6574\u65f6\u4e0d\u5e94\u51fa\u73b0\u5728 missing \u4e2d，\u5b9e\u9645: {signal_attr_missing}"
 
-        # 情况 2: signal_attribution 缺失
+        # \u60c5\u51b5 2: signal_attribution \u7f3a\u5931
         dashboard_no_attr = self._make_dashboard_with_signal_attr(None)
         dashboard_no_attr["battle_plan"] = {"sniper_points": {"stop_loss": "100"}}
         result_no_attr = self._make_result(dashboard_no_attr)
@@ -390,13 +390,13 @@ class TestSignalAttributionE2E:
         passed, missing = check_content_integrity(result_no_attr)
         assert passed is True
         signal_attr_missing = [m for m in missing if "signal_attribution" in m]
-        assert len(signal_attr_missing) == 0, "signal_attribution 缺失时不应出现在 missing 中"
+        assert len(signal_attr_missing) == 0, "signal_attribution \u7f3a\u5931\u65f6\u4e0d\u5e94\u51fa\u73b0\u5728 missing \u4e2d"
 
-        # 情况 3: signal_attribution 贡献度缺失
+        # \u60c5\u51b5 3: signal_attribution \u8d21\u732e\u5ea6\u7f3a\u5931
         signal_attr_incomplete = {
             "technical_indicators": 35,
             "news_sentiment": 25,
-            # 缺少 fundamentals 和 market_conditions
+            # \u7f3a\u5c11 fundamentals \u548c market_conditions
         }
         dashboard_incomplete = self._make_dashboard_with_signal_attr(signal_attr_incomplete)
         dashboard_incomplete["battle_plan"] = {"sniper_points": {"stop_loss": "100"}}
@@ -405,45 +405,45 @@ class TestSignalAttributionE2E:
         passed, missing = check_content_integrity(result_incomplete)
         assert passed is True
         signal_attr_missing = [m for m in missing if "signal_attribution" in m]
-        assert len(signal_attr_missing) == 0, "signal_attribution 贡献度缺失时不应出现在 missing 中"
+        assert len(signal_attr_missing) == 0, "signal_attribution \u8d21\u732e\u5ea6\u7f3a\u5931\u65f6\u4e0d\u5e94\u51fa\u73b0\u5728 missing \u4e2d"
 
-    # ========== 测试 6: 归一化函数测试 ==========
+    # ========== \u6d4b\u8bd5 6: \u5f52\u4e00\u5316\u51fd\u6570\u6d4b\u8bd5 ==========
     def test_normalize_dashboard_signal_attribution_direct(self):
         """
-        直接测试 normalize_dashboard_signal_attribution() 函数。
+        \u76f4\u63a5\u6d4b\u8bd5 normalize_dashboard_signal_attribution() \u51fd\u6570。
 
-        验证：
-        1. 字符串百分比转为 int
-        2. 负数转为 0
-        3. 总和≠100 时归一化为 100
-        4. None 值处理
+        \u9a8c\u8bc1：
+        1. \u5b57\u7b26\u4e32\u767e\u5206\u6bd4\u8f6c\u4e3a int
+        2. \u8d1f\u6570\u8f6c\u4e3a 0
+        3. \u603b\u548c≠100 \u65f6\u5f52\u4e00\u5316\u4e3a 100
+        4. None \u503c\u5904\u7406
         """
-        # 情况 1: 字符串百分比
+        # \u60c5\u51b5 1: \u5b57\u7b26\u4e32\u767e\u5206\u6bd4
         dashboard = {
             "signal_attribution": {
                 "technical_indicators": "30%",
                 "news_sentiment": 20,
                 "fundamentals": "30",
                 "market_conditions": 10,
-                "strongest_bullish_signal": "测试",
+                "strongest_bullish_signal": "\u6d4b\u8bd5",
             },
         }
         normalize_dashboard_signal_attribution(dashboard)
         attr = dashboard["signal_attribution"]
-        # 验证字符串已转为 int（具体值可能因归一化而改变，但应该是 int）
-        assert isinstance(attr["technical_indicators"], int), f"字符串百分比应转为 int: {attr['technical_indicators']}"
-        assert isinstance(attr["fundamentals"], int), f"字符串应转为 int: {attr['fundamentals']}"
+        # \u9a8c\u8bc1\u5b57\u7b26\u4e32\u5df2\u8f6c\u4e3a int（\u5177\u4f53\u503c\u53ef\u80fd\u56e0\u5f52\u4e00\u5316\u800c\u6539\u53d8，\u4f46\u5e94\u8be5\u662f int）
+        assert isinstance(attr["technical_indicators"], int), f"\u5b57\u7b26\u4e32\u767e\u5206\u6bd4\u5e94\u8f6c\u4e3a int: {attr['technical_indicators']}"
+        assert isinstance(attr["fundamentals"], int), f"\u5b57\u7b26\u4e32\u5e94\u8f6c\u4e3a int: {attr['fundamentals']}"
 
-        # 验证总和=100
+        # \u9a8c\u8bc1\u603b\u548c=100
         total = sum([
             attr.get("technical_indicators", 0),
             attr.get("news_sentiment", 0),
             attr.get("fundamentals", 0),
             attr.get("market_conditions", 0),
         ])
-        assert total == 100, f"归一化后总和应为 100: {total}"
+        assert total == 100, f"\u5f52\u4e00\u5316\u540e\u603b\u548c\u5e94\u4e3a 100: {total}"
 
-        # 情况 2: 负数
+        # \u60c5\u51b5 2: \u8d1f\u6570
         dashboard = {
             "signal_attribution": {
                 "technical_indicators": -10,
@@ -454,9 +454,9 @@ class TestSignalAttributionE2E:
         }
         normalize_dashboard_signal_attribution(dashboard)
         attr = dashboard["signal_attribution"]
-        assert attr["technical_indicators"] == 0, f"负数应转为 0: {attr['technical_indicators']}"
+        assert attr["technical_indicators"] == 0, f"\u8d1f\u6570\u5e94\u8f6c\u4e3a 0: {attr['technical_indicators']}"
 
-        # 情况 3: 总和=100，不需要归一化
+        # \u60c5\u51b5 3: \u603b\u548c=100，\u4e0d\u9700\u8981\u5f52\u4e00\u5316
         dashboard = {
             "signal_attribution": {
                 "technical_indicators": 25,
@@ -468,21 +468,21 @@ class TestSignalAttributionE2E:
         normalize_dashboard_signal_attribution(dashboard)
         attr = dashboard["signal_attribution"]
         total = sum([attr["technical_indicators"], attr["news_sentiment"], attr["fundamentals"], attr["market_conditions"]])
-        assert total == 100, f"总和应为 100: {total}"
+        assert total == 100, f"\u603b\u548c\u5e94\u4e3a 100: {total}"
 
-        # 情况 4: 总和≠100（需要归一化）
+        # \u60c5\u51b5 4: \u603b\u548c≠100（\u9700\u8981\u5f52\u4e00\u5316）
         dashboard = {
             "signal_attribution": {
                 "technical_indicators": 10,
                 "news_sentiment": 20,
                 "fundamentals": 30,
-                "market_conditions": 30,  # 总和=90
+                "market_conditions": 30,  # \u603b\u548c=90
             },
         }
         normalize_dashboard_signal_attribution(dashboard)
         attr = dashboard["signal_attribution"]
         total = sum([attr["technical_indicators"], attr["news_sentiment"], attr["fundamentals"], attr["market_conditions"]])
-        assert total == 100, f"归一化后总和应为 100: {total}"
+        assert total == 100, f"\u5f52\u4e00\u5316\u540e\u603b\u548c\u5e94\u4e3a 100: {total}"
 
 
 if __name__ == "__main__":

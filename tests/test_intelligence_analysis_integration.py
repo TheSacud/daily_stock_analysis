@@ -66,12 +66,12 @@ class PersistedIntelligenceAnalysisIntegrationTestCase(unittest.TestCase):
         pipeline.config = self.config
         context = pipeline._load_persisted_intelligence_context(
             code="600519",
-            stock_name="贵州茅台",
+            stock_name="\u8d35\u5dde\u8305\u53f0",
             market="cn",
         )
         self.assertIsNotNone(context)
         assert context is not None
-        self.assertIn("本地资讯证据池", context)
+        self.assertIn("\u672c\u5730\u8d44\u8baf\u8bc1\u636e\u6c60", context)
         self.assertIn("Company wins major AI order", context)
         self.assertIn("https://news.example.com/symbol", context)
 
@@ -83,7 +83,7 @@ class PersistedIntelligenceAnalysisIntegrationTestCase(unittest.TestCase):
         with patch("src.core.pipeline.IntelligenceService.refresh_auto_sources", return_value={"ok": True}) as refresh:
             context = pipeline._load_persisted_intelligence_context(
                 code="600519",
-                stock_name="贵州茅台",
+                stock_name="\u8d35\u5dde\u8305\u53f0",
                 market="cn",
             )
 
@@ -101,7 +101,7 @@ class PersistedIntelligenceAnalysisIntegrationTestCase(unittest.TestCase):
             service.list_items.return_value = {"items": [], "total": 0}
             context = pipeline._load_persisted_intelligence_context(
                 code="600519",
-                stock_name="贵州茅台",
+                stock_name="\u8d35\u5dde\u8305\u53f0",
                 market="cn",
             )
 
@@ -144,7 +144,7 @@ class PersistedIntelligenceAnalysisIntegrationTestCase(unittest.TestCase):
         pipeline.config = self.config
         context = pipeline._load_persisted_intelligence_context(
             code="600519",
-            stock_name="贵州茅台",
+            stock_name="\u8d35\u5dde\u8305\u53f0",
             market="cn",
         )
 
@@ -191,7 +191,7 @@ class PersistedIntelligenceAnalysisIntegrationTestCase(unittest.TestCase):
             with self.subTest(code=code):
                 context = pipeline._load_persisted_intelligence_context(
                     code=code,
-                    stock_name="腾讯控股",
+                    stock_name="\u817e\u8baf\u63a7\u80a1",
                     market="hk",
                 )
 
@@ -261,7 +261,7 @@ class PersistedIntelligenceAnalysisIntegrationTestCase(unittest.TestCase):
                 ],
             ),
             news=merged,
-            report="复盘正文",
+            report="\u590d\u76d8\u6b63\u6587",
             market_light_snapshot={"dimensions": {"breadth": {"available": True}}},
         )
         self.assertEqual(payload["news"][0]["url"], "https://news.example.com/market")
@@ -326,7 +326,7 @@ class PersistedIntelligenceAnalysisIntegrationTestCase(unittest.TestCase):
                 ],
             ),
             news=merged,
-            report="复盘正文",
+            report="\u590d\u76d8\u6b63\u6587",
             market_light_snapshot={"dimensions": {"breadth": {"available": True}}},
         )
         self.assertGreaterEqual(len(payload["news"]), 8)
@@ -397,7 +397,7 @@ class PersistedIntelligenceAnalysisIntegrationTestCase(unittest.TestCase):
         pipeline.config = self.config
         context = pipeline._load_persisted_intelligence_context(
             code="600519",
-            stock_name="贵州茅台",
+            stock_name="\u8d35\u5dde\u8305\u53f0",
             market="cn",
         )
         assert context is not None

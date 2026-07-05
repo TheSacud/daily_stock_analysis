@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 """
 ===================================
-全局异常处理中间件
+\u5168\u5c40\u5f02\u5e38\u5904\u7406Medium\u95f4\u4ef6
 ===================================
 
-职责：
-1. 捕获未处理的异常
-2. 统一错误响应格式
-3. 记录错误日志
+\u804c\u8d23:
+1. \u6355\u83b7\u672a\u5904\u7406\u7684\u5f02\u5e38
+2. \u7edf\u4e00error\u54cd\u5e94\u683c\u5f0f
+3. \u8bb0\u5f55errorlog
 """
 
 import logging
@@ -23,45 +23,45 @@ logger = logging.getLogger(__name__)
 
 class ErrorHandlerMiddleware(BaseHTTPMiddleware):
     """
-    全局异常处理中间件
-    
-    捕获所有未处理的异常，返回统一格式的错误响应
+    \u5168\u5c40\u5f02\u5e38\u5904\u7406Medium\u95f4\u4ef6
+
+    \u6355\u83b7\u6240\u6709\u672a\u5904\u7406\u7684\u5f02\u5e38; \u8fd4\u56de\u7edf\u4e00\u683c\u5f0f\u7684error\u54cd\u5e94
     """
-    
+
     async def dispatch(
-        self, 
-        request: Request, 
+        self,
+        request: Request,
         call_next: Callable
     ) -> Response:
         """
-        处理请求，捕获异常
-        
+        \u5904\u7406request; \u6355\u83b7\u5f02\u5e38
+
         Args:
-            request: 请求对象
-            call_next: 下一个处理器
-            
+            request: request\u5bf9\u8c61
+            call_next: \u4e0b\u4e00\u4e2a\u5904\u7406\u5668
+
         Returns:
-            Response: 响应对象
+            Response: \u54cd\u5e94\u5bf9\u8c61
         """
         try:
             response = await call_next(request)
             return response
-            
+
         except Exception as e:
-            # 记录错误日志
+            # \u8bb0\u5f55errorlog
             logger.error(
-                f"未处理的异常: {e}\n"
-                f"请求路径: {request.url.path}\n"
-                f"请求方法: {request.method}\n"
-                f"堆栈: {traceback.format_exc()}"
+                f"\u672a\u5904\u7406\u7684\u5f02\u5e38: {e}\n"
+                f"request\u8def\u5f84: {request.url.path}\n"
+                f"request\u65b9\u6cd5: {request.method}\n"
+                f"\u5806\u6808: {traceback.format_exc()}"
             )
-            
-            # 返回统一格式的错误响应
+
+            # \u8fd4\u56de\u7edf\u4e00\u683c\u5f0f\u7684error\u54cd\u5e94
             return JSONResponse(
                 status_code=500,
                 content={
                     "error": "internal_error",
-                    "message": "服务器内部错误，请稍后重试",
+                    "message": "\u670d\u52a1\u5668\u5185\u90e8error; \u8bf7\u7a0d\u540e\u91cd\u8bd5",
                     "detail": str(e) if logger.isEnabledFor(logging.DEBUG) else None
                 }
             )
@@ -69,26 +69,26 @@ class ErrorHandlerMiddleware(BaseHTTPMiddleware):
 
 def add_error_handlers(app) -> None:
     """
-    添加全局异常处理器
-    
-    为 FastAPI 应用添加各类异常的处理器
-    
+    \u6dfb\u52a0\u5168\u5c40\u5f02\u5e38\u5904\u7406\u5668
+
+    \u4e3a FastAPI \u5e94\u7528\u6dfb\u52a0\u5404\u7c7b\u5f02\u5e38\u7684\u5904\u7406\u5668
+
     Args:
-        app: FastAPI 应用实例
+        app: FastAPI \u5e94\u7528\u5b9e\u4f8b
     """
     from fastapi import HTTPException
     from fastapi.exceptions import RequestValidationError
-    
+
     @app.exception_handler(HTTPException)
     async def http_exception_handler(request: Request, exc: HTTPException):
-        """处理 HTTP 异常"""
-        # 如果 detail 已经是 ErrorResponse 格式的 dict，直接使用
+        """\u5904\u7406 HTTP \u5f02\u5e38"""
+        # \u5982\u679c detail \u5df2\u7ecf\u662f ErrorResponse \u683c\u5f0f\u7684 dict; \u76f4\u63a5\u4f7f\u7528
         if isinstance(exc.detail, dict) and "error" in exc.detail and "message" in exc.detail:
             return JSONResponse(
                 status_code=exc.status_code,
                 content=exc.detail
             )
-        # 否则将 detail 包装成 ErrorResponse 格式
+        # \u5426\u5219\u5c06 detail \u5305\u88c5\u6210 ErrorResponse \u683c\u5f0f
         return JSONResponse(
             status_code=exc.status_code,
             content={
@@ -97,32 +97,32 @@ def add_error_handlers(app) -> None:
                 "detail": None
             }
         )
-    
+
     @app.exception_handler(RequestValidationError)
     async def validation_exception_handler(request: Request, exc: RequestValidationError):
-        """处理请求验证异常"""
+        """\u5904\u7406request\u9a8c\u8bc1\u5f02\u5e38"""
         return JSONResponse(
             status_code=422,
             content={
                 "error": "validation_error",
-                "message": "请求参数验证失败",
+                "message": "requestparameter\u9a8c\u8bc1failed",
                 "detail": exc.errors()
             }
         )
-    
+
     @app.exception_handler(Exception)
     async def general_exception_handler(request: Request, exc: Exception):
-        """处理通用异常"""
+        """\u5904\u7406\u901a\u7528\u5f02\u5e38"""
         logger.error(
-            f"未处理的异常: {exc}\n"
-            f"请求路径: {request.url.path}\n"
-            f"堆栈: {traceback.format_exc()}"
+            f"\u672a\u5904\u7406\u7684\u5f02\u5e38: {exc}\n"
+            f"request\u8def\u5f84: {request.url.path}\n"
+            f"\u5806\u6808: {traceback.format_exc()}"
         )
         return JSONResponse(
             status_code=500,
             content={
                 "error": "internal_error",
-                "message": "服务器内部错误",
+                "message": "\u670d\u52a1\u5668\u5185\u90e8error",
                 "detail": None
             }
         )

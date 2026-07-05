@@ -23,33 +23,33 @@ from data_provider.fundamental_adapter import (
 
 class TestFundamentalAdapter(unittest.TestCase):
     def test_parse_dividend_plan_to_per_share_supports_cn_patterns(self) -> None:
-        self.assertAlmostEqual(_parse_dividend_plan_to_per_share("10派3元(含税)"), 0.3, places=6)
-        self.assertAlmostEqual(_parse_dividend_plan_to_per_share("每10股派发2.5元"), 0.25, places=6)
-        self.assertAlmostEqual(_parse_dividend_plan_to_per_share("每股派0.8元"), 0.8, places=6)
-        self.assertIsNone(_parse_dividend_plan_to_per_share("仅送股，不现金分红"))
+        self.assertAlmostEqual(_parse_dividend_plan_to_per_share("10\u6d3e3\u5143(\u542b\u7a0e)"), 0.3, places=6)
+        self.assertAlmostEqual(_parse_dividend_plan_to_per_share("\u6bcf10\u80a1\u6d3e\u53d12.5\u5143"), 0.25, places=6)
+        self.assertAlmostEqual(_parse_dividend_plan_to_per_share("\u6bcf\u80a1\u6d3e0.8\u5143"), 0.8, places=6)
+        self.assertIsNone(_parse_dividend_plan_to_per_share("\u4ec5\u9001\u80a1，\u4e0d\u73b0\u91d1\u5206\u7ea2"))
 
     def test_extract_latest_row_returns_none_when_code_mismatch(self) -> None:
         df = pd.DataFrame(
             {
-                "股票代码": ["600000", "000001"],
-                "值": [1, 2],
+                "\u80a1\u7968\u4ee3\u7801": ["600000", "000001"],
+                "\u503c": [1, 2],
             }
         )
         row = _extract_latest_row(df, "600519")
         self.assertIsNone(row)
 
     def test_extract_latest_row_fallback_when_no_code_column(self) -> None:
-        df = pd.DataFrame({"值": [1, 2]})
+        df = pd.DataFrame({"\u503c": [1, 2]})
         row = _extract_latest_row(df, "600519")
         self.assertIsNotNone(row)
-        self.assertEqual(row["值"], 1)
+        self.assertEqual(row["\u503c"], 1)
 
     def test_dragon_tiger_no_match_with_code_column_is_ok(self) -> None:
         adapter = AkshareFundamentalAdapter()
         df = pd.DataFrame(
             {
-                "股票代码": ["600000"],
-                "日期": ["2026-01-01"],
+                "\u80a1\u7968\u4ee3\u7801": ["600000"],
+                "\u65e5\u671f": ["2026-01-01"],
             }
         )
         with patch.object(adapter, "_call_df_candidates", return_value=(df, "stock_lhb_stock_statistic_em", [])):
@@ -63,8 +63,8 @@ class TestFundamentalAdapter(unittest.TestCase):
         today = pd.Timestamp.now().strftime("%Y-%m-%d")
         df = pd.DataFrame(
             {
-                "股票代码": ["600519"],
-                "日期": [today],
+                "\u80a1\u7968\u4ee3\u7801": ["600519"],
+                "\u65e5\u671f": [today],
             }
         )
         with patch.object(adapter, "_call_df_candidates", return_value=(df, "stock_lhb_stock_statistic_em", [])):
@@ -81,23 +81,23 @@ class TestFundamentalAdapter(unittest.TestCase):
         old_day = (now - timedelta(days=500)).strftime("%Y-%m-%d")
         fin_df = pd.DataFrame(
             {
-                "股票代码": ["600519"],
-                "报告期": [within_ttm],
-                "营业总收入": [1000.0],
-                "归母净利润": [300.0],
-                "经营活动产生的现金流量净额": [500.0],
-                "净资产收益率": [18.2],
-                "营业收入同比": [12.0],
-                "净利润同比": [9.5],
+                "\u80a1\u7968\u4ee3\u7801": ["600519"],
+                "\u62a5\u544a\u671f": [within_ttm],
+                "\u8425\u4e1a\u603b\u6536\u5165": [1000.0],
+                "\u5f52\u6bcd\u51c0\u5229\u6da6": [300.0],
+                "\u7ecf\u8425\u6d3b\u52a8\u4ea7\u751f\u7684\u73b0\u91d1\u6d41\u91cf\u51c0\u989d": [500.0],
+                "\u51c0\u8d44\u4ea7\u6536\u76ca\u7387": [18.2],
+                "\u8425\u4e1a\u6536\u5165\u540c\u6bd4": [12.0],
+                "\u51c0\u5229\u6da6\u540c\u6bd4": [9.5],
             }
         )
-        forecast_df = pd.DataFrame({"股票代码": ["600519"], "预告": ["预增"]})
-        quick_df = pd.DataFrame({"股票代码": ["600519"], "快报": ["快报摘要"]})
+        forecast_df = pd.DataFrame({"\u80a1\u7968\u4ee3\u7801": ["600519"], "\u9884\u544a": ["\u9884\u589e"]})
+        quick_df = pd.DataFrame({"\u80a1\u7968\u4ee3\u7801": ["600519"], "\u5feb\u62a5": ["\u5feb\u62a5\u6458\u8981"]})
         dividend_df = pd.DataFrame(
             {
-                "股票代码": ["600519", "600519", "600519", "600519"],
-                "除息日": [within_ttm, within_ttm, future_day, old_day],
-                "分配方案": ["10派3元(含税)", "10派3元(含税)", "10派5元", "10派1元"],
+                "\u80a1\u7968\u4ee3\u7801": ["600519", "600519", "600519", "600519"],
+                "\u9664\u606f\u65e5": [within_ttm, within_ttm, future_day, old_day],
+                "\u5206\u914d\u65b9\u6848": ["10\u6d3e3\u5143(\u542b\u7a0e)", "10\u6d3e3\u5143(\u542b\u7a0e)", "10\u6d3e5\u5143", "10\u6d3e1\u5143"],
             }
         )
 
@@ -132,9 +132,9 @@ class TestFundamentalAdapter(unittest.TestCase):
         now = datetime.now().strftime("%Y-%m-%d")
         df = pd.DataFrame(
             {
-                "股票代码": ["000001"],
-                "除息日": [now],
-                "分配方案": ["10派3元(含税)"],
+                "\u80a1\u7968\u4ee3\u7801": ["000001"],
+                "\u9664\u606f\u65e5": [now],
+                "\u5206\u914d\u65b9\u6848": ["10\u6d3e3\u5143(\u542b\u7a0e)"],
             }
         )
 
@@ -145,9 +145,9 @@ class TestFundamentalAdapter(unittest.TestCase):
         now = datetime.now().strftime("%Y-%m-%d")
         df = pd.DataFrame(
             {
-                "股票代码": ["600519"],
-                "除息日": [now],
-                "分配方案": ["10派3元(税后)"],
+                "\u80a1\u7968\u4ee3\u7801": ["600519"],
+                "\u9664\u606f\u65e5": [now],
+                "\u5206\u914d\u65b9\u6848": ["10\u6d3e3\u5143(\u7a0e\u540e)"],
             }
         )
 
@@ -160,9 +160,9 @@ class TestFundamentalAdapter(unittest.TestCase):
         day_366 = (now - timedelta(days=366)).strftime("%Y-%m-%d")
         df = pd.DataFrame(
             {
-                "股票代码": ["600519", "600519"],
-                "除息日": [day_365, day_366],
-                "分配方案": ["10派3元(含税)", "10派5元(含税)"],
+                "\u80a1\u7968\u4ee3\u7801": ["600519", "600519"],
+                "\u9664\u606f\u65e5": [day_365, day_366],
+                "\u5206\u914d\u65b9\u6848": ["10\u6d3e3\u5143(\u542b\u7a0e)", "10\u6d3e5\u5143(\u542b\u7a0e)"],
             }
         )
 

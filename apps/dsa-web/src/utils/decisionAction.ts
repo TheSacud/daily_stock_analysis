@@ -14,14 +14,14 @@ export type DecisionActionLabelTextKey =
 export type DecisionActionLabelTranslator = (key: DecisionActionLabelTextKey) => string;
 
 export const DEFAULT_DECISION_ACTION_LABELS: DecisionActionLabelMap = {
-  buy: '买入',
-  add: '加仓',
-  hold: '持有',
-  reduce: '减仓',
-  sell: '卖出',
-  watch: '观望',
-  avoid: '回避',
-  alert: '预警',
+  buy: 'Buy',
+  add: 'Add',
+  hold: 'Hold',
+  reduce: 'Reduce',
+  sell: 'Sell',
+  watch: 'Watch',
+  avoid: 'Avoid',
+  alert: 'Alert',
 };
 
 const resolveActionLabels = (labels?: Partial<DecisionActionLabelMap>): DecisionActionLabelMap => ({
@@ -102,26 +102,26 @@ export const getLegacyDecisionAction = (advice?: string | null): DecisionAction 
 
   if (
     includesAny(normalized, [
-      '暂不买入',
-      '不要买入',
-      '不宜买入',
-      '先不买入',
-      '无需买入',
-      '无须买入',
-      '不建议建仓',
-      '暂不建仓',
-      '不要建仓',
-      '不宜建仓',
-      '先不建仓',
-      '无需建仓',
-      '无须建仓',
-      '不建议布局',
-      '暂不布局',
-      '不要布局',
-      '不宜布局',
-      '先不布局',
-      '无需布局',
-      '无须布局',
+      '\u6682\u4e0d\u4e70\u5165',
+      '\u4e0d\u8981\u4e70\u5165',
+      '\u4e0d\u5b9c\u4e70\u5165',
+      '\u5148\u4e0d\u4e70\u5165',
+      '\u65e0\u9700\u4e70\u5165',
+      '\u65e0\u987b\u4e70\u5165',
+      '\u4e0d\u5efa\u8bae\u5efa\u4ed3',
+      '\u6682\u4e0d\u5efa\u4ed3',
+      '\u4e0d\u8981\u5efa\u4ed3',
+      '\u4e0d\u5b9c\u5efa\u4ed3',
+      '\u5148\u4e0d\u5efa\u4ed3',
+      '\u65e0\u9700\u5efa\u4ed3',
+      '\u65e0\u987b\u5efa\u4ed3',
+      '\u4e0d\u5efa\u8bae\u5e03\u5c40',
+      '\u6682\u4e0d\u5e03\u5c40',
+      '\u4e0d\u8981\u5e03\u5c40',
+      '\u4e0d\u5b9c\u5e03\u5c40',
+      '\u5148\u4e0d\u5e03\u5c40',
+      '\u65e0\u9700\u5e03\u5c40',
+      '\u65e0\u987b\u5e03\u5c40',
     ]) ||
     matchesEnglishNegatedAction(lower, ['buy'])
   ) {
@@ -129,36 +129,36 @@ export const getLegacyDecisionAction = (advice?: string | null): DecisionAction 
   }
   if (
     includesAny(normalized, [
-      '不建议加仓',
-      '无需加仓',
-      '无须加仓',
-      '不要加仓',
-      '不宜加仓',
-      '暂不加仓',
-      '不建议增持',
-      '无需增持',
-      '无须增持',
-      '不要增持',
-      '不宜增持',
-      '暂不增持',
-      '不建议卖出',
-      '无需卖出',
-      '无须卖出',
-      '不要卖出',
-      '不宜卖出',
-      '暂不卖出',
-      '不建议减仓',
-      '无需减仓',
-      '无须减仓',
-      '不要减仓',
-      '不宜减仓',
-      '暂不减仓',
-      '不建议清仓',
-      '无需清仓',
-      '无须清仓',
-      '不要清仓',
-      '不宜清仓',
-      '暂不清仓',
+      '\u4e0d\u5efa\u8bae\u52a0\u4ed3',
+      '\u65e0\u9700\u52a0\u4ed3',
+      '\u65e0\u987b\u52a0\u4ed3',
+      '\u4e0d\u8981\u52a0\u4ed3',
+      '\u4e0d\u5b9c\u52a0\u4ed3',
+      '\u6682\u4e0d\u52a0\u4ed3',
+      '\u4e0d\u5efa\u8bae\u589e\u6301',
+      '\u65e0\u9700\u589e\u6301',
+      '\u65e0\u987b\u589e\u6301',
+      '\u4e0d\u8981\u589e\u6301',
+      '\u4e0d\u5b9c\u589e\u6301',
+      '\u6682\u4e0d\u589e\u6301',
+      '\u4e0d\u5efa\u8bae\u5356\u51fa',
+      '\u65e0\u9700\u5356\u51fa',
+      '\u65e0\u987b\u5356\u51fa',
+      '\u4e0d\u8981\u5356\u51fa',
+      '\u4e0d\u5b9c\u5356\u51fa',
+      '\u6682\u4e0d\u5356\u51fa',
+      '\u4e0d\u5efa\u8bae\u51cf\u4ed3',
+      '\u65e0\u9700\u51cf\u4ed3',
+      '\u65e0\u987b\u51cf\u4ed3',
+      '\u4e0d\u8981\u51cf\u4ed3',
+      '\u4e0d\u5b9c\u51cf\u4ed3',
+      '\u6682\u4e0d\u51cf\u4ed3',
+      '\u4e0d\u5efa\u8bae\u6e05\u4ed3',
+      '\u65e0\u9700\u6e05\u4ed3',
+      '\u65e0\u987b\u6e05\u4ed3',
+      '\u4e0d\u8981\u6e05\u4ed3',
+      '\u4e0d\u5b9c\u6e05\u4ed3',
+      '\u6682\u4e0d\u6e05\u4ed3',
     ]) ||
     hasEnglishAvoidedHoldAction(lower) ||
     matchesEnglishNegatedAction(lower, ['add', 'accumulate', 'sell', 'reduce', 'trim'])
@@ -167,18 +167,18 @@ export const getLegacyDecisionAction = (advice?: string | null): DecisionAction 
   }
   const guardMatches = new Set<DecisionAction>();
   if (
-    normalized.includes('不建议买入') ||
-    normalized.includes('避免买入') ||
-    normalized.includes('回避') ||
-    normalized.includes('规避') ||
+    normalized.includes('\u4e0d\u5efa\u8bae\u4e70\u5165') ||
+    normalized.includes('\u907f\u514d\u4e70\u5165') ||
+    normalized.includes('\u56de\u907f') ||
+    normalized.includes('\u89c4\u907f') ||
     matchesEnglishTerm(lower, ['avoid'])
   ) {
     guardMatches.add('avoid');
   }
   if (
-    normalized.includes('风险预警') ||
-    normalized.includes('触发告警') ||
-    normalized.includes('警惕') ||
+    normalized.includes('\u98ce\u9669\u9884\u8b66') ||
+    normalized.includes('\u89e6\u53d1\u544a\u8b66') ||
+    normalized.includes('\u8b66\u60d5') ||
     lower.includes('risk alert') ||
     matchesEnglishTerm(lower, ['alert'])
   ) {
@@ -192,22 +192,22 @@ export const getLegacyDecisionAction = (advice?: string | null): DecisionAction 
   }
 
   const matches = new Set<DecisionAction>();
-  if (normalized.includes('加仓') || normalized.includes('增持') || matchesEnglishTerm(lower, ['add', 'accumulate'])) {
+  if (normalized.includes('\u52a0\u4ed3') || normalized.includes('\u589e\u6301') || matchesEnglishTerm(lower, ['add', 'accumulate'])) {
     matches.add('add');
   }
-  if (normalized.includes('减仓') || matchesEnglishTerm(lower, ['reduce', 'trim'])) {
+  if (normalized.includes('\u51cf\u4ed3') || matchesEnglishTerm(lower, ['reduce', 'trim'])) {
     matches.add('reduce');
   }
-  if (normalized.includes('强烈卖出') || normalized.includes('卖出') || normalized.includes('清仓') || matchesEnglishTerm(lower, ['sell'])) {
+  if (normalized.includes('\u5f3a\u70c8\u5356\u51fa') || normalized.includes('\u5356\u51fa') || normalized.includes('\u6e05\u4ed3') || matchesEnglishTerm(lower, ['sell'])) {
     matches.add('sell');
   }
-  if (normalized.includes('持有') || normalized.includes('洗盘观察') || matchesEnglishTerm(lower, ['hold'])) {
+  if (normalized.includes('\u6301\u6709') || normalized.includes('\u6d17\u76d8\u89c2\u5bdf') || matchesEnglishTerm(lower, ['hold'])) {
     matches.add('hold');
   }
-  if (normalized.includes('观望') || normalized.includes('等待') || matchesEnglishTerm(lower, ['watch', 'wait'])) {
+  if (normalized.includes('\u89c2\u671b') || normalized.includes('\u7b49\u5f85') || matchesEnglishTerm(lower, ['watch', 'wait'])) {
     matches.add('watch');
   }
-  if (normalized.includes('强烈买入') || normalized.includes('买入') || normalized.includes('布局') || normalized.includes('建仓') || matchesEnglishTerm(lower, ['buy'])) {
+  if (normalized.includes('\u5f3a\u70c8\u4e70\u5165') || normalized.includes('\u4e70\u5165') || normalized.includes('\u5e03\u5c40') || normalized.includes('\u5efa\u4ed3') || matchesEnglishTerm(lower, ['buy'])) {
     matches.add('buy');
   }
 
@@ -221,7 +221,7 @@ export const getDecisionActionLabel = (
   action?: DecisionAction | null,
   actionLabel?: string | null,
   legacyAdvice?: string | null,
-  emptyLabel: string | null = '建议',
+  emptyLabel: string | null = 'Recommendation',
   labels?: Partial<DecisionActionLabelMap>,
 ): string | null => {
   const actionLabels = resolveActionLabels(labels);
@@ -241,9 +241,9 @@ export const getDecisionActionTone = (
   const label = actionLabel?.trim() || '';
   if (label) {
     const lowerLabel = normalizeEnglishAdvice(label);
-    if (label.includes('买') || label.includes('加仓') || label.includes('持有')) return 'success';
-    if (label.includes('卖') || label.includes('减仓') || label.includes('清仓')) return 'danger';
-    if (label.includes('观望') || label.includes('等待') || label.includes('回避') || label.includes('预警')) {
+    if (label.includes('\u4e70') || label.includes('\u52a0\u4ed3') || label.includes('\u6301\u6709')) return 'success';
+    if (label.includes('\u5356') || label.includes('\u51cf\u4ed3') || label.includes('\u6e05\u4ed3')) return 'danger';
+    if (label.includes('\u89c2\u671b') || label.includes('\u7b49\u5f85') || label.includes('\u56de\u907f') || label.includes('\u9884\u8b66')) {
       return 'warning';
     }
     if (matchesEnglishTerm(lowerLabel, ['buy', 'add', 'hold'])) return 'success';

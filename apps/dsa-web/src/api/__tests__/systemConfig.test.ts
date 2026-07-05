@@ -124,12 +124,12 @@ describe('systemConfigApi', () => {
         checks: [
           {
             key: 'llm_primary',
-            title: 'LLM 主渠道',
+            title: 'LLM \u4e3b\u6e20\u9053',
             category: 'ai_model',
             required: true,
             status: 'needs_action',
-            message: '缺少主模型配置',
-            next_step: '打开系统设置',
+            message: '\u7f3a\u5c11\u4e3b\u6a21\u578b\u914d\u7f6e',
+            next_step: '\u6253\u5f00\u7cfb\u7edf\u8bbe\u7f6e',
           },
         ],
       },
@@ -140,7 +140,7 @@ describe('systemConfigApi', () => {
     expect(get).toHaveBeenCalledWith('/api/v1/system/config/setup/status');
     expect(result.isComplete).toBe(false);
     expect(result.nextStepKey).toBe('llm_primary');
-    expect(result.checks[0].nextStep).toBe('打开系统设置');
+    expect(result.checks[0].nextStep).toBe('\u6253\u5f00\u7cfb\u7edf\u8bbe\u7f6e');
   });
 
   it('loads generation backend status with camelCase fields', async () => {

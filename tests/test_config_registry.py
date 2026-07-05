@@ -696,7 +696,7 @@ class TestAgentContextCompressionFields(unittest.TestCase):
         )
         self.assertEqual(
             [option["label"] for option in field["options"]],
-            ["成本优先", "均衡推荐", "长上下文原文优先"],
+            ["\u6210\u672c\u4f18\u5148", "\u5747\u8861\u63a8\u8350", "\u957f\u4e0a\u4e0b\u6587\u539f\u6587\u4f18\u5148"],
         )
 
     def test_trigger_and_protected_turns_can_follow_profile_preset(self):

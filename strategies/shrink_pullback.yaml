@@ -1,46 +1,46 @@
-# Shrink Volume Pullback Strategy / 缩量回踩
-# Volume shrinks during pullback to MA5/MA10, then price bounces.
+﻿# Shrink Volume Pullback Strategy
+# Volume contracts during a pullback to MA5 or MA10, then price stabilizes or rebounds.
 
 name: shrink_pullback
-display_name: 缩量回踩
-description: 检测缩量回踩均线支撑信号，趋势延续的理想入场点。
+display_name: Shrink Volume Pullback
+description: Detects low-volume pullbacks to moving-average support, an ideal continuation entry in an existing trend.
 category: trend
 core_rules: [1, 2, 4]
 required_tools:
   - get_daily_history
   - analyze_trend
   - get_realtime_quote
-aliases: [缩量回踩, 回踩]
+aliases: [low-volume pullback, pullback]
 default_router: true
 default_priority: 40
 market_regimes: [trending_down, sideways]
 
 instructions: |
-  **缩量回踩（Shrink Volume Pullback Strategy）**
+  **Shrink Volume Pullback Strategy**
 
-  入场判定标准：
+  Entry criteria:
 
-  1. **前提条件**（关联理念2：趋势交易）：
-     - 股票必须处于上升趋势（MA5 > MA10 > MA20）。
-     - 使用 `analyze_trend` 确认多头排列。
+  1. **Prerequisite trend**
+     - The stock should already be in an uptrend with MA5 > MA10 > MA20.
+     - Use `analyze_trend` to confirm bullish alignment.
 
-  2. **回踩检测**（关联理念4：买点偏好）：
-     - 使用 `get_daily_history` 和 `get_realtime_quote`。
-     - 价格回踩至 MA5 附近（误差 1% 以内）或 MA10 附近（误差 2% 以内）。
-     - 回调期间成交量 < 5 日均量的 70%（缩量特征）。
-     - `analyze_trend` → volume_status 应显示缩量。
+  2. **Pullback detection**
+     - Use `get_daily_history` and `get_realtime_quote`.
+     - Price should pull back to near MA5 within 1% or near MA10 within 2%.
+     - Pullback volume should be below 70% of the 5-day average.
+     - `analyze_trend.volume_status` should indicate contraction when available.
 
-  3. **反弹信号**（关联理念1：严进策略）：
-     - 当前价格守住均线支撑位。
-     - MA5 乖离率 < 2% — 最佳买入区间。
+  3. **Rebound signal**
+     - Current price should hold moving-average support.
+     - MA5 bias below 2% is the best entry zone.
 
-  4. **确认条件**（关联理念5：风险排查）：
-     - `search_stock_news` 无利空消息。
-     - 筹码分布健康（获利比例 50-80%）。
+  4. **Confirmation conditions**
+     - `search_stock_news` should not reveal fresh negative catalysts.
+     - Chip distribution, if available, should show healthy cost concentration.
 
-  评分调整：
-  - 缩量回踩 MA5：sentiment_score +10
-  - 缩量回踩 MA10 且量能 < 0.6 倍均量：sentiment_score +8
-  - 理想买点设在 MA5 水平，次优买点设在 MA10。
-  - 止损设在 MA20 水平。
-  - 在 `buy_reason` 中注明"缩量回踩"。
+  Score adjustments:
+  - Low-volume pullback to MA5: `sentiment_score +10`
+  - Low-volume pullback to MA10 with volume below 0.6x average: `sentiment_score +8`
+  - Ideal entry is near MA5; secondary entry is near MA10.
+  - Stop reference is near MA20.
+  - Mention `low-volume pullback` in `buy_reason`.

@@ -4,8 +4,8 @@ Research command — deep research on a stock or market topic.
 
 Usage:
     /research 600519                        -> Deep research on Kweichow Moutai
-    /research 600519 近期业绩风险            -> Focused research with specific question
-    /research 新能源板块前景分析              -> Topic-based research
+    /research 600519 \u8fd1\u671f\u4e1a\u7ee9\u98ce\u9669            -> Focused research with specific question
+    /research \u65b0\u80fd\u6e90sector\u524d\u666fanalyze              -> Topic-based research
 """
 
 import logging
@@ -30,8 +30,8 @@ class ResearchCommand(BotCommand):
 
     Usage:
         /research 600519                    -> Deep research on a stock
-        /research 600519 业绩风险分析        -> Focused question
-        /research 新能源板块 发展前景         -> Sector research
+        /research 600519 \u4e1a\u7ee9\u98ce\u9669analyze        -> Focused question
+        /research \u65b0\u80fd\u6e90sector \u53d1\u5c55\u524d\u666f         -> Sector research
     """
 
     @property
@@ -40,7 +40,7 @@ class ResearchCommand(BotCommand):
 
     @property
     def aliases(self) -> List[str]:
-        return ["深研", "deepsearch"]
+        return ["\u6df1\u7814", "deepsearch"]
 
     @property
     def description(self) -> str:
@@ -54,15 +54,15 @@ class ResearchCommand(BotCommand):
         if not args:
             return BotResponse.text_response(
                 f"Usage: {self.usage}\n"
-                "Example: /research 600519 近期有哪些风险\n"
-                "Example: /research 新能源板块前景分析"
+                "Example: /research 600519 \u8fd1\u671f\u6709\u54ea\u4e9b\u98ce\u9669\n"
+                "Example: /research \u65b0\u80fd\u6e90sector\u524d\u666fanalyze"
             )
 
         config = get_config()
 
         if not config.agent_mode:
             return BotResponse.text_response(
-                "⚠️ Agent 模式未开启，无法使用深度研究功能。\n请在配置中设置 `AGENT_MODE=true`。"
+                "⚠️ Agent mode\u672a\u5f00\u542f; \u65e0\u6cd5\u4f7f\u7528\u6df1\u5ea6\u7814\u7a76\u529f\u80fd.\n\u8bf7\u5728configMedium\u8bbe\u7f6e `AGENT_MODE=true`."
             )
 
         # Parse arguments — first arg may be stock code, rest is the question
@@ -70,7 +70,7 @@ class ResearchCommand(BotCommand):
         stock_code: Optional[str] = None
 
         # Try to detect a stock code in the first argument
-        first = query_parts[0].upper().replace("，", ",")
+        first = query_parts[0].upper().replace("; ", ",")
         if _RESEARCH_STOCK_CODE_RE.match(first):
             stock_code = first
             query_parts = query_parts[1:]
@@ -115,7 +115,7 @@ class ResearchCommand(BotCommand):
             if getattr(result, "timed_out", False):
                 logger.warning("[ResearchCommand] Deep research timed out after %ss", duration)
                 return BotResponse.text_response(
-                    f"⏳ 深度研究超时（{duration}s / {research_timeout}s），请稍后重试或缩小研究范围。"
+                    f"⏳ \u6df1\u5ea6\u7814\u7a76\u8d85\u65f6 ({duration}s / {research_timeout}s); \u8bf7\u7a0d\u540e\u91cd\u8bd5or\u7f29\u5c0f\u7814\u7a76\u8303\u56f4."
                 )
 
             if result.success:

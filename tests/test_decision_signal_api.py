@@ -98,7 +98,7 @@ def client_and_db(tmp_path):
 def _payload(**overrides):
     payload = {
         "stock_code": "SH600519",
-        "stock_name": "贵州茅台",
+        "stock_name": "\u8d35\u5dde\u8305\u53f0",
         "market": "cn",
         "source_type": "analysis",
         "source_agent": "api-test",
@@ -112,7 +112,7 @@ def _payload(**overrides):
         "horizon": "3d",
         "entry_low": 1680,
         "stop_loss": 1600,
-        "reason": "突破平台",
+        "reason": "\u7a81\u7834\u5e73\u53f0",
         "evidence": {"source": "unit-test"},
         "metadata": {"task_id": "task-3001", "alert_trigger_id": "alert-1"},
     }
@@ -178,13 +178,13 @@ def test_create_duplicate_list_detail_latest_and_status_update(client_and_db) ->
 
     duplicate_resp = client.post(
         "/api/v1/decision-signals",
-        json=_payload(reason="重复报告里不同文案不应覆盖旧信号"),
+        json=_payload(reason="\u91cd\u590d\u62a5\u544a\u91cc\u4e0d\u540c\u6587\u6848\u4e0d\u5e94\u8986\u76d6\u65e7\u4fe1\u53f7"),
     )
     assert duplicate_resp.status_code == 200, duplicate_resp.text
     duplicate = duplicate_resp.json()
     assert duplicate["created"] is False
     assert duplicate["item"]["id"] == signal_id
-    assert duplicate["item"]["reason"] == "突破平台"
+    assert duplicate["item"]["reason"] == "\u7a81\u7834\u5e73\u53f0"
 
     list_resp = client.get(
         "/api/v1/decision-signals",
@@ -1225,7 +1225,7 @@ def _save_reassess_history(
     *,
     code: str = "600519",
     report_type: str = "full",
-    operation_advice: str | None = "买入",
+    operation_advice: str | None = "\u4e70\u5165",
     raw_result: dict | str | None = None,
     context_snapshot: dict | str | None = None,
     sentiment_score: int | None = 72,
@@ -1242,12 +1242,12 @@ def _save_reassess_history(
         row = AnalysisHistory(
             query_id="query-reassess-test",
             code=code,
-            name="贵州茅台",
+            name="\u8d35\u5dde\u8305\u53f0",
             report_type=report_type,
             sentiment_score=sentiment_score,
             operation_advice=operation_advice,
-            trend_prediction="震荡上行",
-            analysis_summary="趋势改善但需要风控。",
+            trend_prediction="\u9707\u8361\u4e0a\u884c",
+            analysis_summary="\u8d8b\u52bf\u6539\u5584\u4f46\u9700\u8981\u98ce\u63a7。",
             raw_result=raw_payload,
             context_snapshot=context_payload,
             ideal_buy=1680,
@@ -1263,11 +1263,11 @@ def _save_reassess_history(
 def _valid_reassess_raw(**overrides) -> dict:
     raw = {
         "action": "buy",
-        "operation_advice": "买入",
+        "operation_advice": "\u4e70\u5165",
         "sentiment_score": 72,
-        "confidence_level": "中",
-        "analysis_summary": "趋势改善但需要确认。",
-        "risk_warning": "跌破关键支撑需退出。",
+        "confidence_level": "\u4e2d",
+        "analysis_summary": "\u8d8b\u52bf\u6539\u5584\u4f46\u9700\u8981\u786e\u8ba4。",
+        "risk_warning": "\u8dcc\u7834\u5173\u952e\u652f\u6491\u9700\u9000\u51fa。",
         "dashboard": {
             "battle_plan": {
                 "sniper_points": {
@@ -1276,10 +1276,10 @@ def _valid_reassess_raw(**overrides) -> dict:
                     "stop_loss": 1600,
                     "take_profit": 1850,
                 },
-                "action_checklist": ["放量突破", "资金流转正"],
+                "action_checklist": ["\u653e\u91cf\u7a81\u7834", "\u8d44\u91d1\u6d41\u8f6c\u6b63"],
             },
             "phase_decision": {
-                "watch_conditions": ["量能维持"],
+                "watch_conditions": ["\u91cf\u80fd\u7ef4\u6301"],
             },
         },
     }
@@ -1394,7 +1394,7 @@ def test_reassess_error_mapping(client_and_db) -> None:
         db,
         code="600519",
         operation_advice=None,
-        raw_result={"analysis_summary": "仅有摘要，不能推断动作"},
+        raw_result={"analysis_summary": "\u4ec5\u6709\u6458\u8981，\u4e0d\u80fd\u63a8\u65ad\u52a8\u4f5c"},
         context_snapshot=_valid_reassess_context(),
     )
     insufficient = client.post(
@@ -1465,14 +1465,14 @@ def test_reassess_preview_prefers_stability_adjusted_score(client_and_db) -> Non
     raw_result = _valid_reassess_raw(
         action=None,
         sentiment_score=72,
-        operation_advice="观望",
+        operation_advice="\u89c2\u671b",
     )
     dashboard = raw_result["dashboard"]
     dashboard["decision_score_calibration"] = {
         "raw_score": 72,
         "adjusted_score": 59,
         "final_action": "watch",
-        "guardrail_reason": "资金流偏弱，先观望回撤到 45-59。",
+        "guardrail_reason": "\u8d44\u91d1\u6d41\u504f\u5f31，\u5148\u89c2\u671b\u56de\u64a4\u5230 45-59。",
     }
     raw_result["dashboard"] = dashboard
     record_id = _save_reassess_history(

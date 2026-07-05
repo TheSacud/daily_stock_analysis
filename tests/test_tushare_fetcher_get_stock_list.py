@@ -66,10 +66,10 @@ class TestTushareFetcherGetStockList(unittest.TestCase):
         fetcher._api.stock_basic.return_value = pd.DataFrame(
             {
                 "ts_code": ["600519.SH", "000001.SZ"],
-                "name": ["贵州茅台", "平安银行"],
-                "industry": ["白酒", "银行"],
-                "area": ["贵州", "深圳"],
-                "market": ["主板", "主板"],
+                "name": ["\u8d35\u5dde\u8305\u53f0", "\u5e73\u5b89\u94f6\u884c"],
+                "industry": ["\u767d\u9152", "\u94f6\u884c"],
+                "area": ["\u8d35\u5dde", "\u6df1\u5733"],
+                "market": ["\u4e3b\u677f", "\u4e3b\u677f"],
             }
         )
 
@@ -84,7 +84,7 @@ class TestTushareFetcherGetStockList(unittest.TestCase):
         )
         self.assertEqual(len(df), 2)
         self.assertEqual(set(df["code"].tolist()), {"600519", "000001"})
-        self.assertEqual(fetcher._stock_name_cache.get("600519"), "贵州茅台")
+        self.assertEqual(fetcher._stock_name_cache.get("600519"), "\u8d35\u5dde\u8305\u53f0")
 
         fetcher._api.stock_basic.assert_called_once()
         self.assertFalse(fetcher._api.hk_basic.called)
@@ -179,7 +179,7 @@ class TestTushareFetcherFetchRawData(unittest.TestCase):
         with patch.object(fetcher, "_check_rate_limit"):
             with self.assertRaises(DataFetchError) as ctx:
                 fetcher._fetch_raw_data("AAPL", "2026-01-01", "2026-01-05")
-        self.assertIn("不支持美股", str(ctx.exception))
+        self.assertIn("\u4e0d\u652f\u6301\u7f8e\u80a1", str(ctx.exception))
         fetcher._api.daily.assert_not_called()
 
     def test_fetch_raw_data_api_unconfigured_raises(self) -> None:
@@ -189,7 +189,7 @@ class TestTushareFetcherFetchRawData(unittest.TestCase):
         self.assertIsNone(fetcher._api)
         with self.assertRaises(DataFetchError) as ctx:
             fetcher._fetch_raw_data("600519", "2026-01-01", "2026-01-05")
-        self.assertIn("未初始化", str(ctx.exception))
+        self.assertIn("\u672a\u521d\u59cb\u5316", str(ctx.exception))
 
     def test_fetch_raw_data_quota_exception_becomes_rate_limit(self) -> None:
         fetcher = self._make_fetcher()
@@ -202,7 +202,7 @@ class TestTushareFetcherFetchRawData(unittest.TestCase):
     def test_convert_stock_code_normalizes(self) -> None:
         fetcher = self._make_fetcher()
         self.assertEqual(fetcher._convert_stock_code("HK00700"), "HK00700")
-    
+
 
     def test_convert_stock_code_for_tushare_normalizes_hk(self) -> None:
         fetcher = self._make_fetcher()

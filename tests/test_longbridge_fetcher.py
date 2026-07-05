@@ -246,7 +246,7 @@ class TestLongbridgeAuthSelection(unittest.TestCase):
                 ctx = fetcher._get_ctx()
 
         self.assertIsNone(ctx)
-        self.assertIn("不支持 OAuth 2.0", "\n".join(logs.output))
+        self.assertIn("\u4e0d\u652f\u6301 OAuth 2.0", "\n".join(logs.output))
         mock_quote_context.assert_not_called()
 
     @patch("src.config.get_config")
@@ -477,7 +477,7 @@ class TestLongbridgeFetcherMocked(unittest.TestCase):
     def _make_mock_static(self, **kwargs):
         s = MagicMock()
         defaults = {
-            "name_cn": "苹果",
+            "name_cn": "\u82f9\u679c",
             "name_en": "Apple Inc.",
             "circulating_shares": 15000000000,
             "total_shares": 16000000000,
@@ -503,7 +503,7 @@ class TestLongbridgeFetcherMocked(unittest.TestCase):
         self.assertEqual(quote.source, RealtimeSource.LONGBRIDGE)
         self.assertAlmostEqual(quote.price, 253.79, places=2)
         self.assertAlmostEqual(quote.change_pct, 2.90, places=0)
-        self.assertEqual(quote.name, "苹果")
+        self.assertEqual(quote.name, "\u82f9\u679c")
 
         # turnover_rate = volume / circulating_shares * 100
         expected_turnover = 49549600 / 15000000000 * 100
@@ -607,7 +607,7 @@ class TestLongbridgeFetcherMocked(unittest.TestCase):
         """HK stock should use .HK suffix."""
         fetcher, ctx = self._make_fetcher_with_mock_ctx()
         ctx.quote.return_value = [self._make_mock_quote()]
-        ctx.static_info.return_value = [self._make_mock_static(name_cn="腾讯控股")]
+        ctx.static_info.return_value = [self._make_mock_static(name_cn="\u817e\u8baf\u63a7\u80a1")]
         ctx.history_candlesticks_by_offset.return_value = []
 
         quote = fetcher.get_realtime_quote("HK00700")
@@ -638,7 +638,7 @@ class TestSupplementFromLongbridge(unittest.TestCase):
 
         lb_quote = UnifiedRealtimeQuote(
             code="AAPL",
-            name="苹果",
+            name="\u82f9\u679c",
             source=RealtimeSource.LONGBRIDGE,
             price=253.79,
             volume_ratio=1.25,

@@ -412,7 +412,7 @@ def _calculate_rsi(close: pd.Series, period: int) -> pd.Series:
     delta = close.diff()
     gain = delta.where(delta > 0, 0)
     loss = -delta.where(delta < 0, 0)
-    # 使用 Wilder's EMA / SMMA 口径，不使用 rolling SMA。
+    # \u4f7f\u7528 Wilder's EMA / SMMA \u53e3\u5f84; \u4e0d\u4f7f\u7528 rolling SMA.
     avg_gain = gain.ewm(alpha=1 / period, adjust=False).mean()
     avg_loss = loss.ewm(alpha=1 / period, adjust=False).mean()
     rs = avg_gain / avg_loss
@@ -460,12 +460,12 @@ def _indicator_unavailable(
 
 def _find_column(df: pd.DataFrame, canonical: str) -> Optional[Any]:
     candidates = {
-        "date": ("date", "trade_date", "datetime", "time", "日期", "交易日期"),
-        "open": ("open", "open_price", "开盘", "开盘价"),
-        "high": ("high", "high_price", "最高", "最高价"),
-        "low": ("low", "low_price", "最低", "最低价"),
-        "close": ("close", "close_price", "收盘", "收盘价"),
-        "volume": ("volume", "vol", "成交量"),
+        "date": ("date", "trade_date", "datetime", "time", "date", "\u4ea4\u6613date"),
+        "open": ("open", "open_price", "\u5f00\u76d8", "\u5f00\u76d8\u4ef7"),
+        "high": ("high", "high_price", "\u6700High", "\u6700High\u4ef7"),
+        "low": ("low", "low_price", "\u6700Low", "\u6700Low\u4ef7"),
+        "close": ("close", "close_price", "\u6536\u76d8", "\u6536\u76d8\u4ef7"),
+        "volume": ("volume", "vol", "volume"),
     }
     by_normalized = {str(column).strip().lower(): column for column in df.columns}
     for candidate in candidates[canonical]:

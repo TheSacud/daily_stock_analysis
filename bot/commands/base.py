@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 """
 ===================================
-命令基类
+command\u57fa\u7c7b
 ===================================
 
-定义命令处理器的抽象基类，所有命令都必须继承此类。
+\u5b9a\u4e49command\u5904\u7406\u5668\u7684\u62bd\u8c61\u57fa\u7c7b; \u6240\u6709command\u90fd\u5fc5\u987b\u7ee7\u627f\u6b64\u7c7b.
 """
 
 import asyncio
@@ -16,11 +16,11 @@ from bot.models import BotMessage, BotResponse
 
 class BotCommand(ABC):
     """
-    命令处理器抽象基类
+    command\u5904\u7406\u5668\u62bd\u8c61\u57fa\u7c7b
 
-    所有命令都必须继承此类并实现抽象方法。
+    \u6240\u6709command\u90fd\u5fc5\u987b\u7ee7\u627f\u6b64\u7c7b\u5e76\u5b9e\u73b0\u62bd\u8c61\u65b9\u6cd5.
 
-    使用示例：
+    \u4f7f\u7528\u793a\u4f8b:
         class MyCommand(BotCommand):
             @property
             def name(self) -> str:
@@ -28,27 +28,27 @@ class BotCommand(ABC):
 
             @property
             def aliases(self) -> List[str]:
-                return ["mc", "我的命令"]
+                return ["mc", "my-command"]
 
             @property
             def description(self) -> str:
-                return "这是我的命令"
+                return "\u8fd9\u662fmy-command"
 
             @property
             def usage(self) -> str:
-                return "/mycommand [参数]"
+                return "/mycommand [parameter]"
 
             def execute(self, message: BotMessage, args: List[str]) -> BotResponse:
-                return BotResponse.text_response("命令执行成功")
+                return BotResponse.text_response("commandexecuted successfully")
     """
 
     @property
     @abstractmethod
     def name(self) -> str:
         """
-        命令名称（不含前缀）
+        commandname (\u4e0d\u542bprefix)
 
-        例如 "analyze"，用户输入 "/analyze" 触发
+        \u4f8b\u5982 "analyze"; user\u8f93\u5165 "/analyze" \u89e6\u53d1
         """
         pass
 
@@ -56,81 +56,81 @@ class BotCommand(ABC):
     @abstractmethod
     def aliases(self) -> List[str]:
         """
-        命令别名列表
+        commandalias\u5217\u8868
 
-        例如 ["a", "分析"]，用户输入 "/a" 或 "分析" 也能触发
+        \u4f8b\u5982 ["a", "analyze"]; user\u8f93\u5165 "/a" or "analyze" \u4e5f\u80fd\u89e6\u53d1
         """
         pass
 
     @property
     @abstractmethod
     def description(self) -> str:
-        """命令描述（用于帮助信息）"""
+        """command\u63cf\u8ff0 (\u7528\u4e8ehelpinfo)"""
         pass
 
     @property
     @abstractmethod
     def usage(self) -> str:
         """
-        使用说明（用于帮助信息）
+        \u4f7f\u7528\u8bf4\u660e (\u7528\u4e8ehelpinfo)
 
-        例如 "/analyze <股票代码>"
+        \u4f8b\u5982 "/analyze <stock code>"
         """
         pass
 
     @property
     def hidden(self) -> bool:
         """
-        是否在帮助列表中隐藏
+        \u662f\u5426\u5728help\u5217\u8868Medium\u9690\u85cf
 
-        默认 False，设为 True 则不显示在 /help 列表中
+        default False; \u8bbe\u4e3a True \u5219\u4e0d\u663e\u793a\u5728 /help \u5217\u8868Medium
         """
         return False
 
     @property
     def admin_only(self) -> bool:
         """
-        是否仅管理员可用
+        \u662f\u5426\u4ec5\u7ba1\u7406\u5458\u53ef\u7528
 
-        默认 False，设为 True 则需要管理员权限
+        default False; \u8bbe\u4e3a True \u5219\u9700\u8981\u7ba1\u7406\u5458\u6743\u9650
         """
         return False
 
     @abstractmethod
     def execute(self, message: BotMessage, args: List[str]) -> BotResponse:
         """
-        执行命令
+        \u6267\u884ccommand
 
         Args:
-            message: 原始消息对象
-            args: 命令参数列表（已分割）
+            message: \u539f\u59cb\u6d88\u606f\u5bf9\u8c61
+            args: commandparameter\u5217\u8868 (\u5df2\u5206\u5272)
 
         Returns:
-            BotResponse 响应对象
+            BotResponse \u54cd\u5e94\u5bf9\u8c61
         """
         pass
 
     async def execute_async(self, message: BotMessage, args: List[str]) -> BotResponse:
-        """异步执行命令。
+        """\u5f02\u6b65\u6267\u884ccommand.
 
-        默认将同步 `execute()` 下沉到线程池，避免在异步分发链路中阻塞事件循环。
+        default\u5c06\u540c\u6b65 `execute()` \u4e0b\u6c89\u5230\u7ebf\u7a0b\u6c60; \u907f\u514d\u5728\u5f02\u6b65\u5206\u53d1\u94fe\u8defMedium\u963b\u585e\u4e8b\u4ef6\u5faa\u73af.
         """
         return await asyncio.to_thread(self.execute, message, args)
 
     def validate_args(self, args: List[str]) -> Optional[str]:
         """
-        验证参数
+        \u9a8c\u8bc1parameter
 
-        子类可重写此方法进行参数校验。
+        \u5b50\u7c7b\u53ef\u91cd\u5199\u6b64\u65b9\u6cd5\u8fdb\u884cparameter\u6821\u9a8c.
 
         Args:
-            args: 命令参数列表
+            args: commandparameter\u5217\u8868
 
         Returns:
-            如果参数有效返回 None，否则返回错误信息
+            \u5982\u679cparameter\u6709\u6548\u8fd4\u56de None; \u5426\u5219\u8fd4\u56deerrorinfo
         """
         return None
 
     def get_help_text(self) -> str:
-        """获取帮助文本"""
-        return f"**{self.name}** - {self.description}\n用法: `{self.usage}`"
+        """\u83b7\u53d6help\u6587\u672c"""
+        return f"**{self.name}** - {self.description}\nUsage: `{self.usage}`"

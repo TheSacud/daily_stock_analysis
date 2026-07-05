@@ -1,14 +1,14 @@
 # -*- coding: utf-8 -*-
 """
 ===================================
-A股自选股智能分析系统 - 分析服务层
+Daily Stock Analysis system - analyze\u670d\u52a1\u5c42
 ===================================
 
-职责：
-1. 封装核心分析逻辑，支持多调用方（CLI、WebUI、Bot）
-2. 提供清晰的API接口，不依赖于命令行参数
-3. 支持依赖注入，便于测试和扩展
-4. 统一管理分析流程和配置
+\u804c\u8d23:
+1. \u5c01\u88c5\u6838\u5fc3analyze\u903b\u8f91; \u652f\u6301\u591a\u8c03\u7528\u65b9 (CLI、WebUI、Bot)
+2. \u63d0\u4f9b\u6e05\u6670\u7684API\u63a5\u53e3; \u4e0d\u4f9d\u8d56\u4e8ecommand\u884cparameter
+3. \u652f\u6301\u4f9d\u8d56\u6ce8\u5165; \u4fbf\u4e8e\u6d4b\u8bd5\u548c\u6269\u5c55
+4. \u7edf\u4e00\u7ba1\u7406analysis flow\u548cconfig
 """
 
 import uuid
@@ -29,35 +29,35 @@ def analyze_stock(
     notifier: Optional[NotificationService] = None,
 ) -> Optional[AnalysisResult]:
     """
-    分析单只股票
+    analyze\u5355stocks
 
     Args:
-        stock_code: 股票代码
-        config: 配置对象（可选，默认使用单例）
-        full_report: 是否生成完整报告
-        notifier: 通知服务（可选）
+        stock_code: stock code
+        config: config\u5bf9\u8c61 (optional; default\u4f7f\u7528\u5355\u4f8b)
+        full_report: \u662f\u5426\u751f\u6210\u5b8c\u6574report
+        notifier: notification service (optional)
 
     Returns:
-        分析结果对象
+        analysis result\u5bf9\u8c61
     """
     if config is None:
         config = get_config()
 
-    # 创建分析流水线
+    # \u521b\u5efaanalyze\u6d41\u6c34\u7ebf
     pipeline = StockAnalysisPipeline(
         config=config,
         query_id=uuid.uuid4().hex,
         query_source="cli"
     )
 
-    # 使用通知服务（如果提供）
+    # \u4f7f\u7528notification service (\u5982\u679c\u63d0\u4f9b)
     if notifier:
         pipeline.notifier = notifier
 
-    # 根据full_report参数设置报告类型
+    # \u6839\u636efull_reportparameter\u8bbe\u7f6ereport type
     report_type = ReportType.FULL if full_report else ReportType.SIMPLE
 
-    # 运行单只股票分析
+    # \u8fd0\u884c\u5355stocksanalyze
     result = pipeline.process_single_stock(
         code=stock_code,
         skip_analysis=False,
@@ -75,16 +75,16 @@ def analyze_stocks(
     notifier: Optional[NotificationService] = None,
 ) -> List[AnalysisResult]:
     """
-    分析多只股票
+    analyze\u591astocks
 
     Args:
-        stock_codes: 股票代码列表
-        config: 配置对象（可选，默认使用单例）
-        full_report: 是否生成完整报告
-        notifier: 通知服务（可选）
+        stock_codes: stock code\u5217\u8868
+        config: config\u5bf9\u8c61 (optional; default\u4f7f\u7528\u5355\u4f8b)
+        full_report: \u662f\u5426\u751f\u6210\u5b8c\u6574report
+        notifier: notification service (optional)
 
     Returns:
-        分析结果列表
+        analysis result\u5217\u8868
     """
     if config is None:
         config = get_config()
@@ -103,29 +103,29 @@ def perform_market_review(
     notifier: Optional[NotificationService] = None,
 ) -> Optional[str]:
     """
-    执行大盘复盘
+    \u6267\u884cmarket review
 
     Args:
-        config: 配置对象（可选，默认使用单例）
-        notifier: 通知服务（可选）
+        config: config\u5bf9\u8c61 (optional; default\u4f7f\u7528\u5355\u4f8b)
+        notifier: notification service (optional)
 
     Returns:
-        复盘报告内容
+        \u590d\u76d8report\u5185\u5bb9
     """
     if config is None:
         config = get_config()
 
-    # 创建分析流水线以获取analyzer和search_service
+    # \u521b\u5efaanalyze\u6d41\u6c34\u7ebf\u4ee5\u83b7\u53d6analyzer\u548csearch_service
     pipeline = StockAnalysisPipeline(
         config=config,
         query_id=uuid.uuid4().hex,
         query_source="cli",
     )
 
-    # 使用提供的通知服务或创建新的
+    # \u4f7f\u7528\u63d0\u4f9b\u7684notification serviceor\u521b\u5efa\u65b0\u7684
     review_notifier = notifier or pipeline.notifier
 
-    # 调用大盘复盘函数
+    # \u8c03\u7528market review\u51fd\u6570
     return run_market_review(
         notifier=review_notifier,
         analyzer=pipeline.analyzer,

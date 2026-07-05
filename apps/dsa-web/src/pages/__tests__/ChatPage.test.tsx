@@ -56,7 +56,7 @@ const mockStoreState = {
   sessions: [
     {
       session_id: 'session-1',
-      title: '请简要分析 600519',
+      title: '\u8bf7\u7b80\u8981\u5206\u6790 600519',
       message_count: 2,
       created_at: '2026-03-15T09:00:00Z',
       last_active: '2026-03-15T09:05:00Z',
@@ -154,7 +154,7 @@ beforeEach(() => {
   mockStoreState.sessions = [
     {
       session_id: 'session-1',
-      title: '请简要分析 600519',
+      title: '\u8bf7\u7b80\u8981\u5206\u6790 600519',
       message_count: 2,
       created_at: '2026-03-15T09:00:00Z',
       last_active: '2026-03-15T09:05:00Z',
@@ -162,7 +162,7 @@ beforeEach(() => {
   ];
   mockGetSkills.mockResolvedValue({
     skills: [
-      { id: 'bull_trend', name: '趋势分析', description: '测试技能' },
+      { id: 'bull_trend', name: '\u8d8b\u52bf\u5206\u6790', description: '\u6d4b\u8bd5\u6280\u80fd' },
     ],
     default_skill_id: 'bull_trend',
   });
@@ -216,7 +216,7 @@ describe('ChatPage', () => {
       </MemoryRouter>
     );
 
-    const compressionToggle = await screen.findByRole('checkbox', { name: /上下文压缩/ });
+    const compressionToggle = await screen.findByRole('checkbox', { name: /\u4e0a\u4e0b\u6587\u538b\u7f29/ });
 
     await waitFor(() => {
       expect(compressionToggle).not.toBeDisabled();
@@ -241,7 +241,7 @@ describe('ChatPage', () => {
     });
 
     expect(compressionToggle).toBeChecked();
-    expect(screen.getByText('已启用')).toBeInTheDocument();
+    expect(screen.getByText('\u5df2\u542f\u7528')).toBeInTheDocument();
   });
 
   it('rolls back the context compression switch when saving fails', async () => {
@@ -259,8 +259,8 @@ describe('ChatPage', () => {
     });
     mockUpdateSystemConfig.mockRejectedValue(
       createParsedApiError({
-        title: '保存失败',
-        message: '配置服务不可用',
+        title: '\u4fdd\u5b58\u5931\u8d25',
+        message: '\u914d\u7f6e\u670d\u52a1\u4e0d\u53ef\u7528',
         category: 'unknown',
       }),
     );
@@ -271,7 +271,7 @@ describe('ChatPage', () => {
       </MemoryRouter>
     );
 
-    const compressionToggle = await screen.findByRole('checkbox', { name: /上下文压缩/ });
+    const compressionToggle = await screen.findByRole('checkbox', { name: /\u4e0a\u4e0b\u6587\u538b\u7f29/ });
 
     await waitFor(() => {
       expect(compressionToggle).toBeChecked();
@@ -291,7 +291,7 @@ describe('ChatPage', () => {
       }));
       expect(compressionToggle).toBeChecked();
     });
-    expect(screen.getByText('配置服务不可用')).toBeInTheDocument();
+    expect(screen.getByText('\u914d\u7f6e\u670d\u52a1\u4e0d\u53ef\u7528')).toBeInTheDocument();
   });
 
   it('does not switch when clicking the current session card', async () => {
@@ -302,7 +302,7 @@ describe('ChatPage', () => {
     );
 
     const sessionCard = await screen.findByRole('button', {
-      name: /切换到对话 请简要分析 600519/,
+      name: /\u5207\u6362\u5230\u5bf9\u8bdd \u8bf7\u7b80\u8981\u5206\u6790 600519/,
     });
 
     fireEvent.click(sessionCard);
@@ -318,13 +318,13 @@ describe('ChatPage', () => {
     );
 
     const deleteButton = await screen.findByRole('button', {
-      name: /删除对话 请简要分析 600519/,
+      name: /\u5220\u9664\u5bf9\u8bdd \u8bf7\u7b80\u8981\u5206\u6790 600519/,
     });
 
     fireEvent.click(deleteButton);
 
     expect(mockSwitchSession).not.toHaveBeenCalled();
-    expect(await screen.findByText('删除后，该对话将不可恢复，确认删除吗？')).toBeInTheDocument();
+    expect(await screen.findByText('\u5220\u9664\u540e，\u8be5\u5bf9\u8bdd\u5c06\u4e0d\u53ef\u6062\u590d，\u786e\u8ba4\u5220\u9664\u5417？')).toBeInTheDocument();
   });
 
   it('hides header actions when there are no messages', async () => {
@@ -334,16 +334,16 @@ describe('ChatPage', () => {
       </MemoryRouter>
     );
 
-    expect(await screen.findByRole('heading', { name: '问股' })).toBeInTheDocument();
-    expect(screen.queryByRole('button', { name: '导出会话' })).not.toBeInTheDocument();
-    expect(screen.queryByRole('button', { name: '发送到已配置的通知机器人/邮箱' })).not.toBeInTheDocument();
-    expect(screen.getByRole('button', { name: '历史对话' })).toBeInTheDocument();
+    expect(await screen.findByRole('heading', { name: '\u95ee\u80a1' })).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: '\u5bfc\u51fa\u4f1a\u8bdd' })).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: '\u53d1\u9001\u5230\u5df2\u914d\u7f6e\u7684\u901a\u77e5\u673a\u5668\u4eba/\u90ae\u7bb1' })).not.toBeInTheDocument();
+    expect(screen.getByRole('button', { name: '\u5386\u53f2\u5bf9\u8bdd' })).toBeInTheDocument();
   });
 
   it('exports the current session from the header action', async () => {
     mockStoreState.messages = [
-      { id: 'user-1', role: 'user', content: '请分析 600519' },
-      { id: 'assistant-1', role: 'assistant', content: '趋势偏强', skillName: '趋势分析' },
+      { id: 'user-1', role: 'user', content: '\u8bf7\u5206\u6790 600519' },
+      { id: 'assistant-1', role: 'assistant', content: '\u8d8b\u52bf\u504f\u5f3a', skillName: '\u8d8b\u52bf\u5206\u6790' },
     ];
 
     render(
@@ -352,7 +352,7 @@ describe('ChatPage', () => {
       </MemoryRouter>
     );
 
-    fireEvent.click(await screen.findByRole('button', { name: '导出会话为 Markdown 文件' }));
+    fireEvent.click(await screen.findByRole('button', { name: '\u5bfc\u51fa\u4f1a\u8bdd\u4e3a Markdown \u6587\u4ef6' }));
 
     expect(mockDownloadSession).toHaveBeenCalledWith(mockStoreState.messages);
     expect(mockFormatSessionAsMarkdown).not.toHaveBeenCalled();
@@ -360,7 +360,7 @@ describe('ChatPage', () => {
 
   it('renders assistant skill labels with shared badge semantics', async () => {
     mockStoreState.messages = [
-      { id: 'assistant-1', role: 'assistant', content: '趋势偏强', skillName: '趋势分析' },
+      { id: 'assistant-1', role: 'assistant', content: '\u8d8b\u52bf\u504f\u5f3a', skillName: '\u8d8b\u52bf\u5206\u6790' },
     ];
 
     render(
@@ -369,9 +369,9 @@ describe('ChatPage', () => {
       </MemoryRouter>
     );
 
-    const skillBadge = await screen.findByLabelText('技能 趋势分析');
+    const skillBadge = await screen.findByLabelText('\u6280\u80fd \u8d8b\u52bf\u5206\u6790');
     expect(skillBadge).toBeInTheDocument();
-    expect(skillBadge).toHaveTextContent('趋势分析');
+    expect(skillBadge).toHaveTextContent('\u8d8b\u52bf\u5206\u6790');
   });
 
   it('renders assistant multi-skill labels with shared badge semantics', async () => {
@@ -379,9 +379,9 @@ describe('ChatPage', () => {
       {
         id: 'assistant-1',
         role: 'assistant',
-        content: '趋势偏强',
+        content: '\u8d8b\u52bf\u504f\u5f3a',
         skills: ['bull_trend', 'ma_golden_cross'],
-        skillNames: ['趋势分析', '均线金叉'],
+        skillNames: ['\u8d8b\u52bf\u5206\u6790', '\u5747\u7ebf\u91d1\u53c9'],
       },
     ];
 
@@ -391,9 +391,9 @@ describe('ChatPage', () => {
       </MemoryRouter>
     );
 
-    const skillBadge = await screen.findByLabelText('技能 趋势分析、均线金叉');
+    const skillBadge = await screen.findByLabelText('\u6280\u80fd \u8d8b\u52bf\u5206\u6790、\u5747\u7ebf\u91d1\u53c9');
     expect(skillBadge).toBeInTheDocument();
-    expect(skillBadge).toHaveTextContent('趋势分析、均线金叉');
+    expect(skillBadge).toHaveTextContent('\u8d8b\u52bf\u5206\u6790、\u5747\u7ebf\u91d1\u53c9');
   });
 
   it('renders failed stage_done progress as a non-success state', async () => {
@@ -474,15 +474,15 @@ describe('ChatPage', () => {
       </MemoryRouter>
     );
 
-    expect(await screen.findByRole('checkbox', { name: '趋势分析' })).toBeChecked();
-    expect(screen.getByRole('checkbox', { name: '通用分析' })).not.toBeChecked();
+    expect(await screen.findByRole('checkbox', { name: '\u8d8b\u52bf\u5206\u6790' })).toBeChecked();
+    expect(screen.getByRole('checkbox', { name: '\u901a\u7528\u5206\u6790' })).not.toBeChecked();
   });
 
   it('sends multiple selected skills in order', async () => {
     mockGetSkills.mockResolvedValue({
       skills: [
-        { id: 'bull_trend', name: '趋势分析', description: '默认趋势' },
-        { id: 'ma_golden_cross', name: '均线金叉', description: '均线交叉' },
+        { id: 'bull_trend', name: '\u8d8b\u52bf\u5206\u6790', description: '\u9ed8\u8ba4\u8d8b\u52bf' },
+        { id: 'ma_golden_cross', name: '\u5747\u7ebf\u91d1\u53c9', description: '\u5747\u7ebf\u4ea4\u53c9' },
       ],
       default_skill_id: 'bull_trend',
     });
@@ -493,21 +493,21 @@ describe('ChatPage', () => {
       </MemoryRouter>
     );
 
-    fireEvent.click(await screen.findByRole('checkbox', { name: '均线金叉' }));
-    fireEvent.change(screen.getByPlaceholderText(/分析 600519/), {
-      target: { value: '分析 600519' },
+    fireEvent.click(await screen.findByRole('checkbox', { name: '\u5747\u7ebf\u91d1\u53c9' }));
+    fireEvent.change(screen.getByPlaceholderText(/\u5206\u6790 600519/), {
+      target: { value: '\u5206\u6790 600519' },
     });
-    fireEvent.click(screen.getByRole('button', { name: '发送' }));
+    fireEvent.click(screen.getByRole('button', { name: '\u53d1\u9001' }));
 
     await waitFor(() => {
       expect(mockStartStream).toHaveBeenCalledWith(
         expect.objectContaining({
-          message: '分析 600519',
+          message: '\u5206\u6790 600519',
           skills: ['bull_trend', 'ma_golden_cross'],
         }),
         expect.objectContaining({
-          skillNames: ['趋势分析', '均线金叉'],
-          skillName: '趋势分析、均线金叉',
+          skillNames: ['\u8d8b\u52bf\u5206\u6790', '\u5747\u7ebf\u91d1\u53c9'],
+          skillName: '\u8d8b\u52bf\u5206\u6790、\u5747\u7ebf\u91d1\u53c9',
         }),
       );
     });
@@ -516,8 +516,8 @@ describe('ChatPage', () => {
   it('collapses the mobile skill picker by default and keeps selected skills when sending', async () => {
     mockGetSkills.mockResolvedValue({
       skills: [
-        { id: 'bull_trend', name: '趋势分析', description: '默认趋势' },
-        { id: 'ma_golden_cross', name: '均线金叉', description: '均线交叉' },
+        { id: 'bull_trend', name: '\u8d8b\u52bf\u5206\u6790', description: '\u9ed8\u8ba4\u8d8b\u52bf' },
+        { id: 'ma_golden_cross', name: '\u5747\u7ebf\u91d1\u53c9', description: '\u5747\u7ebf\u4ea4\u53c9' },
       ],
       default_skill_id: 'bull_trend',
     });
@@ -528,36 +528,36 @@ describe('ChatPage', () => {
       </MemoryRouter>
     );
 
-    const mobileToggle = await screen.findByRole('button', { name: '展开策略选择' });
+    const mobileToggle = await screen.findByRole('button', { name: '\u5c55\u5f00\u7b56\u7565\u9009\u62e9' });
     const skillPanel = screen.getByTestId('chat-skill-picker-panel');
     expect(mobileToggle).toHaveAttribute('aria-expanded', 'false');
     expect(skillPanel).toHaveClass('hidden');
 
     fireEvent.click(mobileToggle);
 
-    expect(screen.getByRole('button', { name: '收起策略选择' })).toHaveAttribute('aria-expanded', 'true');
+    expect(screen.getByRole('button', { name: '\u6536\u8d77\u7b56\u7565\u9009\u62e9' })).toHaveAttribute('aria-expanded', 'true');
     expect(skillPanel).not.toHaveClass('hidden');
     expect(skillPanel).toHaveClass('flex');
 
-    fireEvent.click(screen.getByRole('checkbox', { name: '均线金叉' }));
-    fireEvent.change(screen.getByPlaceholderText(/分析 600519/), {
-      target: { value: '分析 600519' },
+    fireEvent.click(screen.getByRole('checkbox', { name: '\u5747\u7ebf\u91d1\u53c9' }));
+    fireEvent.change(screen.getByPlaceholderText(/\u5206\u6790 600519/), {
+      target: { value: '\u5206\u6790 600519' },
     });
-    fireEvent.click(screen.getByRole('button', { name: '发送' }));
+    fireEvent.click(screen.getByRole('button', { name: '\u53d1\u9001' }));
 
     await waitFor(() => {
       expect(mockStartStream).toHaveBeenCalledWith(
         expect.objectContaining({
-          message: '分析 600519',
+          message: '\u5206\u6790 600519',
           skills: ['bull_trend', 'ma_golden_cross'],
         }),
         expect.objectContaining({
-          skillName: '趋势分析、均线金叉',
+          skillName: '\u8d8b\u52bf\u5206\u6790、\u5747\u7ebf\u91d1\u53c9',
         }),
       );
     });
 
-    expect(screen.getByRole('button', { name: '展开策略选择' })).toHaveAttribute('aria-expanded', 'false');
+    expect(screen.getByRole('button', { name: '\u5c55\u5f00\u7b56\u7565\u9009\u62e9' })).toHaveAttribute('aria-expanded', 'false');
     expect(skillPanel).toHaveClass('hidden');
   });
 
@@ -568,33 +568,33 @@ describe('ChatPage', () => {
       </MemoryRouter>
     );
 
-    fireEvent.click(await screen.findByRole('checkbox', { name: '趋势分析' }));
-    expect(screen.getByRole('checkbox', { name: '通用分析' })).toBeChecked();
+    fireEvent.click(await screen.findByRole('checkbox', { name: '\u8d8b\u52bf\u5206\u6790' }));
+    expect(screen.getByRole('checkbox', { name: '\u901a\u7528\u5206\u6790' })).toBeChecked();
 
-    fireEvent.change(screen.getByPlaceholderText(/分析 600519/), {
-      target: { value: '分析 AAPL' },
+    fireEvent.change(screen.getByPlaceholderText(/\u5206\u6790 600519/), {
+      target: { value: '\u5206\u6790 AAPL' },
     });
-    fireEvent.click(screen.getByRole('button', { name: '发送' }));
+    fireEvent.click(screen.getByRole('button', { name: '\u53d1\u9001' }));
 
     await waitFor(() => {
       expect(mockStartStream).toHaveBeenCalled();
     });
     const lastCall = mockStartStream.mock.calls[mockStartStream.mock.calls.length - 1];
-    expect(lastCall[0]).toEqual(expect.objectContaining({ message: '分析 AAPL' }));
+    expect(lastCall[0]).toEqual(expect.objectContaining({ message: '\u5206\u6790 AAPL' }));
     expect(lastCall[0]).not.toHaveProperty('skills');
     expect(lastCall[1]).toEqual(expect.objectContaining({
-      skillNames: ['通用'],
-      skillName: '通用',
+      skillNames: ['\u901a\u7528'],
+      skillName: '\u901a\u7528',
     }));
   });
 
   it('caps concrete skill selection at three and re-enables choices after unselecting', async () => {
     mockGetSkills.mockResolvedValue({
       skills: [
-        { id: 'bull_trend', name: '趋势分析', description: '默认趋势' },
-        { id: 'ma_golden_cross', name: '均线金叉', description: '均线交叉' },
-        { id: 'chan_theory', name: '缠论', description: '结构分析' },
-        { id: 'wave_theory', name: '波浪理论', description: '波浪分析' },
+        { id: 'bull_trend', name: '\u8d8b\u52bf\u5206\u6790', description: '\u9ed8\u8ba4\u8d8b\u52bf' },
+        { id: 'ma_golden_cross', name: '\u5747\u7ebf\u91d1\u53c9', description: '\u5747\u7ebf\u4ea4\u53c9' },
+        { id: 'chan_theory', name: '\u7f20\u8bba', description: '\u7ed3\u6784\u5206\u6790' },
+        { id: 'wave_theory', name: '\u6ce2\u6d6a\u7406\u8bba', description: '\u6ce2\u6d6a\u5206\u6790' },
       ],
       default_skill_id: 'bull_trend',
     });
@@ -605,22 +605,22 @@ describe('ChatPage', () => {
       </MemoryRouter>
     );
 
-    fireEvent.click(await screen.findByRole('checkbox', { name: '均线金叉' }));
-    fireEvent.click(screen.getByRole('checkbox', { name: '缠论' }));
+    fireEvent.click(await screen.findByRole('checkbox', { name: '\u5747\u7ebf\u91d1\u53c9' }));
+    fireEvent.click(screen.getByRole('checkbox', { name: '\u7f20\u8bba' }));
 
-    const wave = screen.getByRole('checkbox', { name: '波浪理论' });
+    const wave = screen.getByRole('checkbox', { name: '\u6ce2\u6d6a\u7406\u8bba' });
     expect(wave).toBeDisabled();
 
-    fireEvent.click(screen.getByRole('checkbox', { name: '均线金叉' }));
+    fireEvent.click(screen.getByRole('checkbox', { name: '\u5747\u7ebf\u91d1\u53c9' }));
     expect(wave).not.toBeDisabled();
   });
 
   it('quick questions override the current multi-skill selection', async () => {
     mockGetSkills.mockResolvedValue({
       skills: [
-        { id: 'bull_trend', name: '趋势分析', description: '默认趋势' },
-        { id: 'ma_golden_cross', name: '均线金叉', description: '均线交叉' },
-        { id: 'chan_theory', name: '缠论', description: '结构分析' },
+        { id: 'bull_trend', name: '\u8d8b\u52bf\u5206\u6790', description: '\u9ed8\u8ba4\u8d8b\u52bf' },
+        { id: 'ma_golden_cross', name: '\u5747\u7ebf\u91d1\u53c9', description: '\u5747\u7ebf\u4ea4\u53c9' },
+        { id: 'chan_theory', name: '\u7f20\u8bba', description: '\u7ed3\u6784\u5206\u6790' },
       ],
       default_skill_id: 'bull_trend',
     });
@@ -631,18 +631,18 @@ describe('ChatPage', () => {
       </MemoryRouter>
     );
 
-    fireEvent.click(await screen.findByRole('checkbox', { name: '均线金叉' }));
-    fireEvent.click(screen.getByRole('button', { name: '用缠论分析茅台' }));
+    fireEvent.click(await screen.findByRole('checkbox', { name: '\u5747\u7ebf\u91d1\u53c9' }));
+    fireEvent.click(screen.getByRole('button', { name: '\u7528\u7f20\u8bba\u5206\u6790\u8305\u53f0' }));
 
     await waitFor(() => {
       expect(mockStartStream).toHaveBeenCalledWith(
         expect.objectContaining({
-          message: '用缠论分析茅台',
+          message: '\u7528\u7f20\u8bba\u5206\u6790\u8305\u53f0',
           skills: ['chan_theory'],
         }),
         expect.objectContaining({
-          skillNames: ['缠论'],
-          skillName: '缠论',
+          skillNames: ['\u7f20\u8bba'],
+          skillName: '\u7f20\u8bba',
         }),
       );
     });
@@ -650,7 +650,7 @@ describe('ChatPage', () => {
 
   it('keeps assistant message actions directly activatable in the DOM', async () => {
     mockStoreState.messages = [
-      { id: 'assistant-1', role: 'assistant', content: '趋势偏强', skillName: '趋势分析' },
+      { id: 'assistant-1', role: 'assistant', content: '\u8d8b\u52bf\u504f\u5f3a', skillName: '\u8d8b\u52bf\u5206\u6790' },
     ];
 
     render(
@@ -659,7 +659,7 @@ describe('ChatPage', () => {
       </MemoryRouter>
     );
 
-    const exportButton = await screen.findByRole('button', { name: '导出此条消息为 Markdown' });
+    const exportButton = await screen.findByRole('button', { name: '\u5bfc\u51fa\u6b64\u6761\u6d88\u606f\u4e3a Markdown' });
     const actionGroup = exportButton.parentElement;
 
     expect(actionGroup).toHaveClass('chat-message-actions');
@@ -668,8 +668,8 @@ describe('ChatPage', () => {
 
   it('sends exported markdown to notification channel and shows success feedback', async () => {
     mockStoreState.messages = [
-      { id: 'user-1', role: 'user', content: '请分析 600519' },
-      { id: 'assistant-1', role: 'assistant', content: '趋势偏强', skillName: '趋势分析' },
+      { id: 'user-1', role: 'user', content: '\u8bf7\u5206\u6790 600519' },
+      { id: 'assistant-1', role: 'assistant', content: '\u8d8b\u52bf\u504f\u5f3a', skillName: '\u8d8b\u52bf\u5206\u6790' },
     ];
     mockFormatSessionAsMarkdown.mockReturnValue('# exported markdown');
 
@@ -679,25 +679,25 @@ describe('ChatPage', () => {
       </MemoryRouter>
     );
 
-    fireEvent.click(await screen.findByRole('button', { name: '发送到已配置的通知机器人/邮箱' }));
+    fireEvent.click(await screen.findByRole('button', { name: '\u53d1\u9001\u5230\u5df2\u914d\u7f6e\u7684\u901a\u77e5\u673a\u5668\u4eba/\u90ae\u7bb1' }));
 
     await waitFor(() => {
       expect(mockFormatSessionAsMarkdown).toHaveBeenCalledWith(mockStoreState.messages);
       expect(mockSendChat).toHaveBeenCalledWith('# exported markdown');
     });
 
-    expect(await screen.findByText('已发送到通知渠道')).toBeInTheDocument();
+    expect(await screen.findByText('\u5df2\u53d1\u9001\u5230\u901a\u77e5\u6e20\u9053')).toBeInTheDocument();
   });
 
   it('shows parsed error feedback when notification delivery fails', async () => {
     mockStoreState.messages = [
-      { id: 'user-1', role: 'user', content: '请分析 AAPL' },
-      { id: 'assistant-1', role: 'assistant', content: '短线震荡', skillName: '趋势分析' },
+      { id: 'user-1', role: 'user', content: '\u8bf7\u5206\u6790 AAPL' },
+      { id: 'assistant-1', role: 'assistant', content: '\u77ed\u7ebf\u9707\u8361', skillName: '\u8d8b\u52bf\u5206\u6790' },
     ];
     mockSendChat.mockRejectedValue(
       createParsedApiError({
-        title: '发送失败',
-        message: '通知渠道不可用',
+        title: '\u53d1\u9001\u5931\u8d25',
+        message: '\u901a\u77e5\u6e20\u9053\u4e0d\u53ef\u7528',
         category: 'unknown',
       }),
     );
@@ -708,15 +708,15 @@ describe('ChatPage', () => {
       </MemoryRouter>
     );
 
-    fireEvent.click(await screen.findByRole('button', { name: '发送到已配置的通知机器人/邮箱' }));
+    fireEvent.click(await screen.findByRole('button', { name: '\u53d1\u9001\u5230\u5df2\u914d\u7f6e\u7684\u901a\u77e5\u673a\u5668\u4eba/\u90ae\u7bb1' }));
 
-    expect(await screen.findByText('通知渠道不可用')).toBeInTheDocument();
+    expect(await screen.findByText('\u901a\u77e5\u6e20\u9053\u4e0d\u53ef\u7528')).toBeInTheDocument();
   });
 
   it('prevents duplicate notification sends while the request is in flight', async () => {
     mockStoreState.messages = [
-      { id: 'user-1', role: 'user', content: '请分析 TSLA' },
-      { id: 'assistant-1', role: 'assistant', content: '波动较大', skillName: '趋势分析' },
+      { id: 'user-1', role: 'user', content: '\u8bf7\u5206\u6790 TSLA' },
+      { id: 'assistant-1', role: 'assistant', content: '\u6ce2\u52a8\u8f83\u5927', skillName: '\u8d8b\u52bf\u5206\u6790' },
     ];
     const deferred = createDeferred<{ success: boolean }>();
     mockSendChat.mockImplementation(() => deferred.promise);
@@ -727,7 +727,7 @@ describe('ChatPage', () => {
       </MemoryRouter>
     );
 
-    const sendButton = await screen.findByRole('button', { name: '发送到已配置的通知机器人/邮箱' });
+    const sendButton = await screen.findByRole('button', { name: '\u53d1\u9001\u5230\u5df2\u914d\u7f6e\u7684\u901a\u77e5\u673a\u5668\u4eba/\u90ae\u7bb1' });
     fireEvent.click(sendButton);
 
     await waitFor(() => {
@@ -756,25 +756,25 @@ describe('ChatPage', () => {
       </MemoryRouter>
     );
 
-    expect(await screen.findByDisplayValue('请深入分析 贵州茅台(600519)')).toBeInTheDocument();
+    expect(await screen.findByDisplayValue('\u8bf7\u6df1\u5165\u5206\u6790 \u8d35\u5dde\u8305\u53f0(600519)')).toBeInTheDocument();
 
-    const sendButton = screen.getByRole('button', { name: /发送|处理中\.\.\./ });
+    const sendButton = screen.getByRole('button', { name: /\u53d1\u9001|\u5904\u7406\u4e2d\.\.\./ });
     expect(sendButton).not.toBeDisabled();
-    expect(screen.getByText('正在加载历史分析上下文；现在可直接发送追问。')).toBeInTheDocument();
+    expect(screen.getByText('\u6b63\u5728\u52a0\u8f7d\u5386\u53f2\u5206\u6790\u4e0a\u4e0b\u6587；\u73b0\u5728\u53ef\u76f4\u63a5\u53d1\u9001\u8ffd\u95ee。')).toBeInTheDocument();
 
     fireEvent.click(sendButton);
 
     await waitFor(() => {
       expect(mockStartStream).toHaveBeenCalledWith(
         expect.objectContaining({
-          message: '请深入分析 贵州茅台(600519)',
+          message: '\u8bf7\u6df1\u5165\u5206\u6790 \u8d35\u5dde\u8305\u53f0(600519)',
           context: {
             stock_code: '600519',
-            stock_name: '贵州茅台',
+            stock_name: '\u8d35\u5dde\u8305\u53f0',
           },
         }),
         expect.objectContaining({
-          skillName: '趋势分析',
+          skillName: '\u8d8b\u52bf\u5206\u6790',
         }),
       );
     });
@@ -784,16 +784,16 @@ describe('ChatPage', () => {
         id: 1,
         queryId: 'q-1',
         stockCode: '600519',
-        stockName: '贵州茅台',
+        stockName: '\u8d35\u5dde\u8305\u53f0',
         reportType: 'detailed',
         createdAt: '2026-03-18T08:00:00Z',
         currentPrice: 1523.6,
         changePct: 1.8,
       },
       summary: {
-        analysisSummary: '趋势延续',
-        operationAdvice: '继续观察',
-        trendPrediction: '高位震荡',
+        analysisSummary: '\u8d8b\u52bf\u5ef6\u7eed',
+        operationAdvice: '\u7ee7\u7eed\u89c2\u5bdf',
+        trendPrediction: '\u9ad8\u4f4d\u9707\u8361',
         sentimentScore: 78,
       },
       strategy: {
@@ -802,45 +802,45 @@ describe('ChatPage', () => {
     });
 
     await waitFor(() => {
-      expect(screen.queryByText('正在加载历史分析上下文；现在可直接发送追问。')).not.toBeInTheDocument();
+      expect(screen.queryByText('\u6b63\u5728\u52a0\u8f7d\u5386\u53f2\u5206\u6790\u4e0a\u4e0b\u6587；\u73b0\u5728\u53ef\u76f4\u63a5\u53d1\u9001\u8ffd\u95ee。')).not.toBeInTheDocument();
     });
 
-    fireEvent.change(screen.getByPlaceholderText(/分析 600519/), {
-      target: { value: '继续分析成交量' },
+    fireEvent.change(screen.getByPlaceholderText(/\u5206\u6790 600519/), {
+      target: { value: '\u7ee7\u7eed\u5206\u6790\u6210\u4ea4\u91cf' },
     });
-    fireEvent.click(screen.getByRole('button', { name: '发送' }));
+    fireEvent.click(screen.getByRole('button', { name: '\u53d1\u9001' }));
 
     await waitFor(() => {
       expect(mockStartStream).toHaveBeenLastCalledWith(
         expect.objectContaining({
-          message: '继续分析成交量',
+          message: '\u7ee7\u7eed\u5206\u6790\u6210\u4ea4\u91cf',
           context: expect.objectContaining({
             stock_code: '600519',
-            stock_name: '贵州茅台',
+            stock_name: '\u8d35\u5dde\u8305\u53f0',
           }),
         }),
         expect.objectContaining({
-          skillName: '趋势分析',
+          skillName: '\u8d8b\u52bf\u5206\u6790',
         }),
       );
     });
 
-    fireEvent.change(screen.getByPlaceholderText(/分析 600519/), {
-      target: { value: '如果不考虑 TTM 呢' },
+    fireEvent.change(screen.getByPlaceholderText(/\u5206\u6790 600519/), {
+      target: { value: '\u5982\u679c\u4e0d\u8003\u8651 TTM \u5462' },
     });
-    fireEvent.click(screen.getByRole('button', { name: '发送' }));
+    fireEvent.click(screen.getByRole('button', { name: '\u53d1\u9001' }));
 
     await waitFor(() => {
       expect(mockStartStream).toHaveBeenLastCalledWith(
         expect.objectContaining({
-          message: '如果不考虑 TTM 呢',
+          message: '\u5982\u679c\u4e0d\u8003\u8651 TTM \u5462',
           context: expect.objectContaining({
             stock_code: '600519',
-            stock_name: '贵州茅台',
+            stock_name: '\u8d35\u5dde\u8305\u53f0',
           }),
         }),
         expect.objectContaining({
-          skillName: '趋势分析',
+          skillName: '\u8d8b\u52bf\u5206\u6790',
         }),
       );
     });
@@ -852,16 +852,16 @@ describe('ChatPage', () => {
         id: 1,
         queryId: 'q-1',
         stockCode: '600519',
-        stockName: '贵州茅台',
+        stockName: '\u8d35\u5dde\u8305\u53f0',
         reportType: 'detailed',
         createdAt: '2026-03-18T08:00:00Z',
         currentPrice: 1523.6,
         changePct: 1.8,
       },
       summary: {
-        analysisSummary: '趋势延续',
-        operationAdvice: '继续观察',
-        trendPrediction: '高位震荡',
+        analysisSummary: '\u8d8b\u52bf\u5ef6\u7eed',
+        operationAdvice: '\u7ee7\u7eed\u89c2\u5bdf',
+        trendPrediction: '\u9ad8\u4f4d\u9707\u8361',
         sentimentScore: 78,
       },
       strategy: {
@@ -875,21 +875,21 @@ describe('ChatPage', () => {
       </MemoryRouter>
     );
 
-    expect(await screen.findByDisplayValue('请深入分析 贵州茅台(600519)')).toBeInTheDocument();
+    expect(await screen.findByDisplayValue('\u8bf7\u6df1\u5165\u5206\u6790 \u8d35\u5dde\u8305\u53f0(600519)')).toBeInTheDocument();
 
     await waitFor(() => {
-      expect(screen.queryByText('正在加载历史分析上下文；现在可直接发送追问。')).not.toBeInTheDocument();
+      expect(screen.queryByText('\u6b63\u5728\u52a0\u8f7d\u5386\u53f2\u5206\u6790\u4e0a\u4e0b\u6587；\u73b0\u5728\u53ef\u76f4\u63a5\u53d1\u9001\u8ffd\u95ee。')).not.toBeInTheDocument();
     });
 
-    fireEvent.click(screen.getByRole('button', { name: '发送' }));
+    fireEvent.click(screen.getByRole('button', { name: '\u53d1\u9001' }));
 
     await waitFor(() => {
       expect(mockStartStream).toHaveBeenCalledWith(
         expect.objectContaining({
-          message: '请深入分析 贵州茅台(600519)',
+          message: '\u8bf7\u6df1\u5165\u5206\u6790 \u8d35\u5dde\u8305\u53f0(600519)',
           context: expect.objectContaining({
             stock_code: '600519',
-            stock_name: '贵州茅台',
+            stock_name: '\u8d35\u5dde\u8305\u53f0',
             previous_price: 1523.6,
             previous_change_pct: 1.8,
             previous_strategy: expect.objectContaining({
@@ -898,7 +898,7 @@ describe('ChatPage', () => {
           }),
         }),
         expect.objectContaining({
-          skillName: '趋势分析',
+          skillName: '\u8d8b\u52bf\u5206\u6790',
         }),
       );
     });
@@ -911,42 +911,42 @@ describe('ChatPage', () => {
       </MemoryRouter>
     );
 
-    expect(await screen.findByDisplayValue('请深入分析 AAPL')).toBeInTheDocument();
+    expect(await screen.findByDisplayValue('\u8bf7\u6df1\u5165\u5206\u6790 AAPL')).toBeInTheDocument();
 
-    fireEvent.click(screen.getByRole('button', { name: '发送' }));
+    fireEvent.click(screen.getByRole('button', { name: '\u53d1\u9001' }));
 
     await waitFor(() => {
       expect(mockStartStream).toHaveBeenCalledWith(
         expect.objectContaining({
-          message: '请深入分析 AAPL',
+          message: '\u8bf7\u6df1\u5165\u5206\u6790 AAPL',
           context: {
             stock_code: 'AAPL',
             stock_name: null,
           },
         }),
         expect.objectContaining({
-          skillName: '趋势分析',
+          skillName: '\u8d8b\u52bf\u5206\u6790',
         }),
       );
     });
     expect(historyApi.getDetail).not.toHaveBeenCalled();
 
-    fireEvent.change(screen.getByPlaceholderText(/分析 600519/), {
-      target: { value: '继续看估值' },
+    fireEvent.change(screen.getByPlaceholderText(/\u5206\u6790 600519/), {
+      target: { value: '\u7ee7\u7eed\u770b\u4f30\u503c' },
     });
-    fireEvent.click(screen.getByRole('button', { name: '发送' }));
+    fireEvent.click(screen.getByRole('button', { name: '\u53d1\u9001' }));
 
     await waitFor(() => {
       expect(mockStartStream).toHaveBeenLastCalledWith(
         expect.objectContaining({
-          message: '继续看估值',
+          message: '\u7ee7\u7eed\u770b\u4f30\u503c',
           context: {
             stock_code: 'AAPL',
             stock_name: null,
           },
         }),
         expect.objectContaining({
-          skillName: '趋势分析',
+          skillName: '\u8d8b\u52bf\u5206\u6790',
         }),
       );
     });
@@ -959,24 +959,24 @@ describe('ChatPage', () => {
       </MemoryRouter>
     );
 
-    expect(await screen.findByDisplayValue('请深入分析 贵州茅台(600519)')).toBeInTheDocument();
+    expect(await screen.findByDisplayValue('\u8bf7\u6df1\u5165\u5206\u6790 \u8d35\u5dde\u8305\u53f0(600519)')).toBeInTheDocument();
 
-    fireEvent.change(screen.getByPlaceholderText(/分析 600519/), {
-      target: { value: '换成 AAPL 看看' },
+    fireEvent.change(screen.getByPlaceholderText(/\u5206\u6790 600519/), {
+      target: { value: '\u6362\u6210 AAPL \u770b\u770b' },
     });
-    fireEvent.click(screen.getByRole('button', { name: '发送' }));
+    fireEvent.click(screen.getByRole('button', { name: '\u53d1\u9001' }));
 
     await waitFor(() => {
       expect(mockStartStream).toHaveBeenLastCalledWith(
         expect.objectContaining({
-          message: '换成 AAPL 看看',
+          message: '\u6362\u6210 AAPL \u770b\u770b',
           context: {
             stock_code: 'AAPL',
             stock_name: null,
           },
         }),
         expect.objectContaining({
-          skillName: '趋势分析',
+          skillName: '\u8d8b\u52bf\u5206\u6790',
         }),
       );
     });
@@ -989,44 +989,44 @@ describe('ChatPage', () => {
       </MemoryRouter>
     );
 
-    expect(await screen.findByDisplayValue('请深入分析 贵州茅台(600519)')).toBeInTheDocument();
+    expect(await screen.findByDisplayValue('\u8bf7\u6df1\u5165\u5206\u6790 \u8d35\u5dde\u8305\u53f0(600519)')).toBeInTheDocument();
 
-    fireEvent.change(screen.getByPlaceholderText(/分析 600519/), {
-      target: { value: '先不看 600519，换成 AAPL 看看' },
+    fireEvent.change(screen.getByPlaceholderText(/\u5206\u6790 600519/), {
+      target: { value: '\u5148\u4e0d\u770b 600519，\u6362\u6210 AAPL \u770b\u770b' },
     });
-    fireEvent.click(screen.getByRole('button', { name: '发送' }));
+    fireEvent.click(screen.getByRole('button', { name: '\u53d1\u9001' }));
 
     await waitFor(() => {
       expect(mockStartStream).toHaveBeenLastCalledWith(
         expect.objectContaining({
-          message: '先不看 600519，换成 AAPL 看看',
+          message: '\u5148\u4e0d\u770b 600519，\u6362\u6210 AAPL \u770b\u770b',
           context: {
             stock_code: 'AAPL',
             stock_name: null,
           },
         }),
         expect.objectContaining({
-          skillName: '趋势分析',
+          skillName: '\u8d8b\u52bf\u5206\u6790',
         }),
       );
     });
 
-    fireEvent.change(screen.getByPlaceholderText(/分析 600519/), {
-      target: { value: '继续看支撑位' },
+    fireEvent.change(screen.getByPlaceholderText(/\u5206\u6790 600519/), {
+      target: { value: '\u7ee7\u7eed\u770b\u652f\u6491\u4f4d' },
     });
-    fireEvent.click(screen.getByRole('button', { name: '发送' }));
+    fireEvent.click(screen.getByRole('button', { name: '\u53d1\u9001' }));
 
     await waitFor(() => {
       expect(mockStartStream).toHaveBeenLastCalledWith(
         expect.objectContaining({
-          message: '继续看支撑位',
+          message: '\u7ee7\u7eed\u770b\u652f\u6491\u4f4d',
           context: {
             stock_code: 'AAPL',
             stock_name: null,
           },
         }),
         expect.objectContaining({
-          skillName: '趋势分析',
+          skillName: '\u8d8b\u52bf\u5206\u6790',
         }),
       );
     });
@@ -1039,24 +1039,24 @@ describe('ChatPage', () => {
       </MemoryRouter>
     );
 
-    expect(await screen.findByDisplayValue('请深入分析 贵州茅台(600519)')).toBeInTheDocument();
+    expect(await screen.findByDisplayValue('\u8bf7\u6df1\u5165\u5206\u6790 \u8d35\u5dde\u8305\u53f0(600519)')).toBeInTheDocument();
 
-    fireEvent.change(screen.getByPlaceholderText(/分析 600519/), {
-      target: { value: '比较 600519 和 AAPL' },
+    fireEvent.change(screen.getByPlaceholderText(/\u5206\u6790 600519/), {
+      target: { value: '\u6bd4\u8f83 600519 \u548c AAPL' },
     });
-    fireEvent.click(screen.getByRole('button', { name: '发送' }));
+    fireEvent.click(screen.getByRole('button', { name: '\u53d1\u9001' }));
 
     await waitFor(() => {
       expect(mockStartStream).toHaveBeenLastCalledWith(
         expect.objectContaining({
-          message: '比较 600519 和 AAPL',
+          message: '\u6bd4\u8f83 600519 \u548c AAPL',
           context: {
             stock_code: '600519',
-            stock_name: '贵州茅台',
+            stock_name: '\u8d35\u5dde\u8305\u53f0',
           },
         }),
         expect.objectContaining({
-          skillName: '趋势分析',
+          skillName: '\u8d8b\u52bf\u5206\u6790',
         }),
       );
     });
@@ -1069,24 +1069,24 @@ describe('ChatPage', () => {
       </MemoryRouter>
     );
 
-    expect(await screen.findByDisplayValue('请深入分析 贵州茅台(600519)')).toBeInTheDocument();
+    expect(await screen.findByDisplayValue('\u8bf7\u6df1\u5165\u5206\u6790 \u8d35\u5dde\u8305\u53f0(600519)')).toBeInTheDocument();
 
-    fireEvent.change(screen.getByPlaceholderText(/分析 600519/), {
-      target: { value: '分析 600519 和 AAPL 的差异' },
+    fireEvent.change(screen.getByPlaceholderText(/\u5206\u6790 600519/), {
+      target: { value: '\u5206\u6790 600519 \u548c AAPL \u7684\u5dee\u5f02' },
     });
-    fireEvent.click(screen.getByRole('button', { name: '发送' }));
+    fireEvent.click(screen.getByRole('button', { name: '\u53d1\u9001' }));
 
     await waitFor(() => {
       expect(mockStartStream).toHaveBeenLastCalledWith(
         expect.objectContaining({
-          message: '分析 600519 和 AAPL 的差异',
+          message: '\u5206\u6790 600519 \u548c AAPL \u7684\u5dee\u5f02',
           context: {
             stock_code: '600519',
-            stock_name: '贵州茅台',
+            stock_name: '\u8d35\u5dde\u8305\u53f0',
           },
         }),
         expect.objectContaining({
-          skillName: '趋势分析',
+          skillName: '\u8d8b\u52bf\u5206\u6790',
         }),
       );
     });
@@ -1099,24 +1099,24 @@ describe('ChatPage', () => {
       </MemoryRouter>
     );
 
-    expect(await screen.findByDisplayValue('请深入分析 贵州茅台(600519)')).toBeInTheDocument();
+    expect(await screen.findByDisplayValue('\u8bf7\u6df1\u5165\u5206\u6790 \u8d35\u5dde\u8305\u53f0(600519)')).toBeInTheDocument();
 
-    fireEvent.change(screen.getByPlaceholderText(/分析 600519/), {
-      target: { value: '分析 AAPL 和 600519 的差异' },
+    fireEvent.change(screen.getByPlaceholderText(/\u5206\u6790 600519/), {
+      target: { value: '\u5206\u6790 AAPL \u548c 600519 \u7684\u5dee\u5f02' },
     });
-    fireEvent.click(screen.getByRole('button', { name: '发送' }));
+    fireEvent.click(screen.getByRole('button', { name: '\u53d1\u9001' }));
 
     await waitFor(() => {
       expect(mockStartStream).toHaveBeenLastCalledWith(
         expect.objectContaining({
-          message: '分析 AAPL 和 600519 的差异',
+          message: '\u5206\u6790 AAPL \u548c 600519 \u7684\u5dee\u5f02',
           context: {
             stock_code: '600519',
-            stock_name: '贵州茅台',
+            stock_name: '\u8d35\u5dde\u8305\u53f0',
           },
         }),
         expect.objectContaining({
-          skillName: '趋势分析',
+          skillName: '\u8d8b\u52bf\u5206\u6790',
         }),
       );
     });
@@ -1129,24 +1129,24 @@ describe('ChatPage', () => {
       </MemoryRouter>
     );
 
-    expect(await screen.findByDisplayValue('请深入分析 贵州茅台(600519)')).toBeInTheDocument();
+    expect(await screen.findByDisplayValue('\u8bf7\u6df1\u5165\u5206\u6790 \u8d35\u5dde\u8305\u53f0(600519)')).toBeInTheDocument();
 
-    fireEvent.change(screen.getByPlaceholderText(/分析 600519/), {
-      target: { value: 'AAPL 和 TSLA 哪个更值得买' },
+    fireEvent.change(screen.getByPlaceholderText(/\u5206\u6790 600519/), {
+      target: { value: 'AAPL \u548c TSLA \u54ea\u4e2a\u66f4\u503c\u5f97\u4e70' },
     });
-    fireEvent.click(screen.getByRole('button', { name: '发送' }));
+    fireEvent.click(screen.getByRole('button', { name: '\u53d1\u9001' }));
 
     await waitFor(() => {
       expect(mockStartStream).toHaveBeenLastCalledWith(
         expect.objectContaining({
-          message: 'AAPL 和 TSLA 哪个更值得买',
+          message: 'AAPL \u548c TSLA \u54ea\u4e2a\u66f4\u503c\u5f97\u4e70',
           context: {
             stock_code: '600519',
-            stock_name: '贵州茅台',
+            stock_name: '\u8d35\u5dde\u8305\u53f0',
           },
         }),
         expect.objectContaining({
-          skillName: '趋势分析',
+          skillName: '\u8d8b\u52bf\u5206\u6790',
         }),
       );
     });
@@ -1159,24 +1159,24 @@ describe('ChatPage', () => {
       </MemoryRouter>
     );
 
-    expect(await screen.findByDisplayValue('请深入分析 贵州茅台(600519)')).toBeInTheDocument();
+    expect(await screen.findByDisplayValue('\u8bf7\u6df1\u5165\u5206\u6790 \u8d35\u5dde\u8305\u53f0(600519)')).toBeInTheDocument();
 
-    fireEvent.change(screen.getByPlaceholderText(/分析 600519/), {
-      target: { value: '分析 AAPL 的差异化优势' },
+    fireEvent.change(screen.getByPlaceholderText(/\u5206\u6790 600519/), {
+      target: { value: '\u5206\u6790 AAPL \u7684\u5dee\u5f02\u5316\u4f18\u52bf' },
     });
-    fireEvent.click(screen.getByRole('button', { name: '发送' }));
+    fireEvent.click(screen.getByRole('button', { name: '\u53d1\u9001' }));
 
     await waitFor(() => {
       expect(mockStartStream).toHaveBeenLastCalledWith(
         expect.objectContaining({
-          message: '分析 AAPL 的差异化优势',
+          message: '\u5206\u6790 AAPL \u7684\u5dee\u5f02\u5316\u4f18\u52bf',
           context: {
             stock_code: 'AAPL',
             stock_name: null,
           },
         }),
         expect.objectContaining({
-          skillName: '趋势分析',
+          skillName: '\u8d8b\u52bf\u5206\u6790',
         }),
       );
     });
@@ -1189,24 +1189,24 @@ describe('ChatPage', () => {
       </MemoryRouter>
     );
 
-    expect(await screen.findByDisplayValue('请深入分析 贵州茅台(600519)')).toBeInTheDocument();
+    expect(await screen.findByDisplayValue('\u8bf7\u6df1\u5165\u5206\u6790 \u8d35\u5dde\u8305\u53f0(600519)')).toBeInTheDocument();
 
-    fireEvent.change(screen.getByPlaceholderText(/分析 600519/), {
-      target: { value: '分析tsla' },
+    fireEvent.change(screen.getByPlaceholderText(/\u5206\u6790 600519/), {
+      target: { value: '\u5206\u6790tsla' },
     });
-    fireEvent.click(screen.getByRole('button', { name: '发送' }));
+    fireEvent.click(screen.getByRole('button', { name: '\u53d1\u9001' }));
 
     await waitFor(() => {
       expect(mockStartStream).toHaveBeenLastCalledWith(
         expect.objectContaining({
-          message: '分析tsla',
+          message: '\u5206\u6790tsla',
           context: {
             stock_code: 'TSLA',
             stock_name: null,
           },
         }),
         expect.objectContaining({
-          skillName: '趋势分析',
+          skillName: '\u8d8b\u52bf\u5206\u6790',
         }),
       );
     });
@@ -1219,26 +1219,26 @@ describe('ChatPage', () => {
       </MemoryRouter>
     );
 
-    expect(await screen.findByDisplayValue('请深入分析 贵州茅台(600519)')).toBeInTheDocument();
-    fireEvent.click(screen.getByRole('button', { name: '切换到对话 请简要分析 600519' }));
+    expect(await screen.findByDisplayValue('\u8bf7\u6df1\u5165\u5206\u6790 \u8d35\u5dde\u8305\u53f0(600519)')).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: '\u5207\u6362\u5230\u5bf9\u8bdd \u8bf7\u7b80\u8981\u5206\u6790 600519' }));
     expect(mockSwitchSession).not.toHaveBeenCalled();
 
-    fireEvent.change(screen.getByPlaceholderText(/分析 600519/), {
-      target: { value: '继续看成交量' },
+    fireEvent.change(screen.getByPlaceholderText(/\u5206\u6790 600519/), {
+      target: { value: '\u7ee7\u7eed\u770b\u6210\u4ea4\u91cf' },
     });
-    fireEvent.click(screen.getByRole('button', { name: '发送' }));
+    fireEvent.click(screen.getByRole('button', { name: '\u53d1\u9001' }));
 
     await waitFor(() => {
       expect(mockStartStream).toHaveBeenLastCalledWith(
         expect.objectContaining({
-          message: '继续看成交量',
+          message: '\u7ee7\u7eed\u770b\u6210\u4ea4\u91cf',
           context: {
             stock_code: '600519',
-            stock_name: '贵州茅台',
+            stock_name: '\u8d35\u5dde\u8305\u53f0',
           },
         }),
         expect.objectContaining({
-          skillName: '趋势分析',
+          skillName: '\u8d8b\u52bf\u5206\u6790',
         }),
       );
     });
@@ -1246,10 +1246,10 @@ describe('ChatPage', () => {
 
   it('restores active stock context from loaded session messages', async () => {
     mockStoreState.messages = [
-      { id: 'm-1', role: 'user', content: '请分析 600519' },
-      { id: 'm-2', role: 'assistant', content: '600519 分析结果' },
-      { id: 'm-3', role: 'user', content: '先不看 600519，换成 AAPL 看看' },
-      { id: 'm-4', role: 'assistant', content: 'AAPL 分析结果' },
+      { id: 'm-1', role: 'user', content: '\u8bf7\u5206\u6790 600519' },
+      { id: 'm-2', role: 'assistant', content: '600519 \u5206\u6790\u7ed3\u679c' },
+      { id: 'm-3', role: 'user', content: '\u5148\u4e0d\u770b 600519，\u6362\u6210 AAPL \u770b\u770b' },
+      { id: 'm-4', role: 'assistant', content: 'AAPL \u5206\u6790\u7ed3\u679c' },
     ];
 
     render(
@@ -1260,22 +1260,22 @@ describe('ChatPage', () => {
 
     expect(await screen.findByTestId('chat-workspace')).toBeInTheDocument();
 
-    fireEvent.change(screen.getByPlaceholderText(/分析 600519/), {
-      target: { value: '继续看支撑位' },
+    fireEvent.change(screen.getByPlaceholderText(/\u5206\u6790 600519/), {
+      target: { value: '\u7ee7\u7eed\u770b\u652f\u6491\u4f4d' },
     });
-    fireEvent.click(screen.getByRole('button', { name: '发送' }));
+    fireEvent.click(screen.getByRole('button', { name: '\u53d1\u9001' }));
 
     await waitFor(() => {
       expect(mockStartStream).toHaveBeenLastCalledWith(
         expect.objectContaining({
-          message: '继续看支撑位',
+          message: '\u7ee7\u7eed\u770b\u652f\u6491\u4f4d',
           context: {
             stock_code: 'AAPL',
             stock_name: null,
           },
         }),
         expect.objectContaining({
-          skillName: '趋势分析',
+          skillName: '\u8d8b\u52bf\u5206\u6790',
         }),
       );
     });
@@ -1286,7 +1286,7 @@ describe('ChatPage', () => {
       ...mockStoreState.sessions,
       {
         session_id: 'session-2',
-        title: '旧会话',
+        title: '\u65e7\u4f1a\u8bdd',
         message_count: 1,
         created_at: '2026-03-16T09:00:00Z',
         last_active: '2026-03-16T09:05:00Z',
@@ -1299,23 +1299,23 @@ describe('ChatPage', () => {
       </MemoryRouter>
     );
 
-    expect(await screen.findByDisplayValue('请深入分析 贵州茅台(600519)')).toBeInTheDocument();
-    fireEvent.click(screen.getByRole('button', { name: '开启新对话' }));
+    expect(await screen.findByDisplayValue('\u8bf7\u6df1\u5165\u5206\u6790 \u8d35\u5dde\u8305\u53f0(600519)')).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: '\u5f00\u542f\u65b0\u5bf9\u8bdd' }));
     expect(mockStartNewChat).toHaveBeenCalled();
 
-    fireEvent.change(screen.getByPlaceholderText(/分析 600519/), {
-      target: { value: '继续看成交量' },
+    fireEvent.change(screen.getByPlaceholderText(/\u5206\u6790 600519/), {
+      target: { value: '\u7ee7\u7eed\u770b\u6210\u4ea4\u91cf' },
     });
-    fireEvent.click(screen.getByRole('button', { name: '发送' }));
+    fireEvent.click(screen.getByRole('button', { name: '\u53d1\u9001' }));
 
     await waitFor(() => {
       expect(mockStartStream).toHaveBeenLastCalledWith(
         expect.objectContaining({
-          message: '继续看成交量',
+          message: '\u7ee7\u7eed\u770b\u6210\u4ea4\u91cf',
           context: undefined,
         }),
         expect.objectContaining({
-          skillName: '趋势分析',
+          skillName: '\u8d8b\u52bf\u5206\u6790',
         }),
       );
     });
@@ -1329,23 +1329,23 @@ describe('ChatPage', () => {
       </MemoryRouter>
     );
 
-    expect(await screen.findByDisplayValue('请深入分析 贵州茅台(600519)')).toBeInTheDocument();
-    fireEvent.click(screen.getByRole('button', { name: '切换到对话 旧会话' }));
+    expect(await screen.findByDisplayValue('\u8bf7\u6df1\u5165\u5206\u6790 \u8d35\u5dde\u8305\u53f0(600519)')).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: '\u5207\u6362\u5230\u5bf9\u8bdd \u65e7\u4f1a\u8bdd' }));
     expect(mockSwitchSession).toHaveBeenCalledWith('session-2');
 
-    fireEvent.change(screen.getByPlaceholderText(/分析 600519/), {
-      target: { value: '继续看成交量' },
+    fireEvent.change(screen.getByPlaceholderText(/\u5206\u6790 600519/), {
+      target: { value: '\u7ee7\u7eed\u770b\u6210\u4ea4\u91cf' },
     });
-    fireEvent.click(screen.getByRole('button', { name: '发送' }));
+    fireEvent.click(screen.getByRole('button', { name: '\u53d1\u9001' }));
 
     await waitFor(() => {
       expect(mockStartStream).toHaveBeenLastCalledWith(
         expect.objectContaining({
-          message: '继续看成交量',
+          message: '\u7ee7\u7eed\u770b\u6210\u4ea4\u91cf',
           context: undefined,
         }),
         expect.objectContaining({
-          skillName: '趋势分析',
+          skillName: '\u8d8b\u52bf\u5206\u6790',
         }),
       );
     });
@@ -1358,28 +1358,28 @@ describe('ChatPage', () => {
       </MemoryRouter>
     );
 
-    expect(await screen.findByDisplayValue('请深入分析 贵州茅台(600519)')).toBeInTheDocument();
-    fireEvent.click(screen.getByRole('button', { name: '删除对话 请简要分析 600519' }));
-    fireEvent.click(screen.getByRole('button', { name: '删除' }));
+    expect(await screen.findByDisplayValue('\u8bf7\u6df1\u5165\u5206\u6790 \u8d35\u5dde\u8305\u53f0(600519)')).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: '\u5220\u9664\u5bf9\u8bdd \u8bf7\u7b80\u8981\u5206\u6790 600519' }));
+    fireEvent.click(screen.getByRole('button', { name: '\u5220\u9664' }));
 
     await waitFor(() => {
       expect(mockDeleteChatSession).toHaveBeenCalledWith('session-1');
     });
     expect(mockStartNewChat).toHaveBeenCalled();
 
-    fireEvent.change(screen.getByPlaceholderText(/分析 600519/), {
-      target: { value: '继续看成交量' },
+    fireEvent.change(screen.getByPlaceholderText(/\u5206\u6790 600519/), {
+      target: { value: '\u7ee7\u7eed\u770b\u6210\u4ea4\u91cf' },
     });
-    fireEvent.click(screen.getByRole('button', { name: '发送' }));
+    fireEvent.click(screen.getByRole('button', { name: '\u53d1\u9001' }));
 
     await waitFor(() => {
       expect(mockStartStream).toHaveBeenLastCalledWith(
         expect.objectContaining({
-          message: '继续看成交量',
+          message: '\u7ee7\u7eed\u770b\u6210\u4ea4\u91cf',
           context: undefined,
         }),
         expect.objectContaining({
-          skillName: '趋势分析',
+          skillName: '\u8d8b\u52bf\u5206\u6790',
         }),
       );
     });
@@ -1392,8 +1392,8 @@ describe('ChatPage', () => {
       </MemoryRouter>
     );
 
-    expect(await screen.findByRole('heading', { name: '问股' })).toBeInTheDocument();
-    expect(screen.getByPlaceholderText(/分析 600519/)).toHaveValue('');
+    expect(await screen.findByRole('heading', { name: '\u95ee\u80a1' })).toBeInTheDocument();
+    expect(screen.getByPlaceholderText(/\u5206\u6790 600519/)).toHaveValue('');
     expect(historyApi.getDetail).not.toHaveBeenCalled();
   });
 
@@ -1414,28 +1414,28 @@ describe('ChatPage', () => {
 
     render(<RouterProvider router={router} />);
 
-    expect(await screen.findByDisplayValue('请深入分析 贵州茅台(600519)')).toBeInTheDocument();
-    expect(screen.getByText('正在加载历史分析上下文；现在可直接发送追问。')).toBeInTheDocument();
+    expect(await screen.findByDisplayValue('\u8bf7\u6df1\u5165\u5206\u6790 \u8d35\u5dde\u8305\u53f0(600519)')).toBeInTheDocument();
+    expect(screen.getByText('\u6b63\u5728\u52a0\u8f7d\u5386\u53f2\u5206\u6790\u4e0a\u4e0b\u6587；\u73b0\u5728\u53ef\u76f4\u63a5\u53d1\u9001\u8ffd\u95ee。')).toBeInTheDocument();
 
     await router.navigate('/chat?stock=AAPL&name=Apple&recordId=2');
 
-    expect(await screen.findByDisplayValue('请深入分析 Apple(AAPL)')).toBeInTheDocument();
+    expect(await screen.findByDisplayValue('\u8bf7\u6df1\u5165\u5206\u6790 Apple(AAPL)')).toBeInTheDocument();
 
     firstDeferred.resolve({
       meta: {
         id: 1,
         queryId: 'q-1',
         stockCode: '600519',
-        stockName: '贵州茅台',
+        stockName: '\u8d35\u5dde\u8305\u53f0',
         reportType: 'detailed',
         createdAt: '2026-03-18T08:00:00Z',
         currentPrice: 1523.6,
         changePct: 1.8,
       },
       summary: {
-        analysisSummary: '趋势延续',
-        operationAdvice: '继续观察',
-        trendPrediction: '高位震荡',
+        analysisSummary: '\u8d8b\u52bf\u5ef6\u7eed',
+        operationAdvice: '\u7ee7\u7eed\u89c2\u5bdf',
+        trendPrediction: '\u9ad8\u4f4d\u9707\u8361',
         sentimentScore: 78,
       },
       strategy: {
@@ -1455,9 +1455,9 @@ describe('ChatPage', () => {
         changePct: 2.4,
       },
       summary: {
-        analysisSummary: '趋势走强',
-        operationAdvice: '继续持有',
-        trendPrediction: '短线偏强',
+        analysisSummary: '\u8d8b\u52bf\u8d70\u5f3a',
+        operationAdvice: '\u7ee7\u7eed\u6301\u6709',
+        trendPrediction: '\u77ed\u7ebf\u504f\u5f3a',
         sentimentScore: 81,
       },
       strategy: {
@@ -1466,15 +1466,15 @@ describe('ChatPage', () => {
     });
 
     await waitFor(() => {
-      expect(screen.queryByText('正在加载历史分析上下文；现在可直接发送追问。')).not.toBeInTheDocument();
+      expect(screen.queryByText('\u6b63\u5728\u52a0\u8f7d\u5386\u53f2\u5206\u6790\u4e0a\u4e0b\u6587；\u73b0\u5728\u53ef\u76f4\u63a5\u53d1\u9001\u8ffd\u95ee。')).not.toBeInTheDocument();
     });
 
-    fireEvent.click(screen.getByRole('button', { name: '发送' }));
+    fireEvent.click(screen.getByRole('button', { name: '\u53d1\u9001' }));
 
     await waitFor(() => {
       expect(mockStartStream).toHaveBeenCalledWith(
         expect.objectContaining({
-          message: '请深入分析 Apple(AAPL)',
+          message: '\u8bf7\u6df1\u5165\u5206\u6790 Apple(AAPL)',
           context: expect.objectContaining({
             stock_code: 'AAPL',
             stock_name: 'Apple',
@@ -1486,7 +1486,7 @@ describe('ChatPage', () => {
           }),
         }),
         expect.objectContaining({
-          skillName: '趋势分析',
+          skillName: '\u8d8b\u52bf\u5206\u6790',
         }),
       );
     });
@@ -1494,8 +1494,8 @@ describe('ChatPage', () => {
 
   it('shows a jump-to-latest action when new content arrives while the user is away from bottom', async () => {
     mockStoreState.messages = [
-      { id: 'user-1', role: 'user', content: '请分析 600519' },
-      { id: 'assistant-1', role: 'assistant', content: '趋势偏强', skillName: '趋势分析' },
+      { id: 'user-1', role: 'user', content: '\u8bf7\u5206\u6790 600519' },
+      { id: 'assistant-1', role: 'assistant', content: '\u8d8b\u52bf\u504f\u5f3a', skillName: '\u8d8b\u52bf\u5206\u6790' },
     ];
 
     const { rerender } = render(
@@ -1513,7 +1513,7 @@ describe('ChatPage', () => {
 
     mockStoreState.messages = [
       ...mockStoreState.messages,
-      { id: 'assistant-2', role: 'assistant', content: '新的补充分析', skillName: '趋势分析' },
+      { id: 'assistant-2', role: 'assistant', content: '\u65b0\u7684\u8865\u5145\u5206\u6790', skillName: '\u8d8b\u52bf\u5206\u6790' },
     ];
 
     rerender(
@@ -1522,7 +1522,7 @@ describe('ChatPage', () => {
       </MemoryRouter>
     );
 
-    const jumpButton = await screen.findByRole('button', { name: '查看最新消息' });
+    const jumpButton = await screen.findByRole('button', { name: '\u67e5\u770b\u6700\u65b0\u6d88\u606f' });
     expect(jumpButton).toBeInTheDocument();
 
     fireEvent.click(jumpButton);
@@ -1533,12 +1533,12 @@ describe('ChatPage', () => {
 
 describe('extractStockCodeFromMessage', () => {
   it('returns 6-digit A-share code', () => {
-    expect(extractStockCodeFromMessage('分析 600519 趋势')).toBe('600519');
+    expect(extractStockCodeFromMessage('\u5206\u6790 600519 \u8d8b\u52bf')).toBe('600519');
     expect(extractStockCodeFromMessage('002460')).toBe('002460');
   });
 
   it('returns HK prefixed code (normalized)', () => {
-    expect(extractStockCodeFromMessage('分析 hk00700')).toBe('HK00700');
+    expect(extractStockCodeFromMessage('\u5206\u6790 hk00700')).toBe('HK00700');
   });
 
   it('returns .HK suffix code (normalized to canonical)', () => {
@@ -1547,58 +1547,58 @@ describe('extractStockCodeFromMessage', () => {
   });
 
   it('returns code with .SH/.SZ suffix (normalized)', () => {
-    expect(extractStockCodeFromMessage('看 600519.SH')).toBe('600519');
+    expect(extractStockCodeFromMessage('\u770b 600519.SH')).toBe('600519');
     expect(extractStockCodeFromMessage('000001.SZ')).toBe('000001');
   });
 
   it('returns US ticker like AAPL', () => {
-    expect(extractStockCodeFromMessage('分析 AAPL 走势')).toBe('AAPL');
+    expect(extractStockCodeFromMessage('\u5206\u6790 AAPL \u8d70\u52bf')).toBe('AAPL');
     expect(extractStockCodeFromMessage('TSLA')).toBe('TSLA');
-    expect(extractStockCodeFromMessage('分析 BRK.B')).toBe('BRK.B');
+    expect(extractStockCodeFromMessage('\u5206\u6790 BRK.B')).toBe('BRK.B');
   });
 
   it('does NOT return finance abbreviations as tickers', () => {
-    expect(extractStockCodeFromMessage('如果不考虑 TTM 呢')).toBeNull();
-    expect(extractStockCodeFromMessage('市盈率 TTM 怎么看')).toBeNull();
-    expect(extractStockCodeFromMessage('PE 怎么看')).toBeNull();
-    expect(extractStockCodeFromMessage('MACD 还没金叉吗')).toBeNull();
-    expect(extractStockCodeFromMessage('RSI 怎么看')).toBeNull();
+    expect(extractStockCodeFromMessage('\u5982\u679c\u4e0d\u8003\u8651 TTM \u5462')).toBeNull();
+    expect(extractStockCodeFromMessage('\u5e02\u76c8\u7387 TTM \u600e\u4e48\u770b')).toBeNull();
+    expect(extractStockCodeFromMessage('PE \u600e\u4e48\u770b')).toBeNull();
+    expect(extractStockCodeFromMessage('MACD \u8fd8\u6ca1\u91d1\u53c9\u5417')).toBeNull();
+    expect(extractStockCodeFromMessage('RSI \u600e\u4e48\u770b')).toBeNull();
     expect(extractStockCodeFromMessage('WHAT IS PE')).toBeNull();
     expect(extractStockCodeFromMessage('PE IS HIGH')).toBeNull();
     expect(extractStockCodeFromMessage('WHAT IS TTM')).toBeNull();
   });
 
   it('does NOT return contextual moving-average MA as a ticker', () => {
-    expect(extractStockCodeFromMessage('分析 MA 均线')).toBeNull();
-    expect(extractStockCodeFromMessage('看看 MA 怎么排列')).toBeNull();
-    expect(extractStockCodesFromMessage('MA 和 RSI 的指标怎么看')).toEqual([]);
-    expect(extractStockCodeFromMessage('分析 KDJ 指标')).toBeNull();
-    expect(extractStockCodeFromMessage('KDJ 怎么看')).toBeNull();
+    expect(extractStockCodeFromMessage('\u5206\u6790 MA \u5747\u7ebf')).toBeNull();
+    expect(extractStockCodeFromMessage('\u770b\u770b MA \u600e\u4e48\u6392\u5217')).toBeNull();
+    expect(extractStockCodesFromMessage('MA \u548c RSI \u7684\u6307\u6807\u600e\u4e48\u770b')).toEqual([]);
+    expect(extractStockCodeFromMessage('\u5206\u6790 KDJ \u6307\u6807')).toBeNull();
+    expect(extractStockCodeFromMessage('KDJ \u600e\u4e48\u770b')).toBeNull();
   });
 
   it('skips finance abbreviations before a real ticker', () => {
-    expect(extractStockCodeFromMessage('PE AAPL 怎么看')).toBe('AAPL');
-    expect(extractStockCodeFromMessage('TTM AAPL 怎么看')).toBe('AAPL');
-    expect(extractStockCodeFromMessage('MACD AAPL 怎么看')).toBe('AAPL');
+    expect(extractStockCodeFromMessage('PE AAPL \u600e\u4e48\u770b')).toBe('AAPL');
+    expect(extractStockCodeFromMessage('TTM AAPL \u600e\u4e48\u770b')).toBe('AAPL');
+    expect(extractStockCodeFromMessage('MACD AAPL \u600e\u4e48\u770b')).toBe('AAPL');
     expect(extractStockCodeFromMessage('WHAT IS PE AAPL')).toBe('AAPL');
   });
 
   it('does NOT return exchange prefixes as tickers', () => {
-    expect(extractStockCodeFromMessage('分析 SH 走势')).toBeNull();
-    expect(extractStockCodeFromMessage('看看 BJ')).toBeNull();
+    expect(extractStockCodeFromMessage('\u5206\u6790 SH \u8d70\u52bf')).toBeNull();
+    expect(extractStockCodeFromMessage('\u770b\u770b BJ')).toBeNull();
     expect(extractStockCodeFromMessage('HK')).toBeNull();
-    expect(extractStockCodeFromMessage('买入 SZ')).toBeNull();
-    expect(extractStockCodeFromMessage('US 市场')).toBeNull();
+    expect(extractStockCodeFromMessage('\u4e70\u5165 SZ')).toBeNull();
+    expect(extractStockCodeFromMessage('US \u5e02\u573a')).toBeNull();
     expect(extractStockCodeFromMessage('SS')).toBeNull();
   });
 
   it('returns null for messages without stock codes', () => {
-    expect(extractStockCodeFromMessage('茅台现在适合买入吗')).toBeNull();
-    expect(extractStockCodeFromMessage('大盘走势如何')).toBeNull();
+    expect(extractStockCodeFromMessage('\u8305\u53f0\u73b0\u5728\u9002\u5408\u4e70\u5165\u5417')).toBeNull();
+    expect(extractStockCodeFromMessage('\u5927\u76d8\u8d70\u52bf\u5982\u4f55')).toBeNull();
   });
 
   it('matches prefixed code like SH600519 (normalized)', () => {
-    expect(extractStockCodeFromMessage('分析 SH600519')).toBe('600519');
+    expect(extractStockCodeFromMessage('\u5206\u6790 SH600519')).toBe('600519');
   });
 
   it('returns SZ-prefixed code when standalone (normalized)', () => {
@@ -1606,39 +1606,39 @@ describe('extractStockCodeFromMessage', () => {
   });
 
   it('returns all stock codes in message order', () => {
-    expect(extractStockCodesFromMessage('分析 600519 和 AAPL 的差异')).toEqual(['600519', 'AAPL']);
-    expect(extractStockCodesFromMessage('分析 AAPL 和 600519 的差异')).toEqual(['AAPL', '600519']);
-    expect(extractStockCodesFromMessage('AAPL 和 TSLA 哪个更值得买')).toEqual(['AAPL', 'TSLA']);
-    expect(extractStockCodesFromMessage('比较 BRK.B 和 AAPL')).toEqual(['BRK.B', 'AAPL']);
+    expect(extractStockCodesFromMessage('\u5206\u6790 600519 \u548c AAPL \u7684\u5dee\u5f02')).toEqual(['600519', 'AAPL']);
+    expect(extractStockCodesFromMessage('\u5206\u6790 AAPL \u548c 600519 \u7684\u5dee\u5f02')).toEqual(['AAPL', '600519']);
+    expect(extractStockCodesFromMessage('AAPL \u548c TSLA \u54ea\u4e2a\u66f4\u503c\u5f97\u4e70')).toEqual(['AAPL', 'TSLA']);
+    expect(extractStockCodesFromMessage('\u6bd4\u8f83 BRK.B \u548c AAPL')).toEqual(['BRK.B', 'AAPL']);
   });
 
   it('extracts lowercase tickers only with explicit stock intent hints', () => {
-    expect(extractStockCodesFromMessage('分析tsla')).toEqual(['TSLA']);
-    expect(extractStockCodesFromMessage('看看 tsla')).toEqual(['TSLA']);
-    expect(extractStockCodesFromMessage('aapl 和 tsla 哪个更值得买')).toEqual(['AAPL', 'TSLA']);
+    expect(extractStockCodesFromMessage('\u5206\u6790tsla')).toEqual(['TSLA']);
+    expect(extractStockCodesFromMessage('\u770b\u770b tsla')).toEqual(['TSLA']);
+    expect(extractStockCodesFromMessage('aapl \u548c tsla \u54ea\u4e2a\u66f4\u503c\u5f97\u4e70')).toEqual(['AAPL', 'TSLA']);
     expect(extractStockCodesFromMessage('hello tsla')).toEqual([]);
   });
 
   it('returns all HK and A-share variants without exchange affix tokens', () => {
-    expect(extractStockCodesFromMessage('比较 01810 和 AAPL')).toEqual(['HK01810', 'AAPL']);
-    expect(extractStockCodesFromMessage('比较 1810.HK 和 AAPL')).toEqual(['HK01810', 'AAPL']);
-    expect(extractStockCodesFromMessage('比较 600519.SH 和 AAPL')).toEqual(['600519', 'AAPL']);
-    expect(extractStockCodesFromMessage('比较 000001.SZ 和 SS')).toEqual(['000001']);
-    expect(extractStockCodesFromMessage('比较 SH600519 和 AAPL')).toEqual(['600519', 'AAPL']);
-    expect(extractStockCodesFromMessage('比较 SZ000001 和 AAPL')).toEqual(['000001', 'AAPL']);
-    expect(extractStockCodesFromMessage('比较 BJ920748 和 AAPL')).toEqual(['920748', 'AAPL']);
-    expect(extractStockCodesFromMessage('比较 HK01810 和 AAPL')).toEqual(['HK01810', 'AAPL']);
+    expect(extractStockCodesFromMessage('\u6bd4\u8f83 01810 \u548c AAPL')).toEqual(['HK01810', 'AAPL']);
+    expect(extractStockCodesFromMessage('\u6bd4\u8f83 1810.HK \u548c AAPL')).toEqual(['HK01810', 'AAPL']);
+    expect(extractStockCodesFromMessage('\u6bd4\u8f83 600519.SH \u548c AAPL')).toEqual(['600519', 'AAPL']);
+    expect(extractStockCodesFromMessage('\u6bd4\u8f83 000001.SZ \u548c SS')).toEqual(['000001']);
+    expect(extractStockCodesFromMessage('\u6bd4\u8f83 SH600519 \u548c AAPL')).toEqual(['600519', 'AAPL']);
+    expect(extractStockCodesFromMessage('\u6bd4\u8f83 SZ000001 \u548c AAPL')).toEqual(['000001', 'AAPL']);
+    expect(extractStockCodesFromMessage('\u6bd4\u8f83 BJ920748 \u548c AAPL')).toEqual(['920748', 'AAPL']);
+    expect(extractStockCodesFromMessage('\u6bd4\u8f83 HK01810 \u548c AAPL')).toEqual(['HK01810', 'AAPL']);
   });
 
   it('does not return denied abbreviations in multi-code extraction', () => {
-    expect(extractStockCodesFromMessage('如果不考虑 TTM 和 PE')).toEqual([]);
-    expect(extractStockCodesFromMessage('MACD AAPL 和 RSI')).toEqual(['AAPL']);
-    expect(extractStockCodesFromMessage('KDJ AAPL 怎么看')).toEqual(['AAPL']);
+    expect(extractStockCodesFromMessage('\u5982\u679c\u4e0d\u8003\u8651 TTM \u548c PE')).toEqual([]);
+    expect(extractStockCodesFromMessage('MACD AAPL \u548c RSI')).toEqual(['AAPL']);
+    expect(extractStockCodesFromMessage('KDJ AAPL \u600e\u4e48\u770b')).toEqual(['AAPL']);
   });
 });
 
 describe('watchlist button with code variants', () => {
-  it('shows "从自选删除" when canonical code is in watchlist and user inputs variant', async () => {
+  it('shows "\u4ece\u81ea\u9009\u5220\u9664" when canonical code is in watchlist and user inputs variant', async () => {
     mockGetWatchlist.mockResolvedValue(['600519', 'HK01810']);
 
     render(
@@ -1647,14 +1647,14 @@ describe('watchlist button with code variants', () => {
       </MemoryRouter>,
     );
 
-    const textarea = await screen.findByPlaceholderText(/例如/);
-    fireEvent.change(textarea, { target: { value: '分析 600519.SH' } });
+    const textarea = await screen.findByPlaceholderText(/\u4f8b\u5982/);
+    fireEvent.change(textarea, { target: { value: '\u5206\u6790 600519.SH' } });
     fireEvent.keyDown(textarea, { key: 'Enter' });
 
-    expect(await screen.findByText('从自选删除')).toBeInTheDocument();
+    expect(await screen.findByText('\u4ece\u81ea\u9009\u5220\u9664')).toBeInTheDocument();
   });
 
-  it('shows "从自选删除" for HK variant codes', async () => {
+  it('shows "\u4ece\u81ea\u9009\u5220\u9664" for HK variant codes', async () => {
     mockGetWatchlist.mockResolvedValue(['HK01810']);
 
     render(
@@ -1663,11 +1663,11 @@ describe('watchlist button with code variants', () => {
       </MemoryRouter>,
     );
 
-    const textarea = await screen.findByPlaceholderText(/例如/);
-    fireEvent.change(textarea, { target: { value: '分析 1810.HK' } });
+    const textarea = await screen.findByPlaceholderText(/\u4f8b\u5982/);
+    fireEvent.change(textarea, { target: { value: '\u5206\u6790 1810.HK' } });
     fireEvent.keyDown(textarea, { key: 'Enter' });
 
-    expect(await screen.findByText('从自选删除')).toBeInTheDocument();
+    expect(await screen.findByText('\u4ece\u81ea\u9009\u5220\u9664')).toBeInTheDocument();
   });
 
   it('matches raw HK watchlist entries before rendering the watchlist action', async () => {
@@ -1679,11 +1679,11 @@ describe('watchlist button with code variants', () => {
       </MemoryRouter>,
     );
 
-    const textarea = await screen.findByPlaceholderText(/例如/);
-    fireEvent.change(textarea, { target: { value: '分析 1810.HK' } });
+    const textarea = await screen.findByPlaceholderText(/\u4f8b\u5982/);
+    fireEvent.change(textarea, { target: { value: '\u5206\u6790 1810.HK' } });
     fireEvent.keyDown(textarea, { key: 'Enter' });
 
-    expect(await screen.findByText('从自选删除')).toBeInTheDocument();
+    expect(await screen.findByText('\u4ece\u81ea\u9009\u5220\u9664')).toBeInTheDocument();
   });
 
   it('removes the matched raw HK watchlist entry instead of adding a duplicate variant', async () => {
@@ -1696,10 +1696,10 @@ describe('watchlist button with code variants', () => {
       </MemoryRouter>,
     );
 
-    const textarea = await screen.findByPlaceholderText(/例如/);
-    fireEvent.change(textarea, { target: { value: '分析 00700.HK' } });
+    const textarea = await screen.findByPlaceholderText(/\u4f8b\u5982/);
+    fireEvent.change(textarea, { target: { value: '\u5206\u6790 00700.HK' } });
     fireEvent.keyDown(textarea, { key: 'Enter' });
-    fireEvent.click(await screen.findByText('从自选删除'));
+    fireEvent.click(await screen.findByText('\u4ece\u81ea\u9009\u5220\u9664'));
 
     await waitFor(() => {
       expect(mockRemoveFromWatchlist).toHaveBeenCalledWith('00700');

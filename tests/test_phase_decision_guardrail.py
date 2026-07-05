@@ -10,21 +10,21 @@ from src.phase_decision_guardrail import apply_phase_decision_guardrails
 def _result(**kwargs) -> AnalysisResult:
     defaults = {
         "code": "600519",
-        "name": "贵州茅台",
-        "trend_prediction": "看多",
+        "name": "\u8d35\u5dde\u8305\u53f0",
+        "trend_prediction": "\u770b\u591a",
         "sentiment_score": 76,
-        "operation_advice": "立即买入",
+        "operation_advice": "\u7acb\u5373\u4e70\u5165",
         "decision_type": "buy",
-        "confidence_level": "高",
-        "analysis_summary": "盘中偏强",
+        "confidence_level": "\u9ad8",
+        "analysis_summary": "\u76d8\u4e2d\u504f\u5f3a",
         "dashboard": {
-            "core_conclusion": {"one_sentence": "立即买入"},
+            "core_conclusion": {"one_sentence": "\u7acb\u5373\u4e70\u5165"},
             "phase_decision": {
-                "action_window": "盘中跟踪",
-                "immediate_action": "立即买入",
-                "watch_conditions": ["放量突破"],
+                "action_window": "\u76d8\u4e2d\u8ddf\u8e2a",
+                "immediate_action": "\u7acb\u5373\u4e70\u5165",
+                "watch_conditions": ["\u653e\u91cf\u7a81\u7834"],
                 "next_check_time": "14:30",
-                "confidence_reason": "趋势偏强",
+                "confidence_reason": "\u8d8b\u52bf\u504f\u5f3a",
                 "data_limitations": [],
             },
         },
@@ -47,11 +47,11 @@ def _phase(phase: str = "intraday") -> dict:
 
 def _overview(status: str = "stale") -> dict:
     return {
-        "subject": {"code": "600519", "stock_name": "贵州茅台", "market": "cn"},
+        "subject": {"code": "600519", "stock_name": "\u8d35\u5dde\u8305\u53f0", "market": "cn"},
         "blocks": [
             {
                 "key": "quote",
-                "label": "行情",
+                "label": "\u884c\u60c5",
                 "status": status,
                 "source": "tencent",
                 "warnings": [],
@@ -59,7 +59,7 @@ def _overview(status: str = "stale") -> dict:
             },
             {
                 "key": "daily_bars",
-                "label": "日线",
+                "label": "\u65e5\u7ebf",
                 "status": "available",
                 "source": "akshare",
                 "warnings": [],
@@ -67,7 +67,7 @@ def _overview(status: str = "stale") -> dict:
             },
             {
                 "key": "technical",
-                "label": "技术",
+                "label": "\u6280\u672f",
                 "status": "available",
                 "source": "local",
                 "warnings": [],
@@ -93,26 +93,26 @@ def test_degraded_core_data_caps_high_confidence_buy() -> None:
     )
 
     assert "confidence_capped_core_data_degraded" in adjustments
-    assert result.confidence_level == "中"
+    assert result.confidence_level == "\u4e2d"
     pd = result.dashboard["phase_decision"]
     assert pd["phase_context"]["phase"] == "intraday"
     assert "quote: stale" in pd["data_limitations"]
-    assert "核心行情" in pd["confidence_reason"]
+    assert "\u6838\u5fc3\u884c\u60c5" in pd["confidence_reason"]
 
 
 def test_degraded_core_data_caps_high_confidence_hold_advice() -> None:
     result = _result(
-        operation_advice="暂不加仓，观望",
+        operation_advice="\u6682\u4e0d\u52a0\u4ed3，\u89c2\u671b",
         decision_type="hold",
-        confidence_level="高",
+        confidence_level="\u9ad8",
         dashboard={
-            "core_conclusion": {"one_sentence": "暂不加仓，观望"},
+            "core_conclusion": {"one_sentence": "\u6682\u4e0d\u52a0\u4ed3，\u89c2\u671b"},
             "phase_decision": {
-                "action_window": "盘中跟踪",
-                "immediate_action": "暂不加仓，观望",
-                "watch_conditions": ["放量突破"],
+                "action_window": "\u76d8\u4e2d\u8ddf\u8e2a",
+                "immediate_action": "\u6682\u4e0d\u52a0\u4ed3，\u89c2\u671b",
+                "watch_conditions": ["\u653e\u91cf\u7a81\u7834"],
                 "next_check_time": "14:30",
-                "confidence_reason": "趋势未确认",
+                "confidence_reason": "\u8d8b\u52bf\u672a\u786e\u8ba4",
                 "data_limitations": [],
             },
         },
@@ -126,8 +126,8 @@ def test_degraded_core_data_caps_high_confidence_hold_advice() -> None:
     )
 
     assert "confidence_capped_core_data_degraded" in adjustments
-    assert result.confidence_level == "中"
-    assert "核心行情" in result.dashboard["phase_decision"]["confidence_reason"]
+    assert result.confidence_level == "\u4e2d"
+    assert "\u6838\u5fc3\u884c\u60c5" in result.dashboard["phase_decision"]["confidence_reason"]
     assert "quote: stale" in result.dashboard["phase_decision"]["data_limitations"]
 
 
@@ -142,8 +142,8 @@ def test_premarket_high_confidence_immediate_action_is_conservative() -> None:
     )
 
     assert "confidence_capped_non_intraday_action" in adjustments
-    assert result.confidence_level == "低"
-    assert result.dashboard["phase_decision"]["immediate_action"] == "等待盘中确认，禁止追高。"
+    assert result.confidence_level == "\u4f4e"
+    assert result.dashboard["phase_decision"]["immediate_action"] == "\u7b49\u5f85\u76d8\u4e2d\u786e\u8ba4，\u7981\u6b62\u8ffd\u9ad8。"
 
 
 def test_premarket_medium_confidence_immediate_action_rewrites_action_only() -> None:
@@ -183,17 +183,17 @@ def test_premarket_medium_confidence_immediate_action_rewrites_action_only() -> 
 
 def test_unknown_low_confidence_immediate_action_rewrites_action_only() -> None:
     result = _result(
-        operation_advice="观察为主",
+        operation_advice="\u89c2\u5bdf\u4e3a\u4e3b",
         decision_type="hold",
-        confidence_level="低",
+        confidence_level="\u4f4e",
         dashboard={
-            "core_conclusion": {"one_sentence": "观察为主"},
+            "core_conclusion": {"one_sentence": "\u89c2\u5bdf\u4e3a\u4e3b"},
             "phase_decision": {
-                "action_window": "未知阶段观察",
-                "immediate_action": "立即买入",
-                "watch_conditions": ["确认开市状态"],
-                "next_check_time": "阶段确认后",
-                "confidence_reason": "阶段未知",
+                "action_window": "\u672a\u77e5\u9636\u6bb5\u89c2\u5bdf",
+                "immediate_action": "\u7acb\u5373\u4e70\u5165",
+                "watch_conditions": ["\u786e\u8ba4\u5f00\u5e02\u72b6\u6001"],
+                "next_check_time": "\u9636\u6bb5\u786e\u8ba4\u540e",
+                "confidence_reason": "\u9636\u6bb5\u672a\u77e5",
                 "data_limitations": [],
             },
         },
@@ -208,8 +208,8 @@ def test_unknown_low_confidence_immediate_action_rewrites_action_only() -> None:
 
     assert "non_intraday_action_adjusted" in adjustments
     assert "confidence_capped_non_intraday_action" not in adjustments
-    assert result.confidence_level == "低"
-    assert result.dashboard["phase_decision"]["immediate_action"] == "等待盘中确认，禁止追高。"
+    assert result.confidence_level == "\u4f4e"
+    assert result.dashboard["phase_decision"]["immediate_action"] == "\u7b49\u5f85\u76d8\u4e2d\u786e\u8ba4，\u7981\u6b62\u8ffd\u9ad8。"
 
 
 def test_premarket_degraded_immediate_action_uses_strongest_cap() -> None:
@@ -224,17 +224,17 @@ def test_premarket_degraded_immediate_action_uses_strongest_cap() -> None:
 
     assert "confidence_capped_core_data_degraded" in adjustments
     assert "confidence_capped_non_intraday_action" in adjustments
-    assert result.confidence_level == "低"
-    assert result.dashboard["phase_decision"]["immediate_action"] == "等待盘中确认，禁止追高。"
+    assert result.confidence_level == "\u4f4e"
+    assert result.dashboard["phase_decision"]["immediate_action"] == "\u7b49\u5f85\u76d8\u4e2d\u786e\u8ba4，\u7981\u6b62\u8ffd\u9ad8。"
 
 
 def test_intraday_postmarket_recap_wording_is_adjusted_in_zh_and_en() -> None:
     zh_result = _result(
-        operation_advice="今日收盘后复盘显示可买入",
-        analysis_summary="明日重点关注突破",
+        operation_advice="\u4eca\u65e5\u6536\u76d8\u540e\u590d\u76d8\u663e\u793a\u53ef\u4e70\u5165",
+        analysis_summary="\u660e\u65e5\u91cd\u70b9\u5173\u6ce8\u7a81\u7834",
         dashboard={
-            "core_conclusion": {"one_sentence": "今日收盘后复盘显示偏强"},
-            "phase_decision": {"immediate_action": "明日重点关注突破", "watch_conditions": []},
+            "core_conclusion": {"one_sentence": "\u4eca\u65e5\u6536\u76d8\u540e\u590d\u76d8\u663e\u793a\u504f\u5f3a"},
+            "phase_decision": {"immediate_action": "\u660e\u65e5\u91cd\u70b9\u5173\u6ce8\u7a81\u7834", "watch_conditions": []},
         },
     )
 
@@ -246,8 +246,8 @@ def test_intraday_postmarket_recap_wording_is_adjusted_in_zh_and_en() -> None:
     )
 
     assert "postmarket_recap_wording_adjusted" in zh_adjustments
-    assert "今日收盘后" not in zh_result.dashboard["core_conclusion"]["one_sentence"]
-    assert "明日重点" not in zh_result.analysis_summary
+    assert "\u4eca\u65e5\u6536\u76d8\u540e" not in zh_result.dashboard["core_conclusion"]["one_sentence"]
+    assert "\u660e\u65e5\u91cd\u70b9" not in zh_result.analysis_summary
 
     en_result = _result(
         operation_advice="Buy after today's close",
@@ -274,10 +274,10 @@ def test_intraday_postmarket_recap_wording_is_adjusted_in_zh_and_en() -> None:
 
 def test_postmarket_recap_and_missing_inputs_are_fail_open() -> None:
     postmarket = _result(
-        operation_advice="今日收盘后复盘显示可持有",
+        operation_advice="\u4eca\u65e5\u6536\u76d8\u540e\u590d\u76d8\u663e\u793a\u53ef\u6301\u6709",
         dashboard={
-            "core_conclusion": {"one_sentence": "今日收盘后复盘显示可持有"},
-            "phase_decision": {"watch_conditions": ["不破支撑"]},
+            "core_conclusion": {"one_sentence": "\u4eca\u65e5\u6536\u76d8\u540e\u590d\u76d8\u663e\u793a\u53ef\u6301\u6709"},
+            "phase_decision": {"watch_conditions": ["\u4e0d\u7834\u652f\u6491"]},
         },
     )
 
@@ -289,8 +289,8 @@ def test_postmarket_recap_and_missing_inputs_are_fail_open() -> None:
     )
 
     assert adjustments == []
-    assert "今日收盘后" in postmarket.dashboard["core_conclusion"]["one_sentence"]
-    assert postmarket.dashboard["phase_decision"]["watch_conditions"] == ["不破支撑"]
+    assert "\u4eca\u65e5\u6536\u76d8\u540e" in postmarket.dashboard["core_conclusion"]["one_sentence"]
+    assert postmarket.dashboard["phase_decision"]["watch_conditions"] == ["\u4e0d\u7834\u652f\u6491"]
 
     missing = _result(dashboard={})
     adjustments = apply_phase_decision_guardrails(
@@ -307,10 +307,10 @@ def test_postmarket_recap_and_missing_inputs_are_fail_open() -> None:
 
 def test_guardrail_creates_dashboard_for_agent_compatible_result_object() -> None:
     result = SimpleNamespace(
-        confidence_level="高",
+        confidence_level="\u9ad8",
         decision_type="hold",
-        operation_advice="持有",
-        analysis_summary="测试摘要",
+        operation_advice="\u6301\u6709",
+        analysis_summary="\u6d4b\u8bd5\u6458\u8981",
     )
 
     adjustments = apply_phase_decision_guardrails(

@@ -7,7 +7,7 @@ import { DecisionSignalCard, DecisionSignalDetails, PortfolioSignalSummary } fro
 const signal: DecisionSignalItem = {
   id: 7,
   stockCode: '600519',
-  stockName: '贵州茅台',
+  stockName: '\u8d35\u5dde\u8305\u53f0',
   market: 'cn',
   sourceType: 'analysis',
   sourceReportId: 3001,
@@ -22,11 +22,11 @@ const signal: DecisionSignalItem = {
   entryHigh: 1620,
   stopLoss: 1550,
   targetPrice: 1700,
-  invalidation: '跌破 1550',
-  watchConditions: '观察成交量',
-  reason: '趋势保持',
-  riskSummary: '放量下跌风险',
-  catalystSummary: '业绩窗口',
+  invalidation: '\u8dcc\u7834 1550',
+  watchConditions: '\u89c2\u5bdf\u6210\u4ea4\u91cf',
+  reason: '\u8d8b\u52bf\u4fdd\u6301',
+  riskSummary: '\u653e\u91cf\u4e0b\u8dcc\u98ce\u9669',
+  catalystSummary: '\u4e1a\u7ee9\u7a97\u53e3',
   evidence: { technical: 'ma' },
   dataQualitySummary: { freshness: 'ok' },
   planQuality: 'complete',
@@ -51,17 +51,17 @@ describe('DecisionSignalCard', () => {
     const onSelect = vi.fn();
     renderCard(onSelect);
 
-    expect(screen.getByText('贵州茅台').closest('button')).toBeNull();
+    expect(screen.getByText('\u8d35\u5dde\u8305\u53f0').closest('button')).toBeNull();
     expect(screen.getByText('72%')).toBeInTheDocument();
     expect(screen.getByText('1600 - 1620')).toBeInTheDocument();
-    expect(screen.getByText('业绩窗口')).toBeInTheDocument();
-    expect(screen.getByText('跌破 1550')).toBeInTheDocument();
-    fireEvent.click(screen.getByRole('button', { name: '查看 贵州茅台 AI 建议详情' }));
+    expect(screen.getByText('\u4e1a\u7ee9\u7a97\u53e3')).toBeInTheDocument();
+    expect(screen.getByText('\u8dcc\u7834 1550')).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: '\u67e5\u770b \u8d35\u5dde\u8305\u53f0 AI \u5efa\u8bae\u8be6\u60c5' }));
 
     expect(onSelect).toHaveBeenCalledWith(signal);
-    expect(screen.getByText('3 日')).toBeInTheDocument();
-    expect(screen.getByText('计划质量: 完整')).toBeInTheDocument();
-    expect(screen.getByText('阶段: 盘中')).toBeInTheDocument();
+    expect(screen.getByText('3 \u65e5')).toBeInTheDocument();
+    expect(screen.getByText('\u8ba1\u5212\u8d28\u91cf: \u5b8c\u6574')).toBeInTheDocument();
+    expect(screen.getByText('\u9636\u6bb5: \u76d8\u4e2d')).toBeInTheDocument();
     expect(screen.queryByText('3d')).not.toBeInTheDocument();
     expect(screen.queryByText('complete')).not.toBeInTheDocument();
     expect(screen.queryByText('intraday')).not.toBeInTheDocument();
@@ -70,8 +70,8 @@ describe('DecisionSignalCard', () => {
   it('renders non-interactive cards without a details button', () => {
     renderCard();
 
-    expect(screen.getByText('贵州茅台')).toBeInTheDocument();
-    expect(screen.queryByRole('button', { name: '查看 贵州茅台 AI 建议详情' })).not.toBeInTheDocument();
+    expect(screen.getByText('\u8d35\u5dde\u8305\u53f0')).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: '\u67e5\u770b \u8d35\u5dde\u8305\u53f0 AI \u5efa\u8bae\u8be6\u60c5' })).not.toBeInTheDocument();
   });
 
   it('hides missing optional plan text for sparse legacy signals', () => {
@@ -96,15 +96,15 @@ describe('DecisionSignalCard', () => {
       </UiLanguageProvider>,
     );
 
-    expect(screen.getByText('评分')).toBeInTheDocument();
-    expect(screen.getByText('置信度')).toBeInTheDocument();
-    expect(screen.getByText('周期')).toBeInTheDocument();
+    expect(screen.getByText('\u8bc4\u5206')).toBeInTheDocument();
+    expect(screen.getByText('\u7f6e\u4fe1\u5ea6')).toBeInTheDocument();
+    expect(screen.getByText('\u5468\u671f')).toBeInTheDocument();
     expect(screen.getAllByText('-').length).toBeGreaterThanOrEqual(3);
-    expect(screen.queryByText('入场区间')).not.toBeInTheDocument();
-    expect(screen.queryByText('止损')).not.toBeInTheDocument();
-    expect(screen.queryByText('目标价')).not.toBeInTheDocument();
-    expect(screen.queryByText('催化')).not.toBeInTheDocument();
-    expect(screen.queryByText('失效条件')).not.toBeInTheDocument();
+    expect(screen.queryByText('\u5165\u573a\u533a\u95f4')).not.toBeInTheDocument();
+    expect(screen.queryByText('\u6b62\u635f')).not.toBeInTheDocument();
+    expect(screen.queryByText('\u76ee\u6807\u4ef7')).not.toBeInTheDocument();
+    expect(screen.queryByText('\u50ac\u5316')).not.toBeInTheDocument();
+    expect(screen.queryByText('\u5931\u6548\u6761\u4ef6')).not.toBeInTheDocument();
   });
 });
 
@@ -117,12 +117,12 @@ describe('DecisionSignalDetails', () => {
       </UiLanguageProvider>,
     );
 
-    const entryRange = screen.getByText('入场区间').closest('div');
+    const entryRange = screen.getByText('\u5165\u573a\u533a\u95f4').closest('div');
     expect(entryRange).not.toBeNull();
     expect(entryRange as HTMLElement).toHaveTextContent('1680');
-    expect(screen.getByText('3 日')).toBeInTheDocument();
-    expect(screen.getByText('完整')).toBeInTheDocument();
-    expect(screen.getByText('盘中')).toBeInTheDocument();
+    expect(screen.getByText('3 \u65e5')).toBeInTheDocument();
+    expect(screen.getByText('\u5b8c\u6574')).toBeInTheDocument();
+    expect(screen.getByText('\u76d8\u4e2d')).toBeInTheDocument();
     expect(screen.queryByText('3d')).not.toBeInTheDocument();
   });
 
@@ -192,15 +192,15 @@ describe('DecisionSignalDetails', () => {
       </UiLanguageProvider>,
     );
 
-    expect(screen.getByText('后验结果')).toBeInTheDocument();
-    expect(screen.getAllByText('3 日').length).toBeGreaterThan(1);
-    expect(screen.getByText('命中')).toBeInTheDocument();
+    expect(screen.getByText('\u540e\u9a8c\u7ed3\u679c')).toBeInTheDocument();
+    expect(screen.getAllByText('3 \u65e5').length).toBeGreaterThan(1);
+    expect(screen.getByText('\u547d\u4e2d')).toBeInTheDocument();
     expect(screen.getByText('5%')).toBeInTheDocument();
-    expect(screen.getByText('催化')).toBeInTheDocument();
-    expect(screen.getByText('业绩窗口')).toBeInTheDocument();
-    expect(screen.getByText('失效条件')).toBeInTheDocument();
-    expect(screen.getByText('跌破 1550')).toBeInTheDocument();
-    fireEvent.click(screen.getByRole('button', { name: '无用' }));
+    expect(screen.getByText('\u50ac\u5316')).toBeInTheDocument();
+    expect(screen.getByText('\u4e1a\u7ee9\u7a97\u53e3')).toBeInTheDocument();
+    expect(screen.getByText('\u5931\u6548\u6761\u4ef6')).toBeInTheDocument();
+    expect(screen.getByText('\u8dcc\u7834 1550')).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: '\u65e0\u7528' }));
     expect(onFeedbackSubmit).toHaveBeenCalledWith('not_useful');
   });
 

@@ -330,7 +330,7 @@ class GenerationBackendStatusService:
         return {
             "success": True,
             "mode": request.mode,
-            "message": "生成后端冒烟测试通过",
+            "message": "\u751f\u6210\u540e\u7aef\u5192\u70df\u6d4b\u8bd5\u901a\u8fc7",
             "status": status,
         }
 

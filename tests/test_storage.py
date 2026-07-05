@@ -202,57 +202,57 @@ class TestStorage(unittest.TestCase):
 
         DatabaseManager.reset_instance()
         temp_dir.cleanup()
-    
+
     def test_parse_sniper_value(self):
-        """测试解析狙击点位数值"""
-        
-        # 1. 正常数值
+        """\u6d4b\u8bd5\u89e3\u6790\u72d9\u51fb\u70b9\u4f4d\u6570\u503c"""
+
+        # 1. \u6b63\u5e38\u6570\u503c
         self.assertEqual(DatabaseManager._parse_sniper_value(100), 100.0)
         self.assertEqual(DatabaseManager._parse_sniper_value(100.5), 100.5)
         self.assertEqual(DatabaseManager._parse_sniper_value("100"), 100.0)
         self.assertEqual(DatabaseManager._parse_sniper_value("100.5"), 100.5)
-        
-        # 2. 包含中文描述和"元"
-        self.assertEqual(DatabaseManager._parse_sniper_value("建议在 100 元附近买入"), 100.0)
-        self.assertEqual(DatabaseManager._parse_sniper_value("价格：100.5元"), 100.5)
-        
-        # 3. 包含干扰数字（修复的Bug场景）
-        # 之前 "MA5" 会被错误提取为 5.0，现在应该提取 "元" 前面的 100
-        text_bug = "无法给出。需等待MA5数据恢复，在股价回踩MA5且乖离率<2%时考虑100元"
-        self.assertEqual(DatabaseManager._parse_sniper_value(text_bug), 100.0)
-        
-        # 4. 更多干扰场景
-        text_complex = "MA10为20.5，建议在30元买入"
-        self.assertEqual(DatabaseManager._parse_sniper_value(text_complex), 30.0)
-        
-        text_multiple = "支撑位10元，阻力位20元" # 应该提取最后一个"元"前面的数字，即20，或者更复杂的逻辑？
-        # 当前逻辑是找最后一个冒号，然后找之后的第一个"元"，提取中间的数字。
-        # 测试没有冒号的情况
-        self.assertEqual(DatabaseManager._parse_sniper_value("30元"), 30.0)
-        
-        # 测试多个数字在"元"之前
-        self.assertEqual(DatabaseManager._parse_sniper_value("MA5 10 20元"), 20.0)
-        
-        # 5. Fallback: no "元" character — extracts last non-MA number
-        self.assertEqual(DatabaseManager._parse_sniper_value("102.10-103.00（MA5附近）"), 103.0)
-        self.assertEqual(DatabaseManager._parse_sniper_value("97.62-98.50（MA10附近）"), 98.5)
-        self.assertEqual(DatabaseManager._parse_sniper_value("93.40下方（MA20支撑）"), 93.4)
-        self.assertEqual(DatabaseManager._parse_sniper_value("108.00-110.00（前期高点阻力）"), 110.0)
 
-        # 6. 无效输入
+        # 2. \u5305\u542b\u4e2d\u6587\u63cf\u8ff0\u548c"\u5143"
+        self.assertEqual(DatabaseManager._parse_sniper_value("\u5efa\u8bae\u5728 100 \u5143\u9644\u8fd1\u4e70\u5165"), 100.0)
+        self.assertEqual(DatabaseManager._parse_sniper_value("\u4ef7\u683c：100.5\u5143"), 100.5)
+
+        # 3. \u5305\u542b\u5e72\u6270\u6570\u5b57（\u4fee\u590d\u7684Bug\u573a\u666f）
+        # \u4e4b\u524d "MA5" \u4f1a\u88ab\u9519\u8bef\u63d0\u53d6\u4e3a 5.0，\u73b0\u5728\u5e94\u8be5\u63d0\u53d6 "\u5143" \u524d\u9762\u7684 100
+        text_bug = "\u65e0\u6cd5\u7ed9\u51fa。\u9700\u7b49\u5f85MA5\u6570\u636e\u6062\u590d，\u5728\u80a1\u4ef7\u56de\u8e29MA5\u4e14\u4e56\u79bb\u7387<2%\u65f6\u8003\u8651100\u5143"
+        self.assertEqual(DatabaseManager._parse_sniper_value(text_bug), 100.0)
+
+        # 4. \u66f4\u591a\u5e72\u6270\u573a\u666f
+        text_complex = "MA10\u4e3a20.5，\u5efa\u8bae\u572830\u5143\u4e70\u5165"
+        self.assertEqual(DatabaseManager._parse_sniper_value(text_complex), 30.0)
+
+        text_multiple = "\u652f\u6491\u4f4d10\u5143，\u963b\u529b\u4f4d20\u5143" # \u5e94\u8be5\u63d0\u53d6\u6700\u540e\u4e00\u4e2a"\u5143"\u524d\u9762\u7684\u6570\u5b57，\u537320，\u6216\u8005\u66f4\u590d\u6742\u7684\u903b\u8f91？
+        # \u5f53\u524d\u903b\u8f91\u662f\u627e\u6700\u540e\u4e00\u4e2a\u5192\u53f7，\u7136\u540e\u627e\u4e4b\u540e\u7684\u7b2c\u4e00\u4e2a"\u5143"，\u63d0\u53d6\u4e2d\u95f4\u7684\u6570\u5b57。
+        # \u6d4b\u8bd5\u6ca1\u6709\u5192\u53f7\u7684\u60c5\u51b5
+        self.assertEqual(DatabaseManager._parse_sniper_value("30\u5143"), 30.0)
+
+        # \u6d4b\u8bd5\u591a\u4e2a\u6570\u5b57\u5728"\u5143"\u4e4b\u524d
+        self.assertEqual(DatabaseManager._parse_sniper_value("MA5 10 20\u5143"), 20.0)
+
+        # 5. Fallback: no "\u5143" character — extracts last non-MA number
+        self.assertEqual(DatabaseManager._parse_sniper_value("102.10-103.00（MA5\u9644\u8fd1）"), 103.0)
+        self.assertEqual(DatabaseManager._parse_sniper_value("97.62-98.50（MA10\u9644\u8fd1）"), 98.5)
+        self.assertEqual(DatabaseManager._parse_sniper_value("93.40\u4e0b\u65b9（MA20\u652f\u6491）"), 93.4)
+        self.assertEqual(DatabaseManager._parse_sniper_value("108.00-110.00（\u524d\u671f\u9ad8\u70b9\u963b\u529b）"), 110.0)
+
+        # 6. \u65e0\u6548\u8f93\u5165
         self.assertIsNone(DatabaseManager._parse_sniper_value(None))
         self.assertIsNone(DatabaseManager._parse_sniper_value(""))
-        self.assertIsNone(DatabaseManager._parse_sniper_value("没有数字"))
-        self.assertIsNone(DatabaseManager._parse_sniper_value("MA5但没有元"))
+        self.assertIsNone(DatabaseManager._parse_sniper_value("\u6ca1\u6709\u6570\u5b57"))
+        self.assertIsNone(DatabaseManager._parse_sniper_value("MA5\u4f46\u6ca1\u6709\u5143"))
 
-        # 7. 回归：括号内技术指标数字不应被提取
-        self.assertNotEqual(DatabaseManager._parse_sniper_value("1.52-1.53 (回踩MA5/10附近)"), 10.0)
-        self.assertNotEqual(DatabaseManager._parse_sniper_value("1.55-1.56(MA5/M20支撑)"), 20.0)
-        self.assertNotEqual(DatabaseManager._parse_sniper_value("1.49-1.50(MA60附近企稳)"), 60.0)
-        # 验证正确值在区间内
-        self.assertIn(DatabaseManager._parse_sniper_value("1.52-1.53 (回踩MA5/10附近)"), [1.52, 1.53])
-        self.assertIn(DatabaseManager._parse_sniper_value("1.55-1.56(MA5/M20支撑)"), [1.55, 1.56])
-        self.assertIn(DatabaseManager._parse_sniper_value("1.49-1.50(MA60附近企稳)"), [1.49, 1.50])
+        # 7. \u56de\u5f52：\u62ec\u53f7\u5185\u6280\u672f\u6307\u6807\u6570\u5b57\u4e0d\u5e94\u88ab\u63d0\u53d6
+        self.assertNotEqual(DatabaseManager._parse_sniper_value("1.52-1.53 (\u56de\u8e29MA5/10\u9644\u8fd1)"), 10.0)
+        self.assertNotEqual(DatabaseManager._parse_sniper_value("1.55-1.56(MA5/M20\u652f\u6491)"), 20.0)
+        self.assertNotEqual(DatabaseManager._parse_sniper_value("1.49-1.50(MA60\u9644\u8fd1\u4f01\u7a33)"), 60.0)
+        # \u9a8c\u8bc1\u6b63\u786e\u503c\u5728\u533a\u95f4\u5185
+        self.assertIn(DatabaseManager._parse_sniper_value("1.52-1.53 (\u56de\u8e29MA5/10\u9644\u8fd1)"), [1.52, 1.53])
+        self.assertIn(DatabaseManager._parse_sniper_value("1.55-1.56(MA5/M20\u652f\u6491)"), [1.55, 1.56])
+        self.assertIn(DatabaseManager._parse_sniper_value("1.49-1.50(MA60\u9644\u8fd1\u4f01\u7a33)"), [1.49, 1.50])
 
     def test_get_chat_sessions_prefix_is_scoped_by_colon_boundary(self):
         DatabaseManager.reset_instance()

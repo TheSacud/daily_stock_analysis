@@ -47,40 +47,40 @@ class MarketStrategyBlueprint:
     def to_markdown_block(self) -> str:
         """Render blueprint as markdown section for template fallback report."""
         dims = "\n".join([f"- **{dim.name}**: {dim.objective}" for dim in self.dimensions])
-        section_title = "### VI. Strategy Framework" if self.region == "us" else "### 六、策略框架"
+        section_title = "### VI. Strategy Framework" if self.region == "us" else "### \u516d、strategy\u6846\u67b6"
         return f"{section_title}\n{dims}\n"
 
 
 CN_BLUEPRINT = MarketStrategyBlueprint(
     region="cn",
-    title="A股市场三段式复盘策略",
-    positioning="聚焦指数趋势、资金博弈与板块轮动，形成次日交易计划。",
+    title="A-sharemarket\u4e09\u6bb5\u5f0f\u590d\u76d8strategy",
+    positioning="\u805a\u7126index\u8d8b\u52bf、\u8d44\u91d1\u535a\u5f08\u4e0esector\u8f6e\u52a8; \u5f62\u6210\u6b21\u65e5\u4ea4\u6613\u8ba1\u5212.",
     principles=[
-        "先看指数方向，再看量能结构，最后看板块持续性。",
-        "结论必须映射到仓位、节奏与风险控制动作。",
-        "判断使用当日数据与近3日新闻，不臆测未验证信息。",
+        "\u5148\u770bindex\u65b9\u5411; \u518d\u770b\u91cf\u80fd\u7ed3\u6784; \u6700\u540e\u770bsector\u6301\u7eed.",
+        "\u7ed3\u8bba\u5fc5\u987b\u6620\u5c04\u5230\u4ed3characters、\u8282\u594f\u4e0e\u98ce\u9669\u63a7\u5236\u52a8\u4f5c.",
+        "\u5224\u65ad\u4f7f\u7528\u5f53\u65e5\u6570\u636e\u4e0e\u8fd13\u65e5news; \u4e0d\u81c6\u6d4b\u672a\u9a8c\u8bc1info.",
     ],
     dimensions=[
         StrategyDimension(
-            name="趋势结构",
-            objective="判断市场处于上升、震荡还是防守阶段。",
-            checkpoints=["上证/深证/创业板是否同向", "放量上涨或缩量下跌是否成立", "关键支撑阻力是否被突破"],
+            name="\u8d8b\u52bf\u7ed3\u6784",
+            objective="\u5224\u65admarket\u5904\u4e8e\u4e0a\u5347、\u9707\u8361\u8fd8\u662f\u9632\u5b88\u9636\u6bb5.",
+            checkpoints=["\u4e0a\u8bc1/\u6df1\u8bc1/\u521b\u4e1a\u677f\u662f\u5426\u540c\u5411", "\u653e\u91cf\u4e0a\u6da8or\u7f29\u91cf\u4e0b\u8dcc\u662f\u5426\u6210\u7acb", "\u5173\u952e\u652f\u6491\u963b\u529b\u662f\u5426\u88ab\u7a81\u7834"],
         ),
         StrategyDimension(
-            name="资金情绪",
-            objective="识别短线风险偏好与情绪温度。",
-            checkpoints=["涨跌家数与涨跌停结构", "成交额是否扩张", "高位股是否出现分歧"],
+            name="\u8d44\u91d1\u60c5\u7eea",
+            objective="\u8bc6\u522b\u77ed\u7ebf\u98ce\u9669Slightly \u597d\u4e0e\u60c5\u7eea\u6e29\u5ea6.",
+            checkpoints=["change\u5bb6\u6570\u4e0echange\u505c\u7ed3\u6784", "amount\u662f\u5426\u6269\u5f20", "Highcharacters\u80a1\u662f\u5426\u51fa\u73b0\u5206\u6b67"],
         ),
         StrategyDimension(
-            name="主线板块",
-            objective="提炼可交易主线与规避方向。",
-            checkpoints=["领涨板块是否具备事件催化", "板块内部是否有龙头带动", "领跌板块是否扩散"],
+            name="\u4e3b\u7ebfsector",
+            objective="\u63d0\u70bc\u53ef\u4ea4\u6613\u4e3b\u7ebf\u4e0e\u89c4\u907f\u65b9\u5411.",
+            checkpoints=["\u9886\u6da8sector\u662f\u5426\u5177\u5907\u4e8b\u4ef6\u50ac\u5316", "sector\u5185\u90e8\u662f\u5426\u6709\u9f99\u5934\u5e26\u52a8", "\u9886\u8dccsector\u662f\u5426\u6269\u6563"],
         ),
     ],
     action_framework=[
-        "进攻：指数共振上行 + 成交额放大 + 主线强化。",
-        "均衡：指数分化或缩量震荡，控制仓位并等待确认。",
-        "防守：指数转弱 + 领跌扩散，优先风控与减仓。",
+        "\u8fdb\u653b: index\u5171\u632f\u4e0a\u884c + amount\u653e\u5927 + \u4e3b\u7ebf\u5f3a\u5316.",
+        "\u5747\u8861: index\u5206\u5316or\u7f29\u91cf\u9707\u8361; Control position size\u5e76waiting\u786e\u8ba4.",
+        "\u9632\u5b88: index\u8f6c\u5f31 + \u9886\u8dcc\u6269\u6563; \u4f18\u5148\u98ce\u63a7\u4e0e\u51cf\u4ed3.",
     ],
 )
 
@@ -131,101 +131,101 @@ US_BLUEPRINT = MarketStrategyBlueprint(
 
 HK_BLUEPRINT = MarketStrategyBlueprint(
     region="hk",
-    title="港股市场三段式复盘策略",
-    positioning="聚焦恒生指数趋势、南向资金博弈与板块轮动，形成次日交易计划。",
+    title="HK stockmarket\u4e09\u6bb5\u5f0f\u590d\u76d8strategy",
+    positioning="\u805a\u7126\u6052\u751findex\u8d8b\u52bf、\u5357\u5411\u8d44\u91d1\u535a\u5f08\u4e0esector\u8f6e\u52a8; \u5f62\u6210\u6b21\u65e5\u4ea4\u6613\u8ba1\u5212.",
     principles=[
-        "先看恒指/恒科/国企指数方向，再看南向资金情绪，最后看板块持续性。",
-        "结论必须映射到仓位、节奏与风险控制动作。",
-        "判断使用当日数据与近3日新闻，不臆测未验证信息。",
+        "\u5148\u770b\u6052\u6307/\u6052\u79d1/\u56fd\u4f01index\u65b9\u5411; \u518d\u770b\u5357\u5411\u8d44\u91d1\u60c5\u7eea; \u6700\u540e\u770bsector\u6301\u7eed.",
+        "\u7ed3\u8bba\u5fc5\u987b\u6620\u5c04\u5230\u4ed3characters、\u8282\u594f\u4e0e\u98ce\u9669\u63a7\u5236\u52a8\u4f5c.",
+        "\u5224\u65ad\u4f7f\u7528\u5f53\u65e5\u6570\u636e\u4e0e\u8fd13\u65e5news; \u4e0d\u81c6\u6d4b\u672a\u9a8c\u8bc1info.",
     ],
     dimensions=[
         StrategyDimension(
-            name="趋势结构",
-            objective="判断市场处于上升、震荡还是防守阶段。",
-            checkpoints=["恒指/恒科/国企指数是否同向", "放量上涨或缩量下跌是否成立", "关键支撑阻力是否被突破"],
+            name="\u8d8b\u52bf\u7ed3\u6784",
+            objective="\u5224\u65admarket\u5904\u4e8e\u4e0a\u5347、\u9707\u8361\u8fd8\u662f\u9632\u5b88\u9636\u6bb5.",
+            checkpoints=["\u6052\u6307/\u6052\u79d1/\u56fd\u4f01index\u662f\u5426\u540c\u5411", "\u653e\u91cf\u4e0a\u6da8or\u7f29\u91cf\u4e0b\u8dcc\u662f\u5426\u6210\u7acb", "\u5173\u952e\u652f\u6491\u963b\u529b\u662f\u5426\u88ab\u7a81\u7834"],
         ),
         StrategyDimension(
-            name="资金情绪",
-            objective="识别南向资金风险偏好与情绪温度。",
-            checkpoints=["南向资金净流入方向与规模", "港元汇率与内地政策含义", "市场广度与龙头集中度"],
+            name="\u8d44\u91d1\u60c5\u7eea",
+            objective="\u8bc6\u522b\u5357\u5411\u8d44\u91d1\u98ce\u9669Slightly \u597d\u4e0e\u60c5\u7eea\u6e29\u5ea6.",
+            checkpoints=["\u5357\u5411\u8d44\u91d1\u51c0\u6d41\u5165\u65b9\u5411\u4e0e\u89c4\u6a21", "\u6e2f\u5143\u6c47\u7387\u4e0e\u5185\u5730\u653f\u7b56\u542b\u4e49", "market\u5e7f\u5ea6\u4e0e\u9f99\u5934\u96c6Medium\u5ea6"],
         ),
         StrategyDimension(
-            name="主线板块",
-            objective="提炼可交易主线与规避方向。",
-            checkpoints=["科技/互联网平台趋势持续性", "金融/地产对政策转向的敏感度", "防御与成长因子轮动"],
+            name="\u4e3b\u7ebfsector",
+            objective="\u63d0\u70bc\u53ef\u4ea4\u6613\u4e3b\u7ebf\u4e0e\u89c4\u907f\u65b9\u5411.",
+            checkpoints=["\u79d1\u6280/\u4e92\u8054\u7f51\u5e73\u53f0\u8d8b\u52bf\u6301\u7eed", "\u91d1\u878d/\u5730\u4ea7\u5bf9\u653f\u7b56\u8f6c\u5411\u7684\u654f\u611f\u5ea6", "\u9632\u5fa1\u4e0e\u6210\u957f\u56e0\u5b50\u8f6e\u52a8"],
         ),
     ],
     action_framework=[
-        "进攻：恒指共振上行 + 南向资金持续流入 + 主线强化。",
-        "均衡：指数分化或缩量震荡，控制仓位并等待确认。",
-        "防守：指数转弱 + 波动率上升，优先风控与减仓。",
+        "\u8fdb\u653b: \u6052\u6307\u5171\u632f\u4e0a\u884c + \u5357\u5411\u8d44\u91d1\u6301\u7eed\u6d41\u5165 + \u4e3b\u7ebf\u5f3a\u5316.",
+        "\u5747\u8861: index\u5206\u5316or\u7f29\u91cf\u9707\u8361; Control position size\u5e76waiting\u786e\u8ba4.",
+        "\u9632\u5b88: index\u8f6c\u5f31 + \u6ce2\u52a8\u7387\u4e0a\u5347; \u4f18\u5148\u98ce\u63a7\u4e0e\u51cf\u4ed3.",
     ],
 )
 
 
 JP_BLUEPRINT = MarketStrategyBlueprint(
     region="jp",
-    title="日本市场三段式复盘策略",
-    positioning="聚焦日经225、东证指数、汇率与全球风险偏好，形成次日交易计划。",
+    title="\u65e5\u672cmarket\u4e09\u6bb5\u5f0f\u590d\u76d8strategy",
+    positioning="\u805a\u7126\u65e5\u7ecf225、\u4e1c\u8bc1index、\u6c47\u7387\u4e0e\u5168\u7403\u98ce\u9669Slightly \u597d; \u5f62\u6210\u6b21\u65e5\u4ea4\u6613\u8ba1\u5212.",
     principles=[
-        "先看日经225与TOPIX是否同向，再看日元、半导体/出口链与金融股表现。",
-        "把指数结论映射到仓位、节奏与风险控制动作。",
-        "只基于可得指数、新闻和价格行为判断，不臆造市场广度或板块统计。",
+        "\u5148\u770b\u65e5\u7ecf225\u4e0eTOPIX\u662f\u5426\u540c\u5411; \u518d\u770b\u65e5\u5143、\u534a\u5bfc\u4f53/\u51fa\u53e3\u94fe\u4e0e\u91d1\u878d\u80a1\u8868\u73b0.",
+        "\u628aindex\u7ed3\u8bba\u6620\u5c04\u5230\u4ed3characters、\u8282\u594f\u4e0e\u98ce\u9669\u63a7\u5236\u52a8\u4f5c.",
+        "\u53ea\u57fa\u4e8e\u53ef\u5f97index、news\u548cprice\u884c\u4e3a\u5224\u65ad; \u4e0d\u81c6\u9020market\u5e7f\u5ea6orsector\u7edf\u8ba1.",
     ],
     dimensions=[
         StrategyDimension(
-            name="趋势结构",
-            objective="判断日本市场处于上攻、震荡还是防守阶段。",
-            checkpoints=["日经225/TOPIX是否同向", "指数是否突破或跌破关键区间", "大盘权重与成长链是否共振"],
+            name="\u8d8b\u52bf\u7ed3\u6784",
+            objective="\u5224\u65ad\u65e5\u672cmarket\u5904\u4e8e\u4e0a\u653b、\u9707\u8361\u8fd8\u662f\u9632\u5b88\u9636\u6bb5.",
+            checkpoints=["\u65e5\u7ecf225/TOPIX\u662f\u5426\u540c\u5411", "index\u662f\u5426\u7a81\u7834or\u8dcc\u7834\u5173\u952e\u533a\u95f4", "\u5927\u76d8\u6743\u91cd\u4e0e\u6210\u957f\u94fe\u662f\u5426\u5171\u632f"],
         ),
         StrategyDimension(
-            name="宏观与汇率",
-            objective="识别日元、利率和全球风险偏好对权益市场的影响。",
-            checkpoints=["日元方向对出口链的影响", "日本央行和美债利率叙事", "海外科技股与半导体链映射"],
+            name="\u5b8f\u89c2\u4e0e\u6c47\u7387",
+            objective="\u8bc6\u522b\u65e5\u5143、\u5229\u7387\u548c\u5168\u7403\u98ce\u9669Slightly \u597d\u5bf9\u6743\u76camarket\u7684\u5f71\u54cd.",
+            checkpoints=["\u65e5\u5143\u65b9\u5411\u5bf9\u51fa\u53e3\u94fe\u7684\u5f71\u54cd", "\u65e5\u672c\u592e\u884c\u548c\u7f8e\u503a\u5229\u7387\u53d9\u4e8b", "\u6d77\u5916\u79d1\u6280\u80a1\u4e0e\u534a\u5bfc\u4f53\u94fe\u6620\u5c04"],
         ),
         StrategyDimension(
-            name="主题线索",
-            objective="提炼可延续主线与需要规避的拥挤方向。",
-            checkpoints=["半导体/自动化/汽车链持续性", "金融与内需股是否轮动", "新闻催化是否支撑价格行为"],
+            name="\u4e3b\u9898\u7ebf\u7d22",
+            objective="\u63d0\u70bc\u53ef\u5ef6\u7eed\u4e3b\u7ebf\u4e0e\u9700\u8981\u89c4\u907f\u7684\u62e5\u6324\u65b9\u5411.",
+            checkpoints=["\u534a\u5bfc\u4f53/\u81ea\u52a8\u5316/\u6c7d\u8f66\u94fe\u6301\u7eed", "\u91d1\u878d\u4e0e\u5185\u9700\u80a1\u662f\u5426\u8f6e\u52a8", "news\u50ac\u5316\u662f\u5426\u652f\u6491price\u884c\u4e3a"],
         ),
     ],
     action_framework=[
-        "进攻：主要指数共振上行 + 外部风险偏好改善 + 主线强化。",
-        "均衡：指数分化或汇率扰动，降低追涨并等待确认。",
-        "防守：主要指数转弱或外部风险升温，优先控制仓位。",
+        "\u8fdb\u653b: \u4e3b\u8981index\u5171\u632f\u4e0a\u884c + \u5916\u90e8\u98ce\u9669Slightly \u597d\u6539\u5584 + \u4e3b\u7ebf\u5f3a\u5316.",
+        "\u5747\u8861: index\u5206\u5316or\u6c47\u7387\u6270\u52a8; \u964dLow\u8ffd\u6da8\u5e76waiting\u786e\u8ba4.",
+        "\u9632\u5b88: \u4e3b\u8981index\u8f6c\u5f31or\u5916\u90e8\u98ce\u9669\u5347\u6e29; \u4f18\u5148Control position size.",
     ],
 )
 
 KR_BLUEPRINT = MarketStrategyBlueprint(
     region="kr",
-    title="韩国市场三段式复盘策略",
-    positioning="聚焦 KOSPI、KOSDAQ、半导体权重与全球科技风险偏好，形成次日交易计划。",
+    title="\u97e9\u56fdmarket\u4e09\u6bb5\u5f0f\u590d\u76d8strategy",
+    positioning="\u805a\u7126 KOSPI、KOSDAQ、\u534a\u5bfc\u4f53\u6743\u91cd\u4e0e\u5168\u7403\u79d1\u6280\u98ce\u9669Slightly \u597d; \u5f62\u6210\u6b21\u65e5\u4ea4\u6613\u8ba1\u5212.",
     principles=[
-        "先看 KOSPI/KOSDAQ 是否同向，再看三星电子、SK 海力士等权重线索。",
-        "区分指数 beta、半导体周期和成长股风险偏好的贡献。",
-        "只基于可得指数、新闻和价格行为判断，不臆造市场广度或板块统计。",
+        "\u5148\u770b KOSPI/KOSDAQ \u662f\u5426\u540c\u5411; \u518d\u770b\u4e09\u661f\u7535\u5b50、SK \u6d77\u529b\u58eb\u7b49\u6743\u91cd\u7ebf\u7d22.",
+        "\u533a\u5206index beta、\u534a\u5bfc\u4f53\u5468\u671f\u548c\u6210\u957f\u80a1\u98ce\u9669Slightly \u597d\u7684\u8d21\u732e.",
+        "\u53ea\u57fa\u4e8e\u53ef\u5f97index、news\u548cprice\u884c\u4e3a\u5224\u65ad; \u4e0d\u81c6\u9020market\u5e7f\u5ea6orsector\u7edf\u8ba1.",
     ],
     dimensions=[
         StrategyDimension(
-            name="趋势结构",
-            objective="判断韩国市场处于上攻、震荡还是防守阶段。",
-            checkpoints=["KOSPI/KOSDAQ 是否同向", "权重股是否支撑指数", "关键支撑阻力是否被突破"],
+            name="\u8d8b\u52bf\u7ed3\u6784",
+            objective="\u5224\u65ad\u97e9\u56fdmarket\u5904\u4e8e\u4e0a\u653b、\u9707\u8361\u8fd8\u662f\u9632\u5b88\u9636\u6bb5.",
+            checkpoints=["KOSPI/KOSDAQ \u662f\u5426\u540c\u5411", "\u6743\u91cd\u80a1\u662f\u5426\u652f\u6491index", "\u5173\u952e\u652f\u6491\u963b\u529b\u662f\u5426\u88ab\u7a81\u7834"],
         ),
         StrategyDimension(
-            name="科技周期",
-            objective="识别半导体、AI 硬件和全球科技股对韩国市场的映射。",
-            checkpoints=["存储/半导体链新闻催化", "美股科技方向联动", "外资风险偏好变化"],
+            name="\u79d1\u6280\u5468\u671f",
+            objective="\u8bc6\u522b\u534a\u5bfc\u4f53、AI \u786c\u4ef6\u548c\u5168\u7403\u79d1\u6280\u80a1\u5bf9\u97e9\u56fdmarket\u7684\u6620\u5c04.",
+            checkpoints=["\u5b58\u50a8/\u534a\u5bfc\u4f53\u94fenews\u50ac\u5316", "US stock\u79d1\u6280\u65b9\u5411\u8054\u52a8", "\u5916\u8d44\u98ce\u9669Slightly \u597d\u53d8\u5316"],
         ),
         StrategyDimension(
-            name="主题线索",
-            objective="提炼可延续主线与需要规避的拥挤方向。",
-            checkpoints=["电池/汽车/互联网是否轮动", "KOSDAQ 成长股风险偏好", "新闻催化是否支撑价格行为"],
+            name="\u4e3b\u9898\u7ebf\u7d22",
+            objective="\u63d0\u70bc\u53ef\u5ef6\u7eed\u4e3b\u7ebf\u4e0e\u9700\u8981\u89c4\u907f\u7684\u62e5\u6324\u65b9\u5411.",
+            checkpoints=["\u7535\u6c60/\u6c7d\u8f66/\u4e92\u8054\u7f51\u662f\u5426\u8f6e\u52a8", "KOSDAQ \u6210\u957f\u80a1\u98ce\u9669Slightly \u597d", "news\u50ac\u5316\u662f\u5426\u652f\u6491price\u884c\u4e3a"],
         ),
     ],
     action_framework=[
-        "进攻：KOSPI/KOSDAQ 共振上行 + 科技权重确认 + 外部风险偏好改善。",
-        "均衡：指数或权重股分化，控制仓位并等待确认。",
-        "防守：科技权重转弱或外部风险升温，优先控制回撤。",
+        "\u8fdb\u653b: KOSPI/KOSDAQ \u5171\u632f\u4e0a\u884c + \u79d1\u6280\u6743\u91cd\u786e\u8ba4 + \u5916\u90e8\u98ce\u9669Slightly \u597d\u6539\u5584.",
+        "\u5747\u8861: indexor\u6743\u91cd\u80a1\u5206\u5316; Control position size\u5e76waiting\u786e\u8ba4.",
+        "\u9632\u5b88: \u79d1\u6280\u6743\u91cd\u8f6c\u5f31or\u5916\u90e8\u98ce\u9669\u5347\u6e29; \u4f18\u5148\u63a7\u5236\u56de\u64a4.",
     ],
 )
 

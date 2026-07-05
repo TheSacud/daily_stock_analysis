@@ -218,25 +218,25 @@ async def auth_update_settings(request: Request, body: AuthSettingsRequest):
                     status_code=400,
                     content={
                         "error": "password_already_set",
-                        "message": "已存在管理员密码，请启用认证后通过修改密码功能更新",
+                        "message": "already exists\u7ba1\u7406\u5458\u5bc6\u7801; \u8bf7\u542f\u7528\u8ba4\u8bc1\u540e\u901a\u8fc7\u4fee\u6539\u5bc6\u7801\u529f\u80fd\u66f4\u65b0",
                     },
                 )
             if not password:
                 return JSONResponse(
                     status_code=400,
-                    content={"error": "password_required", "message": "请输入要设置的管理员密码"},
+                    content={"error": "password_required", "message": "\u8bf7\u8f93\u5165\u8981\u8bbe\u7f6e\u7684\u7ba1\u7406\u5458\u5bc6\u7801"},
                 )
             if password != confirm:
                 return JSONResponse(
                     status_code=400,
-                    content={"error": "password_mismatch", "message": "两次输入的密码不一致"},
+                    content={"error": "password_mismatch", "message": "\u4e24\u6b21\u8f93\u5165\u7684\u5bc6\u7801\u4e0d\u4e00\u81f4"},
                 )
             if has_stored_password():
                 return JSONResponse(
                     status_code=400,
                     content={
                         "error": "password_already_set",
-                        "message": "已存在管理员密码，请启用认证后通过修改密码功能更新",
+                        "message": "already exists\u7ba1\u7406\u5458\u5bc6\u7801; \u8bf7\u542f\u7528\u8ba4\u8bc1\u540e\u901a\u8fc7\u4fee\u6539\u5bc6\u7801\u529f\u80fd\u66f4\u65b0",
                     },
                 )
             err = set_initial_password(password)
@@ -248,7 +248,7 @@ async def auth_update_settings(request: Request, body: AuthSettingsRequest):
         elif not stored_password_exists:
             return JSONResponse(
                 status_code=400,
-                content={"error": "password_required", "message": "开启密码登录前请先设置密码"},
+                content={"error": "password_required", "message": "\u5f00\u542f\u5bc6\u7801\u767b\u5f55\u524d\u8bf7\u5148\u8bbe\u7f6e\u5bc6\u7801"},
             )
         else:
             # P1 Vulnerability Fix: Enforce current-password check independent of global cached flag
@@ -258,12 +258,12 @@ async def auth_update_settings(request: Request, body: AuthSettingsRequest):
             cookie_val = request.cookies.get(COOKIE_NAME)
             # if target_enabled is True here, they are requesting to enable or keep auth enabled
             is_valid_session = cookie_val and verify_session(cookie_val)
-            
+
             if not is_valid_session:
                 if not current_password:
                     return JSONResponse(
                         status_code=400,
-                        content={"error": "current_required", "message": "重新开启认证前请输入当前密码"},
+                        content={"error": "current_required", "message": "\u91cd\u65b0\u5f00\u542f\u8ba4\u8bc1\u524denter current password"},
                     )
                 ip = get_client_ip(request)
                 if not check_rate_limit(ip):
@@ -278,7 +278,7 @@ async def auth_update_settings(request: Request, body: AuthSettingsRequest):
                     record_login_failure(ip)
                     return JSONResponse(
                         status_code=401,
-                        content={"error": "invalid_password", "message": "当前密码错误"},
+                        content={"error": "invalid_password", "message": "current password is incorrect"},
                     )
                 clear_rate_limit(ip)
     else:
@@ -290,7 +290,7 @@ async def auth_update_settings(request: Request, body: AuthSettingsRequest):
                 if not current_password:
                     return JSONResponse(
                         status_code=400,
-                        content={"error": "current_required", "message": "关闭认证前请输入当前密码"},
+                        content={"error": "current_required", "message": "\u5173\u95ed\u8ba4\u8bc1\u524denter current password"},
                     )
                 ip = get_client_ip(request)
                 if not check_rate_limit(ip):
@@ -305,7 +305,7 @@ async def auth_update_settings(request: Request, body: AuthSettingsRequest):
                     record_login_failure(ip)
                     return JSONResponse(
                         status_code=401,
-                        content={"error": "invalid_password", "message": "当前密码错误"},
+                        content={"error": "invalid_password", "message": "current password is incorrect"},
                     )
                 clear_rate_limit(ip)
 
@@ -371,7 +371,7 @@ async def auth_login(request: Request, body: LoginRequest):
     if not password:
         return JSONResponse(
             status_code=400,
-            content={"error": "password_required", "message": "请输入密码"},
+            content={"error": "password_required", "message": "\u8bf7\u8f93\u5165\u5bc6\u7801"},
         )
 
     ip = get_client_ip(request)
@@ -407,7 +407,7 @@ async def auth_login(request: Request, body: LoginRequest):
             record_login_failure(ip)
             return JSONResponse(
                 status_code=401,
-                content={"error": "invalid_password", "message": "密码错误"},
+                content={"error": "invalid_password", "message": "\u5bc6\u7801error"},
             )
 
     clear_rate_limit(ip)
@@ -443,12 +443,12 @@ async def auth_change_password(body: ChangePasswordRequest):
     if not current:
         return JSONResponse(
             status_code=400,
-            content={"error": "current_required", "message": "请输入当前密码"},
+            content={"error": "current_required", "message": "enter current password"},
         )
     if new_pwd != new_confirm:
         return JSONResponse(
             status_code=400,
-            content={"error": "password_mismatch", "message": "两次输入的新密码不一致"},
+            content={"error": "password_mismatch", "message": "\u4e24\u6b21\u8f93\u5165\u7684\u65b0\u5bc6\u7801\u4e0d\u4e00\u81f4"},
         )
 
     err = change_password(current, new_pwd)

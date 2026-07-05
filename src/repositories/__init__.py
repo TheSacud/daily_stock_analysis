@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 """
 ===================================
-数据访问层模块初始化
+\u6570\u636e\u8bbfask\u5c42\u6a21chunks\u521d\u59cb\u5316
 ===================================
 
-职责：
-1. 导出所有 Repository 类
+\u804c\u8d23:
+1. \u5bfc\u51fa\u6240\u6709 Repository \u7c7b
 """
 
 from src.repositories.analysis_repo import AnalysisRepository

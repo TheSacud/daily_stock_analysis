@@ -11,7 +11,7 @@ Each test is self-contained (one raw fetch + the fetcher, in the same test) so a
 rename is caught LOUD and a narrow connectivity window cannot split-skip two corroborating
 tests. Drift fails LOUD; a transport error, non-trading day, or transient blip skips QUIET
 so the cron is not noisy. A 200 that is NOT JSON (maintenance page / URL migration) is
-DRIFT, not a blip, so it fails — never skipped. Both feeds are public 政府開放資料, no creds.
+DRIFT, not a blip, so it fails — never skipped. Both feeds are public \u653f\u5e9c\u958b\u653e\u8cc7\u6599, no creds.
 
 For the richer human-readable cross-check, see tests/tw_institutional_live_smoke.py.
 """
@@ -107,7 +107,7 @@ class TestTwInstitutionalLiveNetwork(unittest.TestCase):
             self.skipTest("2330.TW None and absent from the raw feed (transient / suspended)")
         if row is None:
             self.skipTest("2330 not in the raw T86 snapshot (cross-check unavailable)")
-        self._assert_record_shape(rec, "上市")
+        self._assert_record_shape(rec, "\u4e0a\u5e02")
         self.assertEqual(rec["foreign_net"], _to_int(row[idx[_T86_FOREIGN]]))
         self.assertEqual(rec["trust_net"], _to_int(row[idx[_T86_TRUST]]))
         self.assertEqual(rec["dealer_net"], _to_int(row[idx[_T86_DEALER]]))
@@ -134,14 +134,14 @@ class TestTwInstitutionalLiveNetwork(unittest.TestCase):
         rec = _fetch_with_retry(TwInstitutionalFetcher(), "5483.TWO")
         if rec is None:
             # row present in the raw feed but the fetcher returned None => parse/date drift
-            # (e.g. a 民國 date-format change _parse_tpex_row can't convert) -> FAIL, not soft-skip.
+            # (e.g. a \u6c11\u570b date-format change _parse_tpex_row can't convert) -> FAIL, not soft-skip.
             if raw is not None:
                 self.fail("5483 is present in the raw TPEx feed but the fetcher returned None after "
-                          "retries — parse/date drift (e.g. a 民國 date-format change)")
+                          "retries — parse/date drift (e.g. a \u6c11\u570b date-format change)")
             self.skipTest("5483.TWO None and absent from the raw feed (transient / suspended)")
         if raw is None:
             self.skipTest("5483 not in the raw TPEx snapshot (cross-check unavailable)")
-        self._assert_record_shape(rec, "上櫃")
+        self._assert_record_shape(rec, "\u4e0a\u6ac3")
         self.assertEqual(rec["foreign_net"], _to_int(raw.get(_TPEX_FOREIGN_EXCL)))
         self.assertEqual(rec["trust_net"], _to_int(raw.get(_TPEX_TRUST)))
         self.assertEqual(rec["dealer_net"], _to_int(raw.get(_TPEX_DEALER)))

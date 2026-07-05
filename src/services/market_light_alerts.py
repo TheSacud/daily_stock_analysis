@@ -21,11 +21,11 @@ from src.services.portfolio_alerts import RuntimeAlertPayload
 MARKET_ALERT_TYPES = frozenset({"market_light_status", "market_light_score_drop"})
 MARKET_STATUS_VALUES = frozenset({"red", "yellow"})
 MARKET_REGION_LABELS = {
-    "cn": "A股大盘",
-    "hk": "港股大盘",
-    "us": "美股大盘",
-    "jp": "日股大盘",
-    "kr": "韩股大盘",
+    "cn": "A-share\u5927\u76d8",
+    "hk": "HK stock\u5927\u76d8",
+    "us": "US stock\u5927\u76d8",
+    "jp": "JP stock\u5927\u76d8",
+    "kr": "KR stock\u5927\u76d8",
 }
 MARKET_LIGHT_DATA_SOURCE = "market_light"
 

@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 """
 ===================================
-状态命令
+statuscommand
 ===================================
 
-显示系统运行状态和配置信息。
+\u663e\u793a\u7cfb\u7edfrun status\u548cconfiginfo.
 """
 
 import platform
@@ -18,46 +18,46 @@ from bot.models import BotMessage, BotResponse
 
 class StatusCommand(BotCommand):
     """
-    状态命令
-    
-    显示系统运行状态，包括：
-    - 服务状态
-    - 配置信息
-    - 可用功能
+    statuscommand
+
+    \u663e\u793a\u7cfb\u7edfrun status; \u5305\u62ec:
+    - \u670d\u52a1status
+    - configinfo
+    - \u53ef\u7528\u529f\u80fd
     """
-    
+
     @property
     def name(self) -> str:
         return "status"
-    
+
     @property
     def aliases(self) -> List[str]:
-        return ["s", "状态", "info"]
-    
+        return ["s", "status", "info"]
+
     @property
     def description(self) -> str:
-        return "显示系统状态"
-    
+        return "show system status"
+
     @property
     def usage(self) -> str:
         return "/status"
-    
+
     def execute(self, message: BotMessage, args: List[str]) -> BotResponse:
-        """执行状态命令"""
+        """\u6267\u884cstatuscommand"""
         from src.config import get_config
-        
+
         config = get_config()
-        
-        # 收集状态信息
+
+        # \u6536\u96c6statusinfo
         status_info = self._collect_status(config)
-        
-        # 格式化输出
+
+        # \u683c\u5f0f\u5316\u8f93\u51fa
         text = self._format_status(status_info, message.platform)
-        
+
         return BotResponse.markdown_response(text)
-    
+
     def _collect_status(self, config) -> dict:
-        """收集系统状态信息"""
+        """\u6536\u96c6\u7cfb\u7edfstatusinfo"""
         from src.config import _uses_direct_env_provider, get_configured_llm_models
 
         status = {
@@ -65,16 +65,16 @@ class StatusCommand(BotCommand):
             "python_version": f"{sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro}",
             "platform": platform.system(),
             "stock_count": len(config.stock_list),
-            "stock_list": config.stock_list[:5],  # 只显示前5个
+            "stock_list": config.stock_list[:5],  # \u53ea\u663e\u793a\u524d5\u4e2a
         }
-        
-        # AI 配置状态
+
+        # AI configstatus
         llm_channels = getattr(config, "llm_channels", []) or []
         llm_model_list = getattr(config, "llm_model_list", []) or []
         llm_model = (getattr(config, "litellm_model", "") or "").strip()
         agent_model = (getattr(config, "agent_litellm_model", "") or "").strip()
         status["ai_primary_model"] = llm_model
-        status["ai_agent_model"] = agent_model or ("继承主模型" if llm_model else "")
+        status["ai_agent_model"] = agent_model or ("\u7ee7\u627f\u4e3b\u6a21\u578b" if llm_model else "")
         status["ai_channels"] = [
             str(channel.get("name") or "").strip()
             for channel in llm_channels
@@ -102,16 +102,16 @@ class StatusCommand(BotCommand):
             llm_model
             and (has_direct_env_model or (llm_model_list and primary_model_reachable))
         )
-        
-        # 搜索服务状态
+
+        # search\u670d\u52a1status
         status["search_bocha"] = len(config.bocha_api_keys) > 0
         status["search_tavily"] = len(config.tavily_api_keys) > 0
         status["search_brave"] = len(config.brave_api_keys) > 0
         status["search_serpapi"] = len(config.serpapi_keys) > 0
         status["search_minimax"] = len(config.minimax_api_keys) > 0
         status["search_searxng"] = config.has_searxng_enabled()
-        
-        # 通知渠道状态
+
+        # notification channelstatus
         status["notify_wechat"] = bool(config.wechat_webhook_url)
         status["notify_feishu"] = bool(config.feishu_webhook_url)
         status["notify_telegram"] = bool(config.telegram_bot_token and config.telegram_chat_id)
@@ -139,40 +139,40 @@ class StatusCommand(BotCommand):
             )
             or getattr(config, "serverchan3_sendkey", None)
         )
-        
+
         return status
-    
+
     def _format_status(self, status: dict, platform: str) -> str:
-        """格式化状态信息"""
-        # 状态图标
+        """\u683c\u5f0f\u5316statusinfo"""
+        # status\u56fe\u6807
         def icon(enabled: bool) -> str:
             return "✅" if enabled else "❌"
-        
+
         lines = [
-            "📊 **股票分析助手 - 系统状态**",
+            "📊 **\u80a1\u7968analyze\u52a9\u624b - \u7cfb\u7edfstatus**",
             "",
-            f"🕐 时间: {status['timestamp']}",
+            f"🕐 \u65f6\u95f4: {status['timestamp']}",
             f"🐍 Python: {status['python_version']}",
-            f"💻 平台: {status['platform']}",
+            f"💻 \u5e73\u53f0: {status['platform']}",
             "",
             "---",
             "",
-            "**📈 自选股配置**",
-            f"• 股票数量: {status['stock_count']} 只",
+            "**📈 watchlistconfig**",
+            f"• \u80a1\u7968count: {status['stock_count']} \u53ea",
         ]
-        
+
         if status['stock_list']:
             stocks_preview = ", ".join(status['stock_list'])
             if status['stock_count'] > 5:
-                stocks_preview += f" ... 等 {status['stock_count']} 只"
-            lines.append(f"• 股票列表: {stocks_preview}")
-        
+                stocks_preview += f" ... \u7b49 {status['stock_count']} \u53ea"
+            lines.append(f"• \u80a1\u7968\u5217\u8868: {stocks_preview}")
+
         lines.extend([
             "",
-            "**🤖 AI 分析服务**",
-            f"• 主模型: {status['ai_primary_model'] or '未配置'}",
-            f"• Agent 模型: {status['ai_agent_model'] or '未配置'}",
-            f"• LLM 渠道: {', '.join(status['ai_channels']) if status['ai_channels'] else '未配置'}",
+            "**🤖 AI analyze\u670d\u52a1**",
+            f"• \u4e3b\u6a21\u578b: {status['ai_primary_model'] or 'not configured'}",
+            f"• Agent \u6a21\u578b: {status['ai_agent_model'] or 'not configured'}",
+            f"• LLM \u6e20\u9053: {', '.join(status['ai_channels']) if status['ai_channels'] else 'not configured'}",
             f"• LiteLLM YAML: {icon(status['ai_yaml'])}",
             "• Legacy Key: "
             + ", ".join(
@@ -180,7 +180,7 @@ class StatusCommand(BotCommand):
                 for name, enabled in status["ai_legacy_keys"].items()
             ),
             "",
-            "**🔍 搜索服务**",
+            "**🔍 search\u670d\u52a1**",
             f"• Bocha: {icon(status['search_bocha'])}",
             f"• Tavily: {icon(status['search_tavily'])}",
             f"• Brave: {icon(status['search_brave'])}",
@@ -188,30 +188,30 @@ class StatusCommand(BotCommand):
             f"• MiniMax: {icon(status['search_minimax'])}",
             f"• SearXNG: {icon(status['search_searxng'])}",
             "",
-            "**📢 通知渠道**",
-            f"• 企业微信: {icon(status['notify_wechat'])}",
-            f"• 飞书: {icon(status['notify_feishu'])}",
+            "**📢 notification channel**",
+            f"• WeCom: {icon(status['notify_wechat'])}",
+            f"• Feishu: {icon(status['notify_feishu'])}",
             f"• Telegram: {icon(status['notify_telegram'])}",
-            f"• 邮件: {icon(status['notify_email'])}",
-            f"• 自定义 Webhook: {icon(status['notify_custom'])}",
+            f"• Email: {icon(status['notify_email'])}",
+            f"• \u81ea\u5b9a\u4e49 Webhook: {icon(status['notify_custom'])}",
             f"• Discord: {icon(status['notify_discord'])}",
             f"• Slack: {icon(status['notify_slack'])}",
-            f"• PushPlus/Pushover/Server酱3: {icon(status['notify_push'])}",
+            f"• PushPlus/Pushover/Server\u91713: {icon(status['notify_push'])}",
         ])
-        
-        # AI 服务总体状态
+
+        # AI \u670d\u52a1\u603b\u4f53status
         if status["ai_available"]:
             lines.extend([
                 "",
                 "---",
-                "✅ **系统就绪，可以开始分析！**",
+                "✅ **\u7cfb\u7edf\u5c31\u7eea; \u53ef\u4ee5\u5f00\u59cbanalyze！**",
             ])
         else:
             lines.extend([
                 "",
                 "---",
-                "⚠️ **AI 服务未配置，分析功能不可用**",
-                "请配置 LITELLM_MODEL、LLM_CHANNELS、LITELLM_CONFIG 或任一 provider API Key",
+                "⚠️ **AI \u670d\u52a1not configured; analyze\u529f\u80fdunavailable**",
+                "\u8bf7config LITELLM_MODEL、LLM_CHANNELS、LITELLM_CONFIG or\u4efb\u4e00 provider API Key",
             ])
-        
+
         return "\n".join(lines)

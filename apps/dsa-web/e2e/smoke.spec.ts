@@ -26,8 +26,8 @@ async function login(page: Page) {
   await page.waitForLoadState('domcontentloaded');
 
   const passwordInput = page.locator('#password');
-  const submitButton = page.getByRole('button', { name: /授权进入工作台|完成设置并登录/ });
-  const homeLink = page.getByRole('link', { name: '首页' });
+  const submitButton = page.getByRole('button', { name: /\u6388\u6743\u8fdb\u5165\u5de5\u4f5c\u53f0|\u5b8c\u6210\u8bbe\u7f6e\u5e76\u767b\u5f55/ });
+  const homeLink = page.getByRole('link', { name: '\u9996\u9875' });
 
   const isAlreadyAuthenticated =
     page.url().endsWith('/') ||
@@ -70,7 +70,7 @@ test.describe('web smoke', () => {
     await expect(page.locator('#password')).toBeVisible();
 
     // Check for submit button
-    await expect(page.getByRole('button', { name: /授权进入工作台|完成设置并登录/ })).toBeVisible();
+    await expect(page.getByRole('button', { name: /\u6388\u6743\u8fdb\u5165\u5de5\u4f5c\u53f0|\u5b8c\u6210\u8bbe\u7f6e\u5e76\u767b\u5f55/ })).toBeVisible();
 
     await captureSmokeScreenshot(page, testInfo, 'smoke-login-page-zh');
   });
@@ -78,14 +78,14 @@ test.describe('web smoke', () => {
   test('home page shows analysis entry and history panel after login', async ({ page }, testInfo) => {
     await login(page);
 
-    const stockInput = page.getByPlaceholder('输入股票代码或名称，如 600519、贵州茅台、AAPL');
+    const stockInput = page.getByPlaceholder('\u8f93\u5165\u80a1\u7968\u4ee3\u7801\u6216\u540d\u79f0，\u5982 600519、\u8d35\u5dde\u8305\u53f0、AAPL');
     await expect(stockInput).toBeVisible({ timeout: 10_000 });
-    await expect(page.getByRole('link', { name: '首页' })).toBeVisible();
-    await expect(page.getByRole('link', { name: '问股' })).toBeVisible();
-    await expect(page.getByText('历史分析')).toBeVisible();
+    await expect(page.getByRole('link', { name: '\u9996\u9875' })).toBeVisible();
+    await expect(page.getByRole('link', { name: '\u95ee\u80a1' })).toBeVisible();
+    await expect(page.getByText('\u5386\u53f2\u5206\u6790')).toBeVisible();
 
     await stockInput.fill('600519');
-    const analyzeButton = page.getByRole('button', { name: '分析', exact: true });
+    const analyzeButton = page.getByRole('button', { name: '\u5206\u6790', exact: true });
     await expect(analyzeButton).toBeVisible();
 
     await captureSmokeScreenshot(page, testInfo, 'smoke-home-page-zh', { fullPage: true });
@@ -95,7 +95,7 @@ test.describe('web smoke', () => {
     await login(page);
 
     // Navigate to chat page by clicking the link
-    await page.getByRole('link', { name: '问股' }).click();
+    await page.getByRole('link', { name: '\u95ee\u80a1' }).click();
     await page.waitForLoadState('domcontentloaded');
     await page.waitForTimeout(1000);
 
@@ -103,13 +103,13 @@ test.describe('web smoke', () => {
     await expect(page.getByTestId('chat-session-list-scroll')).toBeVisible();
     await expect(page.getByTestId('chat-message-scroll')).toBeVisible();
 
-    const input = page.getByPlaceholder(/分析 600519/);
+    const input = page.getByPlaceholder(/\u5206\u6790 600519/);
     await expect(input).toBeVisible({ timeout: 5000 });
-    await expect(page.getByText('策略', { exact: true })).toBeVisible();
+    await expect(page.getByText('\u7b56\u7565', { exact: true })).toBeVisible();
 
-    const prompt = '请简要分析 600519';
+    const prompt = '\u8bf7\u7b80\u8981\u5206\u6790 600519';
     await input.fill(prompt);
-    await page.getByRole('button', { name: '发送' }).click();
+    await page.getByRole('button', { name: '\u53d1\u9001' }).click();
 
     await expect(page.locator('p').filter({ hasText: prompt }).last()).toBeVisible({ timeout: 5000 });
   });
@@ -117,11 +117,11 @@ test.describe('web smoke', () => {
   test('chat page uses accessible labels instead of native title attributes for key actions', async ({ page }) => {
     await login(page);
 
-    await page.getByRole('link', { name: '问股' }).click();
+    await page.getByRole('link', { name: '\u95ee\u80a1' }).click();
     await page.waitForLoadState('domcontentloaded');
 
-    const sendButton = page.getByRole('button', { name: '发送' });
-    const composer = page.getByPlaceholder(/分析 600519/);
+    const sendButton = page.getByRole('button', { name: '\u53d1\u9001' });
+    const composer = page.getByPlaceholder(/\u5206\u6790 600519/);
 
     await expect(page.getByTestId('chat-workspace')).toBeVisible({ timeout: 10_000 });
     await expect(sendButton).toBeVisible({ timeout: 10_000 });
@@ -136,13 +136,13 @@ test.describe('web smoke', () => {
     await login(page);
 
     // Try to open navigation menu
-    const menuButton = page.getByRole('button', { name: /打开导航|菜单/i });
+    const menuButton = page.getByRole('button', { name: /\u6253\u5f00\u5bfc\u822a|\u83dc\u5355/i });
     if (await menuButton.isVisible({ timeout: 2000 }).catch(() => false)) {
       await menuButton.click();
     }
 
     // Check if navigation is visible
-    await expect(page.getByRole('link', { name: '回测' })).toBeVisible({ timeout: 5000 });
+    await expect(page.getByRole('link', { name: '\u56de\u6d4b' })).toBeVisible({ timeout: 5000 });
 
     await captureSmokeScreenshot(page, testInfo, 'smoke-mobile-shell-nav');
   });
@@ -151,14 +151,14 @@ test.describe('web smoke', () => {
     await login(page);
 
     // Navigate to settings page by clicking the link
-    await page.getByRole('link', { name: '设置' }).click();
+    await page.getByRole('link', { name: '\u8bbe\u7f6e' }).click();
     await page.waitForLoadState('domcontentloaded');
     await page.waitForTimeout(1000);
 
     // Use heading role for more precise selection
-    await expect(page.getByRole('heading', { name: '系统设置' })).toBeVisible({ timeout: 10_000 });
-    await expect(page.getByRole('button', { name: '重置' })).toBeVisible();
-    await expect(page.getByRole('button', { name: /保存配置/ })).toBeVisible();
+    await expect(page.getByRole('heading', { name: '\u7cfb\u7edf\u8bbe\u7f6e' })).toBeVisible({ timeout: 10_000 });
+    await expect(page.getByRole('button', { name: '\u91cd\u7f6e' })).toBeVisible();
+    await expect(page.getByRole('button', { name: /\u4fdd\u5b58\u914d\u7f6e/ })).toBeVisible();
 
     await captureSmokeScreenshot(page, testInfo, 'smoke-settings-page-zh');
   });
@@ -166,10 +166,10 @@ test.describe('web smoke', () => {
   test('language switch updates UI copy and persists after page refresh', async ({ page }, testInfo) => {
     await login(page);
 
-    const languageToggle = page.getByRole('button', { name: '切换界面语言' });
+    const languageToggle = page.getByRole('button', { name: '\u5207\u6362\u754c\u9762\u8bed\u8a00' });
     await expect(languageToggle).toBeVisible();
-    await expect(page.getByRole('link', { name: '设置' })).toBeVisible();
-    await expect(page.getByRole('link', { name: '首页' })).toBeVisible();
+    await expect(page.getByRole('link', { name: '\u8bbe\u7f6e' })).toBeVisible();
+    await expect(page.getByRole('link', { name: '\u9996\u9875' })).toBeVisible();
 
     await languageToggle.click();
 
@@ -203,15 +203,15 @@ test.describe('web smoke', () => {
     await login(page);
 
     // Navigate to backtest page by clicking the link
-    await page.getByRole('link', { name: '回测' }).click();
+    await page.getByRole('link', { name: '\u56de\u6d4b' }).click();
     await page.waitForLoadState('domcontentloaded');
     await page.waitForTimeout(1000);
 
     // Check for filter controls
-    const filterInput = page.getByPlaceholder('按股票代码筛选（留空表示全部）');
+    const filterInput = page.getByPlaceholder('\u6309\u80a1\u7968\u4ee3\u7801\u7b5b\u9009（\u7559\u7a7a\u8868\u793a\u5168\u90e8）');
     await expect(filterInput).toBeVisible({ timeout: 10_000 });
-    await expect(page.getByRole('button', { name: '筛选' })).toBeVisible();
-    await expect(page.getByRole('button', { name: '运行回测' })).toBeVisible();
+    await expect(page.getByRole('button', { name: '\u7b5b\u9009' })).toBeVisible();
+    await expect(page.getByRole('button', { name: '\u8fd0\u884c\u56de\u6d4b' })).toBeVisible();
 
     await captureSmokeScreenshot(page, testInfo, 'smoke-backtest-page-zh', { fullPage: true });
   });

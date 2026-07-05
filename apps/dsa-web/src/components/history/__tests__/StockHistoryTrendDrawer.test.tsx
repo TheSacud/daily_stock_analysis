@@ -10,16 +10,16 @@ const report: AnalysisReport = {
     id: 1,
     queryId: 'q-1',
     stockCode: '600519',
-    stockName: '贵州茅台',
+    stockName: '\u8d35\u5dde\u8305\u53f0',
     reportType: 'detailed',
     createdAt: '2026-03-20T08:00:00Z',
   },
   summary: {
-    analysisSummary: '等待确认',
-    operationAdvice: '买入',
+    analysisSummary: '\u7b49\u5f85\u786e\u8ba4',
+    operationAdvice: '\u4e70\u5165',
     action: 'avoid',
-    actionLabel: '回避',
-    trendPrediction: '震荡',
+    actionLabel: '\u56de\u907f',
+    trendPrediction: '\u9707\u8361',
     sentimentScore: 35,
   },
 };
@@ -29,12 +29,12 @@ const items: HistoryItem[] = [
     id: 1,
     queryId: 'q-1',
     stockCode: '600519',
-    stockName: '贵州茅台',
+    stockName: '\u8d35\u5dde\u8305\u53f0',
     sentimentScore: 35,
-    operationAdvice: '买入',
+    operationAdvice: '\u4e70\u5165',
     action: 'avoid',
-    actionLabel: '回避',
-    trendPrediction: '震荡',
+    actionLabel: '\u56de\u907f',
+    trendPrediction: '\u9707\u8361',
     createdAt: '2026-03-20T08:00:00Z',
   },
 ];
@@ -62,8 +62,8 @@ describe('StockHistoryTrendDrawer', () => {
       />,
     );
 
-    expect(screen.getAllByText('回避').length).toBeGreaterThanOrEqual(2);
-    expect(screen.queryByText('买入')).not.toBeInTheDocument();
+    expect(screen.getAllByText('\u56de\u907f').length).toBeGreaterThanOrEqual(2);
+    expect(screen.queryByText('\u4e70\u5165')).not.toBeInTheDocument();
   });
 
   it('keeps full legacy operation advice when structured action is absent', () => {
@@ -73,7 +73,7 @@ describe('StockHistoryTrendDrawer', () => {
           ...report,
           summary: {
             ...report.summary,
-            operationAdvice: '继续持有，等待突破',
+            operationAdvice: '\u7ee7\u7eed\u6301\u6709，\u7b49\u5f85\u7a81\u7834',
             action: null,
             actionLabel: null,
           },
@@ -81,7 +81,7 @@ describe('StockHistoryTrendDrawer', () => {
         items={[
           {
             ...items[0],
-            operationAdvice: '继续持有，等待突破',
+            operationAdvice: '\u7ee7\u7eed\u6301\u6709，\u7b49\u5f85\u7a81\u7834',
             action: null,
             actionLabel: null,
           },
@@ -99,8 +99,8 @@ describe('StockHistoryTrendDrawer', () => {
       />,
     );
 
-    expect(screen.getAllByText('继续持有，等待突破').length).toBeGreaterThanOrEqual(2);
-    expect(screen.queryByText('持有')).not.toBeInTheDocument();
+    expect(screen.getAllByText('\u7ee7\u7eed\u6301\u6709，\u7b49\u5f85\u7a81\u7834').length).toBeGreaterThanOrEqual(2);
+    expect(screen.queryByText('\u6301\u6709')).not.toBeInTheDocument();
   });
 
   it('keeps multi-guard legacy advice as full text when structured action is absent', () => {
@@ -137,8 +137,8 @@ describe('StockHistoryTrendDrawer', () => {
     );
 
     expect(screen.getAllByText('risk alert, avoid buying').length).toBeGreaterThanOrEqual(2);
-    expect(screen.queryByText('回避')).not.toBeInTheDocument();
-    expect(screen.queryByText('预警')).not.toBeInTheDocument();
+    expect(screen.queryByText('\u56de\u907f')).not.toBeInTheDocument();
+    expect(screen.queryByText('\u9884\u8b66')).not.toBeInTheDocument();
   });
 
   it('uses localized taxonomy labels before server labels in English UI mode', () => {
@@ -152,14 +152,14 @@ describe('StockHistoryTrendDrawer', () => {
             summary: {
               ...report.summary,
               action: 'sell',
-              actionLabel: '买入',
+              actionLabel: '\u4e70\u5165',
             },
           }}
           items={[
             {
               ...items[0],
               action: 'sell',
-              actionLabel: '买入',
+              actionLabel: '\u4e70\u5165',
             },
           ]}
           total={1}
@@ -177,6 +177,6 @@ describe('StockHistoryTrendDrawer', () => {
     );
 
     expect(screen.getAllByText('Sell').length).toBeGreaterThanOrEqual(2);
-    expect(screen.queryByText('买入')).not.toBeInTheDocument();
+    expect(screen.queryByText('\u4e70\u5165')).not.toBeInTheDocument();
   });
 });

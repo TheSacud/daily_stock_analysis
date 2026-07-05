@@ -1,28 +1,28 @@
 #!/bin/bash
 # ===================================
-# A股/港股/美股 智能分析系统 - 测试脚本
+# A\u80a1/\u6e2f\u80a1/\u7f8e\u80a1 \u667a\u80fd\u5206\u6790\u7cfb\u7edf - \u6d4b\u8bd5\u811a\u672c
 # ===================================
 #
-# 使用方法：
-#   ./scripts/test.sh [测试场景]
+# \u4f7f\u7528\u65b9\u6cd5：
+#   ./scripts/test.sh [\u6d4b\u8bd5\u573a\u666f]
 #
-# 测试场景：
-#   market      - 仅大盘复盘
-#   a-stock     - A股个股分析（茅台、平安银行）
-#   etf         - etf分析(卫星etf 563230)
-#   hk-stock    - 港股分析（腾讯、阿里）
-#   us-stock    - 美股分析（苹果、特斯拉）
-#   mixed       - 混合市场分析
-#   single      - 单股模式测试
-#   dry-run     - 仅获取数据不分析
-#   full        - 完整流程测试
-#   quick       - 快速测试（单只股票）
-#   all         - 运行所有测试
+# \u6d4b\u8bd5\u573a\u666f：
+#   market      - \u4ec5\u5927\u76d8\u590d\u76d8
+#   a-stock     - A\u80a1\u4e2a\u80a1\u5206\u6790（\u8305\u53f0、\u5e73\u5b89\u94f6\u884c）
+#   etf         - etf\u5206\u6790(\u536b\u661fetf 563230)
+#   hk-stock    - \u6e2f\u80a1\u5206\u6790（\u817e\u8baf、\u963f\u91cc）
+#   us-stock    - \u7f8e\u80a1\u5206\u6790（\u82f9\u679c、\u7279\u65af\u62c9）
+#   mixed       - \u6df7\u5408\u5e02\u573a\u5206\u6790
+#   single      - \u5355\u80a1\u6a21\u5f0f\u6d4b\u8bd5
+#   dry-run     - \u4ec5\u83b7\u53d6\u6570\u636e\u4e0d\u5206\u6790
+#   full        - \u5b8c\u6574\u6d41\u7a0b\u6d4b\u8bd5
+#   quick       - \u5feb\u901f\u6d4b\u8bd5（\u5355\u53ea\u80a1\u7968）
+#   all         - \u8fd0\u884c\u6240\u6709\u6d4b\u8bd5
 #
-# 示例：
-#   ./scripts/test.sh market      # 测试大盘复盘
-#   ./scripts/test.sh us-stock    # 测试美股分析
-#   ./scripts/test.sh quick       # 快速测试
+# \u793a\u4f8b：
+#   ./scripts/test.sh market      # \u6d4b\u8bd5\u5927\u76d8\u590d\u76d8
+#   ./scripts/test.sh us-stock    # \u6d4b\u8bd5\u7f8e\u80a1\u5206\u6790
+#   ./scripts/test.sh quick       # \u5feb\u901f\u6d4b\u8bd5
 #
 
 set -e
@@ -31,14 +31,14 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
 cd "$REPO_ROOT"
 
-# 颜色定义
+# \u989c\u8272\u5b9a\u4e49
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
-# 打印带颜色的信息
+# \u6253\u5370\u5e26\u989c\u8272\u7684\u4fe1\u606f
 info() {
     echo -e "${BLUE}[INFO]${NC} $1"
 }
@@ -63,110 +63,110 @@ header() {
     echo ""
 }
 
-# 检查Python环境
+# \u68c0\u67e5Python\u73af\u5883
 check_python() {
     if ! command -v python3 &> /dev/null; then
-        error "Python3 未安装"
+        error "Python3 \u672a\u5b89\u88c5"
         exit 1
     fi
-    info "Python版本: $(python3 --version)"
+    info "Python\u7248\u672c: $(python3 --version)"
 }
 
-# 检查依赖
+# \u68c0\u67e5\u4f9d\u8d56
 check_deps() {
-    info "检查依赖..."
-    python3 -c "import yfinance" 2>/dev/null || { warn "yfinance 未安装，美股测试可能失败"; }
-    python3 -c "import akshare" 2>/dev/null || { warn "akshare 未安装，A股/港股测试可能失败"; }
-    success "依赖检查完成"
+    info "\u68c0\u67e5\u4f9d\u8d56..."
+    python3 -c "import yfinance" 2>/dev/null || { warn "yfinance \u672a\u5b89\u88c5，\u7f8e\u80a1\u6d4b\u8bd5\u53ef\u80fd\u5931\u8d25"; }
+    python3 -c "import akshare" 2>/dev/null || { warn "akshare \u672a\u5b89\u88c5，A\u80a1/\u6e2f\u80a1\u6d4b\u8bd5\u53ef\u80fd\u5931\u8d25"; }
+    success "\u4f9d\u8d56\u68c0\u67e5\u5b8c\u6210"
 }
 
-# ==================== 测试场景 ====================
+# ==================== \u6d4b\u8bd5\u573a\u666f ====================
 
-# 测试1: 大盘复盘
+# \u6d4b\u8bd51: \u5927\u76d8\u590d\u76d8
 test_market() {
-    header "测试场景: 大盘复盘"
-    info "运行大盘复盘分析..."
+    header "\u6d4b\u8bd5\u573a\u666f: \u5927\u76d8\u590d\u76d8"
+    info "\u8fd0\u884c\u5927\u76d8\u590d\u76d8\u5206\u6790..."
     python3 main.py --market-review "$@"
-    success "大盘复盘测试完成"
+    success "\u5927\u76d8\u590d\u76d8\u6d4b\u8bd5\u5b8c\u6210"
 }
 
-# 测试2: A股分析
+# \u6d4b\u8bd52: A\u80a1\u5206\u6790
 test_a_stock() {
-    header "测试场景: A股分析"
-    info "分析A股: 600519(茅台), 000001(平安银行)"
+    header "\u6d4b\u8bd5\u573a\u666f: A\u80a1\u5206\u6790"
+    info "\u5206\u6790A\u80a1: 600519(\u8305\u53f0), 000001(\u5e73\u5b89\u94f6\u884c)"
     python3 main.py --stocks 600519,000001  --no-market-review "$@"
-    success "A股分析测试完成"
+    success "A\u80a1\u5206\u6790\u6d4b\u8bd5\u5b8c\u6210"
 }
 
-# 测试2.5: ETF分析
+# \u6d4b\u8bd52.5: ETF\u5206\u6790
 test_etf() {
-    header "测试场景: ETF分析"
-    info "分析ETF: 563230(卫星ETF)"
+    header "\u6d4b\u8bd5\u573a\u666f: ETF\u5206\u6790"
+    info "\u5206\u6790ETF: 563230(\u536b\u661fETF)"
     python3 main.py --stocks 563230,512400 --no-market-review "$@"
-    success "ETF分析测试完成"
+    success "ETF\u5206\u6790\u6d4b\u8bd5\u5b8c\u6210"
 }
 
-# 测试3: 港股分析
+# \u6d4b\u8bd53: \u6e2f\u80a1\u5206\u6790
 test_hk_stock() {
-    header "测试场景: 港股分析"
-    info "分析港股: hk00700(腾讯), hk09988(阿里)"
+    header "\u6d4b\u8bd5\u573a\u666f: \u6e2f\u80a1\u5206\u6790"
+    info "\u5206\u6790\u6e2f\u80a1: hk00700(\u817e\u8baf), hk09988(\u963f\u91cc)"
     python3 main.py --stocks hk00700,hk09988 --no-market-review "$@"
-    success "港股分析测试完成"
+    success "\u6e2f\u80a1\u5206\u6790\u6d4b\u8bd5\u5b8c\u6210"
 }
 
-# 测试4: 美股分析
+# \u6d4b\u8bd54: \u7f8e\u80a1\u5206\u6790
 test_us_stock() {
-    header "测试场景: 美股分析"
-    info "分析美股: AAPL(苹果), TSLA(特斯拉)"
-    # 允许透传参数，默认不带 --no-notify
+    header "\u6d4b\u8bd5\u573a\u666f: \u7f8e\u80a1\u5206\u6790"
+    info "\u5206\u6790\u7f8e\u80a1: AAPL(\u82f9\u679c), TSLA(\u7279\u65af\u62c9)"
+    # \u5141\u8bb8\u900f\u4f20\u53c2\u6570，\u9ed8\u8ba4\u4e0d\u5e26 --no-notify
     python3 main.py --stocks AAPL --no-market-review "$@"
-    success "美股分析测试完成"
+    success "\u7f8e\u80a1\u5206\u6790\u6d4b\u8bd5\u5b8c\u6210"
 }
 
-# 测试5: 混合市场
+# \u6d4b\u8bd55: \u6df7\u5408\u5e02\u573a
 test_mixed() {
-    header "测试场景: 混合市场分析"
-    info "分析混合市场: 600519(A股), hk00700(港股), AAPL(美股)"
+    header "\u6d4b\u8bd5\u573a\u666f: \u6df7\u5408\u5e02\u573a\u5206\u6790"
+    info "\u5206\u6790\u6df7\u5408\u5e02\u573a: 600519(A\u80a1), hk00700(\u6e2f\u80a1), AAPL(\u7f8e\u80a1)"
     python3 main.py --stocks 600519,hk00700,AAPL --no-market-review
-    success "混合市场测试完成"
+    success "\u6df7\u5408\u5e02\u573a\u6d4b\u8bd5\u5b8c\u6210"
 }
 
-# 测试6: 单股推送模式
+# \u6d4b\u8bd56: \u5355\u80a1\u63a8\u9001\u6a21\u5f0f
 test_single() {
-    header "测试场景: 单股推送模式"
-    info "测试单股推送模式..."
+    header "\u6d4b\u8bd5\u573a\u666f: \u5355\u80a1\u63a8\u9001\u6a21\u5f0f"
+    info "\u6d4b\u8bd5\u5355\u80a1\u63a8\u9001\u6a21\u5f0f..."
     python3 main.py --stocks 600519 --single-notify --no-market-review
-    success "单股推送模式测试完成"
+    success "\u5355\u80a1\u63a8\u9001\u6a21\u5f0f\u6d4b\u8bd5\u5b8c\u6210"
 }
 
-# 测试7: dry-run模式
+# \u6d4b\u8bd57: dry-run\u6a21\u5f0f
 test_dry_run() {
-    header "测试场景: Dry-Run 模式"
-    info "仅获取数据，不进行AI分析..."
+    header "\u6d4b\u8bd5\u573a\u666f: Dry-Run \u6a21\u5f0f"
+    info "\u4ec5\u83b7\u53d6\u6570\u636e，\u4e0d\u8fdb\u884cAI\u5206\u6790..."
     python3 main.py --stocks 600519,AAPL --dry-run --no-notify
-    success "Dry-Run 测试完成"
+    success "Dry-Run \u6d4b\u8bd5\u5b8c\u6210"
 }
 
-# 测试8: 完整流程
+# \u6d4b\u8bd58: \u5b8c\u6574\u6d41\u7a0b
 test_full() {
-    header "测试场景: 完整流程"
-    info "运行完整分析流程（个股+大盘）..."
+    header "\u6d4b\u8bd5\u573a\u666f: \u5b8c\u6574\u6d41\u7a0b"
+    info "\u8fd0\u884c\u5b8c\u6574\u5206\u6790\u6d41\u7a0b（\u4e2a\u80a1+\u5927\u76d8）..."
     python3 main.py --stocks 600519 --no-notify
-    success "完整流程测试完成"
+    success "\u5b8c\u6574\u6d41\u7a0b\u6d4b\u8bd5\u5b8c\u6210"
 }
 
-# 测试9: 快速测试
+# \u6d4b\u8bd59: \u5feb\u901f\u6d4b\u8bd5
 test_quick() {
-    header "测试场景: 快速测试"
-    info "单只股票快速测试..."
+    header "\u6d4b\u8bd5\u573a\u666f: \u5feb\u901f\u6d4b\u8bd5"
+    info "\u5355\u53ea\u80a1\u7968\u5feb\u901f\u6d4b\u8bd5..."
     python3 main.py --stocks 600519 --no-market-review --no-notify "$@"
-    success "快速测试完成"
+    success "\u5feb\u901f\u6d4b\u8bd5\u5b8c\u6210"
 }
 
-# 测试10: 代码识别测试
+# \u6d4b\u8bd510: \u4ee3\u7801\u8bc6\u522b\u6d4b\u8bd5
 test_code_recognition() {
-    header "测试场景: 代码识别"
-    info "测试股票代码识别逻辑..."
+    header "\u6d4b\u8bd5\u573a\u666f: \u4ee3\u7801\u8bc6\u522b"
+    info "\u6d4b\u8bd5\u80a1\u7968\u4ee3\u7801\u8bc6\u522b\u903b\u8f91..."
 
     python3 << 'PYTEST'
 import sys
@@ -174,17 +174,17 @@ sys.path.insert(0, '.')
 from data_provider.akshare_fetcher import _is_hk_code, _is_us_code
 
 test_cases = [
-    # (代码, 预期HK, 预期US, 描述)
-    ("AAPL", False, True, "美股-苹果"),
-    ("TSLA", False, True, "美股-特斯拉"),
-    ("BRK.B", False, True, "美股-伯克希尔B"),
-    ("hk00700", True, False, "港股-腾讯"),
-    ("HK09988", True, False, "港股-阿里"),
-    ("600519", False, False, "A股-茅台"),
-    ("000001", False, False, "A股-平安"),
+    # (\u4ee3\u7801, \u9884\u671fHK, \u9884\u671fUS, \u63cf\u8ff0)
+    ("AAPL", False, True, "\u7f8e\u80a1-\u82f9\u679c"),
+    ("TSLA", False, True, "\u7f8e\u80a1-\u7279\u65af\u62c9"),
+    ("BRK.B", False, True, "\u7f8e\u80a1-\u4f2f\u514b\u5e0c\u5c14B"),
+    ("hk00700", True, False, "\u6e2f\u80a1-\u817e\u8baf"),
+    ("HK09988", True, False, "\u6e2f\u80a1-\u963f\u91cc"),
+    ("600519", False, False, "A\u80a1-\u8305\u53f0"),
+    ("000001", False, False, "A\u80a1-\u5e73\u5b89"),
 ]
 
-print("\n股票代码识别测试:")
+print("\n\u80a1\u7968\u4ee3\u7801\u8bc6\u522b\u6d4b\u8bd5:")
 print("-" * 60)
 all_pass = True
 for code, exp_hk, exp_us, desc in test_cases:
@@ -197,17 +197,17 @@ for code, exp_hk, exp_us, desc in test_cases:
     print(f"{status} {code:10} | HK:{is_hk:5} US:{is_us:5} | {desc}")
 
 print("-" * 60)
-print(f"{'✅ 所有测试通过!' if all_pass else '❌ 有测试失败!'}")
+print(f"{'✅ \u6240\u6709\u6d4b\u8bd5\u901a\u8fc7!' if all_pass else '❌ \u6709\u6d4b\u8bd5\u5931\u8d25!'}")
 sys.exit(0 if all_pass else 1)
 PYTEST
 
-    success "代码识别测试完成"
+    success "\u4ee3\u7801\u8bc6\u522b\u6d4b\u8bd5\u5b8c\u6210"
 }
 
-# 测试11: YFinance代码转换测试
+# \u6d4b\u8bd511: YFinance\u4ee3\u7801\u8f6c\u6362\u6d4b\u8bd5
 test_yfinance_convert() {
-    header "测试场景: YFinance 代码转换"
-    info "测试YFinance代码转换逻辑..."
+    header "\u6d4b\u8bd5\u573a\u666f: YFinance \u4ee3\u7801\u8f6c\u6362"
+    info "\u6d4b\u8bd5YFinance\u4ee3\u7801\u8f6c\u6362\u903b\u8f91..."
 
     python3 << 'PYTEST'
 import sys
@@ -217,62 +217,62 @@ from data_provider.yfinance_fetcher import YfinanceFetcher
 fetcher = YfinanceFetcher()
 
 test_cases = [
-    ("AAPL", "AAPL", "美股"),
-    ("tsla", "TSLA", "美股小写"),
-    ("BRK.B", "BRK.B", "美股特殊"),
-    ("hk00700", "0700.HK", "港股"),
-    ("HK09988", "9988.HK", "港股大写"),
-    ("600519", "600519.SS", "A股沪市"),
-    ("000001", "000001.SZ", "A股深市"),
-    ("300750", "300750.SZ", "A股创业板"),
+    ("AAPL", "AAPL", "\u7f8e\u80a1"),
+    ("tsla", "TSLA", "\u7f8e\u80a1\u5c0f\u5199"),
+    ("BRK.B", "BRK.B", "\u7f8e\u80a1\u7279\u6b8a"),
+    ("hk00700", "0700.HK", "\u6e2f\u80a1"),
+    ("HK09988", "9988.HK", "\u6e2f\u80a1\u5927\u5199"),
+    ("600519", "600519.SS", "A\u80a1\u6caa\u5e02"),
+    ("000001", "000001.SZ", "A\u80a1\u6df1\u5e02"),
+    ("300750", "300750.SZ", "A\u80a1\u521b\u4e1a\u677f"),
 ]
 
-print("\nYFinance 代码转换测试:")
+print("\nYFinance \u4ee3\u7801\u8f6c\u6362\u6d4b\u8bd5:")
 print("-" * 60)
 all_pass = True
 for input_code, expected, desc in test_cases:
     result = fetcher._convert_stock_code(input_code)
     status = "✅" if result == expected else "❌"
     all_pass = all_pass and (result == expected)
-    print(f"{status} {input_code:10} -> {result:12} (期望: {expected:12}) | {desc}")
+    print(f"{status} {input_code:10} -> {result:12} (\u671f\u671b: {expected:12}) | {desc}")
 
 print("-" * 60)
-print(f"{'✅ 所有测试通过!' if all_pass else '❌ 有测试失败!'}")
+print(f"{'✅ \u6240\u6709\u6d4b\u8bd5\u901a\u8fc7!' if all_pass else '❌ \u6709\u6d4b\u8bd5\u5931\u8d25!'}")
 sys.exit(0 if all_pass else 1)
 PYTEST
 
-    success "YFinance 代码转换测试完成"
+    success "YFinance \u4ee3\u7801\u8f6c\u6362\u6d4b\u8bd5\u5b8c\u6210"
 }
 
-# 测试12: 语法检查
+# \u6d4b\u8bd512: \u8bed\u6cd5\u68c0\u67e5
 test_syntax() {
-    header "测试场景: Python 语法检查"
-    info "检查所有Python文件语法..."
+    header "\u6d4b\u8bd5\u573a\u666f: Python \u8bed\u6cd5\u68c0\u67e5"
+    info "\u68c0\u67e5\u6240\u6709Python\u6587\u4ef6\u8bed\u6cd5..."
 
     python3 -m py_compile main.py src/config.py src/notification.py \
         data_provider/akshare_fetcher.py \
         data_provider/yfinance_fetcher.py \
         bot/commands/analyze.py
 
-    success "语法检查通过"
+    success "\u8bed\u6cd5\u68c0\u67e5\u901a\u8fc7"
 }
 
-# 测试13: Flake8 静态检查
+# \u6d4b\u8bd513: Flake8 \u9759\u6001\u68c0\u67e5
 test_flake8() {
-    header "测试场景: Flake8 静态检查"
-    info "运行 Flake8 检查严重错误..."
+    header "\u6d4b\u8bd5\u573a\u666f: Flake8 \u9759\u6001\u68c0\u67e5"
+    info "\u8fd0\u884c Flake8 \u68c0\u67e5\u4e25\u91cd\u9519\u8bef..."
 
     if command -v flake8 &> /dev/null; then
         flake8 main.py src/config.py src/notification.py --select=F821,E999 --max-line-length=120
-        success "Flake8 检查通过"
+        success "Flake8 \u68c0\u67e5\u901a\u8fc7"
     else
-        warn "Flake8 未安装，跳过检查"
+        warn "Flake8 \u672a\u5b89\u88c5，\u8df3\u8fc7\u68c0\u67e5"
     fi
 }
 
-# 运行所有测试
+# \u8fd0\u884c\u6240\u6709\u6d4b\u8bd5
 test_all() {
-    header "运行所有测试"
+    header "\u8fd0\u884c\u6240\u6709\u6d4b\u8bd5"
 
     test_syntax
     test_code_recognition
@@ -280,19 +280,19 @@ test_all() {
     test_flake8
 
     echo ""
-    info "以下测试需要网络和API配置，可能会失败:"
+    info "\u4ee5\u4e0b\u6d4b\u8bd5\u9700\u8981\u7f51\u7edc\u548cAPI\u914d\u7f6e，\u53ef\u80fd\u4f1a\u5931\u8d25:"
     echo ""
 
-    test_dry_run || warn "Dry-Run 测试失败（可能是网络问题）"
-    test_quick || warn "快速测试失败（可能是API问题）"
+    test_dry_run || warn "Dry-Run \u6d4b\u8bd5\u5931\u8d25（\u53ef\u80fd\u662f\u7f51\u7edc\u95ee\u9898）"
+    test_quick || warn "\u5feb\u901f\u6d4b\u8bd5\u5931\u8d25（\u53ef\u80fd\u662fAPI\u95ee\u9898）"
 
-    success "所有测试完成!"
+    success "\u6240\u6709\u6d4b\u8bd5\u5b8c\u6210!"
 }
 
-# ==================== 主程序 ====================
+# ==================== \u4e3b\u7a0b\u5e8f ====================
 
 main() {
-    header "A股/港股/美股 智能分析系统 - 测试"
+    header "A\u80a1/\u6e2f\u80a1/\u7f8e\u80a1 \u667a\u80fd\u5206\u6790\u7cfb\u7edf - \u6d4b\u8bd5"
 
     check_python
     check_deps
@@ -359,30 +359,30 @@ main() {
             test_all "$@"
             ;;
         help|--help|-h|*)
-            echo "使用方法: $0 [测试场景]"
+            echo "\u4f7f\u7528\u65b9\u6cd5: $0 [\u6d4b\u8bd5\u573a\u666f]"
             echo ""
-            echo "测试场景:"
-            echo "  market      - 仅大盘复盘"
-            echo "  a-stock     - A股个股分析"
-            echo "  etf         - ETF分析"
-            echo "  hk-stock    - 港股分析"
-            echo "  us-stock    - 美股分析"
-            echo "  mixed       - 混合市场分析"
-            echo "  single      - 单股推送模式"
-            echo "  dry-run     - 仅获取数据"
-            echo "  full        - 完整流程"
-            echo "  quick       - 快速测试（推荐）"
-            echo "  code        - 代码识别测试"
-            echo "  yfinance    - YFinance转换测试"
-            echo "  syntax      - 语法检查"
-            echo "  flake8      - 静态检查"
-            echo "  all         - 运行所有测试"
+            echo "\u6d4b\u8bd5\u573a\u666f:"
+            echo "  market      - \u4ec5\u5927\u76d8\u590d\u76d8"
+            echo "  a-stock     - A\u80a1\u4e2a\u80a1\u5206\u6790"
+            echo "  etf         - ETF\u5206\u6790"
+            echo "  hk-stock    - \u6e2f\u80a1\u5206\u6790"
+            echo "  us-stock    - \u7f8e\u80a1\u5206\u6790"
+            echo "  mixed       - \u6df7\u5408\u5e02\u573a\u5206\u6790"
+            echo "  single      - \u5355\u80a1\u63a8\u9001\u6a21\u5f0f"
+            echo "  dry-run     - \u4ec5\u83b7\u53d6\u6570\u636e"
+            echo "  full        - \u5b8c\u6574\u6d41\u7a0b"
+            echo "  quick       - \u5feb\u901f\u6d4b\u8bd5（\u63a8\u8350）"
+            echo "  code        - \u4ee3\u7801\u8bc6\u522b\u6d4b\u8bd5"
+            echo "  yfinance    - YFinance\u8f6c\u6362\u6d4b\u8bd5"
+            echo "  syntax      - \u8bed\u6cd5\u68c0\u67e5"
+            echo "  flake8      - \u9759\u6001\u68c0\u67e5"
+            echo "  all         - \u8fd0\u884c\u6240\u6709\u6d4b\u8bd5"
             echo ""
-            echo "示例:"
-            echo "  $0 quick     # 快速测试"
-            echo "  $0 us-stock  # 测试美股"
-            echo "  $0 code      # 测试代码识别"
-            echo "  $0 all       # 运行所有测试"
+            echo "\u793a\u4f8b:"
+            echo "  $0 quick     # \u5feb\u901f\u6d4b\u8bd5"
+            echo "  $0 us-stock  # \u6d4b\u8bd5\u7f8e\u80a1"
+            echo "  $0 code      # \u6d4b\u8bd5\u4ee3\u7801\u8bc6\u522b"
+            echo "  $0 all       # \u8fd0\u884c\u6240\u6709\u6d4b\u8bd5"
             ;;
     esac
 }

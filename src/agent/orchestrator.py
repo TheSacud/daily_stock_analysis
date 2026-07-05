@@ -138,7 +138,7 @@ class AgentOrchestrator:
             if parse_dashboard and dashboard is not None:
                 dashboard = self._mark_partial_dashboard(
                     dashboard,
-                    note="多 Agent 超时，以下结论基于已完成阶段自动降级生成。",
+                    note="\u591a Agent \u8d85\u65f6; \u4ee5\u4e0b\u7ed3\u8bba\u57fa\u4e8ecompleted\u9636\u6bb5\u81ea\u52a8\u964d\u7ea7\u751f\u6210.",
                 )
                 ctx.set_data("final_dashboard", dashboard)
                 content = json.dumps(dashboard, ensure_ascii=False, indent=2)
@@ -179,7 +179,7 @@ class AgentOrchestrator:
             if parse_dashboard and dashboard is not None:
                 dashboard = self._mark_partial_dashboard(
                     dashboard,
-                    note="多 Agent 预算不足，以下结论基于已完成阶段自动降级生成。",
+                    note="\u591a Agent \u9884\u7b97\u4e0d\u8db3; \u4ee5\u4e0b\u7ed3\u8bba\u57fa\u4e8ecompleted\u9636\u6bb5\u81ea\u52a8\u964d\u7ea7\u751f\u6210.",
                 )
                 ctx.set_data("final_dashboard", dashboard)
                 content = json.dumps(dashboard, ensure_ascii=False, indent=2)
@@ -342,7 +342,7 @@ class AgentOrchestrator:
         else:
             conversation_manager.add_message(
                 session_id, "assistant",
-                f"[分析失败] {orch_result.error or '未知错误'}",
+                f"[analyzefailed] {orch_result.error or 'unknown error'}",
             )
 
         return AgentResult(
@@ -890,7 +890,7 @@ class AgentOrchestrator:
             getattr(base_opinion, "reasoning", ""),
         )
         if not analysis_summary:
-            analysis_summary = f"多 Agent 未生成完整仪表盘，当前按{_signal_to_operation(decision_type)}处理。"
+            analysis_summary = f"\u591a Agent \u672a\u751f\u6210\u5b8c\u6574\u4eea\u8868\u76d8; \u5f53\u524d\u6309{_signal_to_operation(decision_type)}\u5904\u7406."
         analysis_summary = _truncate_text(analysis_summary, 220)
 
         trend_prediction = _first_non_empty_text(
@@ -904,9 +904,9 @@ class AgentOrchestrator:
             ma_alignment = tech_raw.get("ma_alignment")
             trend_score = tech_raw.get("trend_score")
             if ma_alignment or trend_score is not None:
-                trend_prediction = f"技术面{ma_alignment or 'neutral'}，趋势评分 {trend_score if trend_score is not None else 'N/A'}"
+                trend_prediction = f"\u6280\u672f\u9762{ma_alignment or 'neutral'}; \u8d8b\u52bf\u8bc4\u5206 {trend_score if trend_score is not None else 'N/A'}"
             else:
-                trend_prediction = "待结合更多阶段结果确认"
+                trend_prediction = "\u5f85\u7ed3\u5408\u66f4\u591a\u9636\u6bb5result\u786e\u8ba4"
 
         operation_advice_raw = payload.get("operation_advice")
         operation_advice = _normalize_operation_advice_value(operation_advice_raw, decision_type)
@@ -960,7 +960,7 @@ class AgentOrchestrator:
             "stop_loss",
             key_levels.get("stop_loss")
             or key_levels.get("strong_support_stop_loss")
-            or "待补充",
+            or "\u5f85\u8865\u5145",
         )
         sniper.setdefault(
             "take_profit",
@@ -985,7 +985,7 @@ class AgentOrchestrator:
         if not core.get("one_sentence"):
             core["one_sentence"] = _truncate_text(analysis_summary, 60)
         if not core.get("time_sensitivity"):
-            core["time_sensitivity"] = "本周内"
+            core["time_sensitivity"] = "\u672c\u5468\u5185"
         if not core.get("signal_type"):
             core["signal_type"] = _signal_to_signal_type(decision_type)
         core["position_advice"] = position_advice
@@ -998,7 +998,7 @@ class AgentOrchestrator:
             battle["position_strategy"] = {
                 "suggested_position": _default_position_size(decision_type),
                 "entry_plan": position_advice["no_position"],
-                "risk_control": f"止损参考 {sniper.get('stop_loss', '待补充')}",
+                "risk_control": f"\u6b62\u635f\u53c2\u8003 {sniper.get('stop_loss', '\u5f85\u8865\u5145')}",
             }
 
         data_perspective = dashboard_block.get("data_perspective")
@@ -1029,7 +1029,7 @@ class AgentOrchestrator:
             getattr(self._latest_opinion(ctx, {"risk"}), "reasoning", ""),
         )
         if not risk_warning:
-            risk_warning = "暂无额外风险提示"
+            risk_warning = "\u6682\u65e0\u989d\u5916risk warning"
 
         payload["stock_name"] = _first_non_empty_text(payload.get("stock_name"), ctx.stock_name, ctx.stock_code)
         payload["sentiment_score"] = sentiment_score
@@ -1095,14 +1095,14 @@ class AgentOrchestrator:
             if not isinstance(bias, (int, float)):
                 return ""
             if bias > 5:
-                return "超买"
+                return "Overbought"
             elif bias > 2:
-                return "偏高"
+                return "Slightly High"
             elif bias < -5:
-                return "超卖"
+                return "Oversold"
             elif bias < -2:
-                return "偏低"
-            return "中性"
+                return "Slightly Low"
+            return "Medium"
 
         def _r(val, n=2):
             """Round numeric values for display."""
@@ -1142,7 +1142,7 @@ class AgentOrchestrator:
                 "profit_ratio": chip.get("profit_ratio", "N/A"),
                 "avg_cost": chip.get("avg_cost", "N/A"),
                 "concentration": concentration if concentration is not None else "N/A",
-                "chip_health": chip.get("chip_health", "一般"),
+                "chip_health": chip.get("chip_health", "\u4e00\u822c"),
             }
 
         return data_perspective
@@ -1231,7 +1231,7 @@ class AgentOrchestrator:
     ) -> Dict[str, Any]:
         tagged = dict(dashboard)
         summary = _first_non_empty_text(tagged.get("analysis_summary"))
-        prefix = "[降级结果] "
+        prefix = "[\u964d\u7ea7result] "
         if summary and not summary.startswith(prefix):
             tagged["analysis_summary"] = prefix + summary
         elif not summary:
@@ -1308,29 +1308,29 @@ class AgentOrchestrator:
 
         summary = dashboard.get("analysis_summary")
         if isinstance(summary, str) and summary:
-            dashboard["analysis_summary"] = f"[风控下调: {current_signal} -> {new_signal}] {summary}"
+            dashboard["analysis_summary"] = f"[\u98ce\u63a7\u4e0b\u8c03: {current_signal} -> {new_signal}] {summary}"
 
         dashboard_block = dashboard.get("dashboard")
         if isinstance(dashboard_block, dict):
             core = dashboard_block.get("core_conclusion")
             if isinstance(core, dict):
                 signal_type = {
-                    "buy": "🟡持有观望",
-                    "hold": "🟡持有观望",
-                    "sell": "🔴卖出信号",
-                }.get(new_signal, "⚠️风险警告")
+                    "buy": "🟡\u6301\u6709Watch",
+                    "hold": "🟡\u6301\u6709Watch",
+                    "sell": "🔴\u5356\u51fa\u4fe1\u53f7",
+                }.get(new_signal, "⚠️\u98ce\u9669warning")
                 core["signal_type"] = signal_type
                 sentence = core.get("one_sentence")
                 if isinstance(sentence, str) and sentence:
-                    core["one_sentence"] = f"{sentence}（风控下调）"
+                    core["one_sentence"] = f"{sentence} (\u98ce\u63a7\u4e0b\u8c03)"
                 position = core.get("position_advice")
                 if isinstance(position, dict):
                     if new_signal == "hold":
-                        position["no_position"] = "风险未解除前先观望，等待更清晰的入场条件。"
-                        position["has_position"] = "谨慎持有并收紧止损，待风险缓解后再考虑加仓。"
+                        position["no_position"] = "\u98ce\u9669\u672a\u89e3\u9664\u524d\u5148Watch; waiting\u66f4\u6e05\u6670\u7684\u5165\u573a\u6761\u4ef6."
+                        position["has_position"] = "\u8c28\u614e\u6301\u6709\u5e76\u6536\u7d27\u6b62\u635f; \u5f85\u98ce\u9669\u7f13\u89e3\u540e\u518d\u8003\u8651\u52a0\u4ed3."
                     elif new_signal == "sell":
-                        position["no_position"] = "风险明显偏高，暂不新开仓。"
-                        position["has_position"] = "优先控制回撤，建议减仓或退出高风险仓位。"
+                        position["no_position"] = "\u98ce\u9669\u660e\u663eSlightly High; \u6682\u4e0d\u65b0\u5f00\u4ed3."
+                        position["has_position"] = "\u4f18\u5148\u63a7\u5236\u56de\u64a4; \u5efa\u8bae\u51cf\u4ed3or\u9000\u51faHigh\u98ce\u9669\u4ed3characters."
 
         ctx.set_data("final_dashboard", dashboard)
         ctx.set_data("risk_override_applied", {
@@ -1373,7 +1373,7 @@ class AgentOrchestrator:
             severity = str(flag.get("severity", "")).lower()
             if description:
                 warnings.append(f"[{severity or 'risk'}] {description}")
-        prefix = f"风控接管：最终信号已下调为 {signal}。"
+        prefix = f"\u98ce\u63a7\u63a5\u7ba1: \u6700\u7ec8\u4fe1\u53f7\u5df2\u4e0b\u8c03\u4e3a {signal}."
         merged = " ".join(dict.fromkeys([prefix] + warnings))
         return merged[:500]
 
@@ -1415,7 +1415,7 @@ _COMMON_WORDS: set[str] = {
 }
 
 _LOWERCASE_TICKER_HINTS = re.compile(
-    r"分析|看看|查一?下|研究|诊断|走势|趋势|股价|股票|个股",
+    r"analyze|\u770b\u770b|check\u4e00?\u4e0b|\u7814\u7a76|\u8bca\u65ad|\u8d70\u52bf|\u8d8b\u52bf|\u80a1\u4ef7|\u80a1\u7968|individual stocks",
 )
 
 
@@ -1484,48 +1484,48 @@ def _adjust_sentiment_score(score: int, signal: str) -> int:
 def _adjust_operation_advice(advice: str, signal: str) -> str:
     """Normalize action wording to the overridden decision signal."""
     mapping = {
-        "buy": "买入",
-        "hold": "观望",
-        "sell": "减仓/卖出",
+        "buy": "\u4e70\u5165",
+        "hold": "Watch",
+        "sell": "\u51cf\u4ed3/\u5356\u51fa",
     }
     if signal not in mapping:
         return advice
     if advice == mapping[signal]:
         return advice
-    return f"{mapping[signal]}（原建议已被风控下调）"
+    return f"{mapping[signal]} (original advice was downgraded by risk control)"
 
 
 def _signal_to_operation(signal: str) -> str:
     mapping = {
-        "buy": "买入",
-        "hold": "观望",
-        "sell": "减仓/卖出",
+        "buy": "\u4e70\u5165",
+        "hold": "Watch",
+        "sell": "\u51cf\u4ed3/\u5356\u51fa",
     }
-    return mapping.get(signal, "观望")
+    return mapping.get(signal, "Watch")
 
 
 def _signal_to_signal_type(signal: str) -> str:
     mapping = {
-        "buy": "🟢买入信号",
-        "hold": "⚪观望信号",
-        "sell": "🔴卖出信号",
+        "buy": "🟢\u4e70\u5165\u4fe1\u53f7",
+        "hold": "⚪Watch\u4fe1\u53f7",
+        "sell": "🔴\u5356\u51fa\u4fe1\u53f7",
     }
-    return mapping.get(signal, "⚪观望信号")
+    return mapping.get(signal, "⚪Watch\u4fe1\u53f7")
 
 
 def _default_position_advice(signal: str) -> Dict[str, str]:
     mapping = {
         "buy": {
-            "no_position": "可结合支撑位分批试仓，避免一次性追高。",
-            "has_position": "可继续持有，回踩关键位不破再考虑加仓。",
+            "no_position": "\u53ef\u7ed3\u5408\u652f\u6491characters\u5206\u6279\u8bd5\u4ed3; \u907f\u514d\u4e00\u6b21\u8ffdHigh.",
+            "has_position": "\u53ef\u7ee7\u7eed\u6301\u6709; \u56de\u8e29\u5173\u952echaracters\u4e0d\u7834\u518d\u8003\u8651\u52a0\u4ed3.",
         },
         "hold": {
-            "no_position": "暂不追高，等待更清晰的入场条件。",
-            "has_position": "以观察为主，跌破止损位再执行风控。",
+            "no_position": "\u6682\u4e0d\u8ffdHigh; waiting\u66f4\u6e05\u6670\u7684\u5165\u573a\u6761\u4ef6.",
+            "has_position": "\u4ee5\u89c2\u5bdf\u4e3a\u4e3b; \u8dcc\u7834\u6b62\u635fcharacters\u518d\u6267\u884c\u98ce\u63a7.",
         },
         "sell": {
-            "no_position": "暂不参与，等待风险充分释放。",
-            "has_position": "优先控制回撤，按计划减仓或离场。",
+            "no_position": "\u6682\u4e0d\u53c2\u4e0e; waiting\u98ce\u9669\u5145\u5206\u91ca\u653e.",
+            "has_position": "\u4f18\u5148\u63a7\u5236\u56de\u64a4; \u6309\u8ba1\u5212\u51cf\u4ed3or\u79bb\u573a.",
         },
     }
     return mapping.get(signal, mapping["hold"])
@@ -1533,11 +1533,11 @@ def _default_position_advice(signal: str) -> Dict[str, str]:
 
 def _default_position_size(signal: str) -> str:
     mapping = {
-        "buy": "轻仓试仓",
-        "hold": "控制仓位",
-        "sell": "降仓防守",
+        "buy": "\u8f7b\u4ed3\u8bd5\u4ed3",
+        "hold": "Control position size",
+        "sell": "\u964d\u4ed3\u9632\u5b88",
     }
-    return mapping.get(signal, "控制仓位")
+    return mapping.get(signal, "Control position size")
 
 
 def _normalize_operation_advice_value(value: Any, signal: str) -> str:
@@ -1548,10 +1548,10 @@ def _normalize_operation_advice_value(value: Any, signal: str) -> str:
 
 def _confidence_label(confidence: float) -> str:
     if confidence >= 0.75:
-        return "高"
+        return "High"
     if confidence >= 0.45:
-        return "中"
-    return "低"
+        return "Medium"
+    return "Low"
 
 
 def _estimate_sentiment_score(signal: str, confidence: float) -> int:
@@ -1570,7 +1570,7 @@ def _coerce_level_value(value: Any) -> Any:
         return None
     if isinstance(value, (int, float)):
         return round(float(value), 2)
-    text = str(value).replace(",", "").replace("，", "").strip()
+    text = str(value).replace(",", "").replace("; ", "").strip()
     if not text or text.upper() == "N/A" or text in {"-", "—"}:
         return None
     try:

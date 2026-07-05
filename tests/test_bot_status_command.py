@@ -37,13 +37,13 @@ def test_status_command_reports_unified_llm_and_notification_channels():
     text = command._format_status(status, "telegram")
 
     assert status["ai_available"] is True
-    assert "主模型: deepseek/deepseek-v4-flash" in text
-    assert "Agent 模型: openai/gpt-4o-mini" in text
-    assert "LLM 渠道: deepseek" in text
-    assert "自定义 Webhook: ✅" in text
+    assert "\u4e3b\u6a21\u578b: deepseek/deepseek-v4-flash" in text
+    assert "Agent \u6a21\u578b: openai/gpt-4o-mini" in text
+    assert "LLM \u6e20\u9053: deepseek" in text
+    assert "\u81ea\u5b9a\u4e49 Webhook: ✅" in text
     assert "Slack: ✅" in text
-    assert "PushPlus/Pushover/Server酱3: ✅" in text
-    assert "系统就绪" in text
+    assert "PushPlus/Pushover/Server\u91713: ✅" in text
+    assert "\u7cfb\u7edf\u5c31\u7eea" in text
 
 
 def test_status_command_warns_when_no_llm_source_configured():
@@ -54,8 +54,8 @@ def test_status_command_warns_when_no_llm_source_configured():
     text = command._format_status(status, "telegram")
 
     assert status["ai_available"] is False
-    assert "主模型: 未配置" in text
-    assert "AI 服务未配置" in text
+    assert "\u4e3b\u6a21\u578b: \u672a\u914d\u7f6e" in text
+    assert "AI \u670d\u52a1\u672a\u914d\u7f6e" in text
     assert "LITELLM_MODEL" in text
 
 
@@ -71,7 +71,7 @@ def test_status_command_does_not_treat_managed_model_name_as_ready():
     text = command._format_status(status, "telegram")
 
     assert status["ai_available"] is False
-    assert "AI 服务未配置" in text
+    assert "AI \u670d\u52a1\u672a\u914d\u7f6e" in text
 
 
 def test_status_command_keeps_channel_mode_priority_over_legacy_keys():
@@ -102,8 +102,8 @@ def test_status_command_keeps_channel_mode_priority_over_legacy_keys():
     text = command._format_status(status, "telegram")
 
     assert status["ai_available"] is False
-    assert "AI 服务未配置" in text
-    assert "主模型: openai/gpt-4o-mini" in text
+    assert "AI \u670d\u52a1\u672a\u914d\u7f6e" in text
+    assert "\u4e3b\u6a21\u578b: openai/gpt-4o-mini" in text
 
 
 def test_status_command_requires_primary_model_in_configured_router_models():
@@ -133,8 +133,8 @@ def test_status_command_requires_primary_model_in_configured_router_models():
     text = command._format_status(status, "telegram")
 
     assert status["ai_available"] is False
-    assert "AI 服务未配置" in text
-    assert "系统就绪" not in text
+    assert "AI \u670d\u52a1\u672a\u914d\u7f6e" in text
+    assert "\u7cfb\u7edf\u5c31\u7eea" not in text
 
 
 def test_status_command_requires_primary_model_for_yaml_router_models():
@@ -159,9 +159,9 @@ def test_status_command_requires_primary_model_for_yaml_router_models():
 
     assert status["ai_yaml"] is True
     assert status["ai_available"] is False
-    assert "主模型: 未配置" in text
-    assert "AI 服务未配置" in text
-    assert "系统就绪" not in text
+    assert "\u4e3b\u6a21\u578b: \u672a\u914d\u7f6e" in text
+    assert "AI \u670d\u52a1\u672a\u914d\u7f6e" in text
+    assert "\u7cfb\u7edf\u5c31\u7eea" not in text
 
 
 def test_status_command_does_not_treat_invalid_yaml_path_as_active():
@@ -179,7 +179,7 @@ def test_status_command_does_not_treat_invalid_yaml_path_as_active():
     assert status["ai_yaml"] is False
     assert status["ai_available"] is False
     assert "LiteLLM YAML: ❌" in text
-    assert "AI 服务未配置" in text
+    assert "AI \u670d\u52a1\u672a\u914d\u7f6e" in text
 
 
 def test_status_command_treats_direct_env_provider_model_as_ready():
@@ -194,7 +194,7 @@ def test_status_command_treats_direct_env_provider_model_as_ready():
     text = command._format_status(status, "telegram")
 
     assert status["ai_available"] is True
-    assert "系统就绪" in text
+    assert "\u7cfb\u7edf\u5c31\u7eea" in text
 
 
 def test_status_command_supports_legacy_key_compatibility_without_explicit_litellm_model(monkeypatch, tmp_path):
@@ -231,7 +231,7 @@ def test_status_command_supports_legacy_key_compatibility_without_explicit_litel
         text = command._format_status(status, "telegram")
 
         assert status["ai_available"] is True
-        assert "主模型: openai/gpt-4o-mini" in text
-        assert "AI 服务未配置" not in text
+        assert "\u4e3b\u6a21\u578b: openai/gpt-4o-mini" in text
+        assert "AI \u670d\u52a1\u672a\u914d\u7f6e" not in text
     finally:
         Config.reset_instance()

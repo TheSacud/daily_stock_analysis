@@ -123,7 +123,7 @@ class DailyMarketContextService:
             )
             return None
         context_date = target_date or self._today_fn()
-        report_language = normalize_report_language(getattr(config, "report_language", "zh"))
+        report_language = normalize_report_language(getattr(config, "report_language", "en"))
         cache_key = self._cache_key(
             context_date=context_date,
             region=normalized_region,
@@ -243,7 +243,7 @@ class DailyMarketContextService:
         target_date: date,
         current_query_id: Optional[str] = None,
         require_query_id_match: bool = False,
-        report_language: str = "zh",
+        report_language: str = "en",
     ) -> Optional[DailyMarketContext]:
         try:
             history_days = _history_lookup_days(
@@ -327,7 +327,7 @@ class DailyMarketContextService:
         region: str,
         current_query_id: Optional[str] = None,
         require_query_id_match: bool = False,
-        report_language: str = "zh",
+        report_language: str = "en",
     ) -> Tuple[Any, ...]:
         if (
             require_query_id_match
@@ -349,7 +349,7 @@ class DailyMarketContextService:
         region: str,
         current_query_id: Optional[str] = None,
         require_query_id_match: bool = False,
-        report_language: str = "zh",
+        report_language: str = "en",
     ) -> Optional[DailyMarketContext]:
         if not isinstance(current_query_id, str) or not current_query_id.strip():
             return None
@@ -399,7 +399,7 @@ class DailyMarketContextService:
         owns_lock = lock_token is None
         if lock_token is None:
             lock_token = try_acquire_market_review_lock(config)
-        report_language = normalize_report_language(getattr(config, "report_language", "zh"))
+        report_language = normalize_report_language(getattr(config, "report_language", "en"))
         cache_key = self._cache_key(
             context_date=target_date,
             region=region,
@@ -635,7 +635,7 @@ class DailyMarketContextService:
 def format_daily_market_context_prompt_section(
     context: Any,
     *,
-    report_language: str = "zh",
+    report_language: str = "en",
 ) -> str:
     """Render a low-sensitivity market context prompt section."""
 
@@ -824,7 +824,7 @@ def _record_matches_target_date(
     target_date: date,
     current_query_id: Optional[str] = None,
     require_query_id_match: bool = False,
-    report_language: str = "zh",
+    report_language: str = "en",
 ) -> bool:
     payload_date = _payload_trade_date(payload, region)
     language_matches = _record_report_language_matches(record, report_language)

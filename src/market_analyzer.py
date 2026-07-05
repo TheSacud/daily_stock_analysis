@@ -157,7 +157,7 @@ class MarketAnalyzer:
     def _get_output_language(self) -> str:
         """Return the truthful report language (zh/en/ko) for payload and directives."""
         return normalize_report_language(
-            getattr(getattr(self, "config", None), "report_language", "zh")
+            getattr(getattr(self, "config", None), "report_language", "en")
         )
 
     def _get_review_language(self) -> str:

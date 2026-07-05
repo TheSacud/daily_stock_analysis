@@ -132,7 +132,7 @@ class ReportMeta(BaseModel):
     stock_code: str = Field(..., description="stock code")
     stock_name: Optional[str] = Field(None, description="stock name")
     report_type: Optional[str] = Field(None, description="report type")
-    report_language: Optional[str] = Field(None, description="report\u8f93\u51fa\u8bed\u8a00 (zh/en)")
+    report_language: Optional[str] = Field(None, description="Report output language (en/zh/ko)")
     created_at: Optional[str] = Field(None, description="\u521b\u5efa\u65f6\u95f4")
     current_price: Optional[float] = Field(None, description="analyze\u65f6\u80a1\u4ef7")
     change_pct: Optional[float] = Field(None, description="analyze\u65f6change\u5e45(%)")

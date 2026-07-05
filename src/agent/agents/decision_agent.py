@@ -33,7 +33,7 @@ class DecisionAgent(BaseAgent):
         return ctx.meta.get("response_mode") == "chat"
 
     def system_prompt(self, ctx: AgentContext) -> str:
-        report_language = normalize_report_language(ctx.meta.get("report_language", "zh"))
+        report_language = normalize_report_language(ctx.meta.get("report_language", "en"))
         if self._is_chat_mode(ctx):
             prompt = """\
 You are a **Decision Synthesis Agent** replying directly to the user's latest

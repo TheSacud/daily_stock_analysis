@@ -1,7 +1,9 @@
 import type { ReportLanguage } from '../types/analysis';
 
-export const normalizeReportLanguage = (value?: string | null): ReportLanguage =>
-  value === 'en' ? 'en' : value === 'ko' ? 'ko' : 'zh';
+export const normalizeReportLanguage = (value?: string | null): ReportLanguage => {
+  void value;
+  return 'en';
+};
 
 const REPORT_TEXT = {
   zh: {
@@ -145,3 +147,69 @@ const REPORT_TEXT = {
 } as const;
 
 export const getReportText = (language?: string | null) => REPORT_TEXT[normalizeReportLanguage(language)];
+const CJK_TEXT_PATTERN = /[\u3400-\u9fff]/;
+
+const LEGACY_REPORT_EXACT_TRANSLATIONS: Record<string, string> = {
+  '\u89c2\u671b': 'Watch',
+  '\u89c2\u5bdf': 'Watch',
+  '\u7b49\u5f85': 'Wait',
+  '\u6301\u6709': 'Hold',
+  '\u4e70\u5165': 'Buy',
+  '\u52a0\u4ed3': 'Add',
+  '\u51cf\u4ed3': 'Reduce',
+  '\u5356\u51fa': 'Sell',
+  '\u770b\u591a': 'Bullish',
+  '\u770b\u7a7a': 'Bearish',
+  '\u9707\u8361': 'Sideways',
+  '\u591a\u5934\u6392\u5217': 'Bullish alignment',
+  '\u7a7a\u5934\u6392\u5217': 'Bearish alignment',
+  '\u770b\u591a\u4f46\u4e56\u79bb\u7387\u8fc7\u9ad8': 'Bullish, but price is overextended',
+};
+
+const LEGACY_REPORT_REPLACEMENTS: Array<[RegExp, string]> = [
+  [/\u7406\u60f3\u4e70\u5165\u70b9[:\uff1a]/g, 'Ideal entry:'],
+  [/\u6b21\u4f18\u4e70\u5165\u70b9[:\uff1a]/g, 'Secondary entry:'],
+  [/\u6b62\u635f\u4f4d[:\uff1a]/g, 'Stop loss:'],
+  [/\u76ee\u6807\u4f4d[:\uff1a]/g, 'Take profit:'],
+  [/\u7b2c\u4e00\u76ee\u6807/g, 'first target '],
+  [/\u7b2c\u4e8c\u76ee\u6807/g, 'second target '],
+  [/\u6574\u6570\u5173\u53e3/g, 'round-number level'],
+  [/\u524d\u9ad8\u53c2\u8003/g, 'prior high reference'],
+  [/\u8dcc\u7834/g, 'breaks below '],
+  [/\u4e14\u653e\u91cf\u65f6\u6b62\u635f/g, 'on rising volume'],
+  [/\u9644\u8fd1/g, ' area'],
+  [/\u7b49\u5f85\u7f29\u91cf\u56de\u8e29\u786e\u8ba4/g, 'wait for a lower-volume pullback confirmation'],
+  [/\u4e0e/g, ' and '],
+  [/\u4e4b\u95f4/g, 'between'],
+  [/\u5143/g, ''],
+  [/\uff08/g, ' ('],
+  [/\uff09/g, ')'],
+  [/\uff0c/g, ', '],
+  [/\u3002/g, '.'],
+  [/\uff1b/g, '; '],
+  [/\s{2,}/g, ' '],
+];
+
+export const containsCjkText = (value?: string | null): boolean =>
+  CJK_TEXT_PATTERN.test(value || '');
+
+export const localizeLegacyReportValue = (
+  value?: string | null,
+  language?: string | null,
+  fallback = '',
+): string => {
+  const raw = (value || '').trim();
+  if (!raw) return fallback;
+  if (normalizeReportLanguage(language) !== 'en') return raw;
+
+  const exact = LEGACY_REPORT_EXACT_TRANSLATIONS[raw];
+  if (exact) return exact;
+
+  const normalized = LEGACY_REPORT_REPLACEMENTS.reduce(
+    (current, [pattern, replacement]) => current.replace(pattern, replacement),
+    raw,
+  ).trim();
+
+  if (!containsCjkText(normalized)) return normalized;
+  return fallback || 'Reanalyze this saved report to refresh it in English.';
+};

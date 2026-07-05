@@ -719,7 +719,7 @@ class AgentOrchestrator:
                 requested_skills = context.get("strategies", [])
             ctx.meta["skills_requested"] = requested_skills or []
             ctx.meta["strategies_requested"] = requested_skills or []
-            ctx.meta["report_language"] = normalize_report_language(context.get("report_language", "zh"))
+            ctx.meta["report_language"] = normalize_report_language(context.get("report_language", "en"))
             if context.get("market_phase_context"):
                 ctx.meta["market_phase_context"] = context["market_phase_context"]
             daily_market_context = context.get("daily_market_context")
@@ -740,7 +740,7 @@ class AgentOrchestrator:
             ctx.stock_code = _extract_stock_code(task)
 
         if "report_language" not in ctx.meta:
-            ctx.meta["report_language"] = "zh"
+            ctx.meta["report_language"] = "en"
 
         return ctx
 

@@ -172,7 +172,7 @@ class AnalysisService:
             sniper_points = result.get_sniper_points() or {}
 
         # \u8ba1\u7b97\u60c5\u7eea\u6807\u7b7e
-        report_language = normalize_report_language(getattr(result, "report_language", "zh"))
+        report_language = normalize_report_language(getattr(result, "report_language", "en"))
         sentiment_label = get_sentiment_label(result.sentiment_score, report_language)
         stock_name = get_localized_stock_name(getattr(result, "name", None), result.code, report_language)
         action_fields = build_action_fields(

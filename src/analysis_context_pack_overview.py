@@ -27,7 +27,7 @@ logger = logging.getLogger(__name__)
 def render_analysis_context_pack_overview(
     pack: Any,
     *,
-    report_language: str = "zh",
+    report_language: str = "en",
 ) -> Optional[Dict[str, Any]]:
     """Project an AnalysisContextPack into a public, low-sensitivity overview."""
     try:

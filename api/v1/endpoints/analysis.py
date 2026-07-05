@@ -1304,7 +1304,7 @@ def _build_analysis_report(
     report_language = normalize_report_language(
         meta_data.get("report_language")
         or (context_snapshot or {}).get("report_language")
-        or getattr(Config.get_instance(), "report_language", "zh")
+        or getattr(Config.get_instance(), "report_language", "en")
     )
     display_stock_code = _display_stock_code_from_index(meta_data.get("stock_code", stock_code))
     localized_stock_name = get_localized_stock_name(

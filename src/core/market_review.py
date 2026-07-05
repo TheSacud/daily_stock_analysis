@@ -206,7 +206,7 @@ def run_market_review(
     """
     runtime_config = config or get_config()
     history_query_id = query_id or f"market_review_{uuid.uuid4().hex}"
-    review_text = _get_market_review_text(getattr(runtime_config, "report_language", "zh"))
+    review_text = _get_market_review_text(getattr(runtime_config, "report_language", "en"))
     raw_region = (
         override_region
         if override_region is not None
@@ -303,7 +303,7 @@ def run_market_review(
                 review_report=review_report,
                 payloads=market_review_payloads,
                 region=persist_region,
-                language=getattr(runtime_config, "report_language", "zh"),
+                language=getattr(runtime_config, "report_language", "en"),
                 root_title=review_text["root_title"],
             )
             markdown_report = _render_market_review_payload_markdown(
@@ -779,7 +779,7 @@ def _persist_market_review_history(
     try:
         from src.storage import DatabaseManager
 
-        report_language = normalize_report_language(getattr(config, "report_language", "zh"))
+        report_language = normalize_report_language(getattr(config, "report_language", "en"))
         summary = _summarize_market_review(review_report, report_language)
         if report_language == "en":
             stock_name = "Market Review"

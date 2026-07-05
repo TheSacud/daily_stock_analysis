@@ -7,7 +7,7 @@ import type {
 import { Badge, Button, Card, ScoreGauge } from '../common';
 import { formatDateTime } from '../../utils/format';
 import { getMarketPhaseSummaryLabel, getPartialBarLabel } from '../../utils/marketPhase';
-import { getReportText, normalizeReportLanguage } from '../../utils/reportLanguage';
+import { getReportText, localizeLegacyReportValue, normalizeReportLanguage } from '../../utils/reportLanguage';
 import { useUiLanguage } from '../../contexts/UiLanguageContext';
 
 interface ReportOverviewProps {
@@ -178,6 +178,9 @@ export const ReportOverview: React.FC<ReportOverviewProps> = ({
     .filter((board) => normalizeBoardName(board?.name).length > 0);
   const boardSignals = buildBoardSignalMaps(details);
   const preparedRelatedBoards = buildPreparedRelatedBoards(relatedBoards, boardSignals);
+  const analysisSummary = localizeLegacyReportValue(summary.analysisSummary, reportLanguage, text.noAnalysisSummary);
+  const operationAdvice = localizeLegacyReportValue(summary.operationAdvice, reportLanguage, text.noAdvice);
+  const trendPrediction = localizeLegacyReportValue(summary.trendPrediction, reportLanguage, text.noPrediction);
 
   const getPriceChangeStyle = (changePct: number | undefined): React.CSSProperties | undefined => {
     if (changePct === undefined || changePct === null) {
@@ -296,7 +299,7 @@ export const ReportOverview: React.FC<ReportOverviewProps> = ({
             <div className="home-divider border-t pt-5">
               <span className="label-uppercase">{text.keyInsights}</span>
               <p className="mt-2 max-w-[62ch] whitespace-pre-wrap text-left text-[15px] leading-7 text-foreground">
-                {summary.analysisSummary || text.noAnalysisSummary}
+                {analysisSummary}
               </p>
             </div>
           </Card>
@@ -319,7 +322,7 @@ export const ReportOverview: React.FC<ReportOverviewProps> = ({
                 <div className="space-y-1.5">
                   <h4 className="home-insight-title text-[11px] font-medium uppercase tracking-[0.16em]">{text.actionAdvice}</h4>
                   <p className="home-insight-body text-sm leading-6">
-                    {summary.operationAdvice || text.noAdvice}
+                    {operationAdvice}
                   </p>
                 </div>
               </div>
@@ -342,7 +345,7 @@ export const ReportOverview: React.FC<ReportOverviewProps> = ({
                 <div className="space-y-1.5">
                   <h4 className="home-insight-title text-[11px] font-medium uppercase tracking-[0.16em]">{text.trendPrediction}</h4>
                   <p className="home-insight-body text-sm leading-6">
-                    {summary.trendPrediction || text.noPrediction}
+                    {trendPrediction}
                   </p>
                 </div>
               </div>

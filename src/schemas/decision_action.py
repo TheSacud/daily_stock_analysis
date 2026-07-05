@@ -366,7 +366,7 @@ def build_action_fields(
     operation_advice: Any = None,
     explicit_action: Any = None,
     report_type: Any = None,
-    report_language: Optional[str] = "zh",
+    report_language: Optional[str] = "en",
     sentiment_score: Any = None,
     guardrail_reason: Any = None,
     align_with_score: bool = False,

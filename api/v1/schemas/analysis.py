@@ -103,7 +103,7 @@ class AnalyzeRequest(BaseModel):
             "original_query": "\u8305\u53f0",
             "selection_source": "autocomplete",
             "notify": True,
-            "report_language": "zh",
+            "report_language": "en",
             "skills": ["bull_trend"]
         }
     })

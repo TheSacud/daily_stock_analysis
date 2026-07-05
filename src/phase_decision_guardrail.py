@@ -118,14 +118,14 @@ def apply_phase_decision_guardrails(
     *,
     market_phase_summary: Optional[Dict[str, Any]],
     analysis_context_pack_overview: Optional[Dict[str, Any]],
-    report_language: str = "zh",
+    report_language: str = "en",
 ) -> List[str]:
     """Apply phase/data-quality guardrails to an AnalysisResult in place."""
 
     if result is None:
         return []
 
-    language = normalize_report_language(report_language or getattr(result, "report_language", "zh"))
+    language = normalize_report_language(report_language or getattr(result, "report_language", "en"))
     phase_summary = _safe_phase_summary(market_phase_summary)
     overview = analysis_context_pack_overview if isinstance(analysis_context_pack_overview, Mapping) else None
     adjustments: List[str] = []

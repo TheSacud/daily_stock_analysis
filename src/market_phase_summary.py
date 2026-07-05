@@ -183,7 +183,7 @@ def format_public_phase_pack_excerpt(
     analysis_context_pack_overview: Any = None,
     *,
     source: Optional[str] = None,
-    report_language: str = "zh",
+    report_language: str = "en",
 ) -> str:
     """Format a low-sensitivity phase/pack excerpt for notifications."""
     phase_summary = _as_mapping(market_phase_summary)
@@ -238,7 +238,7 @@ def format_public_phase_pack_excerpt(
 def format_public_market_status_line(
     market_phase_summary: Any,
     *,
-    report_language: str = "zh",
+    report_language: str = "en",
 ) -> str:
     """Format one compact market/phase line for aggregate reports."""
     phase_summary = _as_mapping(market_phase_summary)

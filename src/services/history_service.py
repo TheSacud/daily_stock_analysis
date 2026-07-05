@@ -897,7 +897,7 @@ class HistoryService:
         """
         report_date = record.created_at.strftime("%Y-%m-%d") if record.created_at else datetime.now().strftime("%Y-%m-%d")
         report_time = record.created_at.strftime("%H:%M:%S") if record.created_at else datetime.now().strftime("%H:%M:%S")
-        report_language = normalize_report_language(getattr(result, "report_language", "zh"))
+        report_language = normalize_report_language(getattr(result, "report_language", "en"))
         labels = get_report_labels(report_language)
 
         def _label(en: str, zh: str, ko: str) -> str:
@@ -1213,7 +1213,7 @@ class HistoryService:
         return get_signal_level(
             result.operation_advice,
             result.sentiment_score,
-            getattr(result, "report_language", "zh"),
+            getattr(result, "report_language", "en"),
         )
 
     @staticmethod

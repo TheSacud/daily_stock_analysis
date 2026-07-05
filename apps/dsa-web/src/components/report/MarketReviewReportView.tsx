@@ -10,7 +10,7 @@ import type {
   ReportLanguage,
 } from '../../types/analysis';
 import { markdownToPlainText } from '../../utils/markdown';
-import { getReportText, normalizeReportLanguage } from '../../utils/reportLanguage';
+import { getReportText, localizeLegacyReportValue, normalizeReportLanguage } from '../../utils/reportLanguage';
 import { Card } from '../common';
 import { Tooltip } from '../common/Tooltip';
 import { ReportMarkdownBody } from './ReportMarkdownBody';
@@ -364,7 +364,7 @@ export const MarketReviewReportView: React.FC<MarketReviewReportViewProps> = ({
   recordId,
   content: providedContent,
   payload: providedPayload,
-  reportLanguage = 'zh',
+  reportLanguage = 'en',
   className = '',
   onOpenRunFlow,
 }) => {
@@ -445,11 +445,11 @@ export const MarketReviewReportView: React.FC<MarketReviewReportViewProps> = ({
     }
   }, [content]);
 
-  const insightCards = useMemo(() => [
+  const insightCards = [
     {
       icon: FileText,
       label: marketReviewText.reviewSummary,
-      value: summary?.analysisSummary || marketReviewText.noReviewSummary,
+      value: localizeLegacyReportValue(summary?.analysisSummary, normalizedReportLanguage, marketReviewText.noReviewSummary),
     },
     {
       icon: Gauge,
@@ -461,14 +461,14 @@ export const MarketReviewReportView: React.FC<MarketReviewReportViewProps> = ({
     {
       icon: Layers,
       label: marketReviewText.rotationAndFunds,
-      value: summary?.operationAdvice || marketReviewText.noRotationView,
+      value: localizeLegacyReportValue(summary?.operationAdvice, normalizedReportLanguage, marketReviewText.noRotationView),
     },
     {
       icon: ShieldAlert,
       label: marketReviewText.riskAndWatch,
-      value: summary?.trendPrediction || marketReviewText.noRiskWatch,
+      value: localizeLegacyReportValue(summary?.trendPrediction, normalizedReportLanguage, marketReviewText.noRiskWatch),
     },
-  ], [marketReviewText, summary, text.marketSentiment]);
+  ];
 
   return (
     <div className={`animate-fade-in space-y-4 pb-8 ${className}`}>

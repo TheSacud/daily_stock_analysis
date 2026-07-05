@@ -612,7 +612,7 @@ const HomePage: React.FC = () => {
     setMarketReviewPayload(null);
     scrollMarketReviewFeedbackIntoView();
     try {
-      const result = await analysisApi.triggerMarketReview({ sendNotification: notify });
+      const result = await analysisApi.triggerMarketReview({ sendNotification: notify, reportLanguage: 'en' });
       setMarketReviewNotice({
         variant: 'success',
         title: t('home.marketReviewSubmitted'),

@@ -2,7 +2,7 @@ import type React from 'react';
 import type { ReportLanguage, ReportStrategy as ReportStrategyType } from '../../types/analysis';
 import { Card } from '../common';
 import { DashboardPanelHeader } from '../dashboard';
-import { getReportText, normalizeReportLanguage } from '../../utils/reportLanguage';
+import { getReportText, localizeLegacyReportValue, normalizeReportLanguage } from '../../utils/reportLanguage';
 
 interface ReportStrategyProps {
   strategy?: ReportStrategyType;
@@ -37,7 +37,7 @@ const StrategyItem: React.FC<StrategyItemProps> = ({
 /**
  * Strategy levels section component - terminal style
  */
-export const ReportStrategy: React.FC<ReportStrategyProps> = ({ strategy, language = 'zh' }) => {
+export const ReportStrategy: React.FC<ReportStrategyProps> = ({ strategy, language = 'en' }) => {
   if (!strategy) {
     return null;
   }
@@ -48,22 +48,22 @@ export const ReportStrategy: React.FC<ReportStrategyProps> = ({ strategy, langua
   const strategyItems = [
     {
       label: text.idealBuy,
-      value: strategy.idealBuy,
+      value: localizeLegacyReportValue(strategy.idealBuy, reportLanguage, text.noValue),
       tone: '--home-strategy-buy',
     },
     {
       label: text.secondaryBuy,
-      value: strategy.secondaryBuy,
+      value: localizeLegacyReportValue(strategy.secondaryBuy, reportLanguage, text.noValue),
       tone: '--home-strategy-secondary',
     },
     {
       label: text.stopLoss,
-      value: strategy.stopLoss,
+      value: localizeLegacyReportValue(strategy.stopLoss, reportLanguage, text.noValue),
       tone: '--home-strategy-stop',
     },
     {
       label: text.takeProfit,
-      value: strategy.takeProfit,
+      value: localizeLegacyReportValue(strategy.takeProfit, reportLanguage, text.noValue),
       tone: '--home-strategy-take',
     },
   ];

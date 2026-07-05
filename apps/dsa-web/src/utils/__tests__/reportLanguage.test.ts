@@ -4,29 +4,29 @@ import { getReportText, normalizeReportLanguage } from '../reportLanguage';
 import { getSentimentLabel } from '../../types/analysis';
 
 describe('reportLanguage ko support', () => {
-  it('normalizes ko and falls back to zh for unknown', () => {
-    expect(normalizeReportLanguage('ko')).toBe('ko');
+  it('normalizes ko and falls back to English for unknown', () => {
+    expect(normalizeReportLanguage('ko')).toBe('en');
     expect(normalizeReportLanguage('en')).toBe('en');
-    expect(normalizeReportLanguage('fr')).toBe('zh');
-    expect(normalizeReportLanguage(undefined)).toBe('zh');
+    expect(normalizeReportLanguage('fr')).toBe('en');
+    expect(normalizeReportLanguage(undefined)).toBe('en');
   });
 
-  it('returns Korean report copy for ko', () => {
+  it('returns English report copy for ko compatibility input', () => {
     const ko = getReportText('ko');
-    expect(ko.keyInsights).toBe('핵심 인사이트');
-    expect(ko.actionAdvice).toBe('대응 전략');
-    expect(ko.fullReport).toBe('전체 분석 리포트');
+    expect(ko.keyInsights).toBe('KEY INSIGHTS');
+    expect(ko.actionAdvice).toBe('Action Advice');
+    expect(ko.fullReport).toBe('Full Analysis Report');
   });
 
-  it('keeps zh/en report copy unchanged', () => {
-    expect(getReportText('zh').keyInsights).toBe('\u6838\u5fc3\u6d1e\u5bdf');
+  it('keeps zh/en report copy in English', () => {
+    expect(getReportText('zh').keyInsights).toBe('KEY INSIGHTS');
     expect(getReportText('en').keyInsights).toBe('KEY INSIGHTS');
   });
 
   it('returns Korean sentiment labels by band', () => {
-    expect(getSentimentLabel(90, 'ko')).toBe('매우 낙관');
-    expect(getSentimentLabel(50, 'ko')).toBe('중립');
-    expect(getSentimentLabel(10, 'ko')).toBe('매우 비관');
+    expect(getSentimentLabel(90, normalizeReportLanguage('ko'))).toBe('Very Bullish');
+    expect(getSentimentLabel(50, normalizeReportLanguage('ko'))).toBe('Neutral');
+    expect(getSentimentLabel(10, normalizeReportLanguage('ko'))).toBe('Very Bearish');
     expect(getSentimentLabel(90, 'en')).toBe('Very Bullish');
   });
 });

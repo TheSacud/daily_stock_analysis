@@ -44,7 +44,7 @@ _WARNING_LABELS_EN = {
 def format_market_phase_prompt_section(
     market_phase_context: Optional[Dict[str, Any]],
     *,
-    report_language: str = "zh",
+    report_language: str = "en",
 ) -> str:
     """Return a human-readable prompt section for a P1a market phase payload.
 

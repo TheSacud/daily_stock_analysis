@@ -280,7 +280,7 @@ class NotificationService(
             if language:
                 return normalize_report_language(language)
 
-        return normalize_report_language(getattr(get_config(), "report_language", "zh"))
+        return normalize_report_language(getattr(get_config(), "report_language", "en"))
 
     def _get_labels(self, payload: Optional[Any] = None) -> Dict[str, str]:
         return get_report_labels(self._get_report_language(payload))

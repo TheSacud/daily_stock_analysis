@@ -63,14 +63,14 @@ def apply_daily_market_context_guardrail(
     result: Any,
     *,
     daily_market_context: Any,
-    report_language: str = "zh",
+    report_language: str = "en",
 ) -> List[str]:
     """Soften aggressive buy advice when daily market context is conservative."""
 
     if result is None or not _is_conservative_context(daily_market_context):
         return []
 
-    language = normalize_report_language(report_language or getattr(result, "report_language", "zh"))
+    language = normalize_report_language(report_language or getattr(result, "report_language", "en"))
     if not _has_aggressive_buy_signal(result, language=language):
         return []
 

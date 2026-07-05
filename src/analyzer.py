@@ -390,7 +390,7 @@ def apply_placeholder_fill(result: "AnalysisResult", missing_fields: List[str]) 
             return not value.strip()
         return False
 
-    report_language = normalize_report_language(getattr(result, "report_language", "zh"))
+    report_language = normalize_report_language(getattr(result, "report_language", "en"))
     placeholder = get_placeholder_text(report_language)
     phase_decision_placeholders = {
         "dashboard.phase_decision.action_window": _localized_text(
@@ -896,7 +896,7 @@ def normalize_chip_structure_availability(result: "AnalysisResult", chip_data: A
     """Fill valid chip metrics or collapse placeholder-only chip fields to one fallback line."""
     if not result:
         return
-    language = getattr(result, "report_language", "zh")
+    language = getattr(result, "report_language", "en")
     if _has_meaningful_chip_data(chip_data):
         fill_chip_structure_if_needed(result, chip_data)
         return
@@ -917,7 +917,7 @@ def fill_chip_structure_if_needed(result: "AnalysisResult", chip_data: Any) -> N
         cs = dp.get("chip_structure") or {}
         filled = _build_chip_structure_from_data(
             chip_data,
-            language=getattr(result, "report_language", "zh"),
+            language=getattr(result, "report_language", "en"),
         )
         # Start from a copy of cs to preserve any extra keys the LLM may have added
         merged = dict(cs)
@@ -1002,7 +1002,7 @@ def stabilize_decision_with_structure(
         return
 
     try:
-        language = normalize_report_language(getattr(result, "report_language", "zh"))
+        language = normalize_report_language(getattr(result, "report_language", "en"))
         dashboard = result.dashboard if isinstance(result.dashboard, dict) else {}
         data_perspective = dashboard.get("data_perspective") if isinstance(dashboard, dict) else {}
         if not isinstance(data_perspective, dict):
@@ -1843,7 +1843,7 @@ def populate_decision_action_fields(
         operation_advice=getattr(result, "operation_advice", None),
         explicit_action=action_source,
         report_type=report_type,
-        report_language=getattr(result, "report_language", "zh"),
+        report_language=getattr(result, "report_language", "en"),
         sentiment_score=getattr(result, "sentiment_score", None),
         guardrail_reason=getattr(result, "guardrail_reason", None),
         align_with_score=align_with_score,
@@ -3069,7 +3069,7 @@ Answer in English. Use concise, evidence-based analysis. Do not provide personal
 
         code = context.get('code', 'Unknown')
         config = self._get_runtime_config()
-        report_language = normalize_report_language(getattr(config, "report_language", "zh"))
+        report_language = normalize_report_language(getattr(config, "report_language", "en"))
         system_prompt = self._get_analysis_system_prompt(report_language, stock_code=code)
         skill_instructions, default_skill_policy, use_legacy_default_prompt = self._get_skill_prompt_sections()
 
@@ -3364,7 +3364,7 @@ Answer in English. Use concise, evidence-based analysis. Do not provide personal
         context: Dict[str, Any],
         name: str,
         news_context: Optional[str] = None,
-        report_language: str = "zh",
+        report_language: str = "en",
         analysis_context_pack_summary: Optional[str] = None,
     ) -> str:
         """
@@ -3953,7 +3953,7 @@ Output the complete Decision Dashboard as JSON."""
         """Delegate to module-level check_content_integrity."""
         return check_content_integrity(result, require_phase_decision=require_phase_decision)
 
-    def _build_integrity_complement_prompt(self, missing_fields: List[str], report_language: str = "zh") -> str:
+    def _build_integrity_complement_prompt(self, missing_fields: List[str], report_language: str = "en") -> str:
         """Build complement instruction for missing mandatory fields."""
         report_language = normalize_report_language(report_language)
         if report_language in ("en", "ko"):
@@ -4022,7 +4022,7 @@ Output the complete Decision Dashboard as JSON."""
         base_prompt: str,
         previous_response: str,
         missing_fields: List[str],
-        report_language: str = "zh",
+        report_language: str = "en",
     ) -> str:
         """Build retry prompt using the previous response as the complement baseline."""
         complement = self._build_integrity_complement_prompt(missing_fields, report_language=report_language)
@@ -4187,7 +4187,7 @@ Output the complete Decision Dashboard as JSON."""
         """
         try:
             report_language = normalize_report_language(
-                getattr(self._get_runtime_config(), "report_language", "zh")
+                getattr(self._get_runtime_config(), "report_language", "en")
             )
             try:
                 _json_str, data = self._extract_analysis_json_object(response_text)
@@ -4346,7 +4346,7 @@ Output the complete Decision Dashboard as JSON."""
     ) -> AnalysisResult:
         """Extract as much analysis information as possible from a plain-text response"""
         report_language = normalize_report_language(
-            getattr(self._get_runtime_config(), "report_language", "zh")
+            getattr(self._get_runtime_config(), "report_language", "en")
         )
         # Try keyword matching to infer sentiment
         sentiment_score = 50

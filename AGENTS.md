@@ -1,5 +1,15 @@
 # AGENTS.md
 
+## Sacud VPS Fork Workflow
+
+- This local clone and the VPS deployment are based on the `TheSacud/daily_stock_analysis` fork.
+- Keep `origin` pointing to `git@github.com:TheSacud/daily_stock_analysis.git`.
+- Keep `upstream` pointing to `https://github.com/ZhuLinsen/daily_stock_analysis.git` for pulling original project updates only.
+- Do not push to `upstream`; on the VPS it should stay configured as `DISABLED` for push.
+- Use the `sacud/vps` branch for Sacud-specific deployment changes, local config examples, service wrappers, nginx/systemd notes, and integration work with Kai.
+- To update from the original project: fetch `upstream`, merge or rebase `upstream/main` into `sacud/vps`, resolve conflicts deliberately, then push only to `origin`.
+- Do not commit secrets, `.env` files, generated runtime data, Cloudflare Access tokens, API keys, or VPS-only private paths.
+
 本文件用于约束本仓库的默认开发流程，目标是减少重复沟通、减少返工，并让改动和当前项目结构保持一致。
 
 如果本文件与仓库中的脚本、工作流、代码现状不一致，以实际可执行内容为准，并在相关改动中顺手修正文档，避免规则继续漂移。

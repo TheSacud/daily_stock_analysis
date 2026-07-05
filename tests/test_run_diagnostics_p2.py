@@ -254,7 +254,7 @@ class RunDiagnosticsP2TestCase(unittest.TestCase):
         )
 
         self.assertEqual(summary["status"], "degraded")
-        self.assertEqual(summary["status_label"], "\u90e8\u5206\u964d\u7ea7")
+        self.assertEqual(summary["status_label"], "Degraded")
         self.assertEqual(summary["components"]["realtime_quote"]["status"], "degraded")
         self.assertEqual(summary["components"]["daily_data"]["status"], "ok")
         self.assertEqual(summary["components"]["llm"]["status"], "ok")
@@ -286,7 +286,7 @@ class RunDiagnosticsP2TestCase(unittest.TestCase):
         daily = summary["components"]["daily_data"]
         self.assertEqual(summary["status"], "degraded")
         self.assertEqual(daily["status"], "degraded")
-        self.assertIn("\u672a\u8fdb\u5165\u672c\u6b21\u5206\u6790\u8f93\u5165", daily["message"])
+        self.assertIn("analysis input was not included in this run", daily["message"])
         self.assertEqual(daily["details"]["analysis_input_status"], "missing")
         self.assertEqual(
             daily["details"]["analysis_input_missing_reasons"],
@@ -316,8 +316,8 @@ class RunDiagnosticsP2TestCase(unittest.TestCase):
 
         news = summary["components"]["news"]
         self.assertEqual(news["status"], "unknown")
-        self.assertIn("\u672a\u8fdb\u5165\u672c\u6b21\u5206\u6790\u8f93\u5165", news["message"])
-        self.assertIn("\u540e\u7eed\u68c0\u7d22", news["message"])
+        self.assertIn("analysis input was not included in this run", news["message"])
+        self.assertIn("follow-up retrieval", news["message"])
         self.assertEqual(news["details"]["analysis_input_status"], "missing")
 
     def test_news_results_with_missing_analysis_input_are_degraded(self) -> None:
@@ -348,8 +348,8 @@ class RunDiagnosticsP2TestCase(unittest.TestCase):
         self.assertEqual(news["details"]["record_count"], 3)
         self.assertEqual(news["details"]["analysis_input_status"], "missing")
         self.assertEqual(news["details"]["evidence_scope"], "retrieval_vs_analysis_input")
-        self.assertIn("\u65b0\u95fb\u68c0\u7d22\u8fd4\u56de 3 \u6761\u7ed3\u679c", news["message"])
-        self.assertIn("\u672a\u8fdb\u5165\u672c\u6b21\u5206\u6790\u8f93\u5165", news["message"])
+        self.assertIn("news search returned 3 results", news["message"])
+        self.assertIn("analysis input was not included in this run", news["message"])
 
     def test_summary_marks_llm_failure_as_failed(self) -> None:
         diagnostics = _diagnostic_snapshot()
@@ -374,7 +374,7 @@ class RunDiagnosticsP2TestCase(unittest.TestCase):
 
         self.assertEqual(summary["status"], "failed")
         self.assertEqual(summary["components"]["llm"]["status"], "failed")
-        self.assertIn("LLM \u5931\u8d25", summary["reason"])
+        self.assertIn("LLM failed", summary["reason"])
         self.assertNotIn("secret-value", summary["copy_text"])
 
     def test_copy_text_redacts_authorization_bearer_tokens(self) -> None:
@@ -491,7 +491,7 @@ class RunDiagnosticsP2TestCase(unittest.TestCase):
         )
 
         self.assertEqual(summary["status"], "unknown")
-        self.assertEqual(summary["status_label"], "\u672a\u77e5")
+        self.assertEqual(summary["status_label"], "Unknown")
         self.assertEqual(summary["query_id"], "legacy-query")
 
     def test_history_service_and_endpoint_return_diagnostic_summary(self) -> None:

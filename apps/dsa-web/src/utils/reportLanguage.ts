@@ -213,3 +213,78 @@ export const localizeLegacyReportValue = (
   if (!containsCjkText(normalized)) return normalized;
   return fallback || 'Reanalyze this saved report to refresh it in English.';
 };
+
+const LEGACY_DIAGNOSTIC_EXACT_TRANSLATIONS: Record<string, string> = {
+  '\u90e8\u5206\u964d\u7ea7': 'Degraded',
+  '\u6b63\u5e38': 'Normal',
+  '\u672a\u77e5': 'Unknown',
+  '\u5b9e\u65f6\u884c\u60c5': 'realtime quote',
+  '\u901a\u77e5': 'notification',
+  '\u4fdd\u5b58': 'save',
+};
+
+const LEGACY_DIAGNOSTIC_REPLACEMENTS: Array<[RegExp, string]> = [
+  [/\u90e8\u5206\u964d\u7ea7/g, 'Degraded'],
+  [/\u6b63\u5e38/g, 'Normal'],
+  [/\u672a\u77e5/g, 'Unknown'],
+  [/\u5b9e\u65f6\u884c\u60c5/g, 'realtime quote'],
+  [/\u524d\u7f6e(?:data source|\u6570\u636e\u6e90)(?:failed|\u5931\u8d25)\u540e\s*\u5df2\u7ee7\u7eed/g, 'continued after an earlier data source failed'],
+  [/\u6210\u529f/g, 'succeeded'],
+  [/\u5931\u8d25/g, 'failed'],
+  [/\u6700\u8fd1\u5931\u8d25\u540e\u5df2\u964d\u7ea7/g, 'Recent failure'],
+  [/\u672a\u914d\u7f6e\u6216\u672c\u6b21\u8df3\u8fc7/g, 'not configured or skipped for this run'],
+  [/\u672a\u914d\u7f6e/g, 'not configured'],
+  [/\u672c\u6b21/g, 'this run'],
+  [/\u8df3\u8fc7/g, 'skipped'],
+  [/\u901a\u77e5/g, 'notification'],
+  [/\u5df2\u4fdd\u5b58/g, 'saved'],
+  [/\u4fdd\u5b58/g, 'save'],
+  [/\u65e0result/g, 'returned no results'],
+  [/\u6570\u636e/g, 'data'],
+  [/\u65e5\u7ebf/g, 'daily bars'],
+  [/\u65b0\u95fb/g, 'news'],
+  [/\u68c0\u7d22/g, 'search'],
+  [/\u8fd4\u56de/g, 'returned'],
+  [/\u6761result/g, 'results'],
+  [/\uff0c/g, ', '],
+  [/\uff1b/g, '; '],
+  [/\u3002/g, '.'],
+];
+
+const LEGACY_DIAGNOSTIC_TEXT_REPLACEMENTS: Array<[RegExp, string]> = [
+  [/data sourcefailed/g, 'data source failed'],
+  [/not configuredorthis runskipping/gi, 'not configured or skipped for this run'],
+  [/reporthistory/g, 'report history '],
+  [/historysave/g, 'history save'],
+  [/newssearch/g, 'news search'],
+  [/daily data data/g, 'daily data'],
+  [/notificationnot configured/gi, 'notification not configured'],
+  [/searchreturned/g, 'search returned'],
+  [/\bsuccess\b/g, 'succeeded'],
+  [/\s*;\s*continued after an earlier data source failed/g, ' after an earlier data source failed'],
+  [/([a-z])([A-Z])/g, '$1 $2'],
+  [/\s{2,}/g, ' '],
+];
+
+export const localizeLegacyDiagnosticText = (
+  value?: string | null,
+  fallback = '',
+): string => {
+  const raw = (value || '').trim();
+  if (!raw) return fallback;
+
+  const exact = LEGACY_DIAGNOSTIC_EXACT_TRANSLATIONS[raw];
+  if (exact) return exact;
+
+  const withTranslatedCjk = LEGACY_DIAGNOSTIC_REPLACEMENTS.reduce(
+    (current, [pattern, replacement]) => current.replace(pattern, replacement),
+    raw,
+  );
+  const normalized = LEGACY_DIAGNOSTIC_TEXT_REPLACEMENTS.reduce(
+    (current, [pattern, replacement]) => current.replace(pattern, replacement),
+    withTranslatedCjk,
+  ).trim();
+
+  if (!containsCjkText(normalized)) return normalized;
+  return fallback || 'Legacy diagnostic text was generated before English localization.';
+};

@@ -58,24 +58,25 @@ describe('ReportDiagnostics', () => {
     render(<ReportDiagnostics recordId={1} />);
 
     expect(historyApi.getDiagnostics).toHaveBeenCalledWith(1);
-    expect(await screen.findByText('\u8fd0\u884c\u72b6\u6001')).toBeInTheDocument();
+    expect(await screen.findByText('Run Status')).toBeInTheDocument();
     const panel = screen.getByTestId('run-diagnostics');
     expect(panel).not.toHaveAttribute('open');
-    expect(screen.getByText('\u90e8\u5206\u964d\u7ea7')).toBeInTheDocument();
+    expect(screen.getByText('Degraded')).toBeInTheDocument();
 
-    fireEvent.click(screen.getByText('\u8fd0\u884c\u72b6\u6001'));
+    fireEvent.click(screen.getByText('Run Status'));
 
     expect(panel).toHaveAttribute('open');
-    expect(screen.getByText('\u6700\u8fd1\u5931\u8d25\u540e\u5df2\u964d\u7ea7')).toBeInTheDocument();
-    expect(screen.getByText('\u672a\u914d\u7f6e')).toBeInTheDocument();
+    expect(screen.getByText('Recent failure')).toBeInTheDocument();
+    expect(screen.getAllByText(/realtime quote baostock succeeded/i).length).toBeGreaterThan(0);
+    expect(screen.getByText('Not configured')).toBeInTheDocument();
 
-    fireEvent.click(screen.getByRole('button', { name: '\u590d\u5236\u6392\u969c\u4fe1\u606f' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Copy diagnostics' }));
 
     await waitFor(() => {
       expect(navigator.clipboard.writeText).toHaveBeenCalledWith(diagnosticSummary.copyText);
     });
     await waitFor(() => {
-      expect(screen.getByRole('button', { name: '\u5df2\u590d\u5236' })).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: 'Copied' })).toBeInTheDocument();
     });
   });
 
@@ -94,8 +95,8 @@ describe('ReportDiagnostics', () => {
 
     render(<ReportDiagnostics recordId={1} onOpenRunFlow={onOpenRunFlow} />);
 
-    fireEvent.click(await screen.findByText('\u8fd0\u884c\u72b6\u6001'));
-    fireEvent.click(screen.getByRole('button', { name: '\u67e5\u770b\u5386\u53f2\u8bb0\u5f55 1 \u8fd0\u884c\u6d41' }));
+    fireEvent.click(await screen.findByText('Run Status'));
+    fireEvent.click(screen.getByRole('button', { name: 'View run flow for history record 1' }));
 
     expect(onOpenRunFlow).toHaveBeenCalledWith(1);
   });
@@ -112,6 +113,6 @@ describe('ReportDiagnostics', () => {
     await waitFor(() => {
       expect(historyApi.getDiagnostics).toHaveBeenCalledTimes(2);
     });
-    expect(await screen.findByText('\u8fd0\u884c\u72b6\u6001')).toBeInTheDocument();
+    expect(await screen.findByText('Run Status')).toBeInTheDocument();
   });
 });

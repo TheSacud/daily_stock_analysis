@@ -10,7 +10,7 @@ import type {
   RunDiagnosticStatus,
   RunDiagnosticSummary,
 } from '../../types/analysis';
-import { normalizeReportLanguage } from '../../utils/reportLanguage';
+import { localizeLegacyDiagnosticText, normalizeReportLanguage } from '../../utils/reportLanguage';
 import { Badge, Button, Card, StatusDot } from '../common';
 
 interface ReportDiagnosticsProps {
@@ -165,7 +165,7 @@ const getOrderedComponents = (
 export const ReportDiagnostics: React.FC<ReportDiagnosticsProps> = ({
   recordId,
   summary,
-  language = 'zh',
+  language = 'en',
   onOpenRunFlow,
 }) => {
   const reportLanguage = normalizeReportLanguage(language);
@@ -226,7 +226,7 @@ export const ReportDiagnostics: React.FC<ReportDiagnosticsProps> = ({
   const loadFailed = !summary && Boolean(fetchedForRecord?.failed);
   const isLoading = Boolean(recordId && !summary && !fetchedForRecord);
 
-  const visibleSummary = useMemo<RunDiagnosticSummary | null>(() => {
+  const sourceSummary = useMemo<RunDiagnosticSummary | null>(() => {
     if (loadedSummary) {
       return loadedSummary;
     }
@@ -245,10 +245,35 @@ export const ReportDiagnostics: React.FC<ReportDiagnosticsProps> = ({
     };
   }, [isLoading, loadFailed, loadedSummary, recordId, summary, text]);
 
+  const visibleSummary = useMemo<RunDiagnosticSummary | null>(() => {
+    if (!sourceSummary) {
+      return null;
+    }
+
+    const components = Object.entries(sourceSummary.components || {}).reduce<Record<string, RunDiagnosticComponent>>(
+      (payload, [key, component]) => {
+        payload[key] = {
+          ...component,
+          label: localizeLegacyDiagnosticText(component.label, component.key || key),
+          message: localizeLegacyDiagnosticText(component.message, component.status),
+        };
+        return payload;
+      },
+      {},
+    );
+
+    return {
+      ...sourceSummary,
+      statusLabel: localizeLegacyDiagnosticText(sourceSummary.statusLabel, sourceSummary.status),
+      reason: localizeLegacyDiagnosticText(sourceSummary.reason, text.unavailable),
+      copyText: localizeLegacyDiagnosticText(sourceSummary.copyText, ''),
+      components,
+    };
+  }, [sourceSummary, text.unavailable]);
+
   if (!visibleSummary) {
     return null;
   }
-
   const statusStyle = OVERALL_STATUS_STYLE[visibleSummary.status] || OVERALL_STATUS_STYLE.unknown;
   const statusLabel = text.overall[visibleSummary.status] || visibleSummary.statusLabel;
   const components = getOrderedComponents(visibleSummary.components);

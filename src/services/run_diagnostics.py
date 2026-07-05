@@ -536,15 +536,15 @@ def current_diagnostic_snapshot() -> Optional[Dict[str, Any]]:
 
 _DATA_TYPE_LABELS = {
     "realtime_quote": "realtime quote",
-    "daily_data": "daily dataK\u7ebf",
-    "daily_bars": "daily dataK\u7ebf",
+    "daily_data": "daily data",
+    "daily_bars": "daily data",
     "technical": "technical indicators",
-    "news": "news\u8206\u60c5",
-    "news_search": "news\u8206\u60c5",
+    "news": "news",
+    "news_search": "news",
     "fundamental": "fundamentals",
     "fundamentals": "fundamentals",
-    "belong_boards": "\u6240\u5c5esector",
-    "chip": "\u7b79\u7801\u7ed3\u6784",
+    "belong_boards": "sector",
+    "chip": "chip structure",
 }
 
 
@@ -612,13 +612,13 @@ def _provider_started_flow_event(
     label = _DATA_TYPE_LABELS.get(data_type_key, data_type_key)
     node_id = f"provider_{data_type_key}_{provider_key}_{index}"
     timestamp = datetime.now().isoformat()
-    message = f"{label} {provider} \u8c03\u7528Medium"
+    message = f"{label} {provider} started"
     return {
         "timestamp": timestamp,
         "severity": "info",
         "type": "provider_run_started",
         "node_id": node_id,
-        "title": f"{label}\u5f00\u59cb",
+        "title": f"{label} started",
         "message": sanitize_diagnostic_text(message, max_length=220),
         "metadata": _clean_metadata(
             {
@@ -630,7 +630,7 @@ def _provider_started_flow_event(
                     "id": node_id,
                     "lane": "data_source",
                     "kind": "data_source",
-                    "label": f"{label} · {provider}",
+                    "label": f"{label} - {provider}",
                     "status": "running",
                     "provider": provider,
                     "started_at": timestamp,
@@ -664,7 +664,7 @@ def _provider_flow_event(
         "severity": "success" if run.success else "warning",
         "type": "provider_run",
         "node_id": node_id,
-        "title": f"{label}{'success' if run.success else 'failed'}",
+        "title": f"{label} {'success' if run.success else 'failed'}",
         "message": sanitize_diagnostic_text(message, max_length=220),
         "metadata": _clean_metadata(
             {
@@ -681,7 +681,7 @@ def _provider_flow_event(
                     "id": node_id,
                     "lane": "data_source",
                     "kind": "data_source",
-                    "label": f"{label} · {run.provider}",
+                    "label": f"{label} - {run.provider}",
                     "status": status,
                     "provider": run.provider,
                     "started_at": started_at,
@@ -707,13 +707,13 @@ def _llm_started_flow_event(
     display_model = model or provider or "unknown"
     node_id = f"llm_{call_type_key}_{index}"
     timestamp = datetime.now().isoformat()
-    message = f"LLM {display_model} \u8c03\u7528Medium"
+    message = f"LLM {display_model} started"
     return {
         "timestamp": timestamp,
         "severity": "info",
         "type": "llm_run_started",
         "node_id": node_id,
-        "title": "LLM \u5f00\u59cb",
+        "title": "LLM started",
         "message": sanitize_diagnostic_text(message, max_length=220),
         "metadata": _clean_metadata(
             {
@@ -725,7 +725,7 @@ def _llm_started_flow_event(
                     "id": node_id,
                     "lane": "analysis",
                     "kind": "model",
-                    "label": "LLM \u751f\u6210",
+                    "label": "LLM generation",
                     "status": "running",
                     "provider": display_model,
                     "started_at": timestamp,
@@ -772,7 +772,7 @@ def _llm_flow_event(
                     "id": node_id,
                     "lane": "analysis",
                     "kind": "model",
-                    "label": "LLM \u751f\u6210",
+                    "label": "LLM generation",
                     "status": status,
                     "provider": model,
                     "started_at": started_at,
@@ -792,13 +792,13 @@ def _history_flow_event(
 ) -> Dict[str, Any]:
     node_id = "history_save" if index == 1 else f"history_save_{index}"
     status = "success" if run.report_saved else "failed"
-    message = "reporthistory\u5df2\u4fdd\u5b58" if run.report_saved else f"reporthistorysave failed: {run.error_message_sanitized or 'unknown error'}"
+    message = "report history saved" if run.report_saved else f"report history save failed: {run.error_message_sanitized or 'unknown error'}"
     return {
         "timestamp": run.created_at,
         "severity": "success" if run.report_saved else "danger",
         "type": "history_run",
         "node_id": node_id,
-        "title": "historysave succeeded" if run.report_saved else "historysave failed",
+        "title": "history save succeeded" if run.report_saved else "history save failed",
         "message": sanitize_diagnostic_text(message, max_length=220),
         "metadata": _clean_metadata(
             {
@@ -809,7 +809,7 @@ def _history_flow_event(
                     "id": node_id,
                     "lane": "artifact",
                     "kind": "artifact",
-                    "label": "\u4fdd\u5b58report",
+                    "label": "Save report",
                     "status": status,
                     "message": message,
                 },
@@ -829,14 +829,14 @@ def _notification_flow_event(
     status = _flow_status_for_success(run.success, skipped=skipped)
     node_id = f"notification_{channel_key}_{index}"
     if status == "success":
-        title = "\u901a\u77e5send succeeded"
-        message = f"{channel} \u901a\u77e5send succeeded"
+        title = "notification sent"
+        message = f"{channel} notification sent"
     elif status == "skipped":
-        title = "\u901a\u77e5skipping"
-        message = f"{channel} \u901a\u77e5skipping"
+        title = "notification skipped"
+        message = f"{channel} notification skipped"
     else:
-        title = "\u901a\u77e5failed"
-        message = f"{channel} \u901a\u77e5failed: {run.error_message_sanitized or run.status or 'unknown error'}"
+        title = "notification failed"
+        message = f"{channel} notification failed: {run.error_message_sanitized or run.status or 'unknown error'}"
     return {
         "timestamp": run.created_at,
         "severity": "success" if status == "success" else ("warning" if status == "skipped" else "danger"),
@@ -854,7 +854,7 @@ def _notification_flow_event(
                     "id": node_id,
                     "lane": "artifact",
                     "kind": "notification",
-                    "label": f"\u63a8\u9001\u901a\u77e5 · {channel}",
+                    "label": f"Notification - {channel}",
                     "status": status,
                     "provider": channel,
                     "attempts": run.attempts,
@@ -1040,19 +1040,19 @@ def record_history_run(
 
 
 _SUMMARY_STATUS_LABELS = {
-    "normal": "\u6b63\u5e38",
-    "degraded": "\u90e8\u5206\u964d\u7ea7",
-    "failed": "failed",
-    "unknown": "unknown",
+    "normal": "Normal",
+    "degraded": "Degraded",
+    "failed": "Failed",
+    "unknown": "Unknown",
 }
 _ANALYSIS_INPUT_STATUS_MESSAGES = {
-    "missing": "\u672a\u8fdb\u5165this runanalyze\u8f93\u5165",
-    "partial": "this runanalyze\u8f93\u5165\u4ec5\u90e8\u5206\u53ef\u7528",
-    "fallback": "this runanalyze\u8f93\u5165\u4f7f\u7528\u964d\u7ea7\u6570\u636e",
-    "stale": "this runanalyze\u8f93\u5165\u4f7f\u7528\u8fc7\u671f\u6570\u636e",
-    "estimated": "this runanalyze\u8f93\u5165\u4f7f\u7528\u4f30\u7b97\u6570\u636e",
-    "fetch_failed": "\u8f93\u5165chunks\u663e\u793a\u6293\u53d6failed",
-    "not_supported": "\u8f93\u5165chunks\u6807\u8bb0\u4e3adoes not support",
+    "missing": "analysis input was not included in this run",
+    "partial": "analysis input was only partially available in this run",
+    "fallback": "analysis input used fallback data",
+    "stale": "analysis input used stale data",
+    "estimated": "analysis input used estimated data",
+    "fetch_failed": "analysis input fetch failed",
+    "not_supported": "analysis input is not supported",
 }
 
 
@@ -1112,7 +1112,7 @@ def _analysis_input_status_message(block: Dict[str, Any]) -> Optional[str]:
     status = str(block.get("status") or "").strip()
     if status == "available" or not status:
         return None
-    return _ANALYSIS_INPUT_STATUS_MESSAGES.get(status, f"\u8f93\u5165chunksstatus\u4e3a {status}")
+    return _ANALYSIS_INPUT_STATUS_MESSAGES.get(status, f"analysis input status is {status}")
 
 
 def _list_text(value: Any, *, limit: int = 5) -> List[str]:
@@ -1153,7 +1153,7 @@ def _reconcile_daily_provider_with_analysis_input(
         component.key,
         component.label,
         "degraded",
-        f"{component.label}{provider} success; \u4f46{input_message}",
+        f"{component.label} {provider} succeeded; however, {input_message}",
         details,
     )
 
@@ -1170,7 +1170,7 @@ def _provider_component(
         if isinstance(run, dict) and run.get("data_type") == data_type
     ]
     if not runs:
-        return _component(key, label, "unknown", f"{label}\u672a\u8bb0\u5f55\u8bca\u65adinfo")
+        return _component(key, label, "unknown", f"{label} diagnostics were not recorded")
 
     successes = [run for run in runs if run.get("success") is True]
     failures = [run for run in runs if run.get("success") is False]
@@ -1194,21 +1194,21 @@ def _provider_component(
                 key,
                 label,
                 "degraded",
-                f"{label}{provider} success; \u524d\u7f6edata sourcefailed\u540e\u5df2\u7ee7\u7eed",
+                f"{label} {provider} succeeded after an earlier data source failed",
                 details,
             )
         return _component(
             key,
             label,
             "ok",
-            f"{label}{provider} success",
+            f"{label} {provider} succeeded",
             details,
         )
 
     message = (
         last_run.get("error_message_sanitized")
         or last_run.get("error_type")
-        or "\u6240\u6709data source\u5c1d\u8bd5failed"
+        or "all data sources failed"
     )
     return _component(
         key,
@@ -1224,7 +1224,7 @@ def _provider_component(
 
 
 def _news_component(context_snapshot: Dict[str, Any], raw_result: Dict[str, Any]) -> RunDiagnosticComponent:
-    label = "newssearch"
+    label = "news search"
     input_block = _analysis_input_block(context_snapshot, "news")
     input_message = _analysis_input_status_message(input_block)
     has_retrieval_news = "news_retrieval_content" in context_snapshot
@@ -1237,7 +1237,7 @@ def _news_component(context_snapshot: Dict[str, Any], raw_result: Dict[str, Any]
                     "news",
                     label,
                     "degraded",
-                    f"news\u68c0\u7d22\u8fd4\u56de {news_result_count} \u6761result; \u4f46news{input_message}；report\u9875\u76f8\u5173\u8d44\u8baf\u53ef\u80fd\u6765\u81ea\u540e\u7eed\u68c0\u7d22orhistory\u6301\u4e45\u5316",
+                    f"news search returned {news_result_count} results; however, {input_message}; related news shown in the report may come from follow-up retrieval or persisted history",
                     {
                         "record_count": news_result_count,
                         "analysis_input_block": "news",
@@ -1252,16 +1252,16 @@ def _news_component(context_snapshot: Dict[str, Any], raw_result: Dict[str, Any]
                 "news",
                 label,
                 "ok",
-                f"news\u68c0\u7d22\u8fd4\u56de {news_result_count} \u6761result",
+                f"news search returned {news_result_count} results",
                 {"record_count": news_result_count},
             )
-        return _component("news", label, "degraded", "newssearch\u65e0result", {"record_count": 0})
+        return _component("news", label, "degraded", "news search returned no results", {"record_count": 0})
     if input_message:
         return _component(
             "news",
             label,
             "unknown",
-            f"news{input_message}；report\u9875\u76f8\u5173\u8d44\u8baf\u53ef\u80fd\u6765\u81ea\u540e\u7eed\u68c0\u7d22orhistory\u6301\u4e45\u5316",
+            f"news {input_message}; related news shown in the report may come from follow-up retrieval or persisted history",
             {
                 "analysis_input_block": "news",
                 "analysis_input_status": input_block.get("status"),
@@ -1272,8 +1272,8 @@ def _news_component(context_snapshot: Dict[str, Any], raw_result: Dict[str, Any]
             },
         )
     if has_snapshot_news and not has_retrieval_news:
-        return _component("news", label, "unknown", "news\u68c0\u7d22\u672a\u8bb0\u5f55\u539f\u59cb\u8bc1\u636e; \u53ef\u80fd\u672a\u5c1d\u8bd5or\u672a\u542f\u7528")
-    return _component("news", label, "unknown", "newssearch\u672a\u8bb0\u5f55\u8bca\u65adinfo")
+        return _component("news", label, "unknown", "news search did not record raw retrieval evidence; it may not have been attempted or enabled")
+    return _component("news", label, "unknown", "news search diagnostics were not recorded")
 
 
 def _llm_component(diagnostics: Dict[str, Any], raw_result: Dict[str, Any]) -> RunDiagnosticComponent:
@@ -1292,7 +1292,7 @@ def _llm_component(diagnostics: Dict[str, Any], raw_result: Dict[str, Any]) -> R
             status = "degraded" if failures or success_run.get("fallback_model") else "ok"
             message = f"LLM {model} success"
             if status == "degraded":
-                message = f"LLM {model} success; \u671f\u95f4\u53d1\u751f\u8fc7failedor\u6a21\u578b\u5207\u6362"
+                message = f"LLM {model} succeeded after an earlier failure or model fallback"
             return _component(
                 "llm",
                 label,
@@ -1325,18 +1325,18 @@ def _llm_component(diagnostics: Dict[str, Any], raw_result: Dict[str, Any]) -> R
         if model:
             return _component("llm", label, "ok", f"LLM {model} success", {"model": model})
         if raw_result.get("analysis_summary"):
-            return _component("llm", label, "ok", "LLM success; \u6a21\u578b\u672a\u8bb0\u5f55")
-    return _component("llm", label, "unknown", "LLM \u672a\u8bb0\u5f55\u8bca\u65adinfo")
+            return _component("llm", label, "ok", "LLM succeeded; model was not recorded")
+    return _component("llm", label, "unknown", "LLM diagnostics were not recorded")
 
 
 def _notification_component(diagnostics: Dict[str, Any]) -> RunDiagnosticComponent:
-    label = "\u901a\u77e5"
+    label = "notification"
     runs = [
         run for run in _as_list(diagnostics.get("notification_runs"))
         if isinstance(run, dict)
     ]
     if not runs:
-        return _component("notification", label, "unknown", "\u901a\u77e5result\u672a\u8bb0\u5f55")
+        return _component("notification", label, "unknown", "notification result was not recorded")
 
     skipped = [run for run in runs if run.get("status") in {"skipped", "not_configured"}]
     successes = [run for run in runs if run.get("success") is True]
@@ -1347,7 +1347,7 @@ def _notification_component(diagnostics: Dict[str, Any]) -> RunDiagnosticCompone
             "notification",
             label,
             "degraded",
-            "\u90e8\u5206notification channelfailed; \u5176\u4f59\u6e20\u9053\u5df2\u53d1\u9001",
+            "some notification channels failed; remaining channels were sent",
             {"channels": channels, "failed": [run.get("channel") for run in failures]},
         )
     if successes:
@@ -1355,7 +1355,7 @@ def _notification_component(diagnostics: Dict[str, Any]) -> RunDiagnosticCompone
             "notification",
             label,
             "ok",
-            "\u901a\u77e5send succeeded",
+            "notification sent",
             {"channels": channels},
         )
     if skipped and not failures:
@@ -1364,7 +1364,7 @@ def _notification_component(diagnostics: Dict[str, Any]) -> RunDiagnosticCompone
             "notification",
             label,
             status,
-            "\u901a\u77e5not configuredorthis runskipping",
+            "notification not configured or skipped for this run",
             {"channels": channels},
         )
     last_failure = failures[-1] if failures else runs[-1]
@@ -1372,7 +1372,7 @@ def _notification_component(diagnostics: Dict[str, Any]) -> RunDiagnosticCompone
         "notification",
         label,
         "failed",
-        f"\u901a\u77e5failed: {last_failure.get('error_message_sanitized') or last_failure.get('status') or 'unknown error'}",
+        f"notification failed: {last_failure.get('error_message_sanitized') or last_failure.get('status') or 'unknown error'}",
         {"channels": channels},
     )
 
@@ -1381,7 +1381,7 @@ def _history_component(
     diagnostics: Dict[str, Any],
     report_saved: Optional[bool],
 ) -> RunDiagnosticComponent:
-    label = "history\u4fdd\u5b58"
+    label = "history save"
     runs = [
         run for run in _as_list(diagnostics.get("history_runs"))
         if isinstance(run, dict)
@@ -1393,20 +1393,20 @@ def _history_component(
                 "history",
                 label,
                 "ok",
-                "reporthistory\u5df2\u4fdd\u5b58",
+                "report history saved",
                 {"analysis_history_id": last_run.get("analysis_history_id")},
             )
         return _component(
             "history",
             label,
             "failed",
-            f"reporthistorysave failed: {last_run.get('error_message_sanitized') or 'unknown error'}",
+            f"report history save failed: {last_run.get('error_message_sanitized') or 'unknown error'}",
         )
     if report_saved is True:
-        return _component("history", label, "ok", "reporthistory\u5df2\u4fdd\u5b58")
+        return _component("history", label, "ok", "report history saved")
     if report_saved is False:
-        return _component("history", label, "failed", "reporthistorysave failed")
-    return _component("history", label, "unknown", "history\u4fdd\u5b58\u672a\u8bb0\u5f55\u8bca\u65adinfo")
+        return _component("history", label, "failed", "report history save failed")
+    return _component("history", label, "unknown", "history save diagnostics were not recorded")
 
 
 def build_run_diagnostic_summary(
@@ -1432,7 +1432,7 @@ def build_run_diagnostic_summary(
 
     daily_data_component = _provider_component(
         key="daily_data",
-        label="daily data\u6570\u636e",
+        label="daily data",
         data_type="daily_data",
         provider_runs=provider_runs,
     )
@@ -1469,7 +1469,7 @@ def build_run_diagnostic_summary(
         status = "normal"
 
     if status == "unknown":
-        reason = "\u65e7reportor\u8bca\u65ad\u8bc1\u636e\u4e0d\u8db3; \u65e0\u6cd5\u5224\u65adthis runrun status"
+        reason = "Legacy report or insufficient diagnostic evidence; cannot determine this run status"
     else:
         reason = next(
             (

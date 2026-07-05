@@ -2640,13 +2640,54 @@ class TestMarketAnalyzerBypassFix:
 
         result = ma.generate_market_review(overview, [])
 
-        assert "A-share Market Recap" in result
+        assert "Market Recap" in result
         assert "### 1. Market Summary" in result
         assert "### 3. Breadth & Liquidity" in result
-        assert "Turnover (CNY 100m)" in result
+        assert "Turnover (100m units)" in result
         assert "### 4. Sector / Theme Highlights" in result
         assert "### 6. Strategy Framework" in result
         assert "### \u4e00、\u5e02\u573a\u603b\u7ed3" not in result
+
+    def test_cn_english_market_review_sanitizes_country_and_currency_terms(self):
+        from src.market_analyzer import MarketOverview, MarketIndex
+
+        ma = self._make_market_analyzer_with_mock_generate_text(
+            return_value="""## 2026-03-05 A-share Market Recap
+
+### 1. Market Summary
+Chinese equities rose as China's liquidity improved and turnover reached 3.20 trillion yuan.
+
+### 2. Index Commentary
+CNY 100m turnover, RMB liquidity, \u0041\u80a1, \u4e2d\u56fd\u653f\u7b56, \u4eba\u6c11\u5e01, and \u4ebf\u5143 were referenced.
+"""
+        )
+        ma.config.report_language = "en"
+        overview = MarketOverview(
+            date="2026-03-05",
+            indices=[
+                MarketIndex(
+                    code="000001",
+                    name="SSE Composite",
+                    current=3300.0,
+                    change=12.0,
+                    change_pct=0.36,
+                    amount=145000000000.0,
+                )
+            ],
+            up_count=3200,
+            down_count=1800,
+            total_amount=14567.0,
+        )
+
+        result = ma.generate_market_review(overview, [])
+
+        lowered = result.lower()
+        for forbidden in ("a-share", "cny", "rmb", "renminbi", "yuan", "chinese", "china"):
+            assert forbidden not in lowered
+        for forbidden_cjk in ("\u0041\u80a1", "\u4e2d\u56fd", "\u4eba\u6c11\u5e01", "\u4ebf\u5143", "\u5143"):
+            assert forbidden_cjk not in result
+        assert "## 2026-03-05 Market Recap" in result
+        assert "100m units" in result
 
     def test_generate_template_review_uses_jp_title_for_english_fallback(self):
         from src.core.market_profile import JP_PROFILE
@@ -2776,7 +2817,7 @@ class TestMarketAnalyzerBypassFix:
             top_sectors=[{"name": "AI\u7b97\u529b", "change_pct": 3.25}],
             bottom_sectors=[{"name": "\u7164\u70ad", "change_pct": -1.12}],
         )
-        review = """## 2026-03-05 A-share Market Recap
+        review = """## 2026-03-05 Market Recap
 
 ### 1. Market Summary
 Summary text.
@@ -2792,8 +2833,8 @@ Sector text.
 
         assert "- **Market Signal**: 66/100 (constructive, risk-on)" in result
         assert "- **Breadth**: Advancers 3200 / Decliners 1800 / Flat 100;" in result
-        assert "Turnover 14567 (CNY 100m)" in result
-        assert "| Index | Last | Change % | Open | High | Low | Amplitude | Turnover (CNY 100m) |" in result
+        assert "Turnover 14567 (100m units)" in result
+        assert "| Index | Last | Change % | Open | High | Low | Amplitude | Turnover (100m units) |" in result
         assert "#### Leading Industry Sectors" in result
         assert "| 1 | AI\u7b97\u529b | +3.25% |" in result
         assert "#### Lagging Industry Sectors" in result

@@ -180,7 +180,7 @@ class MarketAnalyzer:
         if self.region == "kr":
             return "Korea market" if review_language == "en" else "\u97e9\u56fdmarket"
         if review_language == "en":
-            return "A-share market"
+            return "equity market"
         return "A-sharemarket"
 
     def _get_turnover_unit_label(self) -> str:
@@ -193,7 +193,7 @@ class MarketAnalyzer:
             return "JPY bn" if self._get_review_language() == "en" else "\u5341\u4ebf\u65e5\u5143"
         if self.region == "kr":
             return "KRW bn" if self._get_review_language() == "en" else "\u5341\u4ebf\u97e9\u5143"
-        return "CNY 100m" if self._get_review_language() == "en" else "\u4ebf"
+        return "100m units" if self._get_review_language() == "en" else "\u4ebf"
 
     def _format_turnover_value(self, amount_raw: float) -> str:
         """Format raw turnover according to market-specific units."""
@@ -221,7 +221,7 @@ class MarketAnalyzer:
                 "jp": "Japan Market Recap",
                 "kr": "Korea Market Recap",
             }
-            market_name = market_names.get(self.region, "A-share Market Recap")
+            market_name = market_names.get(self.region, "Market Recap")
             return f"## {date} {market_name}"
         return f"## {date} market review"
 
@@ -610,7 +610,7 @@ Focus on index trend, liquidity, and sector rotation to shape the next-session t
         search_queries = self.profile.news_queries
         review_language = self._get_review_language()
         market_names = {
-            "cn": "\u5927\u76d8" if review_language == "zh" else "A-share market",
+            "cn": "\u5927\u76d8" if review_language == "zh" else "equity market",
             "us": "US stockmarket" if review_language == "zh" else "US market",
             "hk": "HK stockmarket" if review_language == "zh" else "HK market",
             "jp": "\u65e5\u672c\u80a1\u5e02" if review_language == "zh" else "Japan stock market",
@@ -682,7 +682,7 @@ Focus on index trend, liquidity, and sector rotation to shape the next-session t
                 "[\u5927\u76d8] %s action=generate_review status=fallback_template reason=no_analyzer",
                 self._log_context(),
             )
-            return self._generate_template_review(overview, news)
+            return self._sanitize_default_english_market_report(self._generate_template_review(overview, news))
 
         # \u6784\u5efa Prompt
         prompt = self._build_review_prompt(overview, news)
@@ -726,13 +726,13 @@ Focus on index trend, liquidity, and sector rotation to shape the next-session t
                 len(review),
             )
             # Inject structured data tables into LLM prose sections
-            return self._inject_data_into_review(review, overview, news)
+            return self._sanitize_default_english_market_report(self._inject_data_into_review(review, overview, news))
 
         logger.warning(
             "[\u5927\u76d8] %s action=generate_review status=fallback_template reason=empty_llm_response",
             self._log_context(),
         )
-        return self._generate_template_review(overview, news)
+        return self._sanitize_default_english_market_report(self._generate_template_review(overview, news))
 
     def _get_analyzer_generation_backend_config_error(self) -> Optional[GenerationError]:
         """Return analyzer backend config errors without relying on dynamic mock attributes."""
@@ -1392,6 +1392,39 @@ Focus on index trend, liquidity, and sector rotation to shape the next-session t
         add_section("risk warning", " (\u5217\u51fa\u9700\u8981\u5173\u6ce8\u7684\u98ce\u9669\u70b9；\u6700\u540e\u8865\u5145“\u5efa\u8bae\u4ec5\u4f9b\u53c2\u8003; \u4e0d\u6784\u6210\u6295\u8d44\u5efa\u8bae”.)")
         return "\n\n".join(sections)
 
+    def _sanitize_default_english_market_report(self, report: str) -> str:
+        """Remove CN-specific country/currency labels from English market-review output."""
+        if self.region != "cn" or self._get_output_language() != "en" or not report:
+            return report
+
+        sanitized = report
+        replacements = (
+            (r"\bA[- ]shares?\s+Market Recap\b", "Market Recap"),
+            (r"\bA[- ]shares?\s+market\b", "equity market"),
+            (r"\bA[- ]shares\b", "equities"),
+            (r"\bA[- ]share\b", "equity"),
+            ("\u0041\u80a1", "equities"),
+            (r"\bCNY\s*100m\b", "100m units"),
+            (r"\bCNY\b", "units"),
+            (r"\bRMB\b", "units"),
+            (r"\brenminbi\b", "units"),
+            (r"\byuan\b", "units"),
+            ("\u4eba\u6c11\u5e01", "units"),
+            ("\u4ebf\u5143", "100m units"),
+            ("\u5143", "units"),
+            (r"\bMainland\s+China\b", "the market"),
+            (r"\bChina's\b", "the market's"),
+            (r"\bChina\b", "the market"),
+            ("\u4e2d\u56fd", "the market"),
+            (r"\bChinese\s+", ""),
+            (r"\bChinese\b", "market"),
+        )
+        for pattern, replacement in replacements:
+            sanitized = re.sub(pattern, replacement, sanitized, flags=re.IGNORECASE)
+        sanitized = re.sub(r"[ \t]{2,}", " ", sanitized)
+        sanitized = re.sub(r" +\n", "\n", sanitized)
+        return sanitized
+
     def _build_review_prompt(self, overview: MarketOverview, news: List) -> str:
         """\u6784\u5efa\u590d\u76d8report Prompt"""
         review_language = self._get_review_language()
@@ -1493,6 +1526,11 @@ concept\u9886\u8dcc: {bottom_concepts_text if bottom_concepts_text else no_data_
                 if data_limits_block
                 else ""
             )
+            neutral_market_requirement = (
+                "- For the default equity-market report, do not write country or currency labels such as yuan, CNY, RMB, renminbi, China, Chinese, or A-share; use market/equities and 100m units instead.\n"
+                if self.region == "cn" and self._get_output_language() == "en"
+                else ""
+            )
             market_summary_hint = (
                 "2-3 sentences summarizing overall market tone, index moves, and liquidity."
                 if self.profile.has_market_stats
@@ -1533,7 +1571,7 @@ concept\u9886\u8dcc: {bottom_concepts_text if bottom_concepts_text else no_data_
 - No code blocks
 - Use emoji sparingly in headings (at most one per heading)
 - The entire fixed shell, headings, guidance, and conclusion must be in {shell_language_label}
-{data_boundary_requirement}
+{data_boundary_requirement}{neutral_market_requirement}
 
 ---
 
@@ -1701,7 +1739,7 @@ Output the report content directly, no extra commentary.
                 "jp": "Japan Market Recap",
                 "kr": "Korea Market Recap",
             }
-            market_name = market_names.get(self.region, "A-share Market Recap")
+            market_name = market_names.get(self.region, "Market Recap")
             report = f"""## {overview.date} {market_name}
 
 ### 1. Market Summary

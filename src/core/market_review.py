@@ -114,7 +114,7 @@ def _get_market_review_text(language: str) -> dict[str, str]:
         return {
             "root_title": "# 🎯 Market Review",
             "push_title": "🎯 Market Review",
-            "cn_title": "# A-share Market Recap",
+            "cn_title": "# Market Recap",
             "us_title": "# US Market Recap",
             "hk_title": "# HK Market Recap",
             "jp_title": "# Japan Market Recap",

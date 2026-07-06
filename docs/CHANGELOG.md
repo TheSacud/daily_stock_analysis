@@ -7,6 +7,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 > For user-friendly release highlights, see the [GitHub Releases](https://github.com/ZhuLinsen/daily_stock_analysis/releases) page.
 
 ## [Unreleased]
+- [docs] Add security and rollback review guardrails.
 - [improvement] Remove China/yuan wording from English CN market-review titles, turnover labels, and generated Markdown output.
 - [docs] Convert repository collaboration, documentation, strategy, and Web-facing copy to English-first wording.
 - [improvement] Make the Web UI default to English and keep legacy `zh` language paths returning English text for compatibility.

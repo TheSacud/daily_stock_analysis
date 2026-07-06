@@ -8,6 +8,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 - [docs] Add security and rollback review guardrails.
+- [docs] Add deterministic workspace testing and PR handoff commands.
 - [improvement] Remove China/yuan wording from English CN market-review titles, turnover labels, and generated Markdown output.
 - [docs] Convert repository collaboration, documentation, strategy, and Web-facing copy to English-first wording.
 - [improvement] Make the Web UI default to English and keep legacy `zh` language paths returning English text for compatibility.

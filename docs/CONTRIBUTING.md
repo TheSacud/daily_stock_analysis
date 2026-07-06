@@ -101,6 +101,8 @@ npm run lint
 npm run build
 ```
 
+For deterministic install, unit, smoke, desktop, and PR handoff commands with known gaps, see [Testing And PR Handoff Commands](testing.md).
+
 ### Documentation Sync Rule
 
 When modifying a Chinese-language core document (e.g., `docs/full-guide.md`), your PR description **must state** whether the corresponding English document has been updated. If not updated, explain why.

@@ -17,7 +17,10 @@ For PR handoff, also confirm the current branch and remotes without printing cre
 
 ```bash
 git branch --show-current
-git remote -v
+git remote
+git remote get-url origin | sed -E 's#(https?://)[^/@]+@#\1<redacted>@#'
+git remote get-url --push origin | sed -E 's#(https?://)[^/@]+@#\1<redacted>@#'
+git remote get-url upstream 2>/dev/null | sed -E 's#(https?://)[^/@]+@#\1<redacted>@#' || true
 ```
 
 Expected fork workflow:
@@ -138,10 +141,13 @@ Web Playwright smoke:
 
 ```bash
 cd apps/dsa-web
-DSA_WEB_SMOKE_PASSWORD='<local test password>' npm run test:smoke
+read -rsp 'DSA_WEB_SMOKE_PASSWORD: ' DSA_WEB_SMOKE_PASSWORD
+export DSA_WEB_SMOKE_PASSWORD
+npm run test:smoke
+unset DSA_WEB_SMOKE_PASSWORD
 ```
 
-`apps/dsa-web/playwright.config.ts` only starts the local backend and Vite servers when `DSA_WEB_SMOKE_PASSWORD` is set. Use a disposable local test password and do not put secrets in command logs. If the backend command must be customized, set `DSA_WEB_SMOKE_BACKEND_CMD`.
+`apps/dsa-web/playwright.config.ts` only starts the local backend and Vite servers when `DSA_WEB_SMOKE_PASSWORD` is set. Use a disposable local test password, do not echo it, and do not include it in PR evidence. If the backend command must be customized, set `DSA_WEB_SMOKE_BACKEND_CMD`.
 
 Desktop manual smoke should be called out in PR evidence when performed. Do not treat `npm run dev` or packaging as a required automated worker check unless the task specifically touches desktop startup or release behavior.
 
